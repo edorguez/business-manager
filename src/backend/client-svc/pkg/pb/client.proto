@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package= "github.com/EdoRguez/business-manager/client-svc/pb";
+
+service ClientService{
+  rpc CreateClient(CreateClientRequest) returns (CreateClientResponse);
+}
+
+message CreateClientRequest{
+  int64 companyId = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  string phone = 5;
+  string identificationNumber = 6;
+  string identificationType = 7;
+}
+
+message CreateClientResponse{
+  int64 status = 1;
+  string error = 2;
+  int64 id = 3;
+}
