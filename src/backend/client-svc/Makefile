@@ -9,3 +9,12 @@ proto:
 
 new_migration:
 	migrate create -ext sql -dir pkg/db/migration -seq $(name)
+
+migrateup:
+	migrate -path pkg/db/migration -database "postgresql://postgres:postgres@localhost:5434/client_svc?sslmode=disable" --verbose up
+
+migratedown:
+	migrate -path pkg/db/migration -database "postgresql://postgres:postgres@localhost:5434/client_svc?sslmode=disable" --verbose down
+
+sqlc:
+	docker run --rm -v "%cd%:/src" -w /src sqlc/sqlc generate
