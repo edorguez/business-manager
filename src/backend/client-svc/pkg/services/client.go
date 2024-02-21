@@ -17,8 +17,8 @@ type ClientService struct {
 }
 
 func (s *ClientService) CreateClient(ctx context.Context, req *client.CreateClientRequest) (*client.CreateClientResponse, error) {
-	fmt.Println("Patient Service : CreatePatient")
-	fmt.Println("repository")
+	fmt.Println("Client Service :  CreateClient")
+	fmt.Println("Client Service :  Create Client - Req")
 	fmt.Println(req)
 	fmt.Println("----------------")
 
@@ -34,12 +34,15 @@ func (s *ClientService) CreateClient(ctx context.Context, req *client.CreateClie
 
 	c, err := s.Repo.CreateClient(ctx, createClientParams)
 	if err != nil {
+		fmt.Println("API Gateway :  Create Client - ERROR")
+		fmt.Println(err.Error())
 		return &client.CreateClientResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
+	fmt.Println("API Gateway :  Create Client - SUCCESS")
 	return &client.CreateClientResponse{
 		Status: http.StatusCreated,
 		Id:     c.ID,

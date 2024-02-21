@@ -52,7 +52,7 @@ func startServer(address string, conf *config.Config) error {
 	}
 
 	go func() {
-		fmt.Println("Starting server on: ", address)
+		fmt.Println("Starting server ON: ", address)
 
 		err := s.ListenAndServe()
 		if err != nil {

@@ -11,6 +11,7 @@ import (
 	"github.com/EdoRguez/business-manager/client-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/client-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/client-svc/pkg/services"
+	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 )
 
@@ -32,7 +33,7 @@ func main() {
 
 	storage := db.NewStorage(conn)
 
-	fmt.Println("Client Service ON", c.Port)
+	fmt.Println("Client Service ON: ", c.Port)
 
 	// s := services.NewClientService(storage)
 	s := services.ClientService{

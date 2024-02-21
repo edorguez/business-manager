@@ -24,6 +24,6 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 }
 
 func (svc *ServiceClient) CreateClient(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("API Gateway :  CreatePatient called --> 1")
+	fmt.Println("API Gateway :  CreateClient called --> 1")
 	routes.CreateClient(w, r, svc.Client)
 }
