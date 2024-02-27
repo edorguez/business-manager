@@ -242,6 +242,11 @@ UPDATE
   client.client
 SET 
   first_name = $2,
+  last_name = $3,
+  email = $4,
+  phone = $5,
+  identification_number = $6,
+  identification_type = $7,
   modified_at = NOW()
 WHERE 
   id = $1
@@ -249,12 +254,25 @@ RETURNING id, company_id, first_name, last_name, email, phone, identification_nu
 `
 
 type UpdateClientParams struct {
-	ID        int64  `json:"id"`
-	FirstName string `json:"first_name"`
+	ID                   int64          `json:"id"`
+	FirstName            string         `json:"first_name"`
+	LastName             sql.NullString `json:"last_name"`
+	Email                sql.NullString `json:"email"`
+	Phone                sql.NullString `json:"phone"`
+	IdentificationNumber string         `json:"identification_number"`
+	IdentificationType   string         `json:"identification_type"`
 }
 
 func (q *Queries) UpdateClient(ctx context.Context, arg UpdateClientParams) (ClientClient, error) {
-	row := q.db.QueryRowContext(ctx, updateClient, arg.ID, arg.FirstName)
+	row := q.db.QueryRowContext(ctx, updateClient,
+		arg.ID,
+		arg.FirstName,
+		arg.LastName,
+		arg.Email,
+		arg.Phone,
+		arg.IdentificationNumber,
+		arg.IdentificationType,
+	)
 	var i ClientClient
 	err := row.Scan(
 		&i.ID,

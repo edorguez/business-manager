@@ -81,6 +81,11 @@ UPDATE
   client.client
 SET 
   first_name = $2,
+  last_name = $3,
+  email = $4,
+  phone = $5,
+  identification_number = $6,
+  identification_type = $7,
   modified_at = NOW()
 WHERE 
   id = $1
