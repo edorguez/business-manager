@@ -121,3 +121,101 @@ func (s *ClientService) GetClients(ctx context.Context, req *client.GetClientsRe
 		Status:  http.StatusOK,
 	}, nil
 }
+
+func (s *ClientService) GetClientsByCompanyId(ctx context.Context, req *client.GetClientsByCompanyIdRequest) (*client.GetClientsResponse, error) {
+	fmt.Println("Client Service :  GetClientsByCompanyId")
+	fmt.Println("Client Service :  GetClientsByCompanyId - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	params := db.GetClientsByCompanyIdParams{
+		CompanyID: req.Id,
+		Limit:     req.Limit,
+		Offset:    req.Offset,
+	}
+
+	c, err := s.Repo.GetClientsByCompanyId(ctx, params)
+	if err != nil {
+		fmt.Println("API Gateway :  GetClientsByCompanyId - ERROR")
+		fmt.Println(err.Error())
+		return &client.GetClientsResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	var clients []*client.GetClientResponse
+	for _, v := range c {
+		clients = append(clients, &client.GetClientResponse{
+			Id:                   v.ID,
+			CompanyId:            v.CompanyID,
+			FirstName:            v.FirstName,
+			LastName:             v.LastName.String,
+			Email:                v.Email.String,
+			Phone:                v.Phone.String,
+			IdentificationNumber: v.IdentificationNumber,
+			IdentificationType:   v.IdentificationType,
+			Status:               http.StatusOK,
+		})
+	}
+
+	fmt.Println("API Gateway :  GetClientsByCompanyId - SUCCESS")
+	return &client.GetClientsResponse{
+		Clients: clients,
+		Status:  http.StatusOK,
+	}, nil
+}
+
+func (s *ClientService) UpdateClient(ctx context.Context, req *client.UpdateClientRequest) (*client.UpdateClientResponse, error) {
+	fmt.Println("Client Service :  UpdateClient")
+	fmt.Println("Client Service :  UpdateClient - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	params := db.UpdateClientParams{
+		ID:                   req.Id,
+		FirstName:            req.FirstName,
+		LastName:             util.NewSqlNullString(req.LastName),
+		Email:                util.NewSqlNullString(req.Email),
+		Phone:                util.NewSqlNullString(req.Phone),
+		IdentificationNumber: req.IdentificationNumber,
+		IdentificationType:   req.IdentificationType,
+	}
+
+	_, err := s.Repo.UpdateClient(ctx, params)
+	if err != nil {
+		fmt.Println("API Gateway :  UpdateClient - ERROR")
+		fmt.Println(err.Error())
+		return &client.UpdateClientResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	fmt.Println("API Gateway :  UpdateClient - SUCCESS")
+	return &client.UpdateClientResponse{
+		Status: http.StatusNoContent,
+	}, nil
+}
+
+func (s *ClientService) DeleteClient(ctx context.Context, req *client.DeleteClientRequest) (*client.DeleteClientResponse, error) {
+	fmt.Println("Client Service :  DeleteClient")
+	fmt.Println("Client Service :  DeleteClient - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	err := s.Repo.DeleteClient(ctx, req.Id)
+	if err != nil {
+		fmt.Println("API Gateway :  DeleteClient - ERROR")
+		fmt.Println(err.Error())
+		return &client.DeleteClientResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	fmt.Println("API Gateway :  DeleteClient - SUCCESS")
+	return &client.DeleteClientResponse{
+		Status: http.StatusNoContent,
+	}, nil
+}

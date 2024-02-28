@@ -19,7 +19,7 @@ type CreateClientRequestBody struct {
 }
 
 func CreateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClient) {
-	fmt.Println("API Gateway :  Create Client")
+	fmt.Println("API Gateway :  CreateClient")
 	var body CreateClientRequestBody
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
@@ -27,7 +27,7 @@ func CreateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClie
 		return
 	}
 
-	fmt.Println("API Gateway :  Create Client - Body")
+	fmt.Println("API Gateway :  CreateClient - Body")
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
@@ -41,15 +41,16 @@ func CreateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClie
 		IdentificationType:   body.IdentificationType,
 	}
 
-	_, err := c.CreateClient(r.Context(), createClientParams)
+	res, err := c.CreateClient(r.Context(), createClientParams)
 
 	if err != nil {
-		fmt.Println("API Gateway :  Create Client - ERROR")
+		fmt.Println("API Gateway :  CreateClient - ERROR")
 		fmt.Println(err.Error())
-		http.Error(w, "There is an error", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Println("API Gateway :  Create Client - SUCCESS")
-	w.WriteHeader(http.StatusCreated)
+	fmt.Println("API Gateway :  CreateClient - SUCCESS")
+	w.WriteHeader(int(res.Status))
+	json.NewEncoder(w).Encode(res)
 }
