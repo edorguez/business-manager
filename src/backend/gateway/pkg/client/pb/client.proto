@@ -8,7 +8,6 @@ service ClientService{
   rpc CreateClient(CreateClientRequest) returns (CreateClientResponse);
   rpc GetClient(GetClientRequest) returns (GetClientResponse);
   rpc GetClients(GetClientsRequest) returns (GetClientsResponse);
-  rpc GetClientsByCompanyId(GetClientsByCompanyIdRequest) returns (GetClientsResponse);
   rpc UpdateClient(UpdateClientRequest) returns (UpdateClientResponse);
   rpc DeleteClient(DeleteClientRequest) returns (DeleteClientResponse);
 }
@@ -47,20 +46,15 @@ message GetClientResponse{
 }
 
 message GetClientsRequest{
-  int32 limit = 1;
-  int32 offset = 2;
+  int64 companyId = 1;
+  int32 limit = 2;
+  int32 offset = 3;
 }
 
 message GetClientsResponse{
   repeated GetClientResponse clients = 1;
   int64 status = 2;
   string error = 3;
-}
-
-message GetClientsByCompanyIdRequest{
-  int64 id = 1;
-  int32 limit = 2;
-  int32 offset = 3;
 }
 
 message UpdateClientRequest{

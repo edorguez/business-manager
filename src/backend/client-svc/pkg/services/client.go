@@ -86,8 +86,9 @@ func (s *ClientService) GetClients(ctx context.Context, req *client.GetClientsRe
 	fmt.Println("----------------")
 
 	params := db.GetClientsParams{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		CompanyID: req.CompanyId,
+		Limit:     req.Limit,
+		Offset:    req.Offset,
 	}
 
 	c, err := s.Repo.GetClients(ctx, params)
@@ -116,50 +117,6 @@ func (s *ClientService) GetClients(ctx context.Context, req *client.GetClientsRe
 	}
 
 	fmt.Println("API Gateway :  GetClients - SUCCESS")
-	return &client.GetClientsResponse{
-		Clients: clients,
-		Status:  http.StatusOK,
-	}, nil
-}
-
-func (s *ClientService) GetClientsByCompanyId(ctx context.Context, req *client.GetClientsByCompanyIdRequest) (*client.GetClientsResponse, error) {
-	fmt.Println("Client Service :  GetClientsByCompanyId")
-	fmt.Println("Client Service :  GetClientsByCompanyId - Req")
-	fmt.Println(req)
-	fmt.Println("----------------")
-
-	params := db.GetClientsByCompanyIdParams{
-		CompanyID: req.Id,
-		Limit:     req.Limit,
-		Offset:    req.Offset,
-	}
-
-	c, err := s.Repo.GetClientsByCompanyId(ctx, params)
-	if err != nil {
-		fmt.Println("API Gateway :  GetClientsByCompanyId - ERROR")
-		fmt.Println(err.Error())
-		return &client.GetClientsResponse{
-			Status: http.StatusConflict,
-			Error:  err.Error(),
-		}, nil
-	}
-
-	var clients []*client.GetClientResponse
-	for _, v := range c {
-		clients = append(clients, &client.GetClientResponse{
-			Id:                   v.ID,
-			CompanyId:            v.CompanyID,
-			FirstName:            v.FirstName,
-			LastName:             v.LastName.String,
-			Email:                v.Email.String,
-			Phone:                v.Phone.String,
-			IdentificationNumber: v.IdentificationNumber,
-			IdentificationType:   v.IdentificationType,
-			Status:               http.StatusOK,
-		})
-	}
-
-	fmt.Println("API Gateway :  GetClientsByCompanyId - SUCCESS")
 	return &client.GetClientsResponse{
 		Clients: clients,
 		Status:  http.StatusOK,

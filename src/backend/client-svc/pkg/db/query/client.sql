@@ -46,29 +46,8 @@ SELECT
   modified_at
 FROM 
   client.client
-ORDER BY 
-  id
-LIMIT 
-  $1
-OFFSET 
-  $2;
-
--- name: GetClientsByCompanyId :many
-SELECT 
-  id,
-  company_id,
-  first_name,
-  last_name,
-  email,
-  phone,
-  identification_number,
-  identification_type,
-  created_at,
-  modified_at
-FROM 
-  client.client
 WHERE
-  company_id = $1
+  (company_id = $1) OR $1 = 0
 ORDER BY 
   id
 LIMIT 

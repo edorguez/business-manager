@@ -6,13 +6,17 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/client/pb"
+	"github.com/EdoRguez/business-manager/gateway/pkg/util"
 )
 
 func GetClients(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClient) {
+	companyId := util.GetIdQueryParam("companyId", r)
+	limit, offset := util.GetFilterQueryParams(r)
 
 	params := &pb.GetClientsRequest{
-		Limit:  10,
-		Offset: 0,
+		CompanyId: companyId,
+		Limit:     limit,
+		Offset:    offset,
 	}
 
 	res, err := c.GetClients(r.Context(), params)

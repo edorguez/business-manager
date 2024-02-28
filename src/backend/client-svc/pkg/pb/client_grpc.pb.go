@@ -25,7 +25,6 @@ type ClientServiceClient interface {
 	CreateClient(ctx context.Context, in *CreateClientRequest, opts ...grpc.CallOption) (*CreateClientResponse, error)
 	GetClient(ctx context.Context, in *GetClientRequest, opts ...grpc.CallOption) (*GetClientResponse, error)
 	GetClients(ctx context.Context, in *GetClientsRequest, opts ...grpc.CallOption) (*GetClientsResponse, error)
-	GetClientsByCompanyId(ctx context.Context, in *GetClientsByCompanyIdRequest, opts ...grpc.CallOption) (*GetClientsResponse, error)
 	UpdateClient(ctx context.Context, in *UpdateClientRequest, opts ...grpc.CallOption) (*UpdateClientResponse, error)
 	DeleteClient(ctx context.Context, in *DeleteClientRequest, opts ...grpc.CallOption) (*DeleteClientResponse, error)
 }
@@ -65,15 +64,6 @@ func (c *clientServiceClient) GetClients(ctx context.Context, in *GetClientsRequ
 	return out, nil
 }
 
-func (c *clientServiceClient) GetClientsByCompanyId(ctx context.Context, in *GetClientsByCompanyIdRequest, opts ...grpc.CallOption) (*GetClientsResponse, error) {
-	out := new(GetClientsResponse)
-	err := c.cc.Invoke(ctx, "/pb.ClientService/GetClientsByCompanyId", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *clientServiceClient) UpdateClient(ctx context.Context, in *UpdateClientRequest, opts ...grpc.CallOption) (*UpdateClientResponse, error) {
 	out := new(UpdateClientResponse)
 	err := c.cc.Invoke(ctx, "/pb.ClientService/UpdateClient", in, out, opts...)
@@ -99,7 +89,6 @@ type ClientServiceServer interface {
 	CreateClient(context.Context, *CreateClientRequest) (*CreateClientResponse, error)
 	GetClient(context.Context, *GetClientRequest) (*GetClientResponse, error)
 	GetClients(context.Context, *GetClientsRequest) (*GetClientsResponse, error)
-	GetClientsByCompanyId(context.Context, *GetClientsByCompanyIdRequest) (*GetClientsResponse, error)
 	UpdateClient(context.Context, *UpdateClientRequest) (*UpdateClientResponse, error)
 	DeleteClient(context.Context, *DeleteClientRequest) (*DeleteClientResponse, error)
 	mustEmbedUnimplementedClientServiceServer()
@@ -117,9 +106,6 @@ func (UnimplementedClientServiceServer) GetClient(context.Context, *GetClientReq
 }
 func (UnimplementedClientServiceServer) GetClients(context.Context, *GetClientsRequest) (*GetClientsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClients not implemented")
-}
-func (UnimplementedClientServiceServer) GetClientsByCompanyId(context.Context, *GetClientsByCompanyIdRequest) (*GetClientsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetClientsByCompanyId not implemented")
 }
 func (UnimplementedClientServiceServer) UpdateClient(context.Context, *UpdateClientRequest) (*UpdateClientResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateClient not implemented")
@@ -194,24 +180,6 @@ func _ClientService_GetClients_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ClientService_GetClientsByCompanyId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetClientsByCompanyIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ClientServiceServer).GetClientsByCompanyId(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.ClientService/GetClientsByCompanyId",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClientServiceServer).GetClientsByCompanyId(ctx, req.(*GetClientsByCompanyIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ClientService_UpdateClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateClientRequest)
 	if err := dec(in); err != nil {
@@ -266,10 +234,6 @@ var ClientService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetClients",
 			Handler:    _ClientService_GetClients_Handler,
-		},
-		{
-			MethodName: "GetClientsByCompanyId",
-			Handler:    _ClientService_GetClientsByCompanyId_Handler,
 		},
 		{
 			MethodName: "UpdateClient",

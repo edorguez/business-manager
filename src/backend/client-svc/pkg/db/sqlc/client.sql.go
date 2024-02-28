@@ -126,69 +126,8 @@ SELECT
   modified_at
 FROM 
   client.client
-ORDER BY 
-  id
-LIMIT 
-  $1
-OFFSET 
-  $2
-`
-
-type GetClientsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
-func (q *Queries) GetClients(ctx context.Context, arg GetClientsParams) ([]ClientClient, error) {
-	rows, err := q.db.QueryContext(ctx, getClients, arg.Limit, arg.Offset)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []ClientClient{}
-	for rows.Next() {
-		var i ClientClient
-		if err := rows.Scan(
-			&i.ID,
-			&i.CompanyID,
-			&i.FirstName,
-			&i.LastName,
-			&i.Email,
-			&i.Phone,
-			&i.IdentificationNumber,
-			&i.IdentificationType,
-			&i.CreatedAt,
-			&i.ModifiedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getClientsByCompanyId = `-- name: GetClientsByCompanyId :many
-SELECT 
-  id,
-  company_id,
-  first_name,
-  last_name,
-  email,
-  phone,
-  identification_number,
-  identification_type,
-  created_at,
-  modified_at
-FROM 
-  client.client
 WHERE
-  company_id = $1
+  (company_id = $1) OR $1 = 0
 ORDER BY 
   id
 LIMIT 
@@ -197,14 +136,14 @@ OFFSET
   $3
 `
 
-type GetClientsByCompanyIdParams struct {
+type GetClientsParams struct {
 	CompanyID int64 `json:"company_id"`
 	Limit     int32 `json:"limit"`
 	Offset    int32 `json:"offset"`
 }
 
-func (q *Queries) GetClientsByCompanyId(ctx context.Context, arg GetClientsByCompanyIdParams) ([]ClientClient, error) {
-	rows, err := q.db.QueryContext(ctx, getClientsByCompanyId, arg.CompanyID, arg.Limit, arg.Offset)
+func (q *Queries) GetClients(ctx context.Context, arg GetClientsParams) ([]ClientClient, error) {
+	rows, err := q.db.QueryContext(ctx, getClients, arg.CompanyID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

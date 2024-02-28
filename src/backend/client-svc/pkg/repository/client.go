@@ -67,23 +67,6 @@ func (clientRepo *ClientRepo) GetClients(ctx context.Context, arg db.GetClientsP
 	return result, err
 }
 
-func (clientRepo *ClientRepo) GetClientsByCompanyId(ctx context.Context, arg db.GetClientsByCompanyIdParams) ([]db.ClientClient, error) {
-	var result []db.ClientClient
-
-	err := clientRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
-		var err error
-
-		result, err = q.GetClientsByCompanyId(ctx, arg)
-		if err != nil {
-			return err
-		}
-
-		return err
-	})
-
-	return result, err
-}
-
 func (clientRepo *ClientRepo) UpdateClient(ctx context.Context, arg db.UpdateClientParams) (db.ClientClient, error) {
 	var result db.ClientClient
 

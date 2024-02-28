@@ -31,6 +31,6 @@ func GetClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClient)
 	}
 
 	fmt.Println("API Gateway :  GetClient - SUCCESS")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }
