@@ -16,15 +16,19 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 		Client: InitServiceClient(c),
 	}
 
+	mw := MiddlewareConfig{}
+
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/{id:[0-9]+}", svc.GetClient)
 	getRouter.HandleFunc("", svc.GetClients)
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("", svc.CreateClient)
+	postRouter.Use(mw.MiddlewareValidateCreateClient)
 
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id:[0-9]+}", svc.UpdateClient)
+	putRouter.Use(mw.MiddlewareValidateUpdateClient)
 
 	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/{id:[0-9]+}", svc.DeleteClient)
