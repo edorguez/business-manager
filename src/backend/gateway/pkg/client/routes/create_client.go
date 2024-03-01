@@ -28,7 +28,7 @@ func (c *CreateClientRequestBody) Validate() error {
 func CreateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClient) {
 	fmt.Println("API Gateway :  CreateClient")
 
-	// We got out body through context since we saved it in a middleware
+	// We got our body through context, since we saved it in a middleware
 	body := r.Context().Value(CreateClientRequestBody{}).(CreateClientRequestBody)
 
 	fmt.Println("API Gateway :  CreateClient - Body")

@@ -28,12 +28,9 @@ func (c *UpdateClientRequestBody) Validate() error {
 
 func UpdateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClient) {
 	fmt.Println("API Gateway :  UpdateClient")
-	var body UpdateClientRequestBody
 
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	// We got our body through context, since we saved it in a middleware
+	body := r.Context().Value(UpdateClientRequestBody{}).(UpdateClientRequestBody)
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
