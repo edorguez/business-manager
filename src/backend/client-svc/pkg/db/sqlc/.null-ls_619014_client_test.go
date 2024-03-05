@@ -19,5 +19,4 @@ func createRandomClient(t *testing.T) ClientClient {
 
 	hola := arg
 	chao := hola
-	qlq := chao
 }
