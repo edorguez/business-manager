@@ -7,26 +7,30 @@ import (
 	"strconv"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/client/pb"
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
 
 type UpdateClientRequestBody struct {
-	FirstName            string `json:"firstName" binding:"required,max=20"`
-	LastName             string `json:"lastName" binding:"max=20"`
-	Email                string `json:"email" binding:"email,max=100"`
-	Phone                string `json:"phone" binding:"max=11"`
-	IdentificationNumber string `json:"identificationNumber" binding:"required,max=20"`
-	IdentificationType   string `json:"identificationType" binding:"required,max=1"`
+	FirstName            string `json:"firstName" validate:"required,max=20"`
+	LastName             string `json:"lastName" validate:"max=20"`
+	Email                string `json:"email" validate:"email,max=100"`
+	Phone                string `json:"phone" validate:"max=11"`
+	IdentificationNumber string `json:"identificationNumber" validate:"required,max=20"`
+	IdentificationType   string `json:"identificationType" validate:"required,max=1"`
+}
+
+func (c *UpdateClientRequestBody) Validate() error {
+	validate := validator.New()
+
+	return validate.Struct(c)
 }
 
 func UpdateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClient) {
 	fmt.Println("API Gateway :  UpdateClient")
-	var body UpdateClientRequestBody
 
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	// We got our body through context, since we saved it in a middleware
+	body := r.Context().Value(UpdateClientRequestBody{}).(UpdateClientRequestBody)
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -58,7 +62,6 @@ func UpdateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClie
 	}
 
 	fmt.Println("API Gateway :  UpdateClient - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }
