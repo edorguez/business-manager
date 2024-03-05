@@ -58,6 +58,7 @@ func UpdateClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClie
 	}
 
 	fmt.Println("API Gateway :  UpdateClient - SUCCESS")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }

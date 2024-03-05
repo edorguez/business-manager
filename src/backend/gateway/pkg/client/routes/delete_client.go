@@ -31,6 +31,7 @@ func DeleteClient(w http.ResponseWriter, r *http.Request, c pb.ClientServiceClie
 	}
 
 	fmt.Println("API Gateway :  DeleteClient - SUCCESS")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }
