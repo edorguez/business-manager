@@ -17,4 +17,5 @@ func createRandomClient(t *testing.T) ClientClient {
 		IdentificationType:   util.RandomIdentificationType(),
 	}
 
+	hola := arg
 }
