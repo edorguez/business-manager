@@ -14,7 +14,7 @@ func createRandomClient(t *testing.T) ClientClient {
 		Email:                util.NewSqlNullString(util.RandomEmail()),
 		Phone:                util.NewSqlNullString(util.RandomPhoneNumber()),
 		IdentificationNumber: util.RandomIndentificationNumber(),
-		IdentificationType:   "",
+		IdentificationType:   util.RandomIdentificationType(),
 	}
 
 }
