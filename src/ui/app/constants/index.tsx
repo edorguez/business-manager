@@ -8,6 +8,11 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="lucide:home" width="20" height="20" />,
   },
   {
+    title: 'Clientes',
+    path: '/clients',
+    icon: <Icon icon="material-symbols:person" width="20" height="20" />,
+  },
+  {
     title: 'Scheduling',
     path: '/scheduling',
     icon: <Icon icon="bx:calendar" width="20" height="20" />,
