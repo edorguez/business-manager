@@ -12,34 +12,40 @@ const ClientsClient = () => {
     <div>
       <SimpleCard>
         <BreadcrumbNavigation items={bcItems} />
-      </SimpleCard>
 
-      <div className="mt-4">
+        <hr className="my-3" />
 
-        <SimpleCard>
-          <div className="grid grid-cols-5 gap-4 mb-3">
-            <div>
-              <span className="text-sm">Nombre</span>
-              <Input size="sm" />
-            </div>
-            <div>
-              <span className="text-sm">Apellido</span>
-              <Input size="sm" />
-            </div>
-            <div>
-              <span className="text-sm">Cédula</span>
-              <Input size="sm" />
-            </div>
-            <div>
-              <Button size="sm" className="bg-maincolor">
-                <Icon icon="tabler:search" />
+        <div className="grid grid-cols-6 gap-4">
+          <div>
+            <label className="text-sm">Nombre</label>
+            <Input size="sm" />
+          </div>
+          <div>
+            <label className="text-sm">Apellido</label>
+            <Input size="sm" />
+          </div>
+          <div>
+            <label className="text-sm">Cédula</label>
+            <Input size="sm" />
+          </div>
+          <div className="flex flex-col">
+            <span className="opacity-0">.</span>
+            <Button size="sm" variant="main">
+              <Icon icon="tabler:search" />
+            </Button>
+          </div>
+          <div className="col-start-6">
+            <div className="flex flex-col">
+              <span className="opacity-0">.</span>
+              <Button size="sm" variant="main">
+                Crear Cliente
               </Button>
             </div>
           </div>
+        </div>
 
-          <hr />
-        </SimpleCard>
-      </div>
+        <hr className="my-3"/>
+      </SimpleCard>
     </div>
   )
 }
