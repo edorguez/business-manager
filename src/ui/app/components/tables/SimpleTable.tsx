@@ -1,99 +1,107 @@
 'use client';
 
-import { SimpleTableColumn, SimpleTableData } from './SimpleTable.types';
+import { SimpleTableColumn } from './SimpleTable.types';
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
   TableContainer,
+  Button,
+  TableCaption
 } from '@chakra-ui/react'
+import { Icon } from '@iconify/react';
 
 interface SimpleTableProps {
   columns: SimpleTableColumn[];
-  data: SimpleTableData[];
+  data: any[];
   size?: string;
   showEdit?: boolean;
   showDelete?: boolean;
 }
 
-const TableSimple: React.FC<SimpleTableProps> = ({
+const SimpleTable: React.FC<SimpleTableProps> = ({
   columns,
   data,
   size = 'md',
   showEdit = false,
   showDelete = false
 }) => {
+
   return (
     <TableContainer>
       <Table size={size}>
+        <TableCaption>
+          <div className='flex justify-end'>
+            <div className='flex items-center select-none text-thirdcolor'>
+              <Icon icon="fa:chevron-left" className='cursor-pointer' />
+              <span className='mx-2 font-bold'>
+                Página 1
+              </span>
+              <Icon icon="fa:chevron-right" className='cursor-pointer' />
+            </div>
+          </div>
+        </TableCaption>
         <Thead>
           <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
+            {columns.map((col: SimpleTableColumn, index: number) => (
+              <Th key={index}>
+                {col.name}
+              </Th>
+            ))}
+
+            {(showEdit || showDelete) &&
+              <Th></Th>
+            }
           </Tr>
         </Thead>
         <Tbody>
-          <Tr>
-            <Td>inches</Td>
-            <Td>millimetres (mm)</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
-          <Tr>
-            <Td>feet</Td>
-            <Td>centimetres (cm)</Td>
-            <Td isNumeric>30.48</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
+          {data.map((dataVal: any, dataIndex: number) => (
+
+            <Tr key={dataIndex} className='hover:bg-thirdcolorhov'>
+              {columns.map((col: SimpleTableColumn, colIndex: number) => (
+
+                <Td key={colIndex}>
+                  {dataVal[col.key]}
+                </Td>
+
+              ))}
+
+              <Td>
+                {showEdit && showDelete && (
+                  <div className='flex'>
+                    <Button size="sm" variant="main" className="mr-1">
+                      <Icon icon="lucide:edit" />
+                    </Button>
+                    <Button size="sm" variant="third">
+                      <Icon icon="wpf:delete" />
+                    </Button>
+                  </div>
+                )}
+
+                {showEdit && !showDelete && (
+                  <Button size="sm" variant="main">
+                    <Icon icon="lucide:edit" />
+                  </Button>
+                )}
+
+                {!showEdit && showDelete && (
+                  <Button size="sm" variant="third">
+                    <Icon icon="wpf:delete" />
+                  </Button>
+                )}
+              </Td>
+
+            </Tr>
+
+          ))}
+
         </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Tfoot>
       </Table>
     </TableContainer>
   );
 }
 
-export default TableSimple;
+export default SimpleTable;

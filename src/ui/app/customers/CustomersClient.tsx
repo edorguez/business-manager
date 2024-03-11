@@ -2,13 +2,80 @@
 
 import SimpleCard from "../components/cards/SimpleCard";
 import SimpleTable from "../components/tables/SimpleTable";
+import { SimpleTableColumn } from "../components/tables/SimpleTable.types";
 import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
 import { Button, Input } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
+import { Customer } from '../types/customer';
 
-const ClientsClient = () => {
+const CustomersClient = () => {
   const bcItems: string[] = ["Clientes", "Crear"];
-    
+
+  const customerCols: SimpleTableColumn[] = [
+    {
+      key: "firstName",
+      name: "Nombre"
+    },
+    {
+      key: "lastName",
+      name: "Apellido"
+    },
+    {
+      key: "identificationNumber",
+      name: "Cédula"
+    },
+    {
+      key: "email",
+      name: "Correo"
+    },
+    {
+      key: "phone",
+      name: "Teléfono"
+    },
+  ]
+
+  const customerData: Customer[] = [
+    {
+      id: 1,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 2,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 3,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 4,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 5,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+  ]
 
   return (
     <div>
@@ -45,14 +112,15 @@ const ClientsClient = () => {
             </div>
           </div>
         </div>
-
-        <hr className="my-3"/>
-
-        <SimpleTable />       
-
       </SimpleCard>
+
+      <div className="mt-3">
+        <SimpleCard>
+          <SimpleTable columns={customerCols} data={customerData} showEdit showDelete />
+        </SimpleCard>
+      </div>
     </div>
   )
 }
 
-export default ClientsClient;
+export default CustomersClient;
