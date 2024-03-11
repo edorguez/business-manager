@@ -9,7 +9,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: 'Clientes',
-    path: '/clients',
+    path: '/customers',
     icon: <Icon icon="material-symbols:person" width="20" height="20" />,
   },
   {
