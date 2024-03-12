@@ -7,11 +7,16 @@ import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
 import { Button, Input } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
 import { Customer } from '../types/customer';
+import Link from "next/link";
 
 const CustomersClient = () => {
   const bcItems: string[] = ["Clientes", "Crear"];
 
   const customerCols: SimpleTableColumn[] = [
+    {
+      key: "identificationNumber",
+      name: "Cédula"
+    },
     {
       key: "firstName",
       name: "Nombre"
@@ -19,10 +24,6 @@ const CustomersClient = () => {
     {
       key: "lastName",
       name: "Apellido"
-    },
-    {
-      key: "identificationNumber",
-      name: "Cédula"
     },
     {
       key: "email",
@@ -75,6 +76,46 @@ const CustomersClient = () => {
       phone: "04161234567",
       email: "test@test.com"
     },
+    {
+      id: 6,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 7,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 8,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 9,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
+    {
+      id: 10,
+      firstName: "Eduardo",
+      lastName: "Rodriguez",
+      identificationNumber: "V-12123123",
+      phone: "04161234567",
+      email: "test@test.com"
+    },
   ]
 
   return (
@@ -107,7 +148,9 @@ const CustomersClient = () => {
             <div className="flex flex-col">
               <span className="opacity-0">.</span>
               <Button size="sm" variant="main">
-                Crear Cliente
+                <Link href="/customers/create">
+                  Crear Cliente
+                </Link>
               </Button>
             </div>
           </div>
@@ -116,7 +159,7 @@ const CustomersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showEdit showDelete />
+          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete />
         </SimpleCard>
       </div>
     </div>

@@ -26,6 +26,18 @@ const config: any = {
       800: '#54122e',
       900: '#2a0917',
     },
+    fifth: {
+      50: '#cceeff',
+      100: '#99ddff',
+      200: '#80d4ff',
+      300: '#66ccff',
+      400: '#33bbff',
+      500: '#00A9FF',
+      600: '#0088cc',
+      700: '#006699',
+      800: '#004466',
+      900: '#002233',
+    },
   },
   components: {
     Button: {
@@ -48,6 +60,16 @@ const config: any = {
           },
           _active: {
             backgroundColor: mode('third.700', 'third.400')(props),
+          },
+        }),
+        fifth: (props: any) => ({
+          color: mode('white', 'gray.800')(props),
+          backgroundColor: mode('fifth.500', 'fifth.200')(props),
+          _hover: {
+            backgroundColor: mode('fifth.600', 'fifth.300')(props),
+          },
+          _active: {
+            backgroundColor: mode('fifth.700', 'fifth.400')(props),
           },
         }),
       },

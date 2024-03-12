@@ -25,6 +25,9 @@ const config: Config = {
         thirdcolorhov: '#CB2D6F1A',
         fourthcolor: '#501F3A',
         fourthcolorhov: '#501F3A1A',
+        fifthcolor: '#00A9FF',
+        fifthcolorhov: '#00A9FF1A',
+
       }
     },
   },
