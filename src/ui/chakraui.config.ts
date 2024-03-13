@@ -79,7 +79,7 @@ const config: any = {
         focusBorderColor: 'main.500',
         errorBorderColor: 'third.500'
       }
-    }
+    },
   },
 }
 export default config;

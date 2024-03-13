@@ -13,17 +13,24 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   showDelete = false
 }) => {
 
-  const tableProps = {
+  const tableProps: SimpleTableProps = {
     columns,
     data,
     size,
     showDetails,
     showEdit,
     showDelete
-  }
+  };
 
   return (
-    <SimpleTableDesktop {...tableProps} />
+    <div>
+      <div className='xs:hidden sm:hidden md:block'>
+        <SimpleTableDesktop {...tableProps} />
+      </div>
+      <div className='md:hidden lg:hidden xl:hidden'>
+        <SimpleTableMobile {...tableProps} />
+      </div>
+    </div>
   );
 }
 
