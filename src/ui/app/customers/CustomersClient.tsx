@@ -131,7 +131,7 @@ const CustomersClient = () => {
 
         <hr className="my-3" />
 
-        <div className="grid grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div>
             <label className="text-sm">Nombre</label>
             <Input size="sm" />
@@ -150,7 +150,7 @@ const CustomersClient = () => {
               <Icon icon="tabler:search" />
             </Button>
           </div>
-          <div className="col-start-6">
+          <div className="lg:col-start-6">
             <div className="flex flex-col">
               <span className="opacity-0">.</span>
               <Link href="/customers/create">

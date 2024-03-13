@@ -1,3 +1,12 @@
+export interface SimpleTableProps {
+  columns: SimpleTableColumn[];
+  data: any[];
+  size?: string;
+  showDetails?: boolean;
+  showEdit?: boolean;
+  showDelete?: boolean;
+}
+
 export interface SimpleTableColumn {
   key: string;
   name: string;
