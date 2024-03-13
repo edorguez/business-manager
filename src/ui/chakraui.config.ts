@@ -74,6 +74,12 @@ const config: any = {
         }),
       },
     },
+    Input: {
+      defaultProps: {
+        focusBorderColor: 'main.500',
+        errorBorderColor: 'third.500'
+      }
+    }
   },
 }
 export default config;

@@ -5,3 +5,8 @@ export type SideNavItem = {
   submenu?: boolean;
   subMenuItems?: SideNavItem[];
 };
+
+export type BreadcrumItem = {
+  label: string;
+  href: string;
+}

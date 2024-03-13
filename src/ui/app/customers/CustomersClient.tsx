@@ -8,9 +8,15 @@ import { Button, Input } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
 import { Customer } from '../types/customer';
 import Link from "next/link";
+import { BreadcrumItem } from "../types";
 
 const CustomersClient = () => {
-  const bcItems: string[] = ["Clientes", "Crear"];
+  const bcItems: BreadcrumItem[] = [
+    {
+      label: "Clientes",
+      href: "/customers"
+    }
+  ];
 
   const customerCols: SimpleTableColumn[] = [
     {
@@ -147,11 +153,11 @@ const CustomersClient = () => {
           <div className="col-start-6">
             <div className="flex flex-col">
               <span className="opacity-0">.</span>
-              <Button size="sm" variant="main">
-                <Link href="/customers/create">
+              <Link href="/customers/create">
+                <Button size="sm" variant="main" className="w-full">
                   Crear Cliente
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

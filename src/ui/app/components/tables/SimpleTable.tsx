@@ -38,13 +38,13 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
         <TableCaption>
           <div className='flex justify-end'>
             <div className='flex items-center select-none text-thirdcolor'>
-              <div className='cursor-pointer p-1 rounded hover:bg-maincolor duration-150 hover:text-white'>
+              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white'>
                 <Icon icon="fa:chevron-left" />
               </div>
               <span className='mx-2 font-bold'>
                 Página 1
               </span>
-              <div className='cursor-pointer p-1 rounded hover:bg-maincolor duration-150 hover:text-white'>
+              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white'>
                 <Icon icon="fa:chevron-right" />
               </div>
             </div>

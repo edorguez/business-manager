@@ -6,9 +6,10 @@ import {
   BreadcrumbLink,
 } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
+import { BreadcrumItem } from '../types';
 
 interface BreadcrumbProps {
-  items: string[]
+  items: BreadcrumItem[]
 }
 
 const BreadcrumbNavigation: React.FC<BreadcrumbProps> = ({
@@ -18,10 +19,10 @@ const BreadcrumbNavigation: React.FC<BreadcrumbProps> = ({
   return (
     <>
       <Breadcrumb fontSize="sm" spacing='8px' separator={<Icon icon="octicon:chevron-right-12" />}>
-        {items.map((element: string, index: number) => (
+        {items.map((element: BreadcrumItem, index: number) => (
           <BreadcrumbItem key={index}>
-            <BreadcrumbLink href='#'>
-              {element}
+            <BreadcrumbLink href={`${element.href}`}>
+              {element.label}
             </BreadcrumbLink>
           </BreadcrumbItem>
         ))}

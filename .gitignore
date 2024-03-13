@@ -4,26 +4,37 @@
 /node_modules
 /src/ui/node_modules
 /.pnp
+/src/ui/.pnp
 .pnp.js
+/src/ui/.pnp.js
 
 # testing
 /coverage
+/src/ui/coverage
 
 # next.js
 /.next/
+/src/ui/.next/
 /out/
+/src/ui/out/
 
 # production
 /build
+/src/ui/build
 
 # misc
 .DS_Store
+/src/ui/.DS_Store
 *.pem
+/src/ui/*.pem
 
 # debug
 npm-debug.log*
+/src/ui/npm-debug.log*
 yarn-debug.log*
+/src/ui/yarn-debug.log*
 yarn-error.log*
+/src/ui/yarn-error.log*
 
 # Environment files
 /src/backend/*.env
@@ -35,7 +46,10 @@ yarn-error.log*
 
 # vercel
 .vercel
+/src/ui/.vercel
 
 # typescript
 *.tsbuildinfo
+/src/ui/*.tsbuildinfo
 next-env.d.ts
+/src/ui/next-env.d.ts

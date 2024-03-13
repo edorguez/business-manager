@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { SIDENAV_ITEMS } from '../constants';
 import { SideNavItem } from '../types';
 import { Icon } from '@iconify/react';
+import Image from 'next/image';
 
 const SideNav = () => {
   return (
@@ -17,7 +18,7 @@ const SideNav = () => {
           href="/"
           className="flex flex-row space-x-3 items-center justify-center md:justify-start md:px-6 h-12 w-full"
         >
-          <img src="images/logo.png" className="h-7 w-7 rounded-full" />
+          <Image src='/images/logo.png' alt="Logo" width={28} height={28} />
           <span className="font-bold text-sm hidden md:flex text-thirdcolor">Business Manager</span>
         </Link>
 
