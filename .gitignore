@@ -8,6 +8,10 @@
 .pnp.js
 /src/ui/.pnp.js
 
+# vscode
+.vscode
+/src/ui/.vscode
+
 # testing
 /coverage
 /src/ui/coverage
