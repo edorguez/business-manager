@@ -10,7 +10,8 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   size = 'md',
   showDetails = false,
   showEdit = false,
-  showDelete = false
+  showDelete = false,
+  onDelete
 }) => {
 
   const tableProps: SimpleTableProps = {
@@ -19,7 +20,8 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
     size,
     showDetails,
     showEdit,
-    showDelete
+    showDelete,
+    onDelete
   };
 
   return (

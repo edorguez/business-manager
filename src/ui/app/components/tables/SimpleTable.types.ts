@@ -5,6 +5,7 @@ export interface SimpleTableProps {
   showDetails?: boolean;
   showEdit?: boolean;
   showDelete?: boolean;
+  onDelete?: () => void;
 }
 
 export interface SimpleTableColumn {

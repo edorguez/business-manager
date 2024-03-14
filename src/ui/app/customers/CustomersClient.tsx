@@ -9,6 +9,8 @@ import { Icon } from '@iconify/react';
 import { Customer } from '../types/customer';
 import Link from "next/link";
 import { BreadcrumItem } from "../types";
+import DeleteModal from "../components/modals/DeleteModal";
+import useDeleteModal from "../hooks/useDeleteModal";
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -124,9 +126,12 @@ const CustomersClient = () => {
     },
   ]
 
+  const deleteCustomerModal = useDeleteModal();
+
   return (
     <div>
       <SimpleCard>
+        <DeleteModal onSubmit={()=>{}} title="Eliminar Cliente" description="¿Estás seguro que quieres eliminar este cliente?"/>
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />
@@ -165,7 +170,7 @@ const CustomersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete />
+          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={deleteCustomerModal.onOpen} />
         </SimpleCard>
       </div>
     </div>

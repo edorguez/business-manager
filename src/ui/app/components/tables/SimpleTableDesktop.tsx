@@ -20,7 +20,8 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   size = 'md',
   showDetails = false,
   showEdit = false,
-  showDelete = false
+  showDelete = false,
+  onDelete
 }) => {
 
   return (
@@ -81,7 +82,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
                   )}
 
                   {showDelete && (
-                    <Button size="sm" variant="third">
+                    <Button size="sm" variant="third" onClick={onDelete}>
                       <Icon icon="wpf:delete" />
                     </Button>
                   )}

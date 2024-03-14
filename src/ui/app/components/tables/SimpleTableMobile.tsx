@@ -1,6 +1,6 @@
 'use client';
 
-import { SimpleTableColumn } from './SimpleTable.types';
+import { SimpleTableColumn, SimpleTableProps } from './SimpleTable.types';
 import {
   Table,
   Thead,
@@ -13,25 +13,15 @@ import {
   TableCaption
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
-import { Fragment } from 'react';
 
-interface SimpleTableMobileProps {
-  columns: SimpleTableColumn[];
-  data: any[];
-  size?: string;
-  showDetails?: boolean;
-  showEdit?: boolean;
-  showDelete?: boolean;
-}
-
-const SimpleTableMobile: React.FC<SimpleTableMobileProps> = ({
+const SimpleTableMobile: React.FC<SimpleTableProps> = ({
   columns,
   data,
   size = 'md',
   showDetails = false,
   showEdit = false,
-  showDelete = false
-
+  showDelete = false,
+  onDelete
 }) => {
   return (
     <TableContainer>
@@ -89,7 +79,7 @@ const SimpleTableMobile: React.FC<SimpleTableMobileProps> = ({
                   )}
 
                   {showDelete && (
-                    <Button size="sm" variant="third">
+                    <Button size="sm" variant="third" onClick={onDelete}>
                       <Icon icon="wpf:delete" />
                     </Button>
                   )}

@@ -1,7 +1,7 @@
 'use client';
 
 const WelcomeBanner = () => {
-    return (
+  return (
     <div className="relative bg-white p-4 sm:p-6 rounded-md overflow-hidden shadow-lg">
       {/* Background illustration */}
       <div className="absolute right-0 top-0 -mt-4 mr-16 pointer-events-none hidden xl:block" aria-hidden="true">
