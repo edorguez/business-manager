@@ -1,23 +1,23 @@
 version: '3.9'
 
 services:
-  # client-svc:
-  #     image: EdoRguez/client-svc
+  # customer-svc:
+  #     image: EdoRguez/customer-svc
   #     ports:
   #       - "50052:50052"
   #     environment:
   #       - PORT=:50052
-  #       - DB_URL=postgres://postgres:postgres@client-db:5432/client_svc
+  #       - DB_URL=postgres://postgres:postgres@customer-db:5432/customer_svc
   #     depends_on:
-  #       - client-db
+  #       - customer-db
   #     restart: always
 
-  client-db:
+  customer-db:
     image: postgres:latest
     ports:
       - "5434:5432"
     environment:
-      - POSTGRES_DB=${CLIENT_SVC_DB}
-      - POSTGRES_USER=${CLIENT_SVC_DB_USER}
-      - POSTGRES_PASSWORD=${CLIENT_SVC_DB_PASSWORD}
+      - POSTGRES_DB=${CUSTOMER_SVC_DB}
+      - POSTGRES_USER=${CUSTOMER_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
     restart: always
