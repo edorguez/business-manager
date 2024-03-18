@@ -21,3 +21,12 @@ services:
       - POSTGRES_USER=${CUSTOMER_SVC_DB_USER}
       - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
     restart: always
+  company-db:
+    image: postgres:latest
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=${COMPANY_SVC_DB}
+      - POSTGRES_USER=${COMPANY_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${COMPANY_SVC_DB_PASSWORD}
+    restart: always
