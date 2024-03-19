@@ -35,7 +35,6 @@ func main() {
 
 	fmt.Println("Client Service ON: ", c.Port)
 
-	// s := services.NewClientService(storage)
 	s := services.CustomerService{
 		Repo: repo.NewCustomerRepo(storage),
 	}
