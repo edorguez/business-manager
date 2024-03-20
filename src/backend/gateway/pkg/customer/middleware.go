@@ -33,6 +33,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) h
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(int(middleErr.Status))
 			json.NewEncoder(w).Encode(middleErr)
 			return
@@ -62,6 +63,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateCustomer(next http.Handler) h
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(int(middleErr.Status))
 			json.NewEncoder(w).Encode(middleErr)
 			return

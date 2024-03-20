@@ -13,9 +13,9 @@ type ServiceClient struct {
 }
 
 func InitServiceClient(c *config.Config) pb.CustomerServiceClient {
-	fmt.Println("API Gateway :  InitServiceClient")
+	fmt.Println("API Gateway :  InitCustomerServiceClient")
 	// using WithInsecure() because no SSL running
-	cc, err := grpc.Dial(c.Client_Svc_Url, grpc.WithInsecure())
+	cc, err := grpc.Dial(c.Customer_Svc_Url, grpc.WithInsecure())
 
 	if err != nil {
 		fmt.Println("Could not connect:", err)

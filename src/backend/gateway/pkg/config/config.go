@@ -3,9 +3,10 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Environment    string `mapstructure:"ENVIRONMENT"`
-	Gateway_Url    string `mapstructure:"GATEWAY_URL"`
-	Client_Svc_Url string `mapstructure:"CLIENT_SVC_URL"`
+	Environment      string `mapstructure:"ENVIRONMENT"`
+	Gateway_Url      string `mapstructure:"GATEWAY_URL"`
+	Customer_Svc_Url string `mapstructure:"CUSTOMER_SVC_URL"`
+	Company_Svc_Url  string `mapstructure:"COMPANY_SVC_URL"`
 }
 
 func LoadConfig() (config Config, err error) {

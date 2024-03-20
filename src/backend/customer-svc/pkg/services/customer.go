@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -59,9 +60,18 @@ func (s *CustomerService) GetCustomer(ctx context.Context, req *customer.GetCust
 	if err != nil {
 		fmt.Println("API Gateway :  GetCustomer - ERROR")
 		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
 		return &customer.GetCustomerResponse{
-			Status: http.StatusConflict,
-			Error:  err.Error(),
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
 		}, nil
 	}
 
@@ -143,9 +153,17 @@ func (s *CustomerService) UpdateCustomer(ctx context.Context, req *customer.Upda
 	if err != nil {
 		fmt.Println("API Gateway :  UpdateCustomer - ERROR")
 		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
 		return &customer.UpdateCustomerResponse{
-			Status: http.StatusConflict,
-			Error:  err.Error(),
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
 		}, nil
 	}
 

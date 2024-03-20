@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer"
 	"github.com/gorilla/mux"
@@ -42,6 +43,7 @@ func startServer(address string, conf *config.Config) error {
 	baseRoute := sm.PathPrefix("/api").Subrouter()
 
 	customer.LoadRoutes(baseRoute, conf)
+	company.LoadRoutes(baseRoute, conf)
 
 	s := &http.Server{
 		Addr:         address,

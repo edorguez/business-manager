@@ -22,14 +22,14 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceCl
 	res, err := c.GetCustomers(r.Context(), params)
 
 	if err != nil {
-		fmt.Println("API Gateway :  GetClient - ERROR")
+		fmt.Println("API Gateway :  GetCustomers - ERROR")
 		fmt.Println(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Println("API Gateway :  GetClient - SUCCESS")
+	fmt.Println("API Gateway :  GetCustomers - SUCCESS")
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }

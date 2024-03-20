@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -54,9 +55,18 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 	if err != nil {
 		fmt.Println("API Gateway :  GetCompany - ERROR")
 		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
 		return &company.GetCompanyResponse{
-			Status: http.StatusConflict,
-			Error:  err.Error(),
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
 		}, nil
 	}
 
@@ -93,9 +103,10 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 	var companies []*company.GetCompanyResponse
 	for _, v := range c {
 		companies = append(companies, &company.GetCompanyResponse{
-			Id:     v.ID,
-			Name:   v.Name,
-			Status: http.StatusOK,
+			Id:       v.ID,
+			Name:     v.Name,
+			ImageUrl: v.ImageUrl.String,
+			Status:   http.StatusOK,
 		})
 	}
 
@@ -122,9 +133,18 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, req *company.UpdateC
 	if err != nil {
 		fmt.Println("API Gateway :  UpdateCompany - ERROR")
 		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
 		return &company.UpdateCompanyResponse{
-			Status: http.StatusConflict,
-			Error:  err.Error(),
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
 		}, nil
 	}
 

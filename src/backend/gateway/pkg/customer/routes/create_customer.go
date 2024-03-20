@@ -55,6 +55,7 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerService
 	}
 
 	fmt.Println("API Gateway :  CreateCustomer - SUCCESS")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }
