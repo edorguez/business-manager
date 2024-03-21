@@ -13,6 +13,15 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="material-symbols:person" width="20" height="20" />,
   },
   {
+    title: 'Empresa',
+    path: '/company',
+    icon: <Icon icon="fluent:building-24-regular" width="20" height="20" />,
+    submenu: true,
+    subMenuItems: [
+      { title: 'Métodos de Pago', path: '/payments'}
+    ]
+  },
+  {
     title: 'Scheduling',
     path: '/scheduling',
     icon: <Icon icon="bx:calendar" width="20" height="20" />,
