@@ -1,7 +1,7 @@
 'use client';
 
 import SimpleCard from "../components/cards/SimpleCard";
-import SimpleCardItem from "../components/cards/SimpleCardItem";
+import PaymentCard from "../components/cards/PaymentCard";
 import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
 import { BreadcrumItem } from "../types";
 import { Button } from "@chakra-ui/react";
@@ -42,24 +42,24 @@ const PaymentsClient = () => {
           <div className="grid grid-cols-1 xl:grid-cols-2">
             <div>
               <h3>Métodos de Pago</h3>
-              <SimpleCardItem>
-                <span>hola</span>
-              </SimpleCardItem>
             </div>
             <div>
               <h3>Métodos de Pago</h3>
-              <SimpleCardItem>
-                <span>hola</span>
-              </SimpleCardItem>
-              <SimpleCardItem>
-                <span>hola</span>
-              </SimpleCardItem>
-              <SimpleCardItem>
-                <span>hola</span>
-              </SimpleCardItem>
-              <SimpleCardItem>
-                <span>hola</span>
-              </SimpleCardItem>
+              <div className="mt-1">
+                <PaymentCard name="Zelle" />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="Zelle" />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="Zelle" />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="Zelle" />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="Zelle" />
+              </div>
             </div>
           </div>
         </SimpleCard>

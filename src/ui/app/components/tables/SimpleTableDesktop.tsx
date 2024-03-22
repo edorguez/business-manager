@@ -58,7 +58,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
         <Tbody>
           {data.map((dataVal: any, dataIndex: number) => (
 
-            <Tr key={dataIndex} className='hover:bg-thirdcolorhov text-sm'>
+            <Tr key={dataIndex} className='hover:bg-thirdcolorhov transition duration-150 text-sm'>
               {columns.map((col: SimpleTableColumn, colIndex: number) => (
 
                 <Td key={colIndex}>
