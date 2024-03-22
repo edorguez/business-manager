@@ -4,20 +4,25 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import Image from 'next/image';
 import { Button, Switch } from "@chakra-ui/react";
+import { PaymentTypeEnum } from "@/app/types/payment";
 
 interface PaymentCardProps {
   name: string;
+  paymentTypeEnum: PaymentTypeEnum;
 }
 
 const PaymentCard: React.FC<PaymentCardProps> = ({
-  name
+  name,
+  paymentTypeEnum
 }) => {
+  const paymentType: string = PaymentTypeEnum[paymentTypeEnum];
+
   return (
     <div className="bg-white hover:bg-thirdcolorhov transition duration-150 rounded-md border border-slate-200 p-2">
       <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
         <div className="flex items-center">
           <div className="rounded-md border border-slate-200 p-1 bg-white">
-            <Image src='/images/payments/zelle.png' alt="Logo" width={28} height={28} />
+            <Image src={`/images/payments/${paymentType}.png`} alt="Logo" width={28} height={28} />
           </div>
           <span className="text-sm font-bold ml-2">{name}</span>
         </div>

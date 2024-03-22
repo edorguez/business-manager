@@ -1,7 +1,8 @@
-export enum PaymentType {
+export enum PaymentTypeEnum {
   transfer,
   mobile,
   binance,
+  colombia,
   panama,
   paypal,
   usa,

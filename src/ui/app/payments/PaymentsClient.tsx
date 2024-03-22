@@ -2,6 +2,7 @@
 
 import SimpleCard from "../components/cards/SimpleCard";
 import PaymentCard from "../components/cards/PaymentCard";
+import PaymentFilterCard from "../components/cards/PaymentFilterCard";
 import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
 import { BreadcrumItem } from "../types";
 import { Button } from "@chakra-ui/react";
@@ -15,6 +16,8 @@ const PaymentsClient = () => {
       href: "/payments"
     }
   ];
+
+  const payments: any[] = [...Array(10)];
 
   return (
     <div>
@@ -38,31 +41,51 @@ const PaymentsClient = () => {
       </SimpleCard>
 
       <div className="mt-3">
-        <SimpleCard>
-          <div className="grid grid-cols-1 xl:grid-cols-2">
-            <div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+          <SimpleCard>
+              <h3>Filtrar</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-1">
+                {
+                  payments.map((val: any, index: number) => (
+                    <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" />
+                  ))
+                }
+              </div>
+          </SimpleCard>
+          <SimpleCard>
               <h3>Métodos de Pago</h3>
-            </div>
-            <div>
-              <h3>Métodos de Pago</h3>
               <div className="mt-1">
-                <PaymentCard name="Zelle" />
+                <PaymentCard name="Transferencia" paymentTypeEnum={0} />
               </div>
               <div className="mt-1">
-                <PaymentCard name="Zelle" />
+                <PaymentCard name="Pago Movil" paymentTypeEnum={1} />
               </div>
               <div className="mt-1">
-                <PaymentCard name="Zelle" />
+                <PaymentCard name="Binance" paymentTypeEnum={2} />
               </div>
               <div className="mt-1">
-                <PaymentCard name="Zelle" />
+                <PaymentCard name="Colombia" paymentTypeEnum={3} />
               </div>
               <div className="mt-1">
-                <PaymentCard name="Zelle" />
+                <PaymentCard name="Panama" paymentTypeEnum={4} />
               </div>
-            </div>
-          </div>
-        </SimpleCard>
+              <div className="mt-1">
+                <PaymentCard name="Paypal" paymentTypeEnum={5} />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="USA" paymentTypeEnum={6} />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="Zelle" paymentTypeEnum={7} />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="Zinli" paymentTypeEnum={8} />
+              </div>
+              <div className="mt-1">
+                <PaymentCard name="Otro" paymentTypeEnum={9} />
+              </div>
+          </SimpleCard>
+        </div>
       </div>
     </div>
   )
