@@ -17,7 +17,7 @@ const PaymentsClient = () => {
     }
   ];
 
-  const payments: any[] = [...Array(10)];
+  const payments: any[] = [...Array(11)];
 
   return (
     <div>
@@ -43,16 +43,19 @@ const PaymentsClient = () => {
       <div className="mt-3">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
           <SimpleCard>
+            <div className="p-2">
               <h3>Filtrar</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-1">
                 {
                   payments.map((val: any, index: number) => (
-                    <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" />
+                    <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" isSelected={index == 0} />
                   ))
                 }
               </div>
+            </div>
           </SimpleCard>
           <SimpleCard>
+            <div className="p-2">
               <h3>Métodos de Pago</h3>
               <div className="mt-1">
                 <PaymentCard name="Transferencia" paymentTypeEnum={0} />
@@ -84,6 +87,7 @@ const PaymentsClient = () => {
               <div className="mt-1">
                 <PaymentCard name="Otro" paymentTypeEnum={9} />
               </div>
+            </div>
           </SimpleCard>
         </div>
       </div>

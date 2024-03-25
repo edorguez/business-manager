@@ -1,3 +1,5 @@
+'use client';
+
 import Container from "../components/Container";
 import CustomersClient from "./CustomersClient"
 

@@ -1,4 +1,5 @@
 export enum PaymentTypeEnum {
+  all,
   transfer,
   mobile,
   binance,
@@ -8,5 +9,5 @@ export enum PaymentTypeEnum {
   usa,
   zelle,
   zinli,
-  other
+  other,
 }

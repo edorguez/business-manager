@@ -1,3 +1,5 @@
+'use client';
+
 import { Container } from "@chakra-ui/react";
 import CreateCustomerClient from "./CreateCustomerClient";
 
