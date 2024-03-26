@@ -45,7 +45,7 @@ const PaymentsClient = () => {
           <SimpleCard>
             <div className="p-2">
               <h3>Filtrar</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-1">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-1">
                 {
                   payments.map((val: any, index: number) => (
                     <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" isSelected={index == 0} />

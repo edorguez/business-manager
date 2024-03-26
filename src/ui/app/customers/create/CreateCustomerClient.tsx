@@ -71,13 +71,13 @@ const CreateCustomerClient = () => {
             </div>
           </div>
         </SimpleCard>
+      </div>
 
-        <div className="mt-3">
+      <div className="mt-3">
           <Button variant="main" className='w-full'>
             Crear
           </Button>
         </div>
-      </div>
     </div>
   )
 }

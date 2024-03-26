@@ -21,16 +21,12 @@ const PaymentFilterCard: React.FC<PaymentFilterCardProps> = ({
     <div className={`
       shadow-md 
       cursor-pointer 
-      bg-white 
-      hover:bg-thirdcolorhov 
       hover:scale-105 
       transition 
       duration-150
       rounded-md 
-      border 
-      border-slate-200 
       p-2
-      ${isSelected && 'border-2 border-maincolor bg-maincolorhov hover:bg-maincolorhov'}
+      ${isSelected ? 'border-2 border-maincolor bg-maincolorhov hover:bg-maincolorhov' : 'border border-slate-200 bg-white hover:bg-thirdcolorhov'}
     `}>
       <div className="flex flex-col items-center select-none">
         <div className="mt-2 rounded-md border border-slate-200 p-1 bg-white inline-flex">
