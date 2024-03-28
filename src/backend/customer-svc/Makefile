@@ -17,4 +17,4 @@ migratedown:
 	migrate -path pkg/db/migration -database "postgresql://postgres:postgres@localhost:5434/customer-db?sslmode=disable" --verbose down
 
 sqlc:
-	docker run --rm -v "%cd%:/src" -w /src sqlc/sqlc generate
+	docker run --rm -v $(pwd):/src -w /src sqlc/sqlc generate

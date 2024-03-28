@@ -14,7 +14,7 @@ migrateup:
 	migrate -path pkg/db/migration -database "postgresql://postgres:postgres@localhost:5435/company-db?sslmode=disable" --verbose up
 
 migratedown:
-	migrate -path pkg/db/migration -database "postgresql://postgres:postgres@localhost:5434/company-db?sslmode=disable" --verbose down
+	migrate -path pkg/db/migration -database "postgresql://postgres:postgres@localhost:5435/company-db?sslmode=disable" --verbose down
 
 sqlc:
-	docker run --rm -v "%cd%:/src" -w /src sqlc/sqlc generate
+	docker run --rm -v $(pwd):/src -w /src sqlc/sqlc generate
