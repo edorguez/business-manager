@@ -31,6 +31,8 @@ CREATE TABLE "company"."payment_type" (
   "modified_at" timestamptz NOT NULL DEFAULT (NOW())
 );
 
+ALTER TABLE "company"."payment" ADD FOREIGN KEY ("payment_type_id") REFERENCES "company"."payment_type" ("id");
+
 INSERT INTO "company"."payment_type" (id, name, created_at, modified_at) VALUES (1, 'Binance', NOW(), NOW());
 INSERT INTO "company"."payment_type" (id, name, created_at, modified_at) VALUES (2, 'Colombia', NOW(), NOW());
 INSERT INTO "company"."payment_type" (id, name, created_at, modified_at) VALUES (3, 'Pago Móvil', NOW(), NOW());

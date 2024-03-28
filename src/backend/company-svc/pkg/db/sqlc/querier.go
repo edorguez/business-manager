@@ -10,10 +10,15 @@ import (
 
 type Querier interface {
 	CreateCompany(ctx context.Context, arg CreateCompanyParams) (CompanyCompany, error)
+	CreatePayment(ctx context.Context, arg CreatePaymentParams) (CompanyPayment, error)
 	DeleteCompany(ctx context.Context, id int64) error
+	DeletePayment(ctx context.Context, id int64) error
 	GetCompanies(ctx context.Context, arg GetCompaniesParams) ([]CompanyCompany, error)
 	GetCompany(ctx context.Context, id int64) (CompanyCompany, error)
+	GetPayment(ctx context.Context, id int64) (GetPaymentRow, error)
+	GetPayments(ctx context.Context, arg GetPaymentsParams) ([]GetPaymentsRow, error)
 	UpdateCompany(ctx context.Context, arg UpdateCompanyParams) (CompanyCompany, error)
+	UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (CompanyPayment, error)
 }
 
 var _ Querier = (*Queries)(nil)
