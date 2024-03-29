@@ -20,7 +20,7 @@ type CompanyCompany struct {
 type CompanyPayment struct {
 	ID                   int64          `json:"id"`
 	CompanyID            int64          `json:"company_id"`
-	Name                 sql.NullString `json:"name"`
+	Name                 string         `json:"name"`
 	Bank                 sql.NullString `json:"bank"`
 	AccountNumber        sql.NullString `json:"account_number"`
 	AccountType          sql.NullString `json:"account_type"`

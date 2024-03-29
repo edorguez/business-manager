@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-option go_package= "github.com/EdoRguez/business-manager/customer-svc/pb";
+option go_package= "github.com/EdoRguez/business-manager/company-svc/pb";
 
 service CompanyService{
   rpc CreateCompany(CreateCompanyRequest) returns (CreateCompanyResponse);

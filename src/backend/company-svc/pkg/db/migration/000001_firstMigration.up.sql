@@ -11,7 +11,7 @@ CREATE TABLE "company"."company" (
 CREATE TABLE "company"."payment" (
   "id" bigserial PRIMARY KEY,
   "company_id" bigint NOT NULL,
-  "name" varchar(50),
+  "name" varchar(50) NOT NULL,
   "bank" varchar(50),
   "account_number" varchar(20),
   "account_type" varchar(20),

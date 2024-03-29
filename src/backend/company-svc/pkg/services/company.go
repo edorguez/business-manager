@@ -9,7 +9,7 @@ import (
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
 	company "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/util"
+	"github.com/EdoRguez/business-manager/company-svc/pkg/util"
 )
 
 type CompanyService struct {

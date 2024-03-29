@@ -33,7 +33,7 @@ RETURNING id, company_id, name, bank, account_number, account_type, identificati
 
 type CreatePaymentParams struct {
 	CompanyID            int64          `json:"company_id"`
-	Name                 sql.NullString `json:"name"`
+	Name                 string         `json:"name"`
 	Bank                 sql.NullString `json:"bank"`
 	AccountNumber        sql.NullString `json:"account_number"`
 	AccountType          sql.NullString `json:"account_type"`
@@ -116,7 +116,7 @@ LIMIT 1
 type GetPaymentRow struct {
 	ID                   int64              `json:"id"`
 	CompanyID            int64              `json:"company_id"`
-	Name                 sql.NullString     `json:"name"`
+	Name                 string             `json:"name"`
 	Bank                 sql.NullString     `json:"bank"`
 	AccountNumber        sql.NullString     `json:"account_number"`
 	AccountType          sql.NullString     `json:"account_type"`
@@ -194,7 +194,7 @@ type GetPaymentsParams struct {
 type GetPaymentsRow struct {
 	ID                   int64              `json:"id"`
 	CompanyID            int64              `json:"company_id"`
-	Name                 sql.NullString     `json:"name"`
+	Name                 string             `json:"name"`
 	Bank                 sql.NullString     `json:"bank"`
 	AccountNumber        sql.NullString     `json:"account_number"`
 	AccountType          sql.NullString     `json:"account_type"`
@@ -270,7 +270,7 @@ RETURNING id, company_id, name, bank, account_number, account_type, identificati
 
 type UpdatePaymentParams struct {
 	ID                   int64          `json:"id"`
-	Name                 sql.NullString `json:"name"`
+	Name                 string         `json:"name"`
 	Bank                 sql.NullString `json:"bank"`
 	AccountNumber        sql.NullString `json:"account_number"`
 	AccountType          sql.NullString `json:"account_type"`
