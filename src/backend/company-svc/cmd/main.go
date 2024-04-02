@@ -35,13 +35,18 @@ func main() {
 
 	fmt.Println("Client Service ON: ", c.Port)
 
-	s := services.CompanyService{
+	cs := services.CompanyService{
 		Repo: repo.NewCompanyRepo(storage),
+	}
+
+	ps := services.PaymentService{
+		Repo: repo.NewPaymentRepo(storage),
 	}
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterCompanyServiceServer(grpcServer, &s)
+	pb.RegisterCompanyServiceServer(grpcServer, &cs)
+	pb.RegisterPaymentServiceServer(grpcServer, &ps)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

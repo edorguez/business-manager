@@ -30,7 +30,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 
 	c, err := s.Repo.CreateCompany(ctx, createCompanyParams)
 	if err != nil {
-		fmt.Println("API Gateway :  CreateCompany - ERROR")
+		fmt.Println("Company Service :  CreateCompany - ERROR")
 		fmt.Println(err.Error())
 		return &company.CreateCompanyResponse{
 			Status: http.StatusConflict,
@@ -38,7 +38,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  CreateCompany - SUCCESS")
+	fmt.Println("Company Service :  CreateCompany - SUCCESS")
 	return &company.CreateCompanyResponse{
 		Status: http.StatusCreated,
 		Id:     c.ID,
@@ -70,7 +70,7 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  GetCompany - SUCCESS")
+	fmt.Println("Company Service :  GetCompany - SUCCESS")
 	return &company.GetCompanyResponse{
 		Id:       c.ID,
 		Name:     c.Name,
@@ -92,7 +92,7 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 
 	c, err := s.Repo.GetCompanies(ctx, params)
 	if err != nil {
-		fmt.Println("API Gateway :  GetCompanies - ERROR")
+		fmt.Println("Company Service :  GetCompanies - ERROR")
 		fmt.Println(err.Error())
 		return &company.GetCompaniesResponse{
 			Status: http.StatusConflict,
@@ -110,7 +110,7 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 		})
 	}
 
-	fmt.Println("API Gateway :  GetCompanies - SUCCESS")
+	fmt.Println("Company Service :  GetCompanies - SUCCESS")
 	return &company.GetCompaniesResponse{
 		Companies: companies,
 		Status:    http.StatusOK,
@@ -131,7 +131,7 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, req *company.UpdateC
 
 	_, err := s.Repo.UpdateCompany(ctx, params)
 	if err != nil {
-		fmt.Println("API Gateway :  UpdateCompany - ERROR")
+		fmt.Println("Company Service :  UpdateCompany - ERROR")
 		fmt.Println(err.Error())
 
 		resErrorStatus := http.StatusConflict
@@ -148,7 +148,7 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, req *company.UpdateC
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  UpdateCompany - SUCCESS")
+	fmt.Println("Company Service :  UpdateCompany - SUCCESS")
 	return &company.UpdateCompanyResponse{
 		Status: http.StatusNoContent,
 	}, nil
@@ -162,7 +162,7 @@ func (s *CompanyService) DeleteCompany(ctx context.Context, req *company.DeleteC
 
 	err := s.Repo.DeleteCompany(ctx, req.Id)
 	if err != nil {
-		fmt.Println("API Gateway :  DeleteCompany - ERROR")
+		fmt.Println("Company Service :  DeleteCompany - ERROR")
 		fmt.Println(err.Error())
 		return &company.DeleteCompanyResponse{
 			Status: http.StatusConflict,
@@ -170,7 +170,7 @@ func (s *CompanyService) DeleteCompany(ctx context.Context, req *company.DeleteC
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  DeleteCompany - SUCCESS")
+	fmt.Println("Company Service :  DeleteCompany - SUCCESS")
 	return &company.DeleteCompanyResponse{
 		Status: http.StatusNoContent,
 	}, nil

@@ -35,7 +35,7 @@ func (s *CustomerService) CreateCustomer(ctx context.Context, req *customer.Crea
 
 	c, err := s.Repo.CreateCustomer(ctx, createCustomerParams)
 	if err != nil {
-		fmt.Println("API Gateway :  CreateCustomer - ERROR")
+		fmt.Println("Customer Service :  CreateCustomer - ERROR")
 		fmt.Println(err.Error())
 		return &customer.CreateCustomerResponse{
 			Status: http.StatusConflict,
@@ -43,7 +43,7 @@ func (s *CustomerService) CreateCustomer(ctx context.Context, req *customer.Crea
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  CreateCustomer - SUCCESS")
+	fmt.Println("Customer Service :  CreateCustomer - SUCCESS")
 	return &customer.CreateCustomerResponse{
 		Status: http.StatusCreated,
 		Id:     c.ID,
@@ -58,7 +58,7 @@ func (s *CustomerService) GetCustomer(ctx context.Context, req *customer.GetCust
 
 	c, err := s.Repo.GetCustomer(ctx, req.Id)
 	if err != nil {
-		fmt.Println("API Gateway :  GetCustomer - ERROR")
+		fmt.Println("Customer Service :  GetCustomer - ERROR")
 		fmt.Println(err.Error())
 
 		resErrorStatus := http.StatusConflict
@@ -75,7 +75,7 @@ func (s *CustomerService) GetCustomer(ctx context.Context, req *customer.GetCust
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  GetCustomer - SUCCESS")
+	fmt.Println("Customer Service :  GetCustomer - SUCCESS")
 	return &customer.GetCustomerResponse{
 		Id:                   c.ID,
 		CompanyId:            c.CompanyID,
@@ -103,7 +103,7 @@ func (s *CustomerService) GetCustomers(ctx context.Context, req *customer.GetCus
 
 	c, err := s.Repo.GetCustomers(ctx, params)
 	if err != nil {
-		fmt.Println("API Gateway :  GetCustomers - ERROR")
+		fmt.Println("Customer Service :  GetCustomers - ERROR")
 		fmt.Println(err.Error())
 		return &customer.GetCustomersResponse{
 			Status: http.StatusConflict,
@@ -126,7 +126,7 @@ func (s *CustomerService) GetCustomers(ctx context.Context, req *customer.GetCus
 		})
 	}
 
-	fmt.Println("API Gateway :  GetCustomers - SUCCESS")
+	fmt.Println("Customer Service :  GetCustomers - SUCCESS")
 	return &customer.GetCustomersResponse{
 		Customers: customers,
 		Status:    http.StatusOK,
@@ -151,7 +151,7 @@ func (s *CustomerService) UpdateCustomer(ctx context.Context, req *customer.Upda
 
 	_, err := s.Repo.UpdateCustomer(ctx, params)
 	if err != nil {
-		fmt.Println("API Gateway :  UpdateCustomer - ERROR")
+		fmt.Println("Customer Service :  UpdateCustomer - ERROR")
 		fmt.Println(err.Error())
 
 		resErrorStatus := http.StatusConflict
@@ -167,7 +167,7 @@ func (s *CustomerService) UpdateCustomer(ctx context.Context, req *customer.Upda
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  UpdateCustomer - SUCCESS")
+	fmt.Println("Customer Service :  UpdateCustomer - SUCCESS")
 	return &customer.UpdateCustomerResponse{
 		Status: http.StatusNoContent,
 	}, nil
@@ -181,7 +181,7 @@ func (s *CustomerService) DeleteCustomer(ctx context.Context, req *customer.Dele
 
 	err := s.Repo.DeleteCustomer(ctx, req.Id)
 	if err != nil {
-		fmt.Println("API Gateway :  DeleteCustomer - ERROR")
+		fmt.Println("Customer Service :  DeleteCustomer - ERROR")
 		fmt.Println(err.Error())
 		return &customer.DeleteCustomerResponse{
 			Status: http.StatusConflict,
@@ -189,7 +189,7 @@ func (s *CustomerService) DeleteCustomer(ctx context.Context, req *customer.Dele
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  DeleteCustomer - SUCCESS")
+	fmt.Println("Customer Service :  DeleteCustomer - SUCCESS")
 	return &customer.DeleteCustomerResponse{
 		Status: http.StatusNoContent,
 	}, nil

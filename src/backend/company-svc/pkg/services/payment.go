@@ -14,7 +14,7 @@ import (
 
 type PaymentService struct {
 	Repo *repo.PaymentRepo
-	payment.UnimplementedCompanyServiceServer
+	payment.UnimplementedPaymentServiceServer
 }
 
 func (s *PaymentService) CreatePayment(ctx context.Context, req *payment.CreatePaymentRequest) (*payment.CreatePaymentResponse, error) {
@@ -38,7 +38,7 @@ func (s *PaymentService) CreatePayment(ctx context.Context, req *payment.CreateP
 
 	c, err := s.Repo.CreatePayment(ctx, createPaymentParams)
 	if err != nil {
-		fmt.Println("API Gateway :  CreatePayment - ERROR")
+		fmt.Println("Payment Service :  CreatePayment - ERROR")
 		fmt.Println(err.Error())
 		return &payment.CreatePaymentResponse{
 			Status: http.StatusConflict,
@@ -46,7 +46,7 @@ func (s *PaymentService) CreatePayment(ctx context.Context, req *payment.CreateP
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  CreatePayment - SUCCESS")
+	fmt.Println("Payment Service :  CreatePayment - SUCCESS")
 	return &payment.CreatePaymentResponse{
 		Status: http.StatusCreated,
 		Id:     c.ID,
@@ -61,7 +61,7 @@ func (s *PaymentService) GetPayment(ctx context.Context, req *payment.GetPayment
 
 	p, err := s.Repo.GetPayment(ctx, req.Id)
 	if err != nil {
-		fmt.Println("API Gateway :  GetPayment - ERROR")
+		fmt.Println("Payment Service :  GetPayment - ERROR")
 		fmt.Println(err.Error())
 
 		resErrorStatus := http.StatusConflict
@@ -78,7 +78,7 @@ func (s *PaymentService) GetPayment(ctx context.Context, req *payment.GetPayment
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  GetPayment - SUCCESS")
+	fmt.Println("Payment Service :  GetPayment - SUCCESS")
 	return &payment.GetPaymentResponse{
 		Id:                   p.ID,
 		CompanyId:            p.CompanyID,
@@ -106,13 +106,14 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 	fmt.Println("----------------")
 
 	params := db.GetPaymentsParams{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		CompanyID: req.CompanyId,
+		Limit:     req.Limit,
+		Offset:    req.Offset,
 	}
 
 	p, err := s.Repo.GetPayments(ctx, params)
 	if err != nil {
-		fmt.Println("API Gateway :  GetPayments - ERROR")
+		fmt.Println("Payment Service :  GetPayments - ERROR")
 		fmt.Println(err.Error())
 		return &payment.GetPaymentsResponse{
 			Status: http.StatusConflict,
@@ -141,7 +142,7 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 		})
 	}
 
-	fmt.Println("API Gateway :  GetPayments - SUCCESS")
+	fmt.Println("Payment Service :  GetPayments - SUCCESS")
 	return &payment.GetPaymentsResponse{
 		Payments: payments,
 		Status:   http.StatusOK,
@@ -169,7 +170,7 @@ func (s *PaymentService) UpdatePayment(ctx context.Context, req *payment.UpdateP
 
 	_, err := s.Repo.UpdatePayment(ctx, params)
 	if err != nil {
-		fmt.Println("API Gateway :  UpdatePayment - ERROR")
+		fmt.Println("Payment Service :  UpdatePayment - ERROR")
 		fmt.Println(err.Error())
 
 		resErrorStatus := http.StatusConflict
@@ -186,7 +187,7 @@ func (s *PaymentService) UpdatePayment(ctx context.Context, req *payment.UpdateP
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  UpdatePayment - SUCCESS")
+	fmt.Println("Payment Service :  UpdatePayment - SUCCESS")
 	return &payment.UpdatePaymentResponse{
 		Status: http.StatusNoContent,
 	}, nil
@@ -200,7 +201,7 @@ func (s *PaymentService) DeletePayment(ctx context.Context, req *payment.DeleteP
 
 	err := s.Repo.DeletePayment(ctx, req.Id)
 	if err != nil {
-		fmt.Println("API Gateway :  DeletePayment - ERROR")
+		fmt.Println("Payment Service :  DeletePayment - ERROR")
 		fmt.Println(err.Error())
 		return &payment.DeletePaymentResponse{
 			Status: http.StatusConflict,
@@ -208,7 +209,7 @@ func (s *PaymentService) DeletePayment(ctx context.Context, req *payment.DeleteP
 		}, nil
 	}
 
-	fmt.Println("API Gateway :  DeletePayment - SUCCESS")
+	fmt.Println("Payment Service :  DeletePayment - SUCCESS")
 	return &payment.DeletePaymentResponse{
 		Status: http.StatusNoContent,
 	}, nil

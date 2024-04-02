@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-option go_package= "github.com/EdoRguez/business-manager/company-svc/pb";
+option go_package= "github.com/EdoRguez/business-manager/gateway/company/pb";
 
 service PaymentService{
   rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
