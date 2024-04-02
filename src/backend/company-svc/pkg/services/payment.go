@@ -9,7 +9,7 @@ import (
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
 	payment "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/util"
+	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
 )
 
 type PaymentService struct {
@@ -26,13 +26,13 @@ func (s *PaymentService) CreatePayment(ctx context.Context, req *payment.CreateP
 	createPaymentParams := db.CreatePaymentParams{
 		CompanyID:            req.CompanyId,
 		Name:                 req.Name,
-		Bank:                 util.NewSqlNullString(req.Bank),
-		AccountNumber:        util.NewSqlNullString(req.AccountNumber),
-		AccountType:          util.NewSqlNullString(req.AccountType),
-		IdentificationNumber: util.NewSqlNullString(req.IdentificationNumber),
-		IdentificationType:   util.NewSqlNullString(req.IdentificationType),
-		Phone:                util.NewSqlNullString(req.Phone),
-		Email:                util.NewSqlNullString(req.Email),
+		Bank:                 type_converter.NewSqlNullString(req.Bank),
+		AccountNumber:        type_converter.NewSqlNullString(req.AccountNumber),
+		AccountType:          type_converter.NewSqlNullString(req.AccountType),
+		IdentificationNumber: type_converter.NewSqlNullString(req.IdentificationNumber),
+		IdentificationType:   type_converter.NewSqlNullString(req.IdentificationType),
+		Phone:                type_converter.NewSqlNullString(req.Phone),
+		Email:                type_converter.NewSqlNullString(req.Email),
 		PaymentTypeID:        req.PaymentTypeId,
 	}
 
@@ -158,13 +158,13 @@ func (s *PaymentService) UpdatePayment(ctx context.Context, req *payment.UpdateP
 	params := db.UpdatePaymentParams{
 		ID:                   req.Id,
 		Name:                 req.Name,
-		Bank:                 util.NewSqlNullString(req.Bank),
-		AccountNumber:        util.NewSqlNullString(req.AccountNumber),
-		AccountType:          util.NewSqlNullString(req.AccountType),
-		IdentificationNumber: util.NewSqlNullString(req.IdentificationNumber),
-		IdentificationType:   util.NewSqlNullString(req.IdentificationType),
-		Phone:                util.NewSqlNullString(req.Phone),
-		Email:                util.NewSqlNullString(req.Email),
+		Bank:                 type_converter.NewSqlNullString(req.Bank),
+		AccountNumber:        type_converter.NewSqlNullString(req.AccountNumber),
+		AccountType:          type_converter.NewSqlNullString(req.AccountType),
+		IdentificationNumber: type_converter.NewSqlNullString(req.IdentificationNumber),
+		IdentificationType:   type_converter.NewSqlNullString(req.IdentificationType),
+		Phone:                type_converter.NewSqlNullString(req.Phone),
+		Email:                type_converter.NewSqlNullString(req.Email),
 		PaymentTypeID:        req.PaymentTypeId,
 	}
 

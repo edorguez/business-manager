@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/pb"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util"
+	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 
 func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceClient) {
-	companyId := util.GetIdQueryParam("companyId", r)
-	limit, offset := util.GetFilterQueryParams(r)
+	companyId := query_params.GetId("companyId", r)
+	limit, offset := query_params.GetFilter(r)
 
 	params := &pb.GetCustomersRequest{
 		CompanyId: companyId,

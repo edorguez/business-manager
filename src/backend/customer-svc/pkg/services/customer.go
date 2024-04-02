@@ -9,7 +9,7 @@ import (
 	db "github.com/EdoRguez/business-manager/customer-svc/pkg/db/sqlc"
 	customer "github.com/EdoRguez/business-manager/customer-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/customer-svc/pkg/repository"
-	util "github.com/EdoRguez/business-manager/customer-svc/pkg/util"
+	"github.com/EdoRguez/business-manager/customer-svc/pkg/util/type_converter"
 )
 
 type CustomerService struct {
@@ -26,9 +26,9 @@ func (s *CustomerService) CreateCustomer(ctx context.Context, req *customer.Crea
 	createCustomerParams := db.CreateCustomerParams{
 		CompanyID:            req.CompanyId,
 		FirstName:            req.FirstName,
-		LastName:             util.NewSqlNullString(req.LastName),
-		Email:                util.NewSqlNullString(req.Email),
-		Phone:                util.NewSqlNullString(req.Phone),
+		LastName:             type_converter.NewSqlNullString(req.LastName),
+		Email:                type_converter.NewSqlNullString(req.Email),
+		Phone:                type_converter.NewSqlNullString(req.Phone),
 		IdentificationNumber: req.IdentificationNumber,
 		IdentificationType:   req.IdentificationType,
 	}
@@ -142,9 +142,9 @@ func (s *CustomerService) UpdateCustomer(ctx context.Context, req *customer.Upda
 	params := db.UpdateCustomerParams{
 		ID:                   req.Id,
 		FirstName:            req.FirstName,
-		LastName:             util.NewSqlNullString(req.LastName),
-		Email:                util.NewSqlNullString(req.Email),
-		Phone:                util.NewSqlNullString(req.Phone),
+		LastName:             type_converter.NewSqlNullString(req.LastName),
+		Email:                type_converter.NewSqlNullString(req.Email),
+		Phone:                type_converter.NewSqlNullString(req.Phone),
 		IdentificationNumber: req.IdentificationNumber,
 		IdentificationType:   req.IdentificationType,
 	}

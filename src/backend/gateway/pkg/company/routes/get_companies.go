@@ -6,11 +6,11 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util"
+	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 
 func GetCompanies(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
-	limit, offset := util.GetFilterQueryParams(r)
+	limit, offset := query_params.GetFilter(r)
 
 	params := &pb.GetCompaniesRequest{
 		Limit:  limit,

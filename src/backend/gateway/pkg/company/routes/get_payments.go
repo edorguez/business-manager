@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util"
+	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 
 func GetPayments(w http.ResponseWriter, r *http.Request, c pb.PaymentServiceClient) {
-	companyId := util.GetIdQueryParam("companyId", r)
-	limit, offset := util.GetFilterQueryParams(r)
+	companyId := query_params.GetId("companyId", r)
+	limit, offset := query_params.GetFilter(r)
 
 	params := &pb.GetPaymentsRequest{
 		CompanyId: companyId,

@@ -9,7 +9,7 @@ import (
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
 	company "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/util"
+	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
 )
 
 type CompanyService struct {
@@ -25,7 +25,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 
 	createCompanyParams := db.CreateCompanyParams{
 		Name:     req.Name,
-		ImageUrl: util.NewSqlNullString(req.ImageUrl),
+		ImageUrl: type_converter.NewSqlNullString(req.ImageUrl),
 	}
 
 	c, err := s.Repo.CreateCompany(ctx, createCompanyParams)
@@ -126,7 +126,7 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, req *company.UpdateC
 	params := db.UpdateCompanyParams{
 		ID:       req.Id,
 		Name:     req.Name,
-		ImageUrl: util.NewSqlNullString(req.ImageUrl),
+		ImageUrl: type_converter.NewSqlNullString(req.ImageUrl),
 	}
 
 	_, err := s.Repo.UpdateCompany(ctx, params)

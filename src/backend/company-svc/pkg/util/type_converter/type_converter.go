@@ -1,4 +1,4 @@
-package util
+package type_converter
 
 import "database/sql"
 
