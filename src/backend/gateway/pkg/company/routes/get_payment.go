@@ -6,11 +6,13 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
 	"github.com/gorilla/mux"
 )
 
 func GetPayment(w http.ResponseWriter, r *http.Request, c pb.PaymentServiceClient) {
+	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -31,7 +33,31 @@ func GetPayment(w http.ResponseWriter, r *http.Request, c pb.PaymentServiceClien
 	}
 
 	fmt.Println("API Gateway :  GetPayment - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
-	json.NewEncoder(w).Encode(res)
+
+	if res.Status != http.StatusOK {
+		json.NewEncoder(w).Encode(contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		})
+		return
+	}
+
+	json.NewEncoder(w).Encode(contracts.GetPaymentResponse{
+		Id:                   res.Id,
+		CompanyId:            res.CompanyId,
+		Name:                 res.Name,
+		Bank:                 res.Bank,
+		AccountNumber:        res.AccountNumber,
+		AccountType:          res.AccountType,
+		IdentificationNumber: res.IdentificationNumber,
+		IdentificationType:   res.IdentificationType,
+		Phone:                res.Phone,
+		Email:                res.Email,
+		PaymentTypeId:        res.PaymentTypeId,
+		PaymentType: &contracts.GetPaymentTypeResponse{
+			Id:   res.PaymentType.Id,
+			Name: res.PaymentType.Name,
+		},
+	})
 }

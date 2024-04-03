@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/pb"
 	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 
 func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceClient) {
+	w.Header().Set("Content-Type", "application/json")
 	companyId := query_params.GetId("companyId", r)
 	limit, offset := query_params.GetFilter(r)
 
@@ -29,7 +31,29 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceCl
 	}
 
 	fmt.Println("API Gateway :  GetCustomers - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
-	json.NewEncoder(w).Encode(res)
+
+	if res.Status != http.StatusOK {
+		json.NewEncoder(w).Encode(contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		})
+		return
+	}
+
+	var cr []*contracts.GetCustomerResponse
+	for _, v := range res.Customers {
+		cr = append(cr, &contracts.GetCustomerResponse{
+			Id:                   v.Id,
+			CompanyId:            v.CompanyId,
+			FirstName:            v.FirstName,
+			LastName:             v.LastName,
+			Email:                v.Email,
+			Phone:                v.Phone,
+			IdentificationNumber: v.IdentificationNumber,
+			IdentificationType:   v.IdentificationType,
+		})
+	}
+
+	json.NewEncoder(w).Encode(cr)
 }

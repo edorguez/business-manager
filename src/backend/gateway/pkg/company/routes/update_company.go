@@ -6,27 +6,17 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
-	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
 
-type UpdateCompanyRequestBody struct {
-	Name     string  `json:"name" validate:"required,max=50"`
-	ImageUrl *string `json:"imageUrl"  validate:"omitempty,required"`
-}
-
-func (c *UpdateCompanyRequestBody) Validate() error {
-	validate := validator.New()
-
-	return validate.Struct(c)
-}
-
 func UpdateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("API Gateway :  UpdateCompany")
 
 	// We got our body through context, since we saved it in a middleware
-	body := r.Context().Value(UpdateCompanyRequestBody{}).(UpdateCompanyRequestBody)
+	body := r.Context().Value(contracts.UpdateCompanyRequest{}).(contracts.UpdateCompanyRequest)
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -54,7 +44,6 @@ func UpdateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceCl
 	}
 
 	fmt.Println("API Gateway :  UpdateCompany - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }

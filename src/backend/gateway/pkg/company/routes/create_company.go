@@ -5,26 +5,16 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
-	"github.com/go-playground/validator/v10"
 )
 
-type CreateCompanyRequestBody struct {
-	Name     string  `json:"name" validate:"required,max=50"`
-	ImageUrl *string `json:"imageUrl" validate:"omitempty,required"`
-}
-
-func (c *CreateCompanyRequestBody) Validate() error {
-	validate := validator.New()
-
-	return validate.Struct(c)
-}
-
 func CreateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("API Gateway :  CreateCompany")
 
 	// We got our body through context, since we saved it in a middleware
-	body := r.Context().Value(CreateCompanyRequestBody{}).(CreateCompanyRequestBody)
+	body := r.Context().Value(contracts.CreateCompanyRequest{}).(contracts.CreateCompanyRequest)
 
 	fmt.Println("API Gateway :  CreateCompany - Body")
 	fmt.Println(body)
@@ -45,7 +35,6 @@ func CreateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceCl
 	}
 
 	fmt.Println("API Gateway :  CreateCompany - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }

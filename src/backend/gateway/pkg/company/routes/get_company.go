@@ -6,11 +6,13 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
 	"github.com/gorilla/mux"
 )
 
 func GetCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -31,7 +33,19 @@ func GetCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClien
 	}
 
 	fmt.Println("API Gateway :  GetCompany - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
-	json.NewEncoder(w).Encode(res)
+
+	if res.Status != http.StatusOK {
+		json.NewEncoder(w).Encode(contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		})
+		return
+	}
+
+	json.NewEncoder(w).Encode(&contracts.GetCompanyResponse{
+		Id:       res.Id,
+		Name:     res.Name,
+		ImageUrl: res.ImageUrl,
+	})
 }

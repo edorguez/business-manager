@@ -11,6 +11,7 @@ import (
 )
 
 func DeleteCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceClient) {
+	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -31,7 +32,6 @@ func DeleteCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerService
 	}
 
 	fmt.Println("API Gateway :  DeleteCustomer - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }

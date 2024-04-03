@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
 	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 
 func GetCompanies(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+	w.Header().Set("Content-Type", "application/json")
 	limit, offset := query_params.GetFilter(r)
 
 	params := &pb.GetCompaniesRequest{
@@ -27,7 +29,24 @@ func GetCompanies(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceCli
 	}
 
 	fmt.Println("API Gateway :  GetCompanies - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
-	json.NewEncoder(w).Encode(res)
+
+	if res.Status != http.StatusOK {
+		json.NewEncoder(w).Encode(contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		})
+		return
+	}
+
+	var cr []*contracts.GetCompanyResponse
+	for _, v := range res.Companies {
+		cr = append(cr, &contracts.GetCompanyResponse{
+			Id:       v.Id,
+			Name:     v.Name,
+			ImageUrl: v.ImageUrl,
+		})
+	}
+
+	json.NewEncoder(w).Encode(cr)
 }

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/routes"
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 )
 
 type MiddlewareConfig struct{}
@@ -18,7 +18,7 @@ type MiddlewareErrorResponse struct {
 
 func (m *MiddlewareConfig) MiddlewareValidateCreateCompany(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body routes.CreateCompanyRequestBody
+		var body contracts.CreateCompanyRequest
 
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			fmt.Println(err.Error())
@@ -39,7 +39,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCompany(next http.Handler) ht
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), routes.CreateCompanyRequestBody{}, body)
+		ctx := context.WithValue(r.Context(), contracts.CreateCompanyRequest{}, body)
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
@@ -48,7 +48,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCompany(next http.Handler) ht
 
 func (m *MiddlewareConfig) MiddlewareValidateUpdateCompany(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body routes.UpdateCompanyRequestBody
+		var body contracts.UpdateCompanyRequest
 
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			fmt.Println(err.Error())
@@ -69,7 +69,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateCompany(next http.Handler) ht
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), routes.UpdateCompanyRequestBody{}, body)
+		ctx := context.WithValue(r.Context(), contracts.UpdateCompanyRequest{}, body)
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
@@ -78,7 +78,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateCompany(next http.Handler) ht
 
 func (m *MiddlewareConfig) MiddlewareValidateCreatePayment(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body routes.CreatePaymentRequestBody
+		var body contracts.CreatePaymentRequest
 
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			fmt.Println(err.Error())
@@ -99,7 +99,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreatePayment(next http.Handler) ht
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), routes.CreatePaymentRequestBody{}, body)
+		ctx := context.WithValue(r.Context(), contracts.CreatePaymentRequest{}, body)
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
@@ -108,7 +108,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreatePayment(next http.Handler) ht
 
 func (m *MiddlewareConfig) MiddlewareValidateUpdatePayment(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body routes.UpdatePaymentRequestBody
+		var body contracts.UpdatePaymentRequest
 
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			fmt.Println(err.Error())
@@ -129,7 +129,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdatePayment(next http.Handler) ht
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), routes.UpdatePaymentRequestBody{}, body)
+		ctx := context.WithValue(r.Context(), contracts.UpdatePaymentRequest{}, body)
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)

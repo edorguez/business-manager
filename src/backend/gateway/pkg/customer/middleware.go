@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/routes"
+	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
 )
 
 type MiddlewareConfig struct{}
@@ -18,7 +18,7 @@ type MiddlewareErrorResponse struct {
 
 func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body routes.CreateCustomerRequestBody
+		var body contracts.CreateCustomerRequest
 
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			fmt.Println(err.Error())
@@ -39,7 +39,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) h
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), routes.CreateCustomerRequestBody{}, body)
+		ctx := context.WithValue(r.Context(), contracts.CreateCustomerRequest{}, body)
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
@@ -48,7 +48,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) h
 
 func (m *MiddlewareConfig) MiddlewareValidateUpdateCustomer(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body routes.UpdateCustomerRequestBody
+		var body contracts.UpdateCustomerRequest
 
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			fmt.Println(err.Error())
@@ -69,7 +69,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateCustomer(next http.Handler) h
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), routes.UpdateCustomerRequestBody{}, body)
+		ctx := context.WithValue(r.Context(), contracts.UpdateCustomerRequest{}, body)
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
