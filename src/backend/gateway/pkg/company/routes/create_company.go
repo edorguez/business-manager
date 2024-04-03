@@ -10,8 +10,8 @@ import (
 )
 
 type CreateCompanyRequestBody struct {
-	Name     string `json:"name" validate:"required,max=50"`
-	ImageUrl string `json:"imageUrl" validate:"required"`
+	Name     string  `json:"name" validate:"required,max=50"`
+	ImageUrl *string `json:"imageUrl" validate:"omitempty,required"`
 }
 
 func (c *CreateCompanyRequestBody) Validate() error {

@@ -83,13 +83,13 @@ func (s *PaymentService) GetPayment(ctx context.Context, req *payment.GetPayment
 		Id:                   p.ID,
 		CompanyId:            p.CompanyID,
 		Name:                 p.Name,
-		Bank:                 p.Bank.String,
-		AccountNumber:        p.AccountNumber.String,
-		AccountType:          p.AccountType.String,
-		IdentificationNumber: p.IdentificationNumber.String,
-		IdentificationType:   p.IdentificationType.String,
-		Phone:                p.Phone.String,
-		Email:                p.Email.String,
+		Bank:                 type_converter.NewString(p.Bank),
+		AccountNumber:        type_converter.NewString(p.AccountNumber),
+		AccountType:          type_converter.NewString(p.AccountType),
+		IdentificationNumber: type_converter.NewString(p.IdentificationNumber),
+		IdentificationType:   type_converter.NewString(p.IdentificationType),
+		Phone:                type_converter.NewString(p.Phone),
+		Email:                type_converter.NewString(p.Email),
 		PaymentTypeId:        p.PaymentTypeID,
 		PaymentType: &payment.GetPaymentTypeResponse{
 			Id:   p.CompanyPaymentType.ID,
@@ -127,13 +127,13 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 			Id:                   v.ID,
 			CompanyId:            v.CompanyID,
 			Name:                 v.Name,
-			Bank:                 v.Bank.String,
-			AccountNumber:        v.AccountNumber.String,
-			AccountType:          v.AccountType.String,
-			IdentificationNumber: v.IdentificationNumber.String,
-			IdentificationType:   v.IdentificationType.String,
-			Phone:                v.Phone.String,
-			Email:                v.Email.String,
+			Bank:                 type_converter.NewString(v.Bank),
+			AccountNumber:        type_converter.NewString(v.AccountNumber),
+			AccountType:          type_converter.NewString(v.AccountType),
+			IdentificationNumber: type_converter.NewString(v.IdentificationNumber),
+			IdentificationType:   type_converter.NewString(v.IdentificationType),
+			Phone:                type_converter.NewString(v.Phone),
+			Email:                type_converter.NewString(v.Email),
 			PaymentTypeId:        v.PaymentTypeID,
 			PaymentType: &payment.GetPaymentTypeResponse{
 				Id:   v.CompanyPaymentType.ID,
@@ -143,6 +143,7 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 	}
 
 	fmt.Println("Payment Service :  GetPayments - SUCCESS")
+	fmt.Println(payments)
 	return &payment.GetPaymentsResponse{
 		Payments: payments,
 		Status:   http.StatusOK,

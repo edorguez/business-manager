@@ -15,13 +15,13 @@ service PaymentService{
 message CreatePaymentRequest{
   int64 companyId = 1;
   string name = 2;
-  string bank = 3;
-  string accountNumber = 4;
-  string accountType = 5;
-  string identificationNumber = 6;
-  string identificationType = 7;
-  string phone = 8;
-  string email = 9;
+  optional string bank = 3;
+  optional string accountNumber = 4;
+  optional string accountType = 5;
+  optional string identificationNumber = 6;
+  optional string identificationType = 7;
+  optional string phone = 8;
+  optional string email = 9;
   int64 paymentTypeId = 10;
 }
 
@@ -39,13 +39,13 @@ message GetPaymentResponse{
   int64 id = 1;
   int64 companyId = 2;
   string name = 3;
-  string bank = 4;
-  string accountNumber = 5;
-  string accountType = 6;
-  string identificationNumber = 7;
-  string identificationType = 8;
-  string phone = 9;
-  string email = 10;
+  optional string bank = 4;
+  optional string accountNumber = 5;
+  optional string accountType = 6;
+  optional string identificationNumber = 7;
+  optional string identificationType = 8;
+  optional string phone = 9;
+  optional string email = 10;
   int64 paymentTypeId = 11;
   GetPaymentTypeResponse paymentType = 12;
   int64 status = 13;
@@ -72,13 +72,13 @@ message GetPaymentsResponse{
 message UpdatePaymentRequest{
   int64 id = 1;
   string name = 2;
-  string bank = 3;
-  string accountNumber = 4;
-  string accountType = 5;
-  string identificationNumber = 6;
-  string identificationType = 7;
-  string phone = 8;
-  string email = 9;
+  optional string bank = 3;
+  optional string accountNumber = 4;
+  optional string accountType = 5;
+  optional string identificationNumber = 6;
+  optional string identificationType = 7;
+  optional string phone = 8;
+  optional string email = 9;
   int64 paymentTypeId = 10;
 }
 

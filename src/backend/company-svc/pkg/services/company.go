@@ -74,7 +74,7 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 	return &company.GetCompanyResponse{
 		Id:       c.ID,
 		Name:     c.Name,
-		ImageUrl: c.ImageUrl.String,
+		ImageUrl: type_converter.NewString(c.ImageUrl),
 		Status:   http.StatusOK,
 	}, nil
 }
@@ -105,7 +105,7 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 		companies = append(companies, &company.GetCompanyResponse{
 			Id:       v.ID,
 			Name:     v.Name,
-			ImageUrl: v.ImageUrl.String,
+			ImageUrl: type_converter.NewString(v.ImageUrl),
 			Status:   http.StatusOK,
 		})
 	}

@@ -14,7 +14,7 @@ service CompanyService{
 
 message CreateCompanyRequest{
   string name = 1;
-  string imageUrl = 2;
+  optional string imageUrl = 2;
 }
 
 message CreateCompanyResponse{
@@ -30,7 +30,7 @@ message GetCompanyRequest{
 message GetCompanyResponse{
   int64 id = 1;
   string name = 2;
-  string imageUrl = 3;
+  optional string imageUrl = 3;
   int64 status = 4;
   string error = 5;
 }
@@ -49,7 +49,7 @@ message GetCompaniesResponse{
 message UpdateCompanyRequest{
   int64 id = 1;
   string name = 2;
-  string imageUrl = 3;
+  optional string imageUrl = 3;
 }
 
 message UpdateCompanyResponse{
