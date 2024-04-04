@@ -15,6 +15,15 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceCl
 	companyId := query_params.GetId("companyId", r)
 	limit, offset := query_params.GetFilter(r)
 
+	if companyId <= 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Company ID is required in order to get results",
+		})
+		return
+	}
+
 	params := &pb.GetCustomersRequest{
 		CompanyId: companyId,
 		Limit:     limit,
@@ -41,7 +50,7 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceCl
 		return
 	}
 
-	var cr []*contracts.GetCustomerResponse
+	cr := make([]*contracts.GetCustomerResponse, 0)
 	for _, v := range res.Customers {
 		cr = append(cr, &contracts.GetCustomerResponse{
 			Id:                   v.Id,

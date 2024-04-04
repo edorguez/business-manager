@@ -15,6 +15,15 @@ func GetPayments(w http.ResponseWriter, r *http.Request, c pb.PaymentServiceClie
 	companyId := query_params.GetId("companyId", r)
 	limit, offset := query_params.GetFilter(r)
 
+	if companyId <= 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Company ID is required in order to get results",
+		})
+		return
+	}
+
 	params := &pb.GetPaymentsRequest{
 		CompanyId: companyId,
 		Limit:     limit,
@@ -41,7 +50,7 @@ func GetPayments(w http.ResponseWriter, r *http.Request, c pb.PaymentServiceClie
 		return
 	}
 
-	var pr []*contracts.GetPaymentResponse
+	pr := make([]*contracts.GetPaymentResponse, 0)
 	for _, v := range res.Payments {
 		pr = append(pr, &contracts.GetPaymentResponse{
 			Id:                   v.Id,

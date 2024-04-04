@@ -39,7 +39,7 @@ func GetCompanies(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceCli
 		return
 	}
 
-	var cr []*contracts.GetCompanyResponse
+	cr := make([]*contracts.GetCompanyResponse, 0)
 	for _, v := range res.Companies {
 		cr = append(cr, &contracts.GetCompanyResponse{
 			Id:       v.Id,
