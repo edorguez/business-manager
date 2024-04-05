@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
+	"github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/pb"
 )
 
-func CreateCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceClient) {
+func CreateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("API Gateway :  CreateCustomer")
 
@@ -20,22 +21,21 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerService
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
-	createCustomerParams := &pb.CreateCustomerRequest{
-		CompanyId:            body.CompanyId,
-		FirstName:            body.FirstName,
-		LastName:             body.LastName,
-		Email:                body.Email,
-		Phone:                body.Phone,
-		IdentificationNumber: body.IdentificationNumber,
-		IdentificationType:   body.IdentificationType,
+	if err := client.InitCustomerServiceClient(c); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
 	}
 
-	res, err := c.CreateCustomer(r.Context(), createCustomerParams)
+	res, err := client.CreateCustomer(body, r.Context())
 
 	if err != nil {
 		fmt.Println("API Gateway :  CreateCustomer - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error, int(err.Status))
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 
