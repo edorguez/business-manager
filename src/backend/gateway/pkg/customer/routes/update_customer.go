@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
+	"github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/pb"
 	"github.com/gorilla/mux"
 )
 
-func UpdateCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceClient) {
+func UpdateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("API Gateway :  UpdateCustomer")
 
@@ -21,29 +22,29 @@ func UpdateCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerService
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, "Unable to convert Id", http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Unable to convert ID",
+		})
 	}
 
 	fmt.Println("API Gateway :  UpdateCustomer - Body")
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
-	updateCustomerParams := &pb.UpdateCustomerRequest{
-		Id:                   int64(id),
-		FirstName:            body.FirstName,
-		LastName:             body.LastName,
-		Email:                body.Email,
-		Phone:                body.Phone,
-		IdentificationNumber: body.IdentificationNumber,
-		IdentificationType:   body.IdentificationType,
+	if err := client.InitCustomerServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
 	}
 
-	res, err := c.UpdateCustomer(r.Context(), updateCustomerParams)
+	res, errUpdate := client.UpdateCustomer(int64(id), body, r.Context())
 
-	if err != nil {
+	if errUpdate != nil {
 		fmt.Println("API Gateway :  UpdateCustomer - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(errUpdate)
 		return
 	}
 

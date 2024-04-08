@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	companyClient "github.com/EdoRguez/business-manager/gateway/pkg/company/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
+	customerClient "github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
 )
 
@@ -21,8 +22,7 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
-	if err := client.InitCustomerServiceClient(c); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if err := customerClient.InitCustomerServiceClient(c); err != nil {
 		json.NewEncoder(w).Encode(&contracts.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
@@ -30,11 +30,25 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		return
 	}
 
-	res, err := client.CreateCustomer(body, r.Context())
+	if err := companyClient.InitCompanyServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
+	}
 
+	_, errCompany := companyClient.GetCompany(int64(body.CompanyId), r.Context())
+	if errCompany != nil {
+		fmt.Println("API Gateway :  CreateCustomer - ERROR")
+		errCompany.Error = "Company not found"
+		json.NewEncoder(w).Encode(errCompany)
+		return
+	}
+
+	res, err := customerClient.CreateCustomer(body, r.Context())
 	if err != nil {
 		fmt.Println("API Gateway :  CreateCustomer - ERROR")
-		http.Error(w, err.Error, int(err.Status))
 		json.NewEncoder(w).Encode(err)
 		return
 	}

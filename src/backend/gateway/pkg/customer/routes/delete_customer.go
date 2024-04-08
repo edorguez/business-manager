@@ -6,28 +6,37 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/pb"
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
+	"github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
+	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
 	"github.com/gorilla/mux"
 )
 
-func DeleteCustomer(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceClient) {
+func DeleteCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, "Unable to convert Id", http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Unable to convert ID",
+		})
+		return
 	}
 
-	params := &pb.DeleteCustomerRequest{
-		Id: int64(id),
+	if err := client.InitCustomerServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
 	}
 
-	res, err := c.DeleteCustomer(r.Context(), params)
+	res, errDelete := client.DeleteCustomer(int64(id), r.Context())
 
-	if err != nil {
+	if errDelete != nil {
 		fmt.Println("API Gateway :  DeleteCustomer - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(errDelete)
 		return
 	}
 

@@ -5,24 +5,17 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
+	"github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/pb"
 	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 
-func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceClient) {
+func GetCustomers(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	companyId := query_params.GetId("companyId", r)
 	limit, offset := query_params.GetFilter(r)
-
-	if companyId <= 0 {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(contracts.Error{
-			Status: http.StatusBadRequest,
-			Error:  "Company ID is required in order to get results",
-		})
-		return
-	}
 
 	params := &pb.GetCustomersRequest{
 		CompanyId: companyId,
@@ -30,39 +23,24 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c pb.CustomerServiceCl
 		Offset:    offset,
 	}
 
-	res, err := c.GetCustomers(r.Context(), params)
+	if err := client.InitCustomerServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
+	}
+
+	res, err := client.GetCustomers(params, r.Context())
 
 	if err != nil {
 		fmt.Println("API Gateway :  GetCustomers - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err)
 		return
+
 	}
 
 	fmt.Println("API Gateway :  GetCustomers - SUCCESS")
-	w.WriteHeader(int(res.Status))
-
-	if res.Status != http.StatusOK {
-		json.NewEncoder(w).Encode(contracts.Error{
-			Status: res.Status,
-			Error:  res.Error,
-		})
-		return
-	}
-
-	cr := make([]*contracts.GetCustomerResponse, 0)
-	for _, v := range res.Customers {
-		cr = append(cr, &contracts.GetCustomerResponse{
-			Id:                   v.Id,
-			CompanyId:            v.CompanyId,
-			FirstName:            v.FirstName,
-			LastName:             v.LastName,
-			Email:                v.Email,
-			Phone:                v.Phone,
-			IdentificationNumber: v.IdentificationNumber,
-			IdentificationType:   v.IdentificationType,
-		})
-	}
-
-	json.NewEncoder(w).Encode(cr)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }

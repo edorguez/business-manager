@@ -64,7 +64,7 @@ func CreateCustomer(body contracts.CreateCustomerRequest, c context.Context) (*p
 	return res, nil
 }
 
-func GetCustomer(id int64, c *context.Context) (*contracts.GetCustomerResponse, *contracts.Error) {
+func GetCustomer(id int64, c context.Context) (*contracts.GetCustomerResponse, *contracts.Error) {
 	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  GetCustomer")
 
@@ -72,7 +72,7 @@ func GetCustomer(id int64, c *context.Context) (*contracts.GetCustomerResponse, 
 		Id: id,
 	}
 
-	res, err := customerServiceClient.GetCustomer(*c, params)
+	res, err := customerServiceClient.GetCustomer(c, params)
 
 	if err != nil {
 		fmt.Println("Customer CLIENT :  GetCustomer - ERROR")
@@ -108,7 +108,7 @@ func GetCustomer(id int64, c *context.Context) (*contracts.GetCustomerResponse, 
 	}, nil
 }
 
-func GetCustomers(params *pb.GetCustomersRequest, c *context.Context) ([]*contracts.GetCustomerResponse, *contracts.Error) {
+func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contracts.GetCustomerResponse, *contracts.Error) {
 	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  GetCustomer")
 
@@ -121,7 +121,7 @@ func GetCustomers(params *pb.GetCustomersRequest, c *context.Context) ([]*contra
 		return nil, error
 	}
 
-	res, err := customerServiceClient.GetCustomers(*c, params)
+	res, err := customerServiceClient.GetCustomers(c, params)
 
 	if err != nil {
 		fmt.Println("Customer CLIENT :  GetCustomers - ERROR")
@@ -163,7 +163,7 @@ func GetCustomers(params *pb.GetCustomersRequest, c *context.Context) ([]*contra
 	return cr, nil
 }
 
-func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c *context.Context) (*pb.UpdateCustomerResponse, *contracts.Error) {
+func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c context.Context) (*pb.UpdateCustomerResponse, *contracts.Error) {
 	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  UpdateCustomer")
 
@@ -181,7 +181,7 @@ func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c *context.C
 		IdentificationType:   body.IdentificationType,
 	}
 
-	res, err := customerServiceClient.UpdateCustomer(*c, updateCustomerParams)
+	res, err := customerServiceClient.UpdateCustomer(c, updateCustomerParams)
 
 	if err != nil {
 		fmt.Println("Customer CLIENT :  UpdateCustomer - ERROR")
@@ -199,7 +199,7 @@ func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c *context.C
 	return res, nil
 }
 
-func DeleteCustomer(id int64, c *context.Context) (*pb.DeleteCustomerResponse, *contracts.Error) {
+func DeleteCustomer(id int64, c context.Context) (*pb.DeleteCustomerResponse, *contracts.Error) {
 	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  DeleteCustomer")
 
@@ -207,7 +207,7 @@ func DeleteCustomer(id int64, c *context.Context) (*pb.DeleteCustomerResponse, *
 		Id: id,
 	}
 
-	res, err := customerServiceClient.DeleteCustomer(*c, params)
+	res, err := customerServiceClient.DeleteCustomer(c, params)
 
 	if err != nil {
 		fmt.Println("Customer CLIENT :  DeleteCustomer - ERROR")
