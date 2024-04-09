@@ -14,7 +14,7 @@ import (
 var customerServiceClient pb.CustomerServiceClient
 
 func InitCustomerServiceClient(c *config.Config) error {
-	fmt.Println("API Gateway :  InitCustomerServiceClient")
+	fmt.Println("Customer CLIENT :  InitCustomerServiceClient")
 	// using WithInsecure() because no SSL running
 	cc, err := grpc.Dial(c.Customer_Svc_Url, grpc.WithInsecure())
 
@@ -28,8 +28,6 @@ func InitCustomerServiceClient(c *config.Config) error {
 }
 
 func CreateCustomer(body contracts.CreateCustomerRequest, c context.Context) (*pb.CreateCustomerResponse, *contracts.Error) {
-	var error *contracts.Error
-
 	fmt.Println("Customer CLIENT :  CreateCustomer")
 
 	fmt.Println("Customer CLIENT :  CreateCustomer - Body")
@@ -52,7 +50,7 @@ func CreateCustomer(body contracts.CreateCustomerRequest, c context.Context) (*p
 		fmt.Println("Customer CLIENT :  CreateCustomer - ERROR")
 		fmt.Println(err.Error())
 
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -65,7 +63,6 @@ func CreateCustomer(body contracts.CreateCustomerRequest, c context.Context) (*p
 }
 
 func GetCustomer(id int64, c context.Context) (*contracts.GetCustomerResponse, *contracts.Error) {
-	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  GetCustomer")
 
 	params := &pb.GetCustomerRequest{
@@ -78,7 +75,7 @@ func GetCustomer(id int64, c context.Context) (*contracts.GetCustomerResponse, *
 		fmt.Println("Customer CLIENT :  GetCustomer - ERROR")
 		fmt.Println(err.Error())
 
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -89,7 +86,7 @@ func GetCustomer(id int64, c context.Context) (*contracts.GetCustomerResponse, *
 	fmt.Println("Customer CLIENT :  GetCustomer - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -109,11 +106,10 @@ func GetCustomer(id int64, c context.Context) (*contracts.GetCustomerResponse, *
 }
 
 func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contracts.GetCustomerResponse, *contracts.Error) {
-	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  GetCustomer")
 
 	if params.CompanyId <= 0 {
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Company ID is required in order to get results",
 		}
@@ -127,7 +123,7 @@ func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contrac
 		fmt.Println("Customer CLIENT :  GetCustomers - ERROR")
 		fmt.Println(err.Error())
 
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -135,10 +131,8 @@ func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contrac
 		return nil, error
 	}
 
-	fmt.Println("Customer CLIENT :  GetCustomers - SUCCESS")
-
 	if res.Status != http.StatusOK {
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -160,11 +154,11 @@ func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contrac
 		})
 	}
 
+	fmt.Println("Customer CLIENT :  GetCustomers - SUCCESS")
 	return cr, nil
 }
 
 func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c context.Context) (*pb.UpdateCustomerResponse, *contracts.Error) {
-	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  UpdateCustomer")
 
 	fmt.Println("Customer CLIENT :  UpdateCustomer - Body")
@@ -187,7 +181,7 @@ func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c context.Co
 		fmt.Println("Customer CLIENT :  UpdateCustomer - ERROR")
 		fmt.Println(err.Error())
 
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -200,7 +194,6 @@ func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c context.Co
 }
 
 func DeleteCustomer(id int64, c context.Context) (*pb.DeleteCustomerResponse, *contracts.Error) {
-	var error *contracts.Error
 	fmt.Println("Customer CLIENT :  DeleteCustomer")
 
 	params := &pb.DeleteCustomerRequest{
@@ -213,7 +206,7 @@ func DeleteCustomer(id int64, c context.Context) (*pb.DeleteCustomerResponse, *c
 		fmt.Println("Customer CLIENT :  DeleteCustomer - ERROR")
 		fmt.Println(err.Error())
 
-		error = &contracts.Error{
+		error := &contracts.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}

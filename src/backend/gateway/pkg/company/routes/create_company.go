@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 )
 
-func CreateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+func CreateCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("API Gateway :  CreateCompany")
 
@@ -20,17 +21,19 @@ func CreateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceCl
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
-	createCompanyParams := &pb.CreateCompanyRequest{
-		Name:     body.Name,
-		ImageUrl: body.ImageUrl,
+	if err := client.InitCompanyServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
 	}
 
-	res, err := c.CreateCompany(r.Context(), createCompanyParams)
+	res, err := client.CreateCompany(body, r.Context())
 
 	if err != nil {
 		fmt.Println("API Gateway :  CreateCompany - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 

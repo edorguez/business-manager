@@ -6,32 +6,41 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/gorilla/mux"
 )
 
-func DeleteCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+func DeleteCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
+	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, "Unable to convert Id", http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Unable to convert ID",
+		})
+		return
 	}
 
-	params := &pb.DeleteCompanyRequest{
-		Id: int64(id),
+	if err := client.InitCompanyServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
 	}
 
-	res, err := c.DeleteCompany(r.Context(), params)
+	res, errCompany := client.DeleteCompany(int64(id), r.Context())
 
-	if err != nil {
+	if errCompany != nil {
 		fmt.Println("API Gateway :  DeleteCompany - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(errCompany)
 		return
 	}
 
 	fmt.Println("API Gateway :  DeleteCompany - SUCCESS")
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }

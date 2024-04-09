@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 
-func GetCompanies(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+func GetCompanies(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	limit, offset := query_params.GetFilter(r)
 
@@ -19,34 +21,24 @@ func GetCompanies(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceCli
 		Offset: offset,
 	}
 
-	res, err := c.GetCompanies(r.Context(), params)
+	if err := client.InitCompanyServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
+	}
+
+	res, err := client.GetCompanies(params, r.Context())
 
 	if err != nil {
 		fmt.Println("API Gateway :  GetCompanies - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err)
 		return
+
 	}
 
 	fmt.Println("API Gateway :  GetCompanies - SUCCESS")
-	w.WriteHeader(int(res.Status))
-
-	if res.Status != http.StatusOK {
-		json.NewEncoder(w).Encode(contracts.Error{
-			Status: res.Status,
-			Error:  res.Error,
-		})
-		return
-	}
-
-	cr := make([]*contracts.GetCompanyResponse, 0)
-	for _, v := range res.Companies {
-		cr = append(cr, &contracts.GetCompanyResponse{
-			Id:       v.Id,
-			Name:     v.Name,
-			ImageUrl: v.ImageUrl,
-		})
-	}
-
-	json.NewEncoder(w).Encode(cr)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }

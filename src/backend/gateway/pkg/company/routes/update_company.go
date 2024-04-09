@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/gorilla/mux"
 )
 
-func UpdateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceClient) {
+func UpdateCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("API Gateway :  UpdateCompany")
 
@@ -21,25 +22,29 @@ func UpdateCompany(w http.ResponseWriter, r *http.Request, c pb.CompanyServiceCl
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, "Unable to convert Id", http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Unable to convert ID",
+		})
 	}
 
 	fmt.Println("API Gateway :  UpdateCompany - Body")
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
-	updateCompanyParams := &pb.UpdateCompanyRequest{
-		Id:       int64(id),
-		Name:     body.Name,
-		ImageUrl: body.ImageUrl,
+	if err := client.InitCompanyServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
 	}
 
-	res, err := c.UpdateCompany(r.Context(), updateCompanyParams)
+	res, errCompany := client.UpdateCompany(int64(id), body, r.Context())
 
-	if err != nil {
+	if errCompany != nil {
 		fmt.Println("API Gateway :  UpdateCompany - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(errCompany)
 		return
 	}
 
