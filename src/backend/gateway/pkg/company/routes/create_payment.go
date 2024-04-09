@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
+	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 )
 
-func CreatePayment(w http.ResponseWriter, r *http.Request, c pb.PaymentServiceClient) {
+func CreatePayment(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("API Gateway :  CreatePayment")
 
@@ -20,25 +21,19 @@ func CreatePayment(w http.ResponseWriter, r *http.Request, c pb.PaymentServiceCl
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
-	createPaymentParams := &pb.CreatePaymentRequest{
-		CompanyId:            body.CompanyId,
-		Name:                 body.Name,
-		Bank:                 body.Bank,
-		AccountNumber:        body.AccountNumber,
-		AccountType:          body.AccountType,
-		IdentificationNumber: body.IdentificationNumber,
-		IdentificationType:   body.IdentificationType,
-		Phone:                body.Phone,
-		Email:                body.Email,
-		PaymentTypeId:        body.PaymentTypeId,
+	if err := client.InitPaymentServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
 	}
 
-	res, err := c.CreatePayment(r.Context(), createPaymentParams)
+	res, err := client.CreatePayment(body, r.Context())
 
 	if err != nil {
 		fmt.Println("API Gateway :  CreatePayment - ERROR")
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 
