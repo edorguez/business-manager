@@ -6,19 +6,24 @@ import (
 	"testing"
 	"time"
 
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/util"
+	"github.com/EdoRguez/business-manager/customer-svc/pkg/util/random"
+	"github.com/EdoRguez/business-manager/customer-svc/pkg/util/type_converter"
 	"github.com/stretchr/testify/require"
 )
 
 func createRandomCustomer(t *testing.T) CustomerCustomer {
+	randomName := random.Name()
+	randomEmail := random.Email()
+	randomPhoneNumber := random.PhoneNumber()
+
 	arg := CreateCustomerParams{
 		CompanyID:            1,
-		FirstName:            util.RandomName(),
-		LastName:             util.NewSqlNullString(util.RandomName()),
-		Email:                util.NewSqlNullString(util.RandomEmail()),
-		Phone:                util.NewSqlNullString(util.RandomPhoneNumber()),
-		IdentificationNumber: util.RandomIndentificationNumber(),
-		IdentificationType:   util.RandomIdentificationType(),
+		FirstName:            random.Name(),
+		LastName:             type_converter.NewSqlNullString(&randomName),
+		Email:                type_converter.NewSqlNullString(&randomEmail),
+		Phone:                type_converter.NewSqlNullString(&randomPhoneNumber),
+		IdentificationNumber: random.IndentificationNumber(),
+		IdentificationType:   random.IdentificationType(),
 	}
 
 	client, err := testQueries.CreateCustomer(context.Background(), arg)
