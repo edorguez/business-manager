@@ -141,7 +141,7 @@ func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts
 		return nil, error
 	}
 
-	pr := make([]*contracts.GetPaymentResponse, len(res.Payments))
+	pr := make([]*contracts.GetPaymentResponse, 0, len(res.Payments))
 	for _, v := range res.Payments {
 		pr = append(pr, &contracts.GetPaymentResponse{
 			Id:                   v.Id,

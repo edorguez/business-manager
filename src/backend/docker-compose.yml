@@ -13,6 +13,7 @@ services:
   #     restart: always
 
   customer-db:
+    container_name: customer-db
     image: postgres:latest
     ports:
       - "5434:5432"
@@ -22,6 +23,7 @@ services:
       - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
     restart: always
   company-db:
+    container_name: company-db
     image: postgres:latest
     ports:
       - "5435:5432"

@@ -120,7 +120,7 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 		return nil, error
 	}
 
-	cr := make([]*contracts.GetCompanyResponse, len(res.Companies))
+	cr := make([]*contracts.GetCompanyResponse, 0, len(res.Companies))
 	for _, v := range res.Companies {
 		cr = append(cr, &contracts.GetCompanyResponse{
 			Id:       v.Id,

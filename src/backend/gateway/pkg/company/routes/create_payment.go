@@ -29,6 +29,22 @@ func CreatePayment(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		return
 	}
 
+	if err := client.InitCompanyServiceClient(c); err != nil {
+		json.NewEncoder(w).Encode(&contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		})
+		return
+	}
+
+	_, errCompany := client.GetCompany(int64(body.CompanyId), r.Context())
+	if errCompany != nil {
+		fmt.Println("API Gateway :  CreateCustomer - ERROR")
+		errCompany.Error = "Company not found"
+		json.NewEncoder(w).Encode(errCompany)
+		return
+	}
+
 	res, err := client.CreatePayment(body, r.Context())
 
 	if err != nil {

@@ -43,6 +43,15 @@ yarn-error.log*
 # Environment files
 /src/backend/*.env
 /src/backend/!example.env
+/src/backend/gateway/*.env
+/src/backend/gateway/!example.env
+/src/backend/customer-svc/*.env
+/src/backend/customer-svc/!example.env
+/src/backend/company-svc/*.env
+/src/backend/company-svc/!example.env
+
+
+
 
 # local env files
 .env*.local
