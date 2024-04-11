@@ -13,6 +13,15 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="material-symbols:person" width="20" height="20" />,
   },
   {
+    title: 'Inventario',
+    path: '/products',
+    icon: <Icon icon="fluent-mdl2:product" width="20" height="20" />,
+    submenu: true,
+    subMenuItems: [
+      { title: 'Productos', path: '/products'}
+    ]
+  },
+  {
     title: 'Empresa',
     path: '/company',
     icon: <Icon icon="fluent:building-24-regular" width="20" height="20" />,
