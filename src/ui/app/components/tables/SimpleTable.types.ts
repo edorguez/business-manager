@@ -11,7 +11,15 @@ export interface SimpleTableProps {
 export interface SimpleTableColumn {
   key: string;
   name: string;
+  type: ColumnType;
   display?: boolean;
+}
+
+export enum ColumnType {
+  String,
+  Image,
+  Number,
+  Money
 }
 
 // export interface SimpleTableData {

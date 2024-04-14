@@ -2,7 +2,7 @@
 
 import SimpleCard from "../components/cards/SimpleCard";
 import SimpleTable from "../components/tables/SimpleTable";
-import { SimpleTableColumn } from "../components/tables/SimpleTable.types";
+import { ColumnType, SimpleTableColumn } from "../components/tables/SimpleTable.types";
 import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
 import { Button, Input } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
@@ -23,23 +23,28 @@ const CustomersClient = () => {
   const customerCols: SimpleTableColumn[] = [
     {
       key: "identificationNumber",
-      name: "Cédula"
+      name: "Cédula",
+      type: ColumnType.String
     },
     {
       key: "firstName",
-      name: "Nombre"
+      name: "Nombre",
+      type: ColumnType.String
     },
     {
       key: "lastName",
-      name: "Apellido"
+      name: "Apellido",
+      type: ColumnType.String
     },
     {
       key: "email",
-      name: "Correo"
+      name: "Correo",
+      type: ColumnType.String
     },
     {
       key: "phone",
-      name: "Teléfono"
+      name: "Teléfono",
+      type: ColumnType.String
     },
   ]
 

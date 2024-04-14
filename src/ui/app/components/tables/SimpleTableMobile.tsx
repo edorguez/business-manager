@@ -13,6 +13,7 @@ import {
   TableCaption
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
+import SimpleTableField from './SimpleTableField';
 
 const SimpleTableMobile: React.FC<SimpleTableProps> = ({
   columns,
@@ -56,7 +57,7 @@ const SimpleTableMobile: React.FC<SimpleTableProps> = ({
                     {col.name}
                   </Th>
                   <Td className='text-sm'>
-                    {dataVal[col.key]}
+                    <SimpleTableField data={dataVal} col={col}/>
                   </Td>
                 </Tr>
               )),

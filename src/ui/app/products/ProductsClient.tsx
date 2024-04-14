@@ -2,7 +2,7 @@
 
 import SimpleCard from "../components/cards/SimpleCard";
 import SimpleTable from "../components/tables/SimpleTable";
-import { SimpleTableColumn } from "../components/tables/SimpleTable.types";
+import { ColumnType, SimpleTableColumn } from "../components/tables/SimpleTable.types";
 import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
 import { Button, Input } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
@@ -16,31 +16,36 @@ import useDeleteModal from "../hooks/useDeleteModal";
 const ProductsClient = () => {
   const bcItems: BreadcrumItem[] = [
     {
-      label: "Products",
+      label: "Productos",
       href: "/products"
     }
   ];
 
   const productCols: SimpleTableColumn[] = [
     {
-      key: "identificationNumber",
-      name: "Cédula"
+      key: "imageUrl",
+      name: "",
+      type: ColumnType.Image
     },
     {
-      key: "firstName",
-      name: "Nombre"
+      key: "name",
+      name: "Producto",
+      type: ColumnType.String
     },
     {
-      key: "lastName",
-      name: "Apellido"
+      key: "sku",
+      name: "SKU",
+      type: ColumnType.String
     },
     {
-      key: "email",
-      name: "Correo"
+      key: "quantity",
+      name: "Cantidad",
+      type: ColumnType.Number
     },
     {
-      key: "phone",
-      name: "Teléfono"
+      key: "price",
+      name: "precio",
+      type: ColumnType.Money
     },
   ]
 
@@ -139,15 +144,11 @@ const ProductsClient = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           <div>
-            <label className="text-sm">Nombre</label>
+            <label className="text-sm">Producto</label>
             <Input size="sm" />
           </div>
           <div>
-            <label className="text-sm">Apellido</label>
-            <Input size="sm" />
-          </div>
-          <div>
-            <label className="text-sm">Cédula</label>
+            <label className="text-sm">SKU</label>
             <Input size="sm" />
           </div>
           <div className="flex flex-col">

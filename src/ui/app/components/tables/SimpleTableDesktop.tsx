@@ -13,6 +13,7 @@ import {
   TableCaption
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
+import SimpleTableField from './SimpleTableField';
 
 const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   columns,
@@ -62,7 +63,9 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
               {columns.map((col: SimpleTableColumn, colIndex: number) => (
 
                 <Td key={colIndex}>
-                  {dataVal[col.key]}
+                  {
+                    <SimpleTableField data={dataVal} col={col}/>
+                  }
                 </Td>
 
               ))}
