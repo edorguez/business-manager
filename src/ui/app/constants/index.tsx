@@ -18,7 +18,8 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="fluent-mdl2:product" width="20" height="20" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Productos', path: '/products'}
+      { title: 'Productos', path: '/products'},
+      { title: 'Crear Producto', path: '/products/create'}
     ]
   },
   {

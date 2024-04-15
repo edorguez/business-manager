@@ -160,7 +160,7 @@ const ProductsClient = () => {
           <div className="xl:col-start-6">
             <div className="flex flex-col">
               <span className="opacity-0">.</span>
-              <Link href="/customers/create">
+              <Link href="/products/create">
                 <Button size="sm" variant="main" className="w-full">
                   Crear Producto
                 </Button>
@@ -172,7 +172,7 @@ const ProductsClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={productCols} data={productData} showDetails showEdit showDelete onDelete={deleteProductModal.onOpen} />
+          <SimpleTable columns={productCols} data={productData} showToggleActive showDetails showEdit showDelete onDelete={deleteProductModal.onOpen} />
         </SimpleCard>
       </div>
     </div>

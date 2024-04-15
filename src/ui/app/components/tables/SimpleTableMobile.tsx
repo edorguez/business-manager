@@ -10,7 +10,8 @@ import {
   Td,
   TableContainer,
   Button,
-  TableCaption
+  TableCaption,
+  Switch
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
 import SimpleTableField from './SimpleTableField';
@@ -19,6 +20,7 @@ const SimpleTableMobile: React.FC<SimpleTableProps> = ({
   columns,
   data,
   size = 'md',
+  showToggleActive = false,
   showDetails = false,
   showEdit = false,
   showDelete = false,
@@ -49,7 +51,7 @@ const SimpleTableMobile: React.FC<SimpleTableProps> = ({
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((dataVal: any, dataIndex: number) => 
+          {data.map((dataVal: any, dataIndex: number) =>
             [
               columns.map((col: SimpleTableColumn, colIndex: number) => (
                 <Tr key={colIndex}>
@@ -57,7 +59,7 @@ const SimpleTableMobile: React.FC<SimpleTableProps> = ({
                     {col.name}
                   </Th>
                   <Td className='text-sm'>
-                    <SimpleTableField data={dataVal} col={col}/>
+                    <SimpleTableField data={dataVal} col={col} />
                   </Td>
                 </Tr>
               )),
@@ -66,25 +68,34 @@ const SimpleTableMobile: React.FC<SimpleTableProps> = ({
                 <Td>
                 </Td>
                 <Td>
-                  <div className='flex'>
-                  {showDetails && (
-                    <Button size="sm" variant="fifth">
-                      <Icon icon="lucide:info" />
-                    </Button>
+
+                  {showToggleActive && (
+                    <div className='flex items-center justify-center mb-4'>
+                      <span className="text-xs font-bold text-maincolor mr-2">Activo</span>
+                      <Switch size='lg' colorScheme='main' />
+                    </div>
                   )}
 
-                  {showEdit && (
-                    <Button size="sm" variant="main" className="mx-1">
-                      <Icon icon="lucide:edit" />
-                    </Button>
-                  )}
+                  <div className='flex justify-center'>
 
-                  {showDelete && (
-                    <Button size="sm" variant="third" onClick={onDelete}>
-                      <Icon icon="wpf:delete" />
-                    </Button>
-                  )}
-                </div>
+                    {showDetails && (
+                      <Button size="sm" variant="fifth">
+                        <Icon icon="lucide:info" />
+                      </Button>
+                    )}
+
+                    {showEdit && (
+                      <Button size="sm" variant="main" className="mx-1">
+                        <Icon icon="lucide:edit" />
+                      </Button>
+                    )}
+
+                    {showDelete && (
+                      <Button size="sm" variant="third" onClick={onDelete}>
+                        <Icon icon="wpf:delete" />
+                      </Button>
+                    )}
+                  </div>
                 </Td>
               </Tr>,
 
@@ -95,7 +106,7 @@ const SimpleTableMobile: React.FC<SimpleTableProps> = ({
                 </Td>
               </Tr>
             ]
-              
+
           )}
 
         </Tbody>

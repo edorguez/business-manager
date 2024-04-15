@@ -2,6 +2,7 @@ export interface SimpleTableProps {
   columns: SimpleTableColumn[];
   data: any[];
   size?: string;
+  showToggleActive?: boolean;
   showDetails?: boolean;
   showEdit?: boolean;
   showDelete?: boolean;

@@ -10,7 +10,8 @@ import {
   Td,
   TableContainer,
   Button,
-  TableCaption
+  TableCaption,
+  Switch
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
 import SimpleTableField from './SimpleTableField';
@@ -19,6 +20,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   columns,
   data,
   size = 'md',
+  showToggleActive = false,
   showDetails = false,
   showEdit = false,
   showDelete = false,
@@ -64,14 +66,22 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
 
                 <Td key={colIndex}>
                   {
-                    <SimpleTableField data={dataVal} col={col}/>
+                    <SimpleTableField data={dataVal} col={col} />
                   }
                 </Td>
 
               ))}
 
               <Td>
-                <div className='flex'>
+                <div className='flex justify-end'>
+
+                  {showToggleActive && (
+                    <div className='mr-2 flex items-center justify-center'>
+                      <span className="text-xs font-bold text-maincolor mr-2">Activo</span>
+                      <Switch size='md' colorScheme='main' />
+                    </div>
+                  )}
+
                   {showDetails && (
                     <Button size="sm" variant="fifth">
                       <Icon icon="lucide:info" />
