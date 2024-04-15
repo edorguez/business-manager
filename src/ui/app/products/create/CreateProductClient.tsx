@@ -62,9 +62,11 @@ const CreateProductClient = () => {
       
       <div className="mt-3">
         <SimpleCard>
-          <div className="p-2">
+          <div className="p-1">
             <label className='text-sm'>Imágenes</label>
-            <ImagesUpload />
+            <div className="border rounded py-5 px-2">
+              <ImagesUpload />
+            </div>
           </div>
         </SimpleCard>
       </div>
