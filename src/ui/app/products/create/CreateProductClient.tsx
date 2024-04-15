@@ -6,6 +6,7 @@ import { BreadcrumItem } from "@/app/types";
 import Link from "next/link";
 import { Icon } from '@iconify/react';
 import { Button, Input, NumberInput, NumberInputField } from '@chakra-ui/react'
+import ImagesUpload from "@/app/components/uploads/ImagesUpload";
 
 const CreateProductClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -63,9 +64,7 @@ const CreateProductClient = () => {
         <SimpleCard>
           <div className="p-2">
             <label className='text-sm'>Imágenes</label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-1">
-              
-            </div>
+            <ImagesUpload />
           </div>
         </SimpleCard>
       </div>
