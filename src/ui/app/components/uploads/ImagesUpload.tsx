@@ -11,26 +11,30 @@ const ImagesUpload = () => {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files; // Get the files selected by the user
     if (files) {
-      // Convert files to an array
-      const filesArray = Array.from(files);
-      // Set the uploaded files
-      setUploadedFiles(filesArray);
-      // Read and set preview URLs for each file
-      filesArray.forEach(file => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          // Once the file is read, create a Blob URL for the image preview
-          if (reader.result) {
-            const blobUrl = URL.createObjectURL(file);
-            setImagePreviewUrls(prevUrls => [...prevUrls, blobUrl]);
-          }
-        };
-      });
+      // Get files to upload that are not repeated
+      let filesToLoad: any[] = Array.from(files).filter(x => !uploadedFiles.map(y => y.name).includes(x.name));
+
+      if (filesToLoad.length > 0) {
+
+        // Set the uploaded files
+        setUploadedFiles(prevFiles => [...prevFiles, ...filesToLoad]);
+        // Read and set preview URLs for each file
+        filesToLoad.forEach((file: any) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onloadend = () => {
+            // Once the file is read, create a Blob URL for the image preview
+            if (reader.result) {
+              const blobUrl = URL.createObjectURL(file);
+              setImagePreviewUrls(prevUrls => [...prevUrls, blobUrl]);
+            }
+          };
+        });
+      }
+
     }
   };
 
-  // Function to handle removing an uploaded image
   const handleRemoveImage = (index: number) => {
     const updatedFiles = [...uploadedFiles];
     const updatedPreviewUrls = [...imagePreviewUrls];
@@ -45,25 +49,28 @@ const ImagesUpload = () => {
   return (
     <>
       <div className="flex justify-center mb-5">
-        <input type="file" multiple onChange={handleFileChange} className="
-          block 
-          text-sm 
-          text-slate-500
-          file:mr-4 
-          file:py-2 
-          file:px-4
-          file:rounded-full 
-          file:border-0
-          cursor-pointer
-          file:text-sm 
-          file:font-semibold
-          file:bg-maincolorhov
-          file:text-maincolor
-          hover:file:bg-thirdcolorhov
-          hover:file:text-thirdcolor
-          file:transition
-          file:duration-150" 
-        />
+        <label htmlFor="files" className="
+            text-sm
+            bg-maincolorhov
+            text-maincolor
+            hover:bg-thirdcolorhov
+            hover:text-thirdcolor
+            transition
+            duration-150
+            cursor-pointer
+            rounded-full
+            font-semibold
+            py-2
+            px-4
+            border-0
+            flex
+            items-center
+            select-none
+          ">
+          <Icon icon="icon-park-outline:upload-picture" className="mr-2" />
+          Subir Imagen
+        </label>
+        <input id="files" multiple onChange={handleFileChange} className="hidden" type="file" />
       </div>
 
       <hr />
@@ -87,7 +94,13 @@ const ImagesUpload = () => {
       )}
 
       {uploadedFiles.length === 0 && (
-        <span>Sube</span>
+        <div className="text-center mt-3">
+          <h1 className='font-bold text-md text-thirdcolor'>Ninguna imagen subida</h1>
+          <br />
+          <span className='text-sm'>No has subido ninguna imagen, para hacerlo presiona el botón</span>
+          <br />
+          <span className="text-sm"><b>&ldquo;Subir Imagen&rdquo;</b></span>
+        </div>
       )}
     </>
   );
