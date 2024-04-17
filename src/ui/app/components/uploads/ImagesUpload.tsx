@@ -8,29 +8,25 @@ import SimpleToast from "../toasts/SimpleToast";
 
 interface ImagesUploadProps {
   maxImagesNumber?: number;
+  maxImageSizeMb?: number;
 }
 
 const ImagesUpload: React.FC<ImagesUploadProps> = ({
-  maxImagesNumber = 5
+  maxImagesNumber = 5,
+  maxImageSizeMb = 2.2 // Some files of 2mb are rounded to 2.2
 }) => {
   const toast = useToast();
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (uploadedFiles.length >= maxImagesNumber) {
-      toast({
-        position: 'top-right',
-        duration: 6000,
-        render: () => (
-          <SimpleToast title="Error al subir imagen" description={`Solo puedes subir un máximo de ${maxImagesNumber} imágenes`} status="error" />
-        ),
-      })
-      return;
-    }
-
     const files = event.target.files; // Get the files selected by the user
+
     if (files) {
+
+      if (!areFilesValid(files))
+        return
+
       // Get files to upload that are not repeated
       let filesToLoad: any[] = Array.from(files).filter(x => !uploadedFiles.map(y => y.name).includes(x.name));
 
@@ -54,6 +50,47 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
 
     }
   };
+
+  const areFilesValid = (files: FileList): boolean => {
+    const arrayFiles: File[] = Array.from(files);
+
+    if (uploadedFiles.length + files.length - 1 >= maxImagesNumber) {
+      toast({
+        position: 'top-right',
+        duration: 6000,
+        render: () => (
+          <SimpleToast title="Error al subir imagen" description={`Solo puedes subir un máximo de ${maxImagesNumber} imágenes.`} status="error" />
+        ),
+      })
+      return false;
+    }
+
+    const isIncorrectFileImage: boolean = arrayFiles.some((x: File) => !x.name.match(/\.(jpg|jpeg|png)$/));
+    if (isIncorrectFileImage) {
+       toast({
+        position: 'top-right',
+        duration: 6000,
+        render: () => (
+          <SimpleToast title="Error al subir imagen" description="Solo puedes subir imágenes (PNG, JPG, JPEG)" status="error" />
+        ),
+      })
+      return false;
+     }
+
+    const isFileSizeBig: boolean = arrayFiles.some((x: File) => (x.size / 1000000) > maxImageSizeMb); // File size is in kilobytes and we compare with megabytes
+    if (isFileSizeBig) {
+      toast({
+        position: 'top-right',
+        duration: 6000,
+        render: () => (
+          <SimpleToast title="Error al subir imagen" description={`El tamaño de una imagen es mayor al permitido de ${Math.round(maxImageSizeMb)}mb.`} status="error" />
+        ),
+      })
+      return false;
+    }
+
+    return true;
+  }
 
   const handleRemoveImage = (index: number) => {
     const updatedFiles = [...uploadedFiles];
@@ -90,10 +127,10 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
           <Icon icon="icon-park-outline:upload-picture" className="mr-2" />
           Subir Imagen
         </label>
-        <input id="files" multiple onChange={handleFileChange} className="hidden" type="file" accept="image/png, image/gif, image/*"/>
+        <input id="files" multiple onChange={handleFileChange} className="hidden" type="file" accept="image/png, image/gif, image/*" />
       </div>
       <div className="w-100 flex justify-center mt-2">
-      <small className="text-center text-slate-500">Máximo {maxImagesNumber} imágenes y 2mb de tamaño</small>
+        <small className="text-center text-slate-500">Máximo {maxImagesNumber} imágenes (PNG, JPG, JPEG) y {Math.round(maxImageSizeMb)}mb de tamaño</small>
       </div>
 
       <hr className="my-5" />
