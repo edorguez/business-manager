@@ -1,6 +1,6 @@
 module github.com/EdoRguez/business-manager/company-svc
 
-go 1.22.0
+go 1.22.2
 
 require (
 	github.com/lib/pq v1.10.9
