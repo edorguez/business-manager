@@ -1,9 +1,10 @@
 package models
 
 type Product struct {
-	Id                int64            `json:"id"`
-	Name              string           `json:"name"`
-	Stock             int64            `json:"stock"`
-	Price             int64            `json:"price"`
-	StockDecreaseLogs StockDecreaseLog `gorm:"foreignKey:ProductRefer"`
+	Id          int64  `json:"id"`
+	CompanyId   int64  `json:"companyId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Sku         string `json:"sku"`
+	Price       uint64 `json:"price"`
 }

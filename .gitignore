@@ -49,6 +49,9 @@ yarn-error.log*
 /src/backend/customer-svc/!example.env
 /src/backend/company-svc/*.env
 /src/backend/company-svc/!example.env
+/src/backend/product-svc/*.env
+/src/backend/product-svc/!example.env
+
 
 
 
