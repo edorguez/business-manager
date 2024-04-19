@@ -14,7 +14,7 @@ services:
 
   customer-db:
     container_name: customer-db
-    image: postgres:latest
+    image: postgres:16.2
     ports:
       - "5434:5432"
     environment:
@@ -24,11 +24,20 @@ services:
     restart: always
   company-db:
     container_name: company-db
-    image: postgres:latest
+    image: postgres:16.2
     ports:
       - "5435:5432"
     environment:
       - POSTGRES_DB=${COMPANY_SVC_DB}
       - POSTGRES_USER=${COMPANY_SVC_DB_USER}
       - POSTGRES_PASSWORD=${COMPANY_SVC_DB_PASSWORD}
+    restart: always
+  product-db:
+    container_name: product-db
+    image: mongo:7.0.8
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${PRODUCT_SVC_DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${PRODUCT_SVC_DB_PASSWORD}
     restart: always
