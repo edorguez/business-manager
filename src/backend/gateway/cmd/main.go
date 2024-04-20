@@ -13,6 +13,7 @@ import (
 	"github.com/EdoRguez/business-manager/gateway/pkg/company"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer"
+	"github.com/EdoRguez/business-manager/gateway/pkg/product"
 	"github.com/gorilla/mux"
 )
 
@@ -44,6 +45,7 @@ func startServer(address string, conf *config.Config) error {
 
 	customer.LoadRoutes(baseRoute, conf)
 	company.LoadRoutes(baseRoute, conf)
+	product.LoadRoutes(baseRoute, conf)
 
 	s := &http.Server{
 		Addr:         address,

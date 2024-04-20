@@ -7,6 +7,7 @@ type Config struct {
 	Gateway_Url      string `mapstructure:"GATEWAY_URL"`
 	Customer_Svc_Url string `mapstructure:"CUSTOMER_SVC_URL"`
 	Company_Svc_Url  string `mapstructure:"COMPANY_SVC_URL"`
+	Product_Svc_Url  string `mapstructure:"PRODUCT_SVC_URL"`
 }
 
 func LoadConfig() (config Config, err error) {
