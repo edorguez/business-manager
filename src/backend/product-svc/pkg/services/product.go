@@ -40,6 +40,9 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 	}
 
 	fmt.Println("Product Service :  CreateProduct - SUCCESS")
+	fmt.Println(c)
+	fmt.Println("------------------")
+
 	return &product.CreateProductResponse{
 		Status: http.StatusCreated,
 		Id:     c.Id,

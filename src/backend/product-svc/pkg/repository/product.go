@@ -11,14 +11,15 @@ import (
 
 type ProductRepo struct {
 	client *mongo.Client
-	config *config.Config
+	config config.Config
 }
 
 var collectionName = "products"
 
-func NewProductRepo(client *mongo.Client) *ProductRepo {
+func NewProductRepo(client *mongo.Client, config config.Config) *ProductRepo {
 	return &ProductRepo{
 		client: client,
+		config: config,
 	}
 }
 
