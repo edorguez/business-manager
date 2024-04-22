@@ -23,17 +23,18 @@ func NewProductRepo(client *mongo.Client, config config.Config) *ProductRepo {
 	}
 }
 
-func (productRepo *ProductRepo) CreateProduct(ctx context.Context, arg models.Product) (*models.Product, error) {
+func (productRepo *ProductRepo) CreateProduct(ctx context.Context, arg models.Product) (*primitive.ObjectID, error) {
 	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
 
 	res, err := collection.InsertOne(ctx, arg)
 
-	if err != mongo.ErrNilCursor {
+	if err != nil {
 		return nil, err
 	}
 
-	if _, ok := res.InsertedID.(primitive.ObjectID); ok {
-		return &arg, nil
+	if oidResult, ok := res.InsertedID.(primitive.ObjectID); ok {
+		return &oidResult, nil
 	}
-	return &arg, err
+
+	return &primitive.NilObjectID, err
 }

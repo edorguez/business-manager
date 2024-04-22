@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
 	product "github.com/EdoRguez/business-manager/product-svc/pkg/pb"
@@ -27,6 +28,8 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 		Description: *req.Description,
 		Sku:         *req.Sku,
 		Price:       req.Price,
+		CreatedAt:   time.Now(),
+		ModifiedAt:  time.Now(),
 	}
 
 	c, err := s.Repo.CreateProduct(ctx, createProductParams)
@@ -45,6 +48,6 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 
 	return &product.CreateProductResponse{
 		Status: http.StatusCreated,
-		Id:     c.Id,
+		Id:     c.Hex(),
 	}, nil
 }
