@@ -14,6 +14,8 @@ message CreateProductRequest{
   optional string description = 3;
   optional string sku = 4;
   uint64 price = 5;
+  repeated string images = 6;
+  uint32 status = 7;
 }
 
 message CreateProductResponse{

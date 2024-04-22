@@ -5,8 +5,10 @@ import (
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
+	"go.mongodb.org/mongo-driver/bson/mgocompat"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type ProductRepo struct {
@@ -24,7 +26,7 @@ func NewProductRepo(client *mongo.Client, config config.Config) *ProductRepo {
 }
 
 func (productRepo *ProductRepo) CreateProduct(ctx context.Context, arg models.Product) (*primitive.ObjectID, error) {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.DBName, options.Database().SetRegistry(mgocompat.NewRegistryBuilder().Build())).Collection(collectionName)
 
 	res, err := collection.InsertOne(ctx, arg)
 

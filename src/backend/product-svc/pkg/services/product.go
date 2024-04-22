@@ -28,6 +28,8 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 		Description: *req.Description,
 		Sku:         *req.Sku,
 		Price:       req.Price,
+		Images:      req.Images,
+		Status:      req.Status,
 		CreatedAt:   time.Now(),
 		ModifiedAt:  time.Now(),
 	}

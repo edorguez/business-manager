@@ -28,7 +28,7 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("", cr.CreateProduct)
-	postRouter.Use(mw.MiddlewareValidateCreateCustomer)
+	postRouter.Use(mw.MiddlewareValidateCreateProduct)
 
 	// putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	// putRouter.HandleFunc("/{id:[0-9]+}", cr.UpdateCustomer)

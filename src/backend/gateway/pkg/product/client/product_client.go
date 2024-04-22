@@ -40,6 +40,8 @@ func CreateProduct(body contracts.CreateProductRequest, c context.Context) (*pb.
 		Description: body.Description,
 		Sku:         body.Sku,
 		Price:       body.Price,
+		Images:      body.Images,
+		Status:      body.Status,
 	}
 
 	res, err := productServiceClient.CreateProduct(c, createProductParams)

@@ -16,7 +16,7 @@ type MiddlewareErrorResponse struct {
 	Error  string
 }
 
-func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) http.Handler {
+func (m *MiddlewareConfig) MiddlewareValidateCreateProduct(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body contracts.CreateProductRequest
 
@@ -26,9 +26,12 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) h
 			return
 		}
 
+		fmt.Println("beamos")
+
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateProduct")
+			fmt.Println(err)
 			middleErr := MiddlewareErrorResponse{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
@@ -39,7 +42,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) h
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), contracts.CreateProductRequest{}, body)
+		ctx := context.WithValue(r.Context(), "keyProduct", body)
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
