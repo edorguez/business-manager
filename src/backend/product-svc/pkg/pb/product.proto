@@ -6,6 +6,10 @@ option go_package= "github.com/EdoRguez/business-manager/product-svc/pb";
 
 service ProductService{
   rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc GetProducts(GetProductsRequest) returns (GetProductsResponse);
+  rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
+  rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
 }
 
 message CreateProductRequest{
@@ -22,4 +26,56 @@ message CreateProductResponse{
   string id = 1;
   int64 status = 2;
   string error = 3;
+}
+
+message GetProductRequest{
+  string id = 1;
+}
+
+message GetProductResponse{
+  string id = 1;
+  int64 companyId = 2;
+  string name = 3;
+  optional string description = 4;
+  optional string sku = 5;
+  uint64 price = 6;
+  repeated string images = 7;
+  uint32 status = 8;
+  string error = 9;
+}
+
+message GetProductsRequest{
+  int64 companyId = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message GetProductsResponse{
+  repeated GetProductResponse products = 1;
+  int64 status = 2;
+  string error = 3;
+}
+
+message UpdateProductRequest{
+  string id = 1;
+  string name = 2;
+  optional string description = 3;
+  optional string sku = 4;
+  uint64 price = 5;
+  repeated string images = 6;
+  uint32 status = 7;
+}
+
+message UpdateProductResponse{
+  int64 status = 1;
+  string error = 2;
+}
+
+message DeleteProductRequest{
+  string id = 1;
+}
+
+message DeleteProductResponse{
+  int64 status = 1;
+  string error = 2;
 }
