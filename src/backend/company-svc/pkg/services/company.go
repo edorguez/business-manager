@@ -100,7 +100,7 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 		}, nil
 	}
 
-	var companies []*company.GetCompanyResponse
+	companies := make([]*company.GetCompanyResponse, 0, len(c))
 	for _, v := range c {
 		companies = append(companies, &company.GetCompanyResponse{
 			Id:       v.ID,

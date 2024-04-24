@@ -121,7 +121,7 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 		}, nil
 	}
 
-	var payments []*payment.GetPaymentResponse
+	payments := make([]*payment.GetPaymentResponse, 0, len(p))
 	for _, v := range p {
 		payments = append(payments, &payment.GetPaymentResponse{
 			Id:                   v.ID,

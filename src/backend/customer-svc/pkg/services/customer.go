@@ -111,7 +111,7 @@ func (s *CustomerService) GetCustomers(ctx context.Context, req *customer.GetCus
 		}, nil
 	}
 
-	var customers []*customer.GetCustomerResponse
+	customers := make([]*customer.GetCustomerResponse, 0, len(c))
 	for _, v := range c {
 		customers = append(customers, &customer.GetCustomerResponse{
 			Id:                   v.ID,

@@ -2,7 +2,8 @@ package contracts
 
 import "github.com/go-playground/validator/v10"
 
-type CreateProductRequest struct {
+type UpdateProductRequest struct {
+	Id            string   `json:"string" validate:"required"`
 	CompanyId     int64    `json:"companyId" validate:"required"`
 	Name          string   `json:"name" validate:"required,max=50"`
 	Description   *string  `json:"description" validate:"omitempty,max=50"`
@@ -12,7 +13,7 @@ type CreateProductRequest struct {
 	ProductStatus uint32   `json:"productStatus" validate:"required"`
 }
 
-func (p *CreateProductRequest) Validate() error {
+func (p *UpdateProductRequest) Validate() error {
 	validate := validator.New()
 
 	return validate.Struct(p)

@@ -19,7 +19,7 @@ message CreateProductRequest{
   optional string sku = 4;
   uint64 price = 5;
   repeated string images = 6;
-  uint32 status = 7;
+  uint32 productStatus = 7;
 }
 
 message CreateProductResponse{
@@ -40,8 +40,9 @@ message GetProductResponse{
   optional string sku = 5;
   uint64 price = 6;
   repeated string images = 7;
-  uint32 status = 8;
-  string error = 9;
+  uint32 productStatus = 8;
+  int64 status = 9;
+  string error = 10;
 }
 
 message GetProductsRequest{
@@ -63,7 +64,7 @@ message UpdateProductRequest{
   optional string sku = 4;
   uint64 price = 5;
   repeated string images = 6;
-  uint32 status = 7;
+  uint32 productStatus = 7;
 }
 
 message UpdateProductResponse{

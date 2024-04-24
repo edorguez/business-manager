@@ -41,10 +41,10 @@ func (productRepo *ProductRepo) CreateProduct(ctx context.Context, arg models.Pr
 	return &primitive.NilObjectID, err
 }
 
-func (productRepo *ProductRepo) GetProduct(ctx context.Context, id primitive.ObjectID) (*models.Product, error) {
+func (productRepo *ProductRepo) GetProduct(ctx context.Context, id primitive.ObjectID) (*models.GetProduct, error) {
 	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
 
-	var result models.Product
+	var result models.GetProduct
 	err := collection.FindOne(ctx, bson.M{"_id": id}).Decode(&result)
 	if err != nil {
 		return nil, err
@@ -58,10 +58,10 @@ type GetProductsParams struct {
 	Offset    int32
 }
 
-func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProductsParams) ([]models.Product, error) {
+func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProductsParams) ([]models.GetProduct, error) {
 	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
 
-	var result []models.Product
+	var result []models.GetProduct
 	options := options.Find().SetLimit(int64(arg.Limit)).SetSkip(int64(arg.Offset))
 	cursor, err := collection.Find(ctx, bson.M{"companyId": arg.CompanyId}, options)
 	if err != nil {
@@ -70,7 +70,7 @@ func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProducts
 	defer cursor.Close(ctx)
 
 	for cursor.Next(context.Background()) {
-		var product models.Product
+		var product models.GetProduct
 		cursor.Decode(&product)
 		result = append(result, product)
 	}
@@ -84,11 +84,11 @@ func (productRepo *ProductRepo) UpdateProduct(ctx context.Context, id primitive.
 	opts := options.Update().SetUpsert(true)
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{
-		"name":        arg.Name,
-		"description": arg.Description,
-		"sku":         arg.Sku,
-		"price":       arg.Price,
-		"status":      arg.Status,
+		"name":          arg.Name,
+		"description":   arg.Description,
+		"sku":           arg.Sku,
+		"price":         arg.Price,
+		"productStatus": arg.ProductStatus,
 	},
 	}
 
