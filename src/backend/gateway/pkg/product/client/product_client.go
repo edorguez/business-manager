@@ -71,6 +71,9 @@ func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *c
 
 	res, err := productServiceClient.GetProduct(c, params)
 
+	fmt.Println("product clinet")
+	fmt.Println(res)
+
 	if err != nil {
 		fmt.Println("Product CLIENT :  GetProduct - ERROR")
 		fmt.Println(err.Error())
@@ -83,8 +86,6 @@ func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *c
 		return nil, error
 	}
 
-	fmt.Println("Product CLIENT :  GetProduct - SUCCESS")
-
 	if res.Status != http.StatusOK {
 		error := &contracts.Error{
 			Status: res.Status,
@@ -93,6 +94,7 @@ func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *c
 		return nil, error
 	}
 
+	fmt.Println("Product CLIENT :  GetProduct - SUCCESS")
 	return &contracts.GetProductResponse{
 		Id:            res.Id,
 		CompanyId:     res.CompanyId,

@@ -3,8 +3,6 @@ package contracts
 import "github.com/go-playground/validator/v10"
 
 type UpdateProductRequest struct {
-	Id            string   `json:"string" validate:"required"`
-	CompanyId     int64    `json:"companyId" validate:"required"`
 	Name          string   `json:"name" validate:"required,max=50"`
 	Description   *string  `json:"description" validate:"omitempty,max=50"`
 	Sku           *string  `json:"sku" validate:"omitempty,max=12"`

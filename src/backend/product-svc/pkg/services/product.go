@@ -90,6 +90,7 @@ func (s *ProductService) GetProduct(ctx context.Context, req *product.GetProduct
 		Price:         p.Price,
 		Images:        p.Images,
 		ProductStatus: p.ProductStatus,
+		Status:        http.StatusOK,
 	}, nil
 }
 
@@ -147,6 +148,7 @@ func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateP
 		Description:   req.Description,
 		Sku:           req.Sku,
 		Price:         req.Price,
+		Images:        req.Images,
 		ProductStatus: req.ProductStatus,
 	}
 

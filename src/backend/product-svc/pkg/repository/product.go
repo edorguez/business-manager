@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
@@ -88,7 +89,9 @@ func (productRepo *ProductRepo) UpdateProduct(ctx context.Context, id primitive.
 		"description":   arg.Description,
 		"sku":           arg.Sku,
 		"price":         arg.Price,
+		"images":        arg.Images,
 		"productStatus": arg.ProductStatus,
+		"modifiedAt":    time.Now(),
 	},
 	}
 

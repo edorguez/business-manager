@@ -16,7 +16,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println("API Gateway :  UpdateProduct")
 
 	// We got our body through context, since we saved it in a middleware
-	body := r.Context().Value(contracts.UpdateProductRequest{}).(contracts.UpdateProductRequest)
+	body := r.Context().Value("keyProductUpdate").(contracts.UpdateProductRequest)
 
 	vars := mux.Vars(r)
 

@@ -16,7 +16,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println("API Gateway :  CreateProduct")
 
 	// We got our body through context, since we saved it in a middleware
-	body := r.Context().Value("keyProduct").(contracts.CreateProductRequest)
+	body := r.Context().Value("keyProductCreate").(contracts.CreateProductRequest)
 
 	fmt.Println("API Gateway :  CreateProduct - Body")
 	fmt.Println(body)

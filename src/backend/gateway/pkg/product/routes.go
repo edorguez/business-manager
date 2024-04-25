@@ -22,20 +22,20 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 
 	mw := MiddlewareConfig{}
 
-	// getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
-	// getRouter.HandleFunc("/{id:[0-9]+}", cr.GetCustomer)
-	// getRouter.HandleFunc("", cr.GetCustomers)
+	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/{id}", cr.GetProduct)
+	getRouter.HandleFunc("", cr.GetProducts)
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("", cr.CreateProduct)
 	postRouter.Use(mw.MiddlewareValidateCreateProduct)
 
-	// putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
-	// putRouter.HandleFunc("/{id:[0-9]+}", cr.UpdateCustomer)
-	// putRouter.Use(mw.MiddlewareValidateUpdateCustomer)
-	//
-	// deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
-	// deleteRouter.HandleFunc("/{id:[0-9]+}", cr.DeleteCustomer)
+	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
+	putRouter.HandleFunc("/{id}", cr.UpdateProduct)
+	putRouter.Use(mw.MiddlewareValidateUpdateProduct)
+
+	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
+	deleteRouter.HandleFunc("/{id}", cr.DeleteProduct)
 }
 
 func (pr *ProductRoutes) CreateProduct(w http.ResponseWriter, r *http.Request) {
@@ -43,22 +43,22 @@ func (pr *ProductRoutes) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	routes.CreateProduct(w, r, pr.config)
 }
 
-// func (cr *CustomerRoutes) GetCustomer(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("API Gateway :  GetCustomer Called --> 1")
-// 	routes.GetCustomer(w, r, cr.config)
-// }
-//
-// func (cr *CustomerRoutes) GetCustomers(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("API Gateway :  GetCustomers Called --> 1")
-// 	routes.GetCustomers(w, r, cr.config)
-// }
-//
-// func (cr *CustomerRoutes) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("API Gateway :  UpdateCustomer Called --> 1")
-// 	routes.UpdateCustomer(w, r, cr.config)
-// }
-//
-// func (cr *CustomerRoutes) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("API Gateway :  DeleteCustomer Called --> 1")
-// 	routes.DeleteCustomer(w, r, cr.config)
-// }
+func (cr *ProductRoutes) GetProduct(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetProduct Called --> 1")
+	routes.GetProduct(w, r, cr.config)
+}
+
+func (cr *ProductRoutes) GetProducts(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetProducts Called --> 1")
+	routes.GetProducts(w, r, cr.config)
+}
+
+func (cr *ProductRoutes) UpdateProduct(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  UpdateProduct Called --> 1")
+	routes.UpdateProduct(w, r, cr.config)
+}
+
+func (cr *ProductRoutes) DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  DeleteProduct Called --> 1")
+	routes.DeleteProduct(w, r, cr.config)
+}
