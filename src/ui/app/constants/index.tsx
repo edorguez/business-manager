@@ -32,9 +32,9 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     ]
   },
   {
-    title: 'Scheduling',
-    path: '/scheduling',
-    icon: <Icon icon="bx:calendar" width="20" height="20" />,
+    title: 'WhatsApp',
+    path: '/whatsapp',
+    icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
   },
   {
     title: 'Projects',
