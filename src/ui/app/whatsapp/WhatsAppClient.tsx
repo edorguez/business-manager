@@ -4,12 +4,15 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import SimpleCard from "../components/cards/SimpleCard";
 import { Icon } from "@iconify/react";
 import ChatList from "../components/whatsapp/ChatList";
+import MessageList from "../components/whatsapp/MessageList";
+import MessageBar from "../components/whatsapp/MessageBar";
+import UserBar from "../components/whatsapp/UserBar";
 
 const WhatsAppClient = () => {
   return (
     <SimpleCard>
       <div className="h-[85vh] flex my-3 rounded border-2 border-slate-200">
-        <div className="w-1/3 border-r-2 border-r-slate-200 overflow-scroll">
+        <div className="w-3/6 border-r-2 border-r-slate-200 overflow-scroll">
           <Tabs colorScheme='green'>
             <TabList>
               <Tab><Icon icon="ic:baseline-message" /><span className="text-sm"> Mensajes</span></Tab>
@@ -31,6 +34,13 @@ const WhatsAppClient = () => {
           </Tabs>
         </div>
         <div className="w-full" style={{ backgroundImage: 'url(/images/whatsapp/ws_bg.png)' }}>
+          <div className="h-full bg-rose-500">
+            <UserBar />
+            <MessageList />
+            <div className="mt-auto">
+              <MessageBar />
+            </div>
+          </div>
 
         </div>
       </div>
