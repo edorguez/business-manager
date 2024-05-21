@@ -33,13 +33,13 @@ const WhatsAppClient = () => {
             </TabPanels>
           </Tabs>
         </div>
-        <div className="w-full" style={{ backgroundImage: 'url(/images/whatsapp/ws_bg.png)' }}>
+        <div className="w-full" style={{ backgroundImage: 'url(/images/whatsapp/ws_bg.jpg)', backgroundSize: 'contain', backgroundRepeat: 'repeat' }}>
           <div className="h-full flex flex-col">
             <UserBar />
-            <MessageList />
             <div className="mt-auto">
-              <MessageBar />
+              <MessageList />
             </div>
+            <MessageBar />
           </div>
 
         </div>
