@@ -13,7 +13,7 @@ const MessageBar = () => {
         <div className="mx-2 flex justify-center items-center rounded-full text-slate-500 hover:text-thirdcolor cursor-pointer transition duration-100">
           <Icon icon="fluent-mdl2:product" width={22} height={22} />
         </div>
-        <Input bg="white" size='sm' placeholder='Basic usage' />
+        <Input bg="white" size='sm' placeholder='Mensaje' />
         <div className="mx-2 p-2 flex justify-center items-center rounded-full bg-thirdcolor text-white hover:bg-maincolor cursor-pointer transition duration-100">
           <Icon icon="material-symbols:send" />
         </div>
