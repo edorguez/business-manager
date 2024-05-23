@@ -1,9 +1,11 @@
 'use client';
 
+import useWhatsappMessage from "@/app/hooks/useWhatsappMessage";
 import { WhatsappMessage, WhatsappMessageType } from "@/app/types/whatsapp";
+import { useEffect, useState } from "react";
 
 const MessageList = () => {
-  const messages: WhatsappMessage[] = [
+  const wsm: WhatsappMessage[] = [
     {
       id: 0,
       message: 'Hola',
@@ -28,18 +30,32 @@ const MessageList = () => {
       type: WhatsappMessageType.Sent,
       date: new Date()
     },
-
   ];
+
+  const [messages, setMessages] = useState<WhatsappMessage[]>(wsm);
+  const whatsappMessage = useWhatsappMessage();
 
   const getDateMessageFormat = (date: Date): string => {
     return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
   }
 
+
+  useEffect(() => {
+    const newMessage: WhatsappMessage = {
+      id: messages.length,
+      message: whatsappMessage.message,
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    }
+    
+    setMessages(prevVal => [...prevVal, newMessage]);
+  }, [whatsappMessage.message])
+
   return (
     <div className="flex flex-col p-1">
       {
-        messages.map((message: WhatsappMessage) => (
-          <div key={message.id} 
+        messages.map((message: WhatsappMessage, idx: number) => (
+          <div key={idx} 
                 className={`
                   max-w-[70%]
                   rounded
