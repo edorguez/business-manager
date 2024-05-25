@@ -2,7 +2,7 @@
 
 import useWhatsappMessage from "@/app/hooks/useWhatsappMessage";
 import { WhatsappMessage, WhatsappMessageType } from "@/app/types/whatsapp";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MessageList = () => {
   const wsm: WhatsappMessage[] = [
@@ -30,10 +30,71 @@ const MessageList = () => {
       type: WhatsappMessageType.Sent,
       date: new Date()
     },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
+    {
+      id: 3,
+      message: 'Chevere gracias bro es que este es un mensaje largo que quiero probar para ver como se ve con el sistema porque aja si es muy largo no tiene sentido que pruebe esto!',
+      type: WhatsappMessageType.Sent,
+      date: new Date()
+    },
   ];
 
   const [messages, setMessages] = useState<WhatsappMessage[]>(wsm);
   const whatsappMessage = useWhatsappMessage();
+  const scrollRef = useRef<any>(null);
 
   const getDateMessageFormat = (date: Date): string => {
     return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
@@ -49,7 +110,15 @@ const MessageList = () => {
     }
     
     setMessages(prevVal => [...prevVal, newMessage]);
+
+    // Scroll chat to bottom
+    setTimeout(() => { scrollChatToBottom(); }, 1);
+
   }, [whatsappMessage.message])
+
+  const scrollChatToBottom = () => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   return (
     <div className="flex flex-col p-1">
@@ -82,6 +151,7 @@ const MessageList = () => {
           </div>
         ))
       }
+      <div ref={scrollRef}/>
     </div>
   )
 }

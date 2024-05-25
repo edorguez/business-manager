@@ -9,6 +9,7 @@ import MessageBar from "../components/whatsapp/MessageBar";
 import UserBar from "../components/whatsapp/UserBar";
 
 const WhatsAppClient = () => {
+
   return (
     <SimpleCard>
       <div className="h-[85vh] flex my-3 rounded border-2 border-slate-200">
@@ -36,7 +37,7 @@ const WhatsAppClient = () => {
         <div className="w-full" style={{ backgroundImage: 'url(/images/whatsapp/ws_bg.jpg)', backgroundSize: 'contain', backgroundRepeat: 'repeat' }}>
           <div className="h-full flex flex-col">
             <UserBar />
-            <div className="mt-auto">
+            <div className="mt-auto overflow-y-auto">
               <MessageList />
             </div>
             <MessageBar />
