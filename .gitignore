@@ -51,6 +51,8 @@ yarn-error.log*
 /src/backend/company-svc/!example.env
 /src/backend/product-svc/*.env
 /src/backend/product-svc/!example.env
+/src/backend/whatsapp-svc/*.env
+/src/backend/whatsapp-svc/!example.env
 
 
 
