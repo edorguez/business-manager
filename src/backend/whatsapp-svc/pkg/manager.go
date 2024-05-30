@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"context"
@@ -34,6 +34,8 @@ func checkOrigin(r *http.Request) bool {
 	// Grab the request origin
 	origin := r.Header.Get("Origin")
 
+	return true
+
 	switch origin {
 	// Update this to HTTPS
 	case "https://localhost:8080":
@@ -45,7 +47,7 @@ func checkOrigin(r *http.Request) bool {
 
 // Manager is used to hold references to all Clients Registered, and Broadcasting etc
 type Manager struct {
-	clients ClientList
+	Clients ClientList
 
 	// Using a syncMutex here to be able to lcok state before editing clients
 	// Could also use Channels to block
@@ -59,7 +61,7 @@ type Manager struct {
 // NewManager is used to initalize all the values inside the manager
 func NewManager(ctx context.Context) *Manager {
 	m := &Manager{
-		clients:  make(ClientList),
+		Clients:  make(ClientList),
 		handlers: make(map[string]EventHandler),
 		// Create a new retentionMap that removes Otps older than 5 seconds
 		otps: NewRetentionMap(ctx, 5*time.Second),
@@ -89,7 +91,7 @@ func (m *Manager) routeEvent(event Event, c *Client) error {
 }
 
 // loginHandler is used to verify an user authentication and return a one time password
-func (m *Manager) loginHandler(w http.ResponseWriter, r *http.Request) {
+func (m *Manager) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	type userLoginRequest struct {
 		Username string `json:"username"`
@@ -133,21 +135,21 @@ func (m *Manager) loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // serveWS is a HTTP Handler that the has the Manager that allows connections
-func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
+func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request) {
 
 	// Grab the OTP in the Get param
-	otp := r.URL.Query().Get("otp")
-	if otp == "" {
-		// Tell the user its not authorized
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	// Verify OTP is existing
-	if !m.otps.VerifyOTP(otp) {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
+	// otp := r.URL.Query().Get("otp")
+	// if otp == "" {
+	// 	// Tell the user its not authorized
+	// 	w.WriteHeader(http.StatusUnauthorized)
+	// 	return
+	// }
+	//
+	// // Verify OTP is existing
+	// if !m.otps.VerifyOTP(otp) {
+	// 	w.WriteHeader(http.StatusUnauthorized)
+	// 	return
+	// }
 
 	log.Println("New connection")
 	// Begin by upgrading the HTTP request
@@ -173,7 +175,7 @@ func (m *Manager) addClient(client *Client) {
 	defer m.Unlock()
 
 	// Add Client
-	m.clients[client] = true
+	m.Clients[client] = true
 }
 
 // removeClient will remove the client and clean up
@@ -182,10 +184,10 @@ func (m *Manager) removeClient(client *Client) {
 	defer m.Unlock()
 
 	// Check if Client exists, then delete it
-	if _, ok := m.clients[client]; ok {
+	if _, ok := m.Clients[client]; ok {
 		// close connection
 		client.connection.Close()
 		// remove
-		delete(m.clients, client)
+		delete(m.Clients, client)
 	}
 }

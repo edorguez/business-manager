@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Skeleton, SkeletonCircle, SkeletonText, Stack } from "@chakra-ui/react";
+import { Skeleton, Stack } from "@chakra-ui/react";
 
 const ChatList = () => {
   const chatsLoading: any[] = [...Array(13)].map(item => {

@@ -5,7 +5,13 @@ import { Input } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-const MessageBar = () => {
+interface MessageBarProps {
+  onSendMessage: (message: string) => void;
+}
+
+const MessageBar: React.FC<MessageBarProps> = ({
+  onSendMessage
+}) => {
   
   const whatsappMessage = useWhatsappMessage();
   const [message, setMessage] = useState('');
@@ -22,6 +28,7 @@ const MessageBar = () => {
   const handleSendMessage = () => {
     if(message.trim() !== '') {
       whatsappMessage.setMessage(message);
+      onSendMessage(message);
       setMessage('');
     }
   }

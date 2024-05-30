@@ -7,8 +7,22 @@ import ChatList from "../components/whatsapp/ChatList";
 import MessageList from "../components/whatsapp/MessageList";
 import MessageBar from "../components/whatsapp/MessageBar";
 import UserBar from "../components/whatsapp/UserBar";
+import useWebSocket from 'react-use-websocket';
+
+const WS_URL = 'ws://localhost:8080/ws';
 
 const WhatsAppClient = () => {
+  const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
+    onOpen: () => {
+      console.log('WebSocket connection established.');
+    }
+  });
+
+  const sendWhatsappMessage = (message: string): void  => {
+    sendMessage(message);
+  }
+  
+  // const handleClickSendMessage = useCallback(() => sendMessage('Hello'), []);
 
   return (
     <SimpleCard>
@@ -40,7 +54,7 @@ const WhatsAppClient = () => {
             <div className="mt-auto overflow-y-auto">
               <MessageList />
             </div>
-            <MessageBar />
+            <MessageBar onSendMessage={sendWhatsappMessage} />
           </div>
 
         </div>

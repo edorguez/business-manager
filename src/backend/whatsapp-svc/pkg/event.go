@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"encoding/json"
@@ -66,7 +66,7 @@ func SendMessageHandler(event Event, c *Client) error {
 	outgoingEvent.Payload = data
 	outgoingEvent.Type = EventNewMessage
 	// Broadcast to all other Clients
-	for client := range c.manager.clients {
+	for client := range c.manager.Clients {
 		// Only send to clients inside the same chatroom
 		if client.chatroom == c.chatroom {
 			client.egress <- outgoingEvent
