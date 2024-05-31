@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"time"
 
@@ -79,8 +78,6 @@ func (c *Client) readMessages() {
 		}
 		// Marshal incoming data into a Event struct
 		var request Event
-		fmt.Println("mensaje")
-		fmt.Println(payload)
 		if err := json.Unmarshal(payload, &request); err != nil {
 			log.Printf("error marshalling message: %v", err)
 			break // Breaking the connection here might be harsh xD

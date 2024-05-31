@@ -19,7 +19,15 @@ const WhatsAppClient = () => {
   });
 
   const sendWhatsappMessage = (message: string): void  => {
-    sendMessage(message);
+
+    const result: any = {
+      type: 'send_message',
+      payload: {
+        message: message,
+        from: 'Eduardo'
+      }
+    };
+    sendMessage(JSON.stringify(result));
   }
   
   // const handleClickSendMessage = useCallback(() => sendMessage('Hello'), []);

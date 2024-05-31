@@ -1,6 +1,6 @@
 module github.com/EdoRguez/business-manager/gateway
 
-go 1.22.2
+go 1.22.3
 
 require (
 	github.com/go-playground/validator/v10 v10.18.0
