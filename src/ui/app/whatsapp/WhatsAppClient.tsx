@@ -13,12 +13,20 @@ const WS_URL = 'ws://localhost:8080/ws';
 
 const WhatsAppClient = () => {
   const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
+    share: true,
+    shouldReconnect: () => false,
     onOpen: () => {
       console.log('WebSocket connection established.');
+    },
+    onMessage: (event: WebSocketEventMap['message']) => {
+      console.log('-------------------')
+      console.log(event);
     }
   });
 
   const sendWhatsappMessage = (message: string): void  => {
+    console.log('Enviar primero el mensaje');
+    console.log(lastMessage);
 
     const result: any = {
       type: 'send_message',
