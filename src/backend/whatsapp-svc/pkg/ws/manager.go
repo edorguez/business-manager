@@ -1,4 +1,4 @@
-package pkg
+package ws
 
 import (
 	"context"
@@ -30,15 +30,12 @@ var (
 
 // checkOrigin will check origin and return true if its allowed
 func checkOrigin(r *http.Request) bool {
-
 	// Grab the request origin
 	origin := r.Header.Get("Origin")
 
-	return true
-
 	switch origin {
 	// Update this to HTTPS
-	case "https://localhost:8080":
+	case "http://localhost:3000":
 		return true
 	default:
 		return false

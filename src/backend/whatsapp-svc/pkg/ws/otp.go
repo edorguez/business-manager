@@ -1,5 +1,4 @@
-// Package main - the OTP file is used for having a OTP manager
-package pkg
+package ws
 
 import (
 	"context"

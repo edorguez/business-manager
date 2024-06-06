@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg"
+	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/ws"
 )
 
 func main() {
@@ -26,18 +26,17 @@ func main() {
 		log.Fatal("ListenAndServe: ", err)
 	}
 
-	fmt.Println("Started")
 }
 
 // setupAPI will start all Routes and their Handlers
 func setupAPI(ctx context.Context) {
 
 	// Create a Manager instance used to handle WebSocket Connections
-	manager := pkg.NewManager(ctx)
+	manager := ws.NewManager(ctx)
 
 	// Serve the ./frontend directory at Route /
 	// http.Handle("/", http.FileServer(http.Dir("./frontend")))
-	// http.HandleFunc("/login", manager.LoginHandler)
+	http.HandleFunc("/login", manager.LoginHandler)
 	http.HandleFunc("/ws", manager.ServeWS)
 
 	http.HandleFunc("/debug", func(w http.ResponseWriter, r *http.Request) {
