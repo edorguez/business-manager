@@ -30,7 +30,7 @@ var (
 	// pingInterval has to be less than pongWait, We cant multiply by 0.9 to get 90% of time
 	// Because that can make decimals, so instead *9 / 10 to get 90%
 	// The reason why it has to be less than PingRequency is becuase otherwise it will send a new Ping before getting response
-	pingInterval = (pongWait * 9) / 10
+	pingInterval = (pongWait * 1) / 10
 )
 
 // NewClient is used to initialize a new Client with all required values initialized
@@ -135,6 +135,7 @@ func (c *Client) writeMessages() {
 				log.Println("writemsg: ", err)
 				return // return to break this goroutine triggeing cleanup
 			}
+			// log.Println("test")
 		}
 
 	}

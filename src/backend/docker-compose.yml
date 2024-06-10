@@ -41,3 +41,13 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${PRODUCT_SVC_DB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${PRODUCT_SVC_DB_PASSWORD}
     restart: always
+  whatsapp-db:
+    container_name: whatsapp-db
+    image: postgres:16.2
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_DB=${WHATSAPP_SVC_DB}
+      - POSTGRES_USER=${WHATSAPP_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${WHATSAPP_SVC_DB_PASSWORD}
+    restart: always

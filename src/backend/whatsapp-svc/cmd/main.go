@@ -6,10 +6,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/ws"
 )
 
 func main() {
+	c, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalln("Failed at config", err)
+	}
 
 	// Create a root ctx and a CancelFunc which can be used to cancel retentionMap goroutine
 	rootCtx := context.Background()
@@ -19,13 +24,14 @@ func main() {
 
 	setupAPI(ctx)
 
-	// Serve on port :8080, fudge yeah hardcoded port
-	// err := http.ListenAndServeTLS(":8080", "server.crt", "server.key", nil)
-	err := http.ListenAndServe(":8080", nil)
+	// Serve on port :50055, fudge yeah hardcoded port
+	// err := http.ListenAndServeTLS(":50055", "server.crt", "server.key", nil)
+	err = http.ListenAndServe(":"+c.Port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 
+	// services.StartWhatsapp()
 }
 
 // setupAPI will start all Routes and their Handlers
