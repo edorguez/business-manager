@@ -7,7 +7,7 @@ const ConnectQr = () => {
     <>
       <div className='flex justify-center mt-5'>
         <div className='rounded-full bg-thirdcolorhov text-thirdcolor text-5xl p-2'>
-          <Icon icon="gravity-ui:plug-connection" />
+          <Icon icon="ic:baseline-whatsapp" />
         </div>
       </div>
       <div className='text-center my-3'>

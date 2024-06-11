@@ -21,13 +21,7 @@ func eventHandler(evt interface{}) {
 	}
 }
 
-func StartWhatsapp() {
-	dbLog := waLog.Stdout("Database", "DEBUG", true)
-	// Make sure you add appropriate DB connector imports, e.g. github.com/mattn/go-sqlite3 for SQLite
-	container, err := sqlstore.New("postgres", "postgresql://postgres:postgres@localhost:5436/postgres?sslmode=disable", dbLog)
-	if err != nil {
-		panic(err)
-	}
+func StartWhatsapp(container *sqlstore.Container) {
 	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
 	deviceStore, err := container.GetFirstDevice()
 	if err != nil {

@@ -135,7 +135,8 @@ func (c *Client) writeMessages() {
 				log.Println("writemsg: ", err)
 				return // return to break this goroutine triggeing cleanup
 			}
-			// log.Println("test")
+			log.Println("test")
+			c.connection.WriteMessage(websocket.TextMessage, []byte("Here is a string...."))
 		}
 
 	}

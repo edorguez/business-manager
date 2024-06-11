@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"go.mau.fi/whatsmeow/store/sqlstore"
 )
 
 var (
@@ -53,15 +54,19 @@ type Manager struct {
 	handlers map[string]EventHandler
 	// otps is a map of allowed OTP to accept connections from
 	otps RetentionMap
+
+	// DB container
+	container sqlstore.Container
 }
 
 // NewManager is used to initalize all the values inside the manager
-func NewManager(ctx context.Context) *Manager {
+func NewManager(ctx context.Context, container *sqlstore.Container) *Manager {
 	m := &Manager{
 		Clients:  make(ClientList),
 		handlers: make(map[string]EventHandler),
 		// Create a new retentionMap that removes Otps older than 5 seconds
-		otps: NewRetentionMap(ctx, 5*time.Second),
+		otps:      NewRetentionMap(ctx, 5*time.Second),
+		container: *container,
 	}
 	m.setupEventHandlers()
 	return m
