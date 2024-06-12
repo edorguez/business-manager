@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/services"
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/ws"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	waLog "go.mau.fi/whatsmeow/util/log"
@@ -34,8 +33,6 @@ func main() {
 
 	setupAPI(ctx, container)
 
-	go services.StartWhatsapp(container)
-
 	// Serve on port :50055, fudge yeah hardcoded port
 	// err := http.ListenAndServeTLS(":50055", "server.crt", "server.key", nil)
 	err = http.ListenAndServe(":"+c.Port, nil)
@@ -48,7 +45,7 @@ func main() {
 func setupAPI(ctx context.Context, container *sqlstore.Container) {
 
 	// Create a Manager instance used to handle WebSocket Connections
-	manager := ws.NewManager(ctx, container)
+	manager := ws.NewManager(ctx, *container)
 
 	// Serve the ./frontend directory at Route /
 	// http.Handle("/", http.FileServer(http.Dir("./frontend")))

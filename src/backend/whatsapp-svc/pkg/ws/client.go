@@ -1,11 +1,21 @@
 package ws
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/gorilla/websocket"
+	_ "github.com/lib/pq"
+	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/store/sqlstore"
+	"go.mau.fi/whatsmeow/types/events"
+	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
 // ClientList is a map used to help manage a map of clients
@@ -22,6 +32,8 @@ type Client struct {
 	egress chan Event
 	// chatroom is used to know what room user is in
 	chatroom string
+
+	qrWhatsapp string
 }
 
 var (
@@ -35,11 +47,12 @@ var (
 
 // NewClient is used to initialize a new Client with all required values initialized
 func NewClient(conn *websocket.Conn, manager *Manager) *Client {
-	return &Client{
+	r := &Client{
 		connection: conn,
 		manager:    manager,
 		egress:     make(chan Event),
 	}
+	return r
 }
 
 // readMessages will start the client to read messages and handle them
@@ -136,8 +149,71 @@ func (c *Client) writeMessages() {
 				return // return to break this goroutine triggeing cleanup
 			}
 			log.Println("test")
-			c.connection.WriteMessage(websocket.TextMessage, []byte("Here is a string...."))
+
+			message := NewMessageEvent{
+				SendMessageEvent: SendMessageEvent{
+					Message: c.qrWhatsapp,
+					From:    "server",
+				},
+				Sent: time.Now(),
+			}
+			msg, _ := json.Marshal(message)
+			c.connection.WriteMessage(websocket.TextMessage, msg)
 		}
 
 	}
+}
+
+func whatsappEventHandler(evt interface{}) {
+	switch v := evt.(type) {
+	case *events.Message:
+		fmt.Println("Received a message!", v.Message.GetConversation())
+	}
+}
+
+func (c *Client) startWhatsapp(container *sqlstore.Container) {
+	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
+	deviceStore, err := container.GetFirstDevice()
+	if err != nil {
+		panic(err)
+	}
+
+	clientLog := waLog.Stdout("Client", "DEBUG", true)
+	client := whatsmeow.NewClient(deviceStore, clientLog)
+	client.AddEventHandler(whatsappEventHandler)
+
+	if client.Store.ID == nil {
+		// No ID stored, new login
+		qrChan, _ := client.GetQRChannel(context.Background())
+		err = client.Connect()
+		if err != nil {
+			panic(err)
+		}
+		for evt := range qrChan {
+			if evt.Event == "code" {
+				// Render the QR code here
+				// e.g. qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+				// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
+				fmt.Println("QR code:", evt.Code)
+				c.qrWhatsapp = evt.Code
+				// qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+				fmt.Println("----------------------------------")
+			} else {
+				fmt.Println("Login event:", evt.Event)
+			}
+		}
+	} else {
+		// Already logged in, just connect
+		err = client.Connect()
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+	<-ch
+
+	client.Disconnect()
 }

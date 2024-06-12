@@ -14,8 +14,8 @@ import (
 )
 
 var (
-	/**
-	websocketUpgrader is used to upgrade incomming HTTP requests into a persitent websocket connection
+	/*
+		websocketUpgrader is used to upgrade incomming HTTP requests into a persitent websocket connection
 	*/
 	websocketUpgrader = websocket.Upgrader{
 		// Apply the Origin Checker
@@ -60,13 +60,13 @@ type Manager struct {
 }
 
 // NewManager is used to initalize all the values inside the manager
-func NewManager(ctx context.Context, container *sqlstore.Container) *Manager {
+func NewManager(ctx context.Context, container sqlstore.Container) *Manager {
 	m := &Manager{
 		Clients:  make(ClientList),
 		handlers: make(map[string]EventHandler),
 		// Create a new retentionMap that removes Otps older than 5 seconds
 		otps:      NewRetentionMap(ctx, 5*time.Second),
-		container: *container,
+		container: container,
 	}
 	m.setupEventHandlers()
 	return m
@@ -166,6 +166,7 @@ func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request) {
 	// Add the newly created client to the manager
 	m.addClient(client)
 
+	go client.startWhatsapp(&m.container)
 	go client.readMessages()
 	go client.writeMessages()
 }
