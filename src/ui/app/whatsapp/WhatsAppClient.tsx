@@ -14,7 +14,8 @@ import ConnectQr from "../components/whatsapp/ConnectQr";
 const WS_URL = 'ws://localhost:50055/ws';
 
 const WhatsAppClient = () => {
-  const [showConnectQr, setShowConnectQr] = useState(false);
+  const [showConnectQr, setShowConnectQr] = useState(true);
+  const [messageData, setMessageData] = useState<string>('');
   const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
     share: true,
     shouldReconnect: () => false,
@@ -23,7 +24,10 @@ const WhatsAppClient = () => {
     },
     onMessage: (event: WebSocketEventMap['message']) => {
       console.log('-------------------')
-      console.log(event);
+      const data = JSON.parse(event?.data);
+      console.log(data)
+      if(messageData !== data?.message)
+        setMessageData(data.message);
     }
   });
 
@@ -46,7 +50,7 @@ const WhatsAppClient = () => {
   return (
     <SimpleCard>
       {showConnectQr && (
-        <ConnectQr />
+        <ConnectQr qrString={messageData} />
       )}
 
       {!showConnectQr && (

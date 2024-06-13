@@ -166,7 +166,7 @@ func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request) {
 	// Add the newly created client to the manager
 	m.addClient(client)
 
-	go client.startWhatsapp(&m.container)
+	go client.newWhatsappClient(&m.container)
 	go client.readMessages()
 	go client.writeMessages()
 }

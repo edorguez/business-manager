@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
+	"reflect"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -32,8 +30,6 @@ type Client struct {
 	egress chan Event
 	// chatroom is used to know what room user is in
 	chatroom string
-
-	qrWhatsapp string
 }
 
 var (
@@ -148,30 +144,28 @@ func (c *Client) writeMessages() {
 				log.Println("writemsg: ", err)
 				return // return to break this goroutine triggeing cleanup
 			}
-			log.Println("test")
-
-			message := NewMessageEvent{
-				SendMessageEvent: SendMessageEvent{
-					Message: c.qrWhatsapp,
-					From:    "server",
-				},
-				Sent: time.Now(),
-			}
-			msg, _ := json.Marshal(message)
-			c.connection.WriteMessage(websocket.TextMessage, msg)
 		}
-
 	}
 }
 
-func whatsappEventHandler(evt interface{}) {
+func (c *Client) whatsappEventHandler(evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
 		fmt.Println("Received a message!", v.Message.GetConversation())
+	case *events.QR:
+		fmt.Println("dame qr")
+		if len(v.Codes) > 0 {
+			c.SendServerMessage(v.Codes[0])
+		}
+	default:
+		var r = reflect.TypeOf(v)
+		fmt.Println("----->")
+		fmt.Printf("-----> EVENT TYPE = %v\n", r)
+		fmt.Println("----->")
 	}
 }
 
-func (c *Client) startWhatsapp(container *sqlstore.Container) {
+func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
 	deviceStore, err := container.GetFirstDevice()
 	if err != nil {
@@ -180,7 +174,7 @@ func (c *Client) startWhatsapp(container *sqlstore.Container) {
 
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 	client := whatsmeow.NewClient(deviceStore, clientLog)
-	client.AddEventHandler(whatsappEventHandler)
+	client.AddEventHandler(c.whatsappEventHandler)
 
 	if client.Store.ID == nil {
 		// No ID stored, new login
@@ -194,8 +188,7 @@ func (c *Client) startWhatsapp(container *sqlstore.Container) {
 				// Render the QR code here
 				// e.g. qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
 				// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
-				fmt.Println("QR code:", evt.Code)
-				c.qrWhatsapp = evt.Code
+				// c.qrWhatsapp = evt.Code
 				// qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
 				fmt.Println("----------------------------------")
 			} else {
@@ -204,6 +197,9 @@ func (c *Client) startWhatsapp(container *sqlstore.Container) {
 		}
 	} else {
 		// Already logged in, just connect
+		fmt.Println("================================")
+		fmt.Println("======= ALREADY CONNECTED ======")
+		fmt.Println("================================")
 		err = client.Connect()
 		if err != nil {
 			panic(err)
@@ -211,9 +207,9 @@ func (c *Client) startWhatsapp(container *sqlstore.Container) {
 	}
 
 	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
-	<-ch
+	// ch := make(chan os.Signal, 1)
+	// signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+	// <-ch
 
 	client.Disconnect()
 }
