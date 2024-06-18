@@ -30,6 +30,8 @@ type Client struct {
 	egress chan Event
 	// chatroom is used to know what room user is in
 	chatroom string
+
+	whatsappClient *whatsmeow.Client
 }
 
 var (
@@ -102,6 +104,7 @@ func (c *Client) readMessages() {
 func (c *Client) pongHandler(pongMsg string) error {
 	// Current time + Pong Wait time
 	return c.connection.SetReadDeadline(time.Now().Add(pongWait))
+
 }
 
 // writeMessages is a process that listens for new messages to output to the Client
@@ -157,6 +160,12 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 		if len(v.Codes) > 0 {
 			c.SendServerMessage(v.Codes[0])
 		}
+	case *events.PairSuccess:
+		c.SendServerMessage("Conectado mano")
+	//case *events.OfflineSyncCompleted:
+	// contacts, _ := c.whatsappClient.Store.Contacts.GetAllContacts()
+	// personMsg := map[string][]*events.Message
+	// evt, err := c.whatsappClient.ParseWebMessage(chatJID, historyMsg.GetMessage())
 	default:
 		var r = reflect.TypeOf(v)
 		fmt.Println("----->")
@@ -175,6 +184,7 @@ func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 	client.AddEventHandler(c.whatsappEventHandler)
+	c.whatsappClient = client
 
 	if client.Store.ID == nil {
 		// No ID stored, new login
@@ -210,6 +220,4 @@ func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 	// ch := make(chan os.Signal, 1)
 	// signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 	// <-ch
-
-	client.Disconnect()
 }
