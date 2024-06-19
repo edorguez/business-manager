@@ -1,4 +1,4 @@
-package ws
+package wsmanager
 
 import (
 	"encoding/json"
