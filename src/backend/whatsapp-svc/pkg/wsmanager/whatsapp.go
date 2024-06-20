@@ -2,6 +2,7 @@ package wsmanager
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 
@@ -29,10 +30,40 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 		}
 	// personMsg := map[string][]*events.Message
 	// evt, err := c.whatsappClient.ParseWebMessage(chatJID, historyMsg.GetMessage())
+	case *events.HistorySync:
+
+		b, err := json.Marshal(v.Data.Conversations)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		c.SendServerMessage(string(b))
+		// if v.Data.Progress != nil {
+		// 	c.SendServerMessage(fmt.Sprintf("Progreso = %v", *v.Data.Progress))
+		// 	c.SendServerMessage("CONVERSTAIONS")
+		// 	for _, conversation := range v.Data.Conversations {
+		// 		c.SendServerMessage(fmt.Sprintf("%s = %s = %s", conversation.GetNewJID(), conversation.GetOldJID(), conversation.GetDisplayName()))
+		// 		for _, msg := range conversation.Messages {
+		// 			c.SendServerMessage(fmt.Sprintf("%s --- %s", msg.Message.GetMessage().GetConversation(), "hola"))
+		// 		}
+		// 	}
+		//
+		// 	c.SendServerMessage("V3 MESSAGES")
+		// 	for _, conversation := range v.Data.StatusV3Messages {
+		// 		c.SendServerMessage(fmt.Sprintf("%s = %s = %s", conversation.GetParticipant(), conversation.GetPushName(), conversation.GetMessage().GetConversation()))
+		// 	}
+		//
+		// 	c.SendServerMessage("PUSH NAMES")
+		// 	for _, pusha := range v.Data.Pushnames {
+		// 		c.SendServerMessage(fmt.Sprintf("%s ////////////// %s", pusha.GetID(), pusha.GetPushname()))
+		// 	}
+		//
+		// 	c.SendServerMessage("PROGRESS")
+		// }
 	default:
 		var r = reflect.TypeOf(v)
 		fmt.Println("----->")
-		fmt.Printf("-----> EVENT TYPE = %v\n", r)
+		fmt.Printf("-----> EVENT TYPE = %v", r)
 		fmt.Println("----->")
 	}
 }

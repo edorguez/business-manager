@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/ws"
+	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/wsmanager"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	waLog "go.mau.fi/whatsmeow/util/log"
 )
@@ -45,7 +45,7 @@ func main() {
 func setupAPI(ctx context.Context, container *sqlstore.Container) {
 
 	// Create a Manager instance used to handle WebSocket Connections
-	manager := ws.NewManager(ctx, *container)
+	manager := wsmanager.NewManager(ctx, *container)
 
 	// Serve the ./frontend directory at Route /
 	// http.Handle("/", http.FileServer(http.Dir("./frontend")))
