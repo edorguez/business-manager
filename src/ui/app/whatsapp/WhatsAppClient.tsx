@@ -10,11 +10,13 @@ import UserBar from "../components/whatsapp/UserBar";
 import useWebSocket from 'react-use-websocket';
 import { useState } from "react";
 import ConnectQr from "../components/whatsapp/ConnectQr";
+import { WebsocketMessage, WebsocketMessageTypes } from "../types/websocket";
 
 const WS_URL = 'ws://localhost:50055/ws';
 
 const WhatsAppClient = () => {
-  const [showConnectQr, setShowConnectQr] = useState(true);
+  const [showQR, setShowQR] = useState<boolean>(true);
+  const [qrString, setQrString] = useState<string>('');
   const [messageData, setMessageData] = useState<string>('');
   const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
     share: true,
@@ -24,10 +26,15 @@ const WhatsAppClient = () => {
     },
     onMessage: (event: WebSocketEventMap['message']) => {
       console.log('-------------------')
-      const data = JSON.parse(event?.data);
+      const data: WebsocketMessage = JSON.parse(event?.data);
       console.log(data)
       if(messageData !== data?.message)
         setMessageData(data.message);
+
+      if(data.messageType === WebsocketMessageTypes.QR) {
+        setQrString(data.message);
+        setShowQR(true);
+      }
     }
   });
 
@@ -49,11 +56,11 @@ const WhatsAppClient = () => {
 
   return (
     <SimpleCard>
-      {showConnectQr && (
-        <ConnectQr qrString={messageData} />
+      {showQR && (
+        <ConnectQr qrString={qrString} />
       )}
 
-      {!showConnectQr && (
+      {!showQR && (
         <div className="h-[85vh] flex my-3 rounded border-2 border-slate-200">
           <div className="w-3/6 border-r-2 border-r-slate-200 overflow-scroll">
             <Tabs colorScheme='green'>

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"time"
 
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
@@ -12,32 +13,39 @@ import (
 	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
+type WhatsappConversation struct {
+	ID       string            `json:"id"`
+	Messages []WhatsappMessage `json:"messages"`
+}
+
+type WhatsappMessage struct {
+	Message    string    `json:"message"`
+	Date       time.Time `json:"date"`
+	WasReceipt bool      `json:"wasReceipt"`
+	WasRead    bool      `json:"wasRead"`
+	FromMe     bool      `json:"fromMe"`
+}
+
 func (c *Client) whatsappEventHandler(evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
 		fmt.Println("Received a message!", v.Message.GetConversation())
 	case *events.QR:
-		fmt.Println("dame qr")
 		if len(v.Codes) > 0 {
-			c.SendServerMessage(v.Codes[0])
+			c.SendServerMessage(v.Codes[0], QR)
 		}
-	case *events.PairSuccess:
-		c.SendServerMessage("Conectado mano")
-	case *events.OfflineSyncCompleted:
-		contacts, _ := c.whatsappClient.Store.Contacts.GetAllContacts()
-		for k, v := range contacts {
-			c.SendServerMessage(fmt.Sprintf("key[%s] value[%s]\n", k, v.FullName))
-		}
+	// case *events.PairSuccess:
+	// 	c.SendServerMessage("Conectado mano")
+	// case *events.OfflineSyncCompleted:
+	// 	contacts, _ := c.whatsappClient.Store.Contacts.GetAllContacts()
+	// 	for k, v := range contacts {
+	// 		c.SendServerMessage(fmt.Sprintf("key[%s] value[%s]\n", k, v.FullName), Message)
+	// 	}
 	// personMsg := map[string][]*events.Message
 	// evt, err := c.whatsappClient.ParseWebMessage(chatJID, historyMsg.GetMessage())
 	case *events.HistorySync:
+		c.handleHistorySync(v)
 
-		b, err := json.Marshal(v.Data.Conversations)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		c.SendServerMessage(string(b))
 		// if v.Data.Progress != nil {
 		// 	c.SendServerMessage(fmt.Sprintf("Progreso = %v", *v.Data.Progress))
 		// 	c.SendServerMessage("CONVERSTAIONS")
@@ -114,4 +122,15 @@ func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 	// ch := make(chan os.Signal, 1)
 	// signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 	// <-ch
+}
+
+func (c *Client) handleHistorySync(v *events.HistorySync) {
+	if v.Data.Progress != nil {
+		b, err := json.Marshal(v.Data.Conversations)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		c.SendServerMessage(string(b), Conversations)
+	}
 }

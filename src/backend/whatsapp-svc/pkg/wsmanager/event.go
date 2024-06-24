@@ -31,8 +31,9 @@ const (
 // SendMessageEvent is the payload sent in the
 // send_message event
 type SendMessageEvent struct {
-	Message string `json:"message"`
-	From    string `json:"from"`
+	Message     string `json:"message"`
+	From        string `json:"from"`
+	MessageType string `json:"messageType"`
 }
 
 // NewMessageEvent is returned when responding to send_message
