@@ -9,13 +9,17 @@ import (
 
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
+	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
 type WhatsappConversation struct {
-	ID       string            `json:"id"`
-	Messages []WhatsappMessage `json:"messages"`
+	ID             string            `json:"id"`
+	Name           string            `json:"name"`
+	ProfilePicture string            `json:"profilePicture"`
+	UnreadCount    uint32            `json:"unreadCount"`
+	Messages       []WhatsappMessage `json:"messages"`
 }
 
 type WhatsappMessage struct {
@@ -126,7 +130,55 @@ func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 
 func (c *Client) handleHistorySync(v *events.HistorySync) {
 	if v.Data.Progress != nil {
-		b, err := json.Marshal(v.Data.Conversations)
+
+		result := make([]WhatsappConversation, 0, len(v.Data.Conversations))
+
+		for _, conversation := range v.Data.Conversations {
+			var addConversation WhatsappConversation
+			addConversation.ID = conversation.GetID()
+			addConversation.UnreadCount = conversation.GetUnreadCount()
+
+			jid, _ := types.ParseJID(addConversation.ID)
+			if users, err := c.whatsappClient.GetUserInfo([]types.JID{jid}); err != nil {
+				fmt.Println(err)
+			} else {
+				for _, user := range users {
+					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(jid, nil); err != nil || picture_info == nil {
+						fmt.Println("error", jid, user.PictureID, picture_info, err)
+					} else {
+						fmt.Println("CHAMO QUE PASO")
+						fmt.Println(picture_info.URL)
+						addConversation.ProfilePicture = picture_info.URL
+					}
+				}
+			}
+
+			addConversation.Messages = make([]WhatsappMessage, 0, len(conversation.Messages))
+
+			for _, msg := range conversation.Messages {
+				var wsmsg WhatsappMessage
+				wsmsg.Date = time.Unix(int64(msg.Message.GetMessageTimestamp()), 0)
+				wsmsg.FromMe = msg.Message.Key.GetFromMe()
+
+				conversationMsg := msg.Message.GetMessage().GetConversation()
+				conversationExtended := msg.Message.GetMessage().GetExtendedTextMessage().GetText()
+				conversationEdited := msg.Message.GetMessage().GetEditedMessage().GetMessage().GetProtocolMessage().GetEditedMessage().GetExtendedTextMessage().GetText()
+
+				if len(conversationMsg) > 0 {
+					wsmsg.Message = conversationMsg
+				} else if len(conversationExtended) > 0 {
+					wsmsg.Message = conversationExtended
+				} else {
+					wsmsg.Message = conversationEdited
+				}
+
+				addConversation.Messages = append(addConversation.Messages, wsmsg)
+			}
+
+			result = append(result, addConversation)
+		}
+
+		b, err := json.Marshal(result)
 		if err != nil {
 			fmt.Println(err)
 			return
