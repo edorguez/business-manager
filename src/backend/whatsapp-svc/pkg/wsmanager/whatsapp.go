@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"regexp"
 	"time"
 
 	"go.mau.fi/whatsmeow"
@@ -140,10 +141,17 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 			addConversation.UnreadCount = conversation.GetUnreadCount()
 
 			jid, _ := types.ParseJID(addConversation.ID)
+
+			re := regexp.MustCompile(`^\d+`)
+			// Find the match
+			idFormat := re.FindString(jid.String())
+			addConversation.Name = idFormat
+
 			if users, err := c.whatsappClient.GetUserInfo([]types.JID{jid}); err != nil {
 				fmt.Println(err)
 			} else {
 				for _, user := range users {
+
 					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(jid, nil); err != nil || picture_info == nil {
 						fmt.Println("error", jid, user.PictureID, picture_info, err)
 					} else {
@@ -186,6 +194,9 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 			return
 		}
 
-		c.SendServerMessage(buf.String(), CONVERSATIONS_CODE)
+		jsonStr := buf.String()
+		jsonStr = jsonStr[:len(jsonStr)-1]
+
+		c.SendServerMessage(jsonStr, CONVERSATIONS_CODE)
 	}
 }
