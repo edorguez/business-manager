@@ -3,15 +3,15 @@ package wsmanager
 type MessageType int
 
 const (
-	QR = iota
-	Conversations
-	Message
+	QR_CODE = iota
+	CONVERSATIONS_CODE
+	MESSAGE_CODE
 )
 
 var messageTypeName = map[MessageType]string{
-	QR:            "QR",
-	Conversations: "CONVERSATIONS",
-	Message:       "MESSAGE",
+	QR_CODE:            "QR_CODE",
+	CONVERSATIONS_CODE: "CONVERSATIONS_CODE",
+	MESSAGE_CODE:       "MESSAGE_CODE",
 }
 
 func (mt MessageType) String() string {

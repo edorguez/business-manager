@@ -6,7 +6,7 @@ export type WebsocketMessage = {
 }
 
 export enum WebsocketMessageTypes {
-    QR = 'QR',
-    Conversations = 'CONVERSATIONS',
-    Message = 'MESSAGE',
+    QR_CODE = 'QR_CODE',
+    CONVERSATIONS_CODE = 'CONVERSATIONS_CODE',
+    MESSAGE_CODE = 'MESSAGE_CODE',
 }

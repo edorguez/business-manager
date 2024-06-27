@@ -1,6 +1,7 @@
 package wsmanager
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -36,7 +37,7 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 		fmt.Println("Received a message!", v.Message.GetConversation())
 	case *events.QR:
 		if len(v.Codes) > 0 {
-			c.SendServerMessage(v.Codes[0], QR)
+			c.SendServerMessage(v.Codes[0], QR_CODE)
 		}
 	// case *events.PairSuccess:
 	// 	c.SendServerMessage("Conectado mano")
@@ -146,8 +147,6 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(jid, nil); err != nil || picture_info == nil {
 						fmt.Println("error", jid, user.PictureID, picture_info, err)
 					} else {
-						fmt.Println("CHAMO QUE PASO")
-						fmt.Println(picture_info.URL)
 						addConversation.ProfilePicture = picture_info.URL
 					}
 				}
@@ -178,11 +177,15 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 			result = append(result, addConversation)
 		}
 
-		b, err := json.Marshal(result)
-		if err != nil {
-			fmt.Println(err)
+		var buf bytes.Buffer
+		enc := json.NewEncoder(&buf)
+		enc.SetEscapeHTML(false)
+
+		if err := enc.Encode(result); err != nil {
+			fmt.Println("Error encoding JSON:", err)
 			return
 		}
-		c.SendServerMessage(string(b), Conversations)
+
+		c.SendServerMessage(buf.String(), CONVERSATIONS_CODE)
 	}
 }

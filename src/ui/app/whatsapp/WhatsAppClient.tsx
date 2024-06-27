@@ -31,7 +31,7 @@ const WhatsAppClient = () => {
       if(messageData !== data?.message)
         setMessageData(data.message);
 
-      if(data.messageType === WebsocketMessageTypes.QR) {
+      if(data.messageType === WebsocketMessageTypes.QR_CODE) {
         setQrString(data.message);
         setShowQR(true);
       }
