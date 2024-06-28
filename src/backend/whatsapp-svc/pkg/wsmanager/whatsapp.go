@@ -17,14 +17,15 @@ import (
 )
 
 type WhatsappConversation struct {
-	ID             string            `json:"id"`
-	Name           string            `json:"name"`
-	ProfilePicture string            `json:"profilePicture"`
-	UnreadCount    uint32            `json:"unreadCount"`
-	Messages       []WhatsappMessage `json:"messages"`
+	ID                string            `json:"id"`
+	Name              string            `json:"name"`
+	ProfilePictureUrl string            `json:"profilePictureUrl"`
+	UnreadCount       uint32            `json:"unreadCount"`
+	Messages          []WhatsappMessage `json:"messages"`
 }
 
 type WhatsappMessage struct {
+	ID         string    `jsong:"id"`
 	Message    string    `json:"message"`
 	Date       time.Time `json:"date"`
 	WasReceipt bool      `json:"wasReceipt"`
@@ -155,7 +156,7 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(jid, nil); err != nil || picture_info == nil {
 						fmt.Println("error", jid, user.PictureID, picture_info, err)
 					} else {
-						addConversation.ProfilePicture = picture_info.URL
+						addConversation.ProfilePictureUrl = picture_info.URL
 					}
 				}
 			}
@@ -164,6 +165,7 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 
 			for _, msg := range conversation.Messages {
 				var wsmsg WhatsappMessage
+				wsmsg.ID = msg.Message.GetKey().GetID()
 				wsmsg.Date = time.Unix(int64(msg.Message.GetMessageTimestamp()), 0)
 				wsmsg.FromMe = msg.Message.Key.GetFromMe()
 

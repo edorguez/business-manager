@@ -11,6 +11,7 @@ import useWebSocket from 'react-use-websocket';
 import { useState } from "react";
 import ConnectQr from "../components/whatsapp/ConnectQr";
 import { WebsocketMessage, WebsocketMessageTypes } from "../types/websocket";
+import { WhatsappConversation } from "../types/whatsapp";
 
 const WS_URL = 'ws://localhost:50055/ws';
 
@@ -18,6 +19,7 @@ const WhatsAppClient = () => {
   const [showQR, setShowQR] = useState<boolean>(true);
   const [qrString, setQrString] = useState<string>('');
   const [messageData, setMessageData] = useState<string>('');
+  const [conversations, setConversations] = useState<WhatsappConversation[]>();
   const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
     share: true,
     shouldReconnect: () => false,
@@ -34,6 +36,12 @@ const WhatsAppClient = () => {
       if(data.messageType === WebsocketMessageTypes.QR_CODE) {
         setQrString(data.message);
         setShowQR(true);
+      }
+
+      if(data.messageType === WebsocketMessageTypes.CONVERSATIONS_CODE) {
+        const result: WhatsappConversation[] = JSON.parse(data.message);
+        setConversations(result);
+        setShowQR(false);
       }
     }
   });
@@ -60,7 +68,8 @@ const WhatsAppClient = () => {
         <ConnectQr qrString={qrString} />
       )}
 
-      {!showQR && (
+      {!showQR &&
+       conversations &&(
         <div className="h-[85vh] flex my-3 rounded border-2 border-slate-200">
           <div className="w-3/6 border-r-2 border-r-slate-200 overflow-scroll">
             <Tabs colorScheme='green'>
@@ -72,13 +81,13 @@ const WhatsAppClient = () => {
 
               <TabPanels>
                 <TabPanel>
-                  <ChatList />
+                  <ChatList conversations={conversations} />
                 </TabPanel>
                 <TabPanel>
-                  <ChatList />
+                  <ChatList conversations={conversations} />
                 </TabPanel>
                 <TabPanel>
-                  <ChatList />
+                  <ChatList conversations={conversations} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -87,7 +96,7 @@ const WhatsAppClient = () => {
             <div className="h-full flex flex-col">
               <UserBar />
               <div className="mt-auto overflow-y-auto">
-                <MessageList />
+                <MessageList messages={conversations[2].messages} />
               </div>
               <MessageBar onSendMessage={sendWhatsappMessage} />
             </div>
