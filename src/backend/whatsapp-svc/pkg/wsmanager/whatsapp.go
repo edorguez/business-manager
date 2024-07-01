@@ -181,7 +181,9 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 					wsmsg.Message = conversationEdited
 				}
 
-				addConversation.Messages = append(addConversation.Messages, wsmsg)
+				if len(wsmsg.Message) > 0 {
+					addConversation.Messages = append([]WhatsappMessage{wsmsg}, addConversation.Messages...)
+				}
 			}
 
 			result = append(result, addConversation)
