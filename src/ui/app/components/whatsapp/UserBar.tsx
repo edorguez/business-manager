@@ -2,11 +2,23 @@
 
 import Image from "next/image";
 
-const UserBar = () => {
+interface UserBarProps {
+  imageUrl: string,
+  name: string
+}
+
+const UserBar: React.FC<UserBarProps> = ({
+  imageUrl,
+  name
+}) => {
+  const src = 'https://canto-wp-media.s3.amazonaws.com/app/uploads/2019/08/19194138/image-url-3.jpg';
+
   return (
     <div className="bg-maincolor flex items-center p-1 border-b-2 border-slate-200">
-      <Image className="rounded-full" src={'https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800'} alt="" width={38} height={38} />
-      <span className="text-white text-sm font-bold ml-2">Cliente 1</span>
+      <div className="w-[38px] h-[38px]">
+        <Image className="rounded-full" alt={name} loader={() => src} src={src}  width={38} height={38}/>
+      </div>
+      <span className="text-white text-sm font-bold ml-2">{name}</span>
     </div>
   )
 }

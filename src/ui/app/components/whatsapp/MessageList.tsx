@@ -3,6 +3,7 @@
 import useWhatsappMessage from "@/app/hooks/useWhatsappMessage";
 import { WhatsappMessage } from "@/app/types/whatsapp";
 import { useEffect, useRef, useState } from "react";
+import * as dayjs from 'dayjs'
 
 interface MessageListProps {
   messages: WhatsappMessage[]
@@ -14,27 +15,29 @@ const MessageList: React.FC<MessageListProps> = ({
   const whatsappMessage = useWhatsappMessage();
   const scrollRef = useRef<any>(null);
 
-  const getDateMessageFormat = (date: Date): string => {
-    return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+  const getDateMessageFormat = (stringDate: string): string => {
+    return dayjs(stringDate).format('hh:mm A')
   }
 
   useEffect(() => {
-    const newMessage: WhatsappMessage = {
-      id: "A",
-      message: whatsappMessage.message,
-      fromMe: true,
-      date: new Date(),
-      wasReceipt: false,
-      wasRead: false
-    }
+    if(whatsappMessage.message) {
+      const newMessage: WhatsappMessage = {
+        id: "A",
+        message: whatsappMessage.message,
+        fromMe: true,
+        date: new Date(),
+        wasReceipt: false,
+        wasRead: false
+      }
 
-    messages.push(newMessage);
+      messages.push(newMessage);
     
-    // setMessages(prevVal => [...prevVal, newMessage]);
+      // setMessages(prevVal => [...prevVal, newMessage]);
 
-    // Scroll chat to bottom
-    setTimeout(() => { scrollChatToBottom(); }, 1);
+      // Scroll chat to bottom
+      setTimeout(() => { scrollChatToBottom(); }, 1);
 
+    }
   }, [whatsappMessage.message])
 
   const scrollChatToBottom = () => {

@@ -12,6 +12,7 @@ import { useState } from "react";
 import ConnectQr from "../components/whatsapp/ConnectQr";
 import { WebsocketMessage, WebsocketMessageTypes } from "../types/websocket";
 import { WhatsappConversation } from "../types/whatsapp";
+import SelectChatMessage from "../components/whatsapp/SelectChatMessage";
 
 const WS_URL = 'ws://localhost:50055/ws';
 
@@ -20,6 +21,7 @@ const WhatsAppClient = () => {
   const [qrString, setQrString] = useState<string>('');
   const [messageData, setMessageData] = useState<string>('');
   const [conversations, setConversations] = useState<WhatsappConversation[]>();
+  const [selectedConversation, setSelectedConversation] = useState<WhatsappConversation>();
   const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
     share: true,
     shouldReconnect: () => false,
@@ -51,6 +53,12 @@ const WhatsAppClient = () => {
     }
   });
 
+  const selectConversation = (id: string): void => {
+    const findConversation: WhatsappConversation | undefined = conversations?.find(x => x.id === id);
+    if (findConversation)
+      setSelectedConversation(findConversation);
+  }
+
   const sendWhatsappMessage = (message: string): void => {
     console.log('Enviar primero el mensaje');
     console.log(lastMessage);
@@ -74,41 +82,50 @@ const WhatsAppClient = () => {
       )}
 
       {!showQR &&
-       conversations &&(
-        <div className="h-[85vh] flex my-3 rounded border-2 border-slate-200">
-          <div className="w-3/6 border-r-2 border-r-slate-200 overflow-scroll">
-            <Tabs colorScheme='green'>
-              <TabList>
-                <Tab><Icon icon="ic:baseline-message" /><span className="text-sm"> Mensajes</span></Tab>
-                <Tab><Icon icon="fluent:person-support-16-filled" /><span className="text-sm flex items-center"> Atendiendo</span></Tab>
-                <Tab><Icon icon="lets-icons:done-duotone" /><span className="text-sm flex items-center"> Finalizado</span></Tab>
-              </TabList>
+        conversations && (
+          <div className="h-[85vh] flex my-3 rounded border-2 border-slate-200">
+            <div className="w-3/6 border-r-2 border-r-slate-200 overflow-scroll">
+              <Tabs colorScheme='green'>
+                <TabList>
+                  <Tab><Icon icon="ic:baseline-message" /><span className="text-sm"> Mensajes</span></Tab>
+                  <Tab><Icon icon="fluent:person-support-16-filled" /><span className="text-sm flex items-center"> Atendiendo</span></Tab>
+                  <Tab><Icon icon="lets-icons:done-duotone" /><span className="text-sm flex items-center"> Finalizado</span></Tab>
+                </TabList>
 
-              <TabPanels>
-                <TabPanel p={0}>
-                  <ChatList conversations={conversations} />
-                </TabPanel>
-                <TabPanel p={0}>
-                  <ChatList conversations={conversations} />
-                </TabPanel>
-                <TabPanel p={0}>
-                  <ChatList conversations={conversations} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </div>
-          <div className="w-full" style={{ backgroundImage: 'url(/images/whatsapp/ws_bg.jpg)', backgroundSize: 'contain', backgroundRepeat: 'repeat' }}>
-            <div className="h-full flex flex-col">
-              <UserBar />
-              <div className="mt-auto overflow-y-auto">
-                <MessageList messages={conversations[2].messages} />
-              </div>
-              <MessageBar onSendMessage={sendWhatsappMessage} />
+                <TabPanels>
+                  <TabPanel p={0}>
+                    <ChatList conversations={conversations} onSelectConversation={selectConversation} />
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <ChatList conversations={conversations} onSelectConversation={selectConversation} />
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <ChatList conversations={conversations} onSelectConversation={selectConversation} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </div>
+            <div className="w-full" style={{ backgroundImage: 'url(/images/whatsapp/ws_bg.jpg)', backgroundSize: 'contain', backgroundRepeat: 'repeat' }}>
+              {
+                selectedConversation &&
+                <div className="h-full flex flex-col">
+                  <UserBar name={selectedConversation.name} imageUrl={selectedConversation.profilePictureUrl} />
+                  <div className="mt-auto overflow-y-auto">
+                    <MessageList messages={selectedConversation.messages} />
+                  </div>
+                  <MessageBar onSendMessage={sendWhatsappMessage} />
+                </div>
+              }
 
+              {
+                !selectedConversation &&
+                <div className="h-full flex justify-center items-center">
+                  <SelectChatMessage />
+                </div>
+              }
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </SimpleCard>
   )
 }

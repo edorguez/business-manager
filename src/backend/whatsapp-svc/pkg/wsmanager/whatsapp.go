@@ -168,6 +168,8 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 				wsmsg.ID = msg.Message.GetKey().GetID()
 				wsmsg.Date = time.Unix(int64(msg.Message.GetMessageTimestamp()), 0)
 				wsmsg.FromMe = msg.Message.Key.GetFromMe()
+				wsmsg.WasReceipt = msg.Message.GetUserReceipt()[0].ReceiptTimestamp != nil
+				wsmsg.WasRead = msg.Message.GetUserReceipt()[0].ReadTimestamp != nil
 
 				conversationMsg := msg.Message.GetMessage().GetConversation()
 				conversationExtended := msg.Message.GetMessage().GetExtendedTextMessage().GetText()
