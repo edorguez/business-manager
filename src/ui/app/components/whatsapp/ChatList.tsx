@@ -15,8 +15,6 @@ const ChatList: React.FC<ChatListProps> = ({
   onSelectConversation
 }) => {
 
-  const src = 'https://canto-wp-media.s3.amazonaws.com/app/uploads/2019/08/19194138/image-url-3.jpg';
-
   const previewMsgFormat = (msg: string): string => {
     const maxLength: number = 40;
     if (msg.length >= maxLength) {
@@ -48,7 +46,7 @@ const ChatList: React.FC<ChatListProps> = ({
         conversations.map((conversation: WhatsappConversation) => (
           <div key={conversation.id} className="flex items-center px-1 py-2 hover:bg-thirdcolorhov hover:cursor-pointer select-none" onClick={() => onSelectConversation(conversation.id)}>
             <div className="w-[50px] h-[50px]">
-              <Image className="rounded-full" alt={conversation.name} loader={() => src} src={src} width={50} height={50} />
+              <Image className="rounded-full" alt={conversation.name} loader={() => conversation.profilePictureUrl} src={conversation.profilePictureUrl} width={50} height={50} />
             </div>
             <div className="ml-2 flex justify-between items-center w-full">
               <div>
@@ -57,7 +55,10 @@ const ChatList: React.FC<ChatListProps> = ({
                 <span className="text-xs flex items-center">
                   <Icon icon="mdi:check-all" />
                   <span className="ml-1">
-                    {previewMsgFormat(conversation.messages[0].message)}
+                    {
+                      conversation.messages.length > 0 &&
+                      previewMsgFormat(conversation.messages[0].message)
+                    }
                   </span>
                 </span>
               </div>

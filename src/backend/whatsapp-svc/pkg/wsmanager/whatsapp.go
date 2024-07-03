@@ -119,6 +119,8 @@ func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 		fmt.Println("================================")
 		fmt.Println("======= ALREADY CONNECTED ======")
 		fmt.Println("================================")
+		fmt.Println(c.whatsappClient.Store.ID)
+		fmt.Println(c.whatsappClient.Store.PushName)
 		err = client.Connect()
 		if err != nil {
 			panic(err)
@@ -138,8 +140,10 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 
 		for _, conversation := range v.Data.Conversations {
 			var addConversation WhatsappConversation
+
 			addConversation.ID = conversation.GetID()
 			addConversation.UnreadCount = conversation.GetUnreadCount()
+			addConversation.ProfilePictureUrl = "https://t4.ftcdn.net/jpg/05/89/93/27/360_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg"
 
 			jid, _ := types.ParseJID(addConversation.ID)
 
@@ -159,36 +163,40 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 						addConversation.ProfilePictureUrl = picture_info.URL
 					}
 				}
-			}
 
-			addConversation.Messages = make([]WhatsappMessage, 0, len(conversation.Messages))
+				addConversation.Messages = make([]WhatsappMessage, 0, len(conversation.Messages))
 
-			for _, msg := range conversation.Messages {
-				var wsmsg WhatsappMessage
-				wsmsg.ID = msg.Message.GetKey().GetID()
-				wsmsg.Date = time.Unix(int64(msg.Message.GetMessageTimestamp()), 0)
-				wsmsg.FromMe = msg.Message.Key.GetFromMe()
-				wsmsg.WasReceipt = msg.Message.GetUserReceipt()[0].ReceiptTimestamp != nil
-				wsmsg.WasRead = msg.Message.GetUserReceipt()[0].ReadTimestamp != nil
+				for _, msg := range conversation.Messages {
+					var wsmsg WhatsappMessage
+					wsmsg.ID = msg.Message.GetKey().GetID()
+					wsmsg.Date = time.Unix(int64(msg.Message.GetMessageTimestamp()), 0)
+					wsmsg.FromMe = msg.Message.Key.GetFromMe()
+					if len(msg.Message.GetUserReceipt()) > 0 {
+						wsmsg.WasReceipt = false
+						wsmsg.WasRead = true
+					}
 
-				conversationMsg := msg.Message.GetMessage().GetConversation()
-				conversationExtended := msg.Message.GetMessage().GetExtendedTextMessage().GetText()
-				conversationEdited := msg.Message.GetMessage().GetEditedMessage().GetMessage().GetProtocolMessage().GetEditedMessage().GetExtendedTextMessage().GetText()
+					conversationMsg := msg.Message.GetMessage().GetConversation()
+					conversationExtended := msg.Message.GetMessage().GetExtendedTextMessage().GetText()
+					conversationEdited := msg.Message.GetMessage().GetEditedMessage().GetMessage().GetProtocolMessage().GetEditedMessage().GetExtendedTextMessage().GetText()
 
-				if len(conversationMsg) > 0 {
-					wsmsg.Message = conversationMsg
-				} else if len(conversationExtended) > 0 {
-					wsmsg.Message = conversationExtended
-				} else {
-					wsmsg.Message = conversationEdited
+					if len(conversationMsg) > 0 {
+						wsmsg.Message = conversationMsg
+					} else if len(conversationExtended) > 0 {
+						wsmsg.Message = conversationExtended
+					} else {
+						wsmsg.Message = conversationEdited
+					}
+
+					if len(wsmsg.Message) > 0 {
+						addConversation.Messages = append([]WhatsappMessage{wsmsg}, addConversation.Messages...)
+					}
 				}
 
-				if len(wsmsg.Message) > 0 {
-					addConversation.Messages = append([]WhatsappMessage{wsmsg}, addConversation.Messages...)
+				if len(addConversation.Messages) > 0 {
+					result = append(result, addConversation)
 				}
 			}
-
-			result = append(result, addConversation)
 		}
 
 		var buf bytes.Buffer
