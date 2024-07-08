@@ -1,6 +1,6 @@
 'use client';
 
-import Container from "../components/Container";
+import { Container } from "@chakra-ui/react";
 import WhatsAppClient from "./WhatsAppClient";
 
 const WhatsAppPage = () => {

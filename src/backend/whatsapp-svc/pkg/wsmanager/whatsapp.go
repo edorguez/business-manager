@@ -121,6 +121,7 @@ func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 		fmt.Println("================================")
 		fmt.Println(c.whatsappClient.Store.ID)
 		fmt.Println(c.whatsappClient.Store.PushName)
+		c.SendServerMessage(c.whatsappClient.Store.ID.String(), ALREADY_CONNECTED_CODE)
 		err = client.Connect()
 		if err != nil {
 			panic(err)
