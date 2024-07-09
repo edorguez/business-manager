@@ -1,6 +1,6 @@
 'use client';
 
-import Container from "../components/Container";
+import Container from "@/app/components/Container";
 import ProductsClient from "./ProductsClient";
 
 const ProductsPage = () => {

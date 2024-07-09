@@ -10,7 +10,7 @@ const Header = () => {
     <div className={'sticky inset-x-0 top-0 z-30 w-full transition-all bg-whitebackground shadow-lg'}>
       <div className="flex h-[40px] items-center justify-between px-4">
         <div className="flex items-center space-x-4">
-          <Link href="/" className="flex flex-row space-x-3 items-center justify-center md:hidden">
+          <Link href="/management/home" className="flex flex-row space-x-3 items-center justify-center md:hidden">
             <Image src='/images/logo.png' alt="Logo" width={28} height={28} />
             <span className="font-bold text-xl flex ">Business Manager</span>
           </Link>

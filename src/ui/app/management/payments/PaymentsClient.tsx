@@ -1,10 +1,10 @@
 'use client';
 
-import SimpleCard from "../components/cards/SimpleCard";
-import PaymentCard from "../components/cards/PaymentCard";
-import PaymentFilterCard from "../components/cards/PaymentFilterCard";
-import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
-import { BreadcrumItem } from "../types";
+import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
+import PaymentCard from "@/app/components/cards/PaymentCard";
+import PaymentFilterCard from "@/app/components/cards/PaymentFilterCard";
+import SimpleCard from "@/app/components/cards/SimpleCard";
+import { BreadcrumItem } from "@/app/types";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -13,7 +13,7 @@ const PaymentsClient = () => {
   const bcItems: BreadcrumItem[] = [
     {
       label: "Métodos de Pago",
-      href: "/payments"
+      href: "/management/payments"
     }
   ];
 
@@ -31,7 +31,7 @@ const PaymentsClient = () => {
             <h1 className='ml-2 font-bold'>Métodos de Pago</h1>
           </div>
           <div className="lg:col-start-5">
-            <Link href="/payments/create">
+            <Link href="/management/payments/create">
               <Button size="sm" variant="main" className="w-full">
                 Crear Método de Pago
               </Button>

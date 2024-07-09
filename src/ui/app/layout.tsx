@@ -24,16 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <div className="flex">
-            <SideNav />
-            <main className="flex-1">
-              <MarginWidthWrapper>
-                <Header />
-                <HeaderMobile />
-                <PageWrapper>{children}</PageWrapper>
-              </MarginWidthWrapper>
-            </main>
-          </div>
+          {children}
         </Providers>
       </body>
     </html>

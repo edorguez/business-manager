@@ -1,6 +1,6 @@
 'use client';
 
-import Container from "../components/Container";
+import Container from "@/app/components/Container";
 import PaymentsClient from "./PaymentsClient";
 
 const PaymentsPage = () => {

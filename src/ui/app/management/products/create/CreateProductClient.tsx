@@ -12,11 +12,11 @@ const CreateProductClient = () => {
   const bcItems: BreadcrumItem[] = [
     {
       label: "Productos",
-      href: "/products"
+      href: "/management/products"
     },
     {
       label: "Crear Producto",
-      href: "/products/create"
+      href: "/management/products/create"
     }
   ];
 
@@ -27,7 +27,7 @@ const CreateProductClient = () => {
         <hr className='my-3' />
         <div className='flex items-center'>
           <div>
-            <Link href="/products">
+            <Link href="/management/products">
               <div className='rounded p-2 hover:bg-thirdcolor hover:text-white duration-150'>
                 <Icon icon="fa-solid:arrow-left" />
               </div>

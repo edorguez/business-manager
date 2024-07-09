@@ -1,11 +1,11 @@
 'use client';
 
-import SimpleCard from "../components/cards/SimpleCard";
 import useWebSocket from 'react-use-websocket';
 import { useState } from "react";
-import ConnectQr from "../components/whatsapp/ConnectQr";
-import { WebsocketMessage, WebsocketMessageTypes } from "../types/websocket";
-import Connected from "../components/whatsapp/Connected";
+import { WebsocketMessage, WebsocketMessageTypes } from '@/app/types/websocket';
+import SimpleCard from '@/app/components/cards/SimpleCard';
+import Connected from '@/app/components/whatsapp/Connected';
+import ConnectQr from '@/app/components/whatsapp/ConnectQr';
 
 const WS_URL = 'ws://localhost:50055/ws';
 

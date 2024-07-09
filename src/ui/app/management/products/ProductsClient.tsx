@@ -1,23 +1,23 @@
 'use client';
 
-import SimpleCard from "../components/cards/SimpleCard";
-import SimpleTable from "../components/tables/SimpleTable";
-import { ColumnType, SimpleTableColumn } from "../components/tables/SimpleTable.types";
-import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
+import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
+import SimpleCard from "@/app/components/cards/SimpleCard";
+import DeleteModal from "@/app/components/modals/DeleteModal";
+import SimpleTable from "@/app/components/tables/SimpleTable";
+import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
+import useDeleteModal from "@/app/hooks/useDeleteModal";
+import { BreadcrumItem } from "@/app/types";
+import { Product } from "@/app/types/product";
 import { Button, Input } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
-import { Product } from '../types/product';
 import Link from "next/link";
-import { BreadcrumItem } from "../types";
-import DeleteModal from "../components/modals/DeleteModal";
-import useDeleteModal from "../hooks/useDeleteModal";
 
 
 const ProductsClient = () => {
   const bcItems: BreadcrumItem[] = [
     {
       label: "Productos",
-      href: "/products"
+      href: "/management/products"
     }
   ];
 
@@ -160,7 +160,7 @@ const ProductsClient = () => {
           <div className="xl:col-start-6">
             <div className="flex flex-col">
               <span className="opacity-0">.</span>
-              <Link href="/products/create">
+              <Link href="/management/products/create">
                 <Button size="sm" variant="main" className="w-full">
                   Crear Producto
                 </Button>

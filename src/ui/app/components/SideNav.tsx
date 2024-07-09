@@ -15,7 +15,7 @@ const SideNav = () => {
     <div className="md:w-60 bg-whitebackground shadow-lg h-screen flex-1 fixed hidden md:flex">
       <div className="flex flex-col space-y-6 w-full">
         <Link
-          href="/"
+          href="/management/home"
           className="flex flex-row space-x-3 items-center justify-center md:justify-start md:px-6 h-12 w-full"
         >
           <Image src='/images/logo.png' alt="Logo" width={28} height={28} />

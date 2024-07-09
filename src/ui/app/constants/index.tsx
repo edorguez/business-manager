@@ -4,41 +4,41 @@ import { SideNavItem } from '../types';
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
     title: 'Home',
-    path: '/',
+    path: '/management/home',
     icon: <Icon icon="lucide:home" width="20" height="20" />,
   },
   {
     title: 'Clientes',
-    path: '/customers',
+    path: '/management/customers',
     icon: <Icon icon="material-symbols:person" width="20" height="20" />,
   },
   {
     title: 'Inventario',
-    path: '/products',
+    path: '/management/products',
     icon: <Icon icon="fluent-mdl2:product" width="20" height="20" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Productos', path: '/products' },
-      { title: 'Crear Producto', path: '/products/create' }
+      { title: 'Productos', path: '/management/products' },
+      { title: 'Crear Producto', path: '/management/products/create' }
     ]
   },
   {
     title: 'Empresa',
-    path: '/company',
+    path: '/management/company',
     icon: <Icon icon="fluent:building-24-regular" width="20" height="20" />,
     submenu: true,
     subMenuItems: [
-      { title: 'Métodos de Pago', path: '/payments' }
+      { title: 'Métodos de Pago', path: '/management/payments' }
     ]
   },
   {
     title: 'WhatsApp',
-    path: '/whatsapp',
+    path: '/management/whatsapp',
     icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
   },
   {
     title: 'Projects',
-    path: '/projects',
+    path: '/management/projects',
     icon: <Icon icon="lucide:folder" width="20" height="20" />,
     submenu: true,
     subMenuItems: [
@@ -49,7 +49,7 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
   },
   {
     title: 'Settings',
-    path: '/settings',
+    path: '/management/settings',
     icon: <Icon icon="lucide:settings" width="20" height="20" />,
     submenu: true,
     subMenuItems: [

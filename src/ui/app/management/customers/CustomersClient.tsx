@@ -1,22 +1,22 @@
 'use client';
 
-import SimpleCard from "../components/cards/SimpleCard";
-import SimpleTable from "../components/tables/SimpleTable";
-import { ColumnType, SimpleTableColumn } from "../components/tables/SimpleTable.types";
-import BreadcrumbNavigation from "../components/BreadcrumbNavigation";
-import { Button, Input } from "@chakra-ui/react";
+import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
+import SimpleCard from '@/app/components/cards/SimpleCard';
+import DeleteModal from '@/app/components/modals/DeleteModal';
+import SimpleTable from '@/app/components/tables/SimpleTable';
+import { ColumnType, SimpleTableColumn } from '@/app/components/tables/SimpleTable.types';
+import useDeleteModal from '@/app/hooks/useDeleteModal';
+import { BreadcrumItem } from '@/app/types';
+import { Customer } from '@/app/types/customer';
+import { Button, Input } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
-import { Customer } from '../types/customer';
 import Link from "next/link";
-import { BreadcrumItem } from "../types";
-import DeleteModal from "../components/modals/DeleteModal";
-import useDeleteModal from "../hooks/useDeleteModal";
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [
     {
       label: "Clientes",
-      href: "/customers"
+      href: "/management/customers"
     }
   ];
 
@@ -163,7 +163,7 @@ const CustomersClient = () => {
           <div className="xl:col-start-6">
             <div className="flex flex-col">
               <span className="opacity-0">.</span>
-              <Link href="/customers/create">
+              <Link href="/management/customers/create">
                 <Button size="sm" variant="main" className="w-full">
                   Crear Cliente
                 </Button>

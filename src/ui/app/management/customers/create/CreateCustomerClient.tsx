@@ -1,26 +1,23 @@
 'use client';
 
-import SimpleCard from '../../components/cards/SimpleCard';
 import { Button, Input, Select } from '@chakra-ui/react'
-import BreadcrumbNavigation from "../../components/BreadcrumbNavigation";
 import { BreadcrumItem } from '@/app/types';
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
-import PaymentFilterCard from "../../components/cards/PaymentFilterCard";
+import SimpleCard from '@/app/components/cards/SimpleCard';
+import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 
-const CreatePaymentClient = () => {
+const CreateCustomerClient = () => {
   const bcItems: BreadcrumItem[] = [
     {
-      label: "Métodos de Pago",
-      href: "/payments"
+      label: "Clientes",
+      href: "/management/customers"
     },
     {
-      label: "Crear Método de Pago",
-      href: "/payments/create"
+      label: "Crear Cliente",
+      href: "/management/customers/create"
     }
   ];
-
-  const payments: any[] = [...Array(11)];
 
   return (
     <div>
@@ -29,30 +26,15 @@ const CreatePaymentClient = () => {
         <hr className='my-3' />
         <div className='flex items-center'>
           <div>
-            <Link href="/payments">
+            <Link href="/management/customers">
               <div className='rounded p-2 hover:bg-thirdcolor hover:text-white duration-150'>
                 <Icon icon="fa-solid:arrow-left" />
               </div>
             </Link>
           </div>
-          <h1 className='ml-2 font-bold'>Crear Método de Pago</h1>
+          <h1 className='ml-2 font-bold'>Crear Cliente</h1>
         </div>
       </SimpleCard>
-
-      <div className="mt-3">
-        <SimpleCard>
-          <div className="p-2">
-            <label className='text-sm'>Tipo de Cuenta</label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-1">
-              {
-                payments.map((val: any, index: number) => (
-                  <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" isSelected={index == 0} />
-                ))
-              }
-            </div>
-          </div>
-        </SimpleCard>
-      </div>
 
       <div className='mt-3'>
         <SimpleCard>
@@ -61,19 +43,19 @@ const CreatePaymentClient = () => {
             <Input size="sm" />
           </div>
           <div className='mt-2'>
-            <label className='text-sm'>Banco</label>
+            <label className='text-sm'>Apellido</label>
             <Input size="sm" />
           </div>
           <div className='mt-2'>
-            <label className='text-sm'>Número de Cuenta</label>
+            <label className='text-sm'>Correo</label>
             <Input size="sm" />
           </div>
           <div className='mt-2'>
-            <label className='text-sm'>Tipo de Cuenta</label>
+            <label className='text-sm'>Teléfono</label>
             <Input size="sm" />
           </div>
           <div className='mt-2'>
-            <label className='text-sm'>Cédula</label>
+            <label className='text-sm'>Cédula <span className='text-thirdcolor'>*</span></label>
             <div className='flex'>
               <div className='w-24 mr-1'>
                 <Select size='sm'>
@@ -88,24 +70,16 @@ const CreatePaymentClient = () => {
               <Input size="sm" />
             </div>
           </div>
-          <div className='mt-2'>
-            <label className='text-sm'>Teléfono</label>
-            <Input size="sm" />
-          </div>
-          <div className='mt-2'>
-            <label className='text-sm'>Correo</label>
-            <Input size="sm" />
-          </div>
         </SimpleCard>
       </div>
 
       <div className="mt-3">
-        <Button variant="main" className='w-full'>
-          Crear
-        </Button>
-      </div>
+          <Button variant="main" className='w-full'>
+            Crear
+          </Button>
+        </div>
     </div>
   )
 }
 
-export default CreatePaymentClient;
+export default CreateCustomerClient;
