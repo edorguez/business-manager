@@ -1,6 +1,6 @@
 module github.com/EdoRguez/business-manager/product-svc
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/spf13/viper v1.18.2

@@ -51,3 +51,13 @@ services:
       - POSTGRES_USER=${WHATSAPP_SVC_DB_USER}
       - POSTGRES_PASSWORD=${WHATSAPP_SVC_DB_PASSWORD}
     restart: always
+  auth-db:
+    container_name: auth-db
+    image: postgres:16.2
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=${AUTH_SVC_DB}
+      - POSTGRES_USER=${AUTH_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${AUTH_SVC_DB_PASSWORD}
+    restart: always
