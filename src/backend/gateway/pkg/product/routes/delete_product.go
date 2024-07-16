@@ -26,12 +26,12 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	res, errDelete := client.DeleteProduct(vars["id"], r.Context())
 
 	if errDelete != nil {
-		fmt.Println("API Gateway :  DeleteCustomer - ERROR")
+		fmt.Println("API Gateway :  DeleteProduct - ERROR")
 		json.NewEncoder(w).Encode(errDelete)
 		return
 	}
 
-	fmt.Println("API Gateway :  DeleteCustomer - SUCCESS")
+	fmt.Println("API Gateway :  DeleteProduct - SUCCESS")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }

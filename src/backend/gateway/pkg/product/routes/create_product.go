@@ -40,7 +40,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 
 	_, errCompany := companyClient.GetCompany(int64(body.CompanyId), r.Context())
 	if errCompany != nil {
-		fmt.Println("API Gateway :  CreateCustomer - ERROR")
+		fmt.Println("API Gateway :  CreateProduct - ERROR")
 		errCompany.Error = "Company not found"
 		json.NewEncoder(w).Encode(errCompany)
 		return
