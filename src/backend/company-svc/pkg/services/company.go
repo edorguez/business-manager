@@ -53,7 +53,7 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 
 	c, err := s.Repo.GetCompany(ctx, req.Id)
 	if err != nil {
-		fmt.Println("API Gateway :  GetCompany - ERROR")
+		fmt.Println("Company Service :  GetCompany - ERROR")
 		fmt.Println(err.Error())
 
 		resErrorStatus := http.StatusConflict
