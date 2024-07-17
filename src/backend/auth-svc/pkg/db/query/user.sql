@@ -37,12 +37,14 @@ SELECT
   modified_at
 FROM 
   auth.user
+WHERE
+  (company_id = $1) OR $1 = 0
 ORDER BY 
   id
 LIMIT 
-  $1
+  $2
 OFFSET 
-  $2;
+  $3;
 
 -- name: UpdateUser :one
 UPDATE 

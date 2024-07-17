@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/EdoRguez/business-manager/gateway/pkg/auth"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer"
@@ -46,6 +47,7 @@ func startServer(address string, conf *config.Config) error {
 	customer.LoadRoutes(baseRoute, conf)
 	company.LoadRoutes(baseRoute, conf)
 	product.LoadRoutes(baseRoute, conf)
+	auth.LoadRoutes(baseRoute, conf)
 
 	s := &http.Server{
 		Addr:         address,

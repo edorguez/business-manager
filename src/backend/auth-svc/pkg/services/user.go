@@ -24,7 +24,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *auth.CreateUserReques
 	fmt.Println("----------------")
 
 	createUserParams := db.CreateUserParams{
-		CompanyID:    req.ComanyId,
+		CompanyID:    req.CompanyId,
 		RoleID:       req.RoleId,
 		Email:        req.Email,
 		PasswordHash: password_hash.HashPassword(req.Password),
@@ -74,11 +74,11 @@ func (s *UserService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*a
 
 	fmt.Println("Auth Service :  GetUser - SUCCESS")
 	return &auth.GetUserResponse{
-		Id:       c.ID,
-		ComanyId: c.CompanyID,
-		RoleId:   c.RoleID,
-		Email:    c.Email,
-		Status:   http.StatusOK,
+		Id:        c.ID,
+		CompanyId: c.CompanyID,
+		RoleId:    c.RoleID,
+		Email:     c.Email,
+		Status:    http.StatusOK,
 	}, nil
 }
 
@@ -89,8 +89,9 @@ func (s *UserService) GetUsers(ctx context.Context, req *auth.GetUsersRequest) (
 	fmt.Println("----------------")
 
 	params := db.GetUsersParams{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		CompanyID: req.CompanyId,
+		Limit:     req.Limit,
+		Offset:    req.Offset,
 	}
 
 	c, err := s.Repo.GetUsers(ctx, params)
@@ -106,11 +107,11 @@ func (s *UserService) GetUsers(ctx context.Context, req *auth.GetUsersRequest) (
 	users := make([]*auth.GetUserResponse, 0, len(c))
 	for _, v := range c {
 		users = append(users, &auth.GetUserResponse{
-			Id:       v.ID,
-			ComanyId: v.CompanyID,
-			RoleId:   v.RoleID,
-			Email:    v.Email,
-			Status:   http.StatusOK,
+			Id:        v.ID,
+			CompanyId: v.CompanyID,
+			RoleId:    v.RoleID,
+			Email:     v.Email,
+			Status:    http.StatusOK,
 		})
 	}
 

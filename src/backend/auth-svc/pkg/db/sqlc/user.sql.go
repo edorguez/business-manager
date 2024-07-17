@@ -104,21 +104,24 @@ SELECT
   modified_at
 FROM 
   auth.user
+WHERE
+  (company_id = $1) OR $1 = 0
 ORDER BY 
   id
 LIMIT 
-  $1
-OFFSET 
   $2
+OFFSET 
+  $3
 `
 
 type GetUsersParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+	CompanyID int64 `json:"company_id"`
+	Limit     int32 `json:"limit"`
+	Offset    int32 `json:"offset"`
 }
 
 func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]AuthUser, error) {
-	rows, err := q.db.QueryContext(ctx, getUsers, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, getUsers, arg.CompanyID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
