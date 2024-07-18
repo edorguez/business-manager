@@ -13,12 +13,12 @@ type JWTWrapper struct {
 	ExpirationHours int64
 }
 
-func (w *JWTWrapper) GenerateToken(userId int, userEmail string, role string) (signedToken string, err error) {
+func (w *JWTWrapper) GenerateToken(userId int64, userEmail string, role string) (signedToken string, err error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"id":    userId,
 			"email": userEmail,
-			"exp":   time.Now().Add(time.Hour * 24).Unix(),
+			"exp":   time.Now().Local().Add(time.Hour * time.Duration(w.ExpirationHours)).Unix(),
 			"iss":   w.Issuer,
 		})
 

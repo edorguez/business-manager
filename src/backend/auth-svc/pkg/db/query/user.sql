@@ -26,6 +26,22 @@ WHERE
   id = $1 
 LIMIT 1;
 
+-- name: GetUserByEmail :one
+SELECT 
+  id,
+  company_id,
+  role_id,
+  email,
+  password_hash,
+  created_at,
+  modified_at
+FROM 
+  auth.user
+WHERE 
+  email = $1 
+LIMIT 1;
+
+
 -- name: GetUsers :many
 SELECT 
   id,

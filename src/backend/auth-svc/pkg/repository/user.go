@@ -50,6 +50,23 @@ func (userRepo *UserRepo) GetUser(ctx context.Context, id int64) (db.AuthUser, e
 	return result, err
 }
 
+func (userRepo *UserRepo) GetUserByEmail(ctx context.Context, email string) (db.AuthUser, error) {
+	var result db.AuthUser
+
+	err := userRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.GetUserByEmail(ctx, email)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
 func (userRepo *UserRepo) GetUsers(ctx context.Context, arg db.GetUsersParams) ([]db.AuthUser, error) {
 	var result []db.AuthUser
 
