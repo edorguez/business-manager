@@ -40,7 +40,7 @@ func (w *JWTWrapper) ValidateToken(singedToken string) error {
 	}
 
 	if !token.Valid {
-		return fmt.Errorf("invalid token")
+		return fmt.Errorf("Invalid token")
 	}
 
 	return nil

@@ -92,11 +92,40 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 		}, nil
 	}
 
-	token, _ := s.Jwt.GenerateToken(u.ID, u.Email, "")
+	token, err := s.Jwt.GenerateToken(u.ID, u.Email, "")
+	if err != nil {
+		fmt.Println("Auth Service :  Login - ERROR")
+		fmt.Println(err.Error())
+		return &auth.LoginResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
 
 	fmt.Println("Auth Service :  Login - SUCCESS")
 	return &auth.LoginResponse{
 		Status: http.StatusOK,
 		Token:  token,
+	}, nil
+}
+
+func (s *AuthService) Validate(ctx context.Context, req *auth.ValidateRequest) (*auth.ValidateResponse, error) {
+	fmt.Println("Auth Service :  Validate")
+	fmt.Println("Auth Service :  Validate - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	err := s.Jwt.ValidateToken(req.Token)
+
+	if err != nil {
+		return &auth.ValidateResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	fmt.Println("Auth Service :  Validate - SUCCESS")
+	return &auth.ValidateResponse{
+		Status: http.StatusOK,
 	}, nil
 }

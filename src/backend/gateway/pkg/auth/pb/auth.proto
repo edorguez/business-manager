@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-option go_package= "github.com/EdoRguez/business-manager/auth-svc/pb";
+option go_package= "github.com/EdoRguez/business-manager/gateway/auth/pb";
 
 service AuthService{
   // Register

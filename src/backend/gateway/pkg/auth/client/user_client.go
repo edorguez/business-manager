@@ -55,7 +55,7 @@ func CreateUser(body contracts.CreateUserRequest, c context.Context) (*pb.Create
 		return nil, error
 	}
 
-	fmt.Println("API Gateway :  CreateUser - SUCCESS")
+	fmt.Println("User CLIENT :  CreateUser - SUCCESS")
 	return res, nil
 }
 

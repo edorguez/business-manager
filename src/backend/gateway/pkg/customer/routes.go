@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	auth "github.com/EdoRguez/business-manager/gateway/pkg/auth"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/routes"
 	"github.com/gorilla/mux"
@@ -15,6 +16,9 @@ type CustomerRoutes struct {
 
 func LoadRoutes(router *mux.Router, c *config.Config) {
 	baseRoute := router.PathPrefix("/customers").Subrouter()
+
+	mwc := auth.InitAuthMiddleware(c)
+	baseRoute.Use(mwc.MiddlewareValidateAuth)
 
 	cr := &CustomerRoutes{
 		config: c,
