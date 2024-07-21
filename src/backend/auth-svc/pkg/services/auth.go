@@ -25,13 +25,22 @@ func (s *AuthService) Register(ctx context.Context, req *auth.RegisterRequest) (
 	fmt.Println(req)
 	fmt.Println("----------------")
 
-	_, err := s.Repo.GetUserByEmail(ctx, req.Email)
+	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
 	if err != nil && err != sql.ErrNoRows {
 		fmt.Println("Auth Service :  Register - ERROR")
 		fmt.Println(err.Error())
 		return &auth.RegisterResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
+		}, nil
+	}
+
+	if u.Email == req.Email {
+		fmt.Println("Auth Service :  Register - ERROR")
+		fmt.Println("User already exists")
+		return &auth.RegisterResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "User already exists",
 		}, nil
 	}
 

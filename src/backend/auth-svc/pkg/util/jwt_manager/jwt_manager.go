@@ -22,7 +22,7 @@ func (w *JWTWrapper) GenerateToken(userId int64, userEmail string, role string) 
 			"iss":   w.Issuer,
 		})
 
-	tokenString, err := token.SignedString(w.SecretKey)
+	tokenString, err := token.SignedString([]byte(w.SecretKey))
 	if err != nil {
 		return "", err
 	}
@@ -30,9 +30,9 @@ func (w *JWTWrapper) GenerateToken(userId int64, userEmail string, role string) 
 	return tokenString, nil
 }
 
-func (w *JWTWrapper) ValidateToken(singedToken string) error {
-	token, err := jwt.Parse(singedToken, func(token *jwt.Token) (interface{}, error) {
-		return w.SecretKey, nil
+func (w *JWTWrapper) ValidateToken(signedToken string) error {
+	token, err := jwt.Parse(signedToken, func(token *jwt.Token) (interface{}, error) {
+		return []byte(w.SecretKey), nil
 	})
 
 	if err != nil {

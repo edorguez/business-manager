@@ -48,11 +48,24 @@ func (m *MiddlewareConfig) MiddlewareValidateAuth(next http.Handler) http.Handle
 			return
 		}
 
-		_, err := client.Validate(contracts.ValidateRequest{Token: tokenString}, r.Context())
+		validateToken, err := client.Validate(contracts.ValidateRequest{Token: tokenString}, r.Context())
 
 		if err != nil {
 			fmt.Println("API Gateway :  Validate - ERROR")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(err)
+			return
+		}
+
+		if validateToken.Status != http.StatusOK {
+			fmt.Println("API Gateway :  Validate - ERROR")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(int(validateToken.Status))
+			json.NewEncoder(w).Encode(&contracts.Error{
+				Status: validateToken.Status,
+				Error:  validateToken.Error,
+			})
 			return
 		}
 

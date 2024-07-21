@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	auth "github.com/EdoRguez/business-manager/gateway/pkg/auth"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/routes"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/gorilla/mux"
@@ -20,6 +21,9 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 
 func loadCompanyRoutes(router *mux.Router, c *config.Config) {
 	baseRoute := router.PathPrefix("/companies").Subrouter()
+
+	mwc := auth.InitAuthMiddleware(c)
+	baseRoute.Use(mwc.MiddlewareValidateAuth)
 
 	cr := &CompanyRoutes{
 		config: c,
@@ -45,6 +49,9 @@ func loadCompanyRoutes(router *mux.Router, c *config.Config) {
 
 func loadPaymentRoutes(router *mux.Router, c *config.Config) {
 	baseRoute := router.PathPrefix("/payments").Subrouter()
+
+	mwc := auth.InitAuthMiddleware(c)
+	baseRoute.Use(mwc.MiddlewareValidateAuth)
 
 	cr := &CompanyRoutes{
 		config: c,

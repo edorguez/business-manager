@@ -25,9 +25,8 @@ func loadUserRoutes(router *mux.Router, c *config.Config) {
 		config: c,
 	}
 
-	mw := MiddlewareConfig{
-		config: c,
-	}
+	mw := InitAuthMiddleware(c)
+	baseRoute.Use(mw.MiddlewareValidateAuth)
 
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/{id:[0-9]+}", ar.GetUser)
@@ -52,10 +51,11 @@ func loadAuthRoutes(router *mux.Router, c *config.Config) {
 		config: c,
 	}
 
-	mw := MiddlewareConfig{}
+	mw := InitAuthMiddleware(c)
 
 	registerRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	registerRouter.HandleFunc("/register", ar.Register)
+	registerRouter.Use(mw.MiddlewareValidateAuth)
 	registerRouter.Use(mw.MiddlewareValidateCreateUser)
 
 	loginRouter := baseRoute.Methods(http.MethodPost).Subrouter()
