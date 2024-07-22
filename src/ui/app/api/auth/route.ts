@@ -1,0 +1,18 @@
+import { Login } from "@/app/types/auth"
+
+export async function login(
+  request: Login,
+) {
+  const res = await fetch('http://localhost:3001/api/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify(request),
+  })
+
+  const data = await res.json()
+
+  return Response.json(data)
+}
