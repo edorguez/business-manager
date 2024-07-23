@@ -16,10 +16,7 @@ const LoginClient = () => {
   }
 
   const onLogin = async () => {
-    console.log('epa')
-    console.log(formData)
     let result: any = await login(formData);
-    console.log('vemoas')
     console.log(result)
   }
 

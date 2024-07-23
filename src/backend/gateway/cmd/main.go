@@ -41,6 +41,7 @@ func main() {
 
 func startServer(address string, conf *config.Config) error {
 	sm := mux.NewRouter()
+	rc := routesConfig(sm)
 
 	baseRoute := sm.PathPrefix("/api").Subrouter()
 
@@ -49,12 +50,9 @@ func startServer(address string, conf *config.Config) error {
 	product.LoadRoutes(baseRoute, conf)
 	auth.LoadRoutes(baseRoute, conf)
 
-	// wrap the router with CORS and JSON content type middlewares
-	enhancedRouter := enableCORS(jsonContentTypeMiddleware(sm))
-
 	s := &http.Server{
 		Addr:         address,
-		Handler:      enhancedRouter,
+		Handler:      rc,
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,
@@ -85,12 +83,15 @@ func startServer(address string, conf *config.Config) error {
 	return nil
 }
 
-func enableCORS(next http.Handler) http.Handler {
+func routesConfig(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Set CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "*") // Allow any origin
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// Set JSON Content-Type
+		w.Header().Set("Content-Type", "application/json")
 
 		// Check if the request is for CORS preflight
 		if r.Method == "OPTIONS" {
@@ -102,12 +103,4 @@ func enableCORS(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 
-}
-
-func jsonContentTypeMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Set JSON Content-Type
-		w.Header().Set("Content-Type", "application/json")
-		next.ServeHTTP(w, r)
-	})
 }
