@@ -6,8 +6,12 @@ import { Icon } from '@iconify/react';
 import Link from 'next/link';
 import SimpleCard from '@/app/components/cards/SimpleCard';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateCustomer } from '@/app/types/customer';
+import { useRouter } from 'next/navigation';
+import { CreateCustomerRequest } from '@/app/api/customers/route';
+import { CurrentUser } from '@/app/types/auth';
+import getCurrentUser from '@/app/actions/getCurrentUser';
 
 const CreateCustomerClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -22,7 +26,9 @@ const CreateCustomerClient = () => {
   ];
 
   const toast = useToast();
+  const { push } = useRouter();
   const [formData, setFormData] = useState<CreateCustomer>({
+    companyId: 0,
     firstName: '',
     lastName: '',
     email: '',
@@ -31,16 +37,30 @@ const CreateCustomerClient = () => {
     phone: ''
   });
 
+  useEffect(() => {
+    const currentUser: CurrentUser | null = getCurrentUser();
+    if (currentUser) {
+      formData.companyId = currentUser.companyId;
+    }
+  });
+
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (isFormValid()) {
-      console.log('form valid');
+      let createCustomer: any = await CreateCustomerRequest(formData);
+      console.log(createCustomer);
+      if (!createCustomer.error) {
+        showSuccessCreationMessage('Cliente creado exitosamente');
+        push('/management/customers');
+      } else {
+        showErrorMessage(createCustomer.error);
+      }
     } else {
-      showErrorList();
+      showErrorMessage('Algunos campos son requeridos o inválidos');
     }
   }
 
@@ -54,10 +74,21 @@ const CreateCustomerClient = () => {
     return true;
   }
 
-  const showErrorList = () => {
+  const showSuccessCreationMessage = (msg: string) => {
+    toast({
+      title: 'Cliente',
+      description: msg,
+      variant: 'customsuccess',
+      position: 'top-right',
+      duration: 4000,
+      isClosable: true,
+    });
+  }
+
+  const showErrorMessage = (msg: string) => {
     toast({
       title: 'Error',
-      description: 'Algunos campos son requeridos o inválidos',
+      description: msg,
       variant: 'customerror',
       position: 'top-right',
       duration: 4000,
@@ -86,19 +117,19 @@ const CreateCustomerClient = () => {
         <SimpleCard>
           <div className='mt-2'>
             <label className='text-sm'>Nombre <span className='text-thirdcolor'>*</span></label>
-            <Input size="sm" name='firstName' value={formData.firstName} onChange={handleChange} />
+            <Input size="sm" name='firstName' value={formData.firstName} onChange={handleChange} maxLength={20} />
           </div>
           <div className='mt-2'>
             <label className='text-sm'>Apellido</label>
-            <Input size="sm" name='lastName' value={formData.lastName} onChange={handleChange} />
+            <Input size="sm" name='lastName' value={formData.lastName} onChange={handleChange} maxLength={20} />
           </div>
           <div className='mt-2'>
             <label className='text-sm'>Correo</label>
-            <Input size="sm" name='email' value={formData.email} onChange={handleChange} />
+            <Input size="sm" name='email' value={formData.email} onChange={handleChange} maxLength={100} />
           </div>
           <div className='mt-2'>
             <label className='text-sm'>Teléfono</label>
-            <Input size="sm" name='phone' value={formData.phone} onChange={handleChange} />
+            <Input size="sm" name='phone' value={formData.phone} onChange={handleChange} maxLength={11} />
           </div>
           <div className='mt-2'>
             <label className='text-sm'>Cédula <span className='text-thirdcolor'>*</span></label>
@@ -113,7 +144,7 @@ const CreateCustomerClient = () => {
                   <option value='G'>G</option>
                 </Select>
               </div>
-              <Input size="sm" name='identificationNumber' value={formData.identificationNumber} onChange={handleChange} />
+              <Input size="sm" name='identificationNumber' value={formData.identificationNumber} onChange={handleChange} maxLength={20} />
             </div>
           </div>
         </SimpleCard>

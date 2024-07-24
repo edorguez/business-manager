@@ -3,8 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
+import deleteUserSession from "../actions/deleteUserSession";
 
 const Header = () => {
+  const { push } = useRouter();
+  const onCloseSession = () => {
+    deleteUserSession();
+    push('/login');
+  }
 
   return (
     <div className={'sticky inset-x-0 top-0 z-30 w-full transition-all bg-whitebackground shadow-lg'}>
@@ -17,7 +26,17 @@ const Header = () => {
         </div>
 
         <div className="hidden md:block">
-          <Image src='/images/user_profile.png' alt="User Profile" width={28} height={28} />
+          <Menu>
+            <MenuButton>
+              <Avatar name='User Profile' src='/images/user_profile.png' size="sm" />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={onCloseSession}>
+                <Icon icon="ci:exit" />
+                Cerrar Sesión
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </div>
       </div>
     </div>

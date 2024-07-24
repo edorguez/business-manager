@@ -6,7 +6,7 @@ export async function login(
   try {
     const res = await fetch('http://localhost:3001/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify(request),
+      body: JSON.stringify(request)
     });
     let response = await res.json();
 

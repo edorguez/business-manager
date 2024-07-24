@@ -8,6 +8,7 @@ export type Customer = {
 }
 
 export type CreateCustomer = {
+  companyId: number;
   firstName: string;
   lastName: string;
   identificationNumber: string;
