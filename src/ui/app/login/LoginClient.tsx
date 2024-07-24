@@ -20,7 +20,6 @@ const LoginClient = () => {
 
   const onLogin = async () => {
     let result: any = await login(formData);
-    console.log(result);
     if (!result.error) {
       push('/management/home');
     } else {
