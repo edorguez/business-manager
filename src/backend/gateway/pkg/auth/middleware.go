@@ -19,11 +19,6 @@ func InitAuthMiddleware(c *config.Config) MiddlewareConfig {
 	return MiddlewareConfig{config: c}
 }
 
-type MiddlewareErrorResponse struct {
-	Status int64
-	Error  string
-}
-
 func (m *MiddlewareConfig) MiddlewareValidateAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -86,7 +81,7 @@ func (m *MiddlewareConfig) MiddlewareValidateLogin(next http.Handler) http.Handl
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - Login")
-			middleErr := MiddlewareErrorResponse{
+			middleErr := contracts.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -116,7 +111,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateUser(next http.Handler) http.
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateUser")
-			middleErr := MiddlewareErrorResponse{
+			middleErr := contracts.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -146,7 +141,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateUser(next http.Handler) http.
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateUser")
-			middleErr := MiddlewareErrorResponse{
+			middleErr := contracts.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}

@@ -86,6 +86,28 @@ const config: any = {
         errorBorderColor: 'third.500'
       }
     },
+    Alert: {
+      variants: {
+        customsuccess: (props: any) => {
+          return {
+            container: {
+              ...props.theme.components.Alert.variants.solid(props).container,
+              backgroundColor: mode('main.500', 'main.500')(props),
+              color: mode('white', 'black')(props),
+            },
+          };
+        },
+        customerror: (props: any) => {
+          return {
+            container: {
+              ...props.theme.components.Alert.variants.solid(props).container,
+              backgroundColor: mode('third.500', 'third.500')(props),
+              color: mode('white', 'black')(props),
+            },
+          };
+        },
+      },
+    },
   },
 }
 export default config;

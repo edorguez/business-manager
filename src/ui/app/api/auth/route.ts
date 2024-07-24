@@ -3,12 +3,19 @@ import { Login } from "@/app/types/auth"
 export async function login(
   request: Login,
 ) {
-  const res = await fetch('http://localhost:3001/api/auth/login', {
-    method: 'POST',
-    body: JSON.stringify(request),
-  })
+  try {
+    const res = await fetch('http://localhost:3001/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+    let response = await res.json();
 
-  const data = await res.json()
+    if(!response.error) {
+      localStorage.setItem("token", response.token);
+    }
 
-  return Response.json(data)
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
 }

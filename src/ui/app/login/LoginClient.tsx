@@ -2,12 +2,15 @@
 
 import Image from 'next/image'
 import SimpleCard from '../components/cards/SimpleCard';
-import { Button, Container, Input } from '@chakra-ui/react';
+import { Button, Container, Input, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Login } from '../types/auth';
 import { login } from '../api/auth/route';
+import { useRouter } from 'next/navigation';
 
 const LoginClient = () => {
+  const toast = useToast();
+  const { push } = useRouter();
   const [formData, setFormData] = useState<Login>({ email: '', password: '' });
 
   const handleChange = (event: any) => {
@@ -17,7 +20,25 @@ const LoginClient = () => {
 
   const onLogin = async () => {
     let result: any = await login(formData);
-    console.log(result)
+    console.log(result);
+    if (!result.error) {
+      push('/management/home');
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Correo o contraseña incorrecto',
+        variant: 'customerror',
+        position: 'top-right',
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+  }
+
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      onLogin();
+    }
   }
 
   return (
@@ -37,11 +58,11 @@ const LoginClient = () => {
                 <div className='px-1 py-8'>
                   <div className='mt-2'>
                     <label className='text-sm'>Correo</label>
-                    <Input size="sm" type='email' name='email' value={formData.email} onChange={handleChange} />
+                    <Input size="sm" type='email' name='email' value={formData.email} onChange={handleChange} onKeyDown={handleKeyDown} />
                   </div>
                   <div className='mt-2'>
                     <label className='text-sm'>Contraseña</label>
-                    <Input size="sm" type='password' name='password' value={formData.password} onChange={handleChange} />
+                    <Input size="sm" type='password' name='password' value={formData.password} onChange={handleChange} onKeyDown={handleKeyDown} />
                   </div>
                   <div className="mt-3">
                     <Button variant="main" className='w-full' onClick={onLogin}>
