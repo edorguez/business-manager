@@ -3,6 +3,7 @@ export type Customer = {
   firstName: string;
   lastName: string;
   identificationNumber: string;
+  identificationType: string;
   phone: string;
   email: string;
 }
@@ -15,4 +16,10 @@ export type CreateCustomer = {
   identificationType: string;
   phone: string;
   email: string;
+}
+
+export type GetCustomer = {
+  companyId: number;
+  limit: number;
+  offset: number;
 }

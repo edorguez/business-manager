@@ -11,7 +11,7 @@ export async function login(
     let response = await res.json();
 
     if(!response.error) {
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("token", `Bearer ${response.token}`);
     }
 
     return response;

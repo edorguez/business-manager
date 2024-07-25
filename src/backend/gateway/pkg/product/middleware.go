@@ -11,11 +11,6 @@ import (
 
 type MiddlewareConfig struct{}
 
-type MiddlewareErrorResponse struct {
-	Status int64
-	Error  string
-}
-
 func (m *MiddlewareConfig) MiddlewareValidateCreateProduct(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body contracts.CreateProductRequest
@@ -32,7 +27,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateProduct(next http.Handler) ht
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateProduct")
 			fmt.Println(err)
-			middleErr := MiddlewareErrorResponse{
+			middleErr := contracts.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -62,7 +57,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateProduct(next http.Handler) ht
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateProduct")
-			middleErr := MiddlewareErrorResponse{
+			middleErr := contracts.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}

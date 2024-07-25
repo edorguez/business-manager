@@ -34,6 +34,8 @@ func (m *MiddlewareConfig) MiddlewareValidateAuth(next http.Handler) http.Handle
 			return
 		}
 
+		tokenString = tokenString[len("Bearer "):]
+
 		if err := client.InitAuthServiceClient(m.config); err != nil {
 			json.NewEncoder(w).Encode(&contracts.Error{
 				Status: http.StatusInternalServerError,

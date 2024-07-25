@@ -1,5 +1,6 @@
 'use client';
 
+import { GetCustomersRequest } from '@/app/api/customers/route';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import SimpleCard from '@/app/components/cards/SimpleCard';
 import DeleteModal from '@/app/components/modals/DeleteModal';
@@ -11,6 +12,7 @@ import { Customer } from '@/app/types/customer';
 import { Button, Input } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 import Link from "next/link";
+import { useCallback, useEffect, useState } from 'react';
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -48,95 +50,29 @@ const CustomersClient = () => {
     },
   ]
 
-  const customerData: Customer[] = [
-    {
-      id: 1,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 2,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 3,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 4,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 5,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 6,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 7,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 8,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 9,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-    {
-      id: 10,
-      firstName: "Eduardo",
-      lastName: "Rodriguez",
-      identificationNumber: "V-12123123",
-      phone: "04161234567",
-      email: "test@test.com"
-    },
-  ]
+  const [customerData, setCustomerData] = useState<Customer[]>([]);
+
+  const getCustomers = useCallback(async () => {
+    let data: Customer[] = await GetCustomersRequest({ companyId: 1, limit: 10, offset: 0 });
+    const formatData: Customer[] = data.map(x => {
+      return {
+        ...x,
+        identificationNumber: `${x.identificationType}-${x.identificationNumber}`
+      }
+    })
+    setCustomerData(formatData);
+  }, [])
+
+  useEffect(() => {
+    getCustomers()
+  }, [getCustomers]);
 
   const deleteCustomerModal = useDeleteModal();
 
   return (
     <div>
       <SimpleCard>
-        <DeleteModal onSubmit={()=>{}} title="Eliminar Cliente" description="¿Estás seguro que quieres eliminar este cliente?"/>
+        <DeleteModal onSubmit={() => { }} title="Eliminar Cliente" description="¿Estás seguro que quieres eliminar este cliente?" />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />

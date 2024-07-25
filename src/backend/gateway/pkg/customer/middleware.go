@@ -11,11 +11,6 @@ import (
 
 type MiddlewareConfig struct{}
 
-type MiddlewareErrorResponse struct {
-	Status int64
-	Error  string
-}
-
 func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body contracts.CreateCustomerRequest
@@ -29,7 +24,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) h
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateCustomer")
-			middleErr := MiddlewareErrorResponse{
+			middleErr := contracts.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -59,7 +54,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateCustomer(next http.Handler) h
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateCustomer")
-			middleErr := MiddlewareErrorResponse{
+			middleErr := contracts.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
