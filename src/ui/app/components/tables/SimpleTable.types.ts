@@ -7,6 +7,7 @@ export interface SimpleTableProps {
   showEdit?: boolean;
   showDelete?: boolean;
   onDelete?: () => void;
+  onChangePage?: (val: string) => void;
 }
 
 export interface SimpleTableColumn {

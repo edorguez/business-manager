@@ -24,8 +24,15 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   showDetails = false,
   showEdit = false,
   showDelete = false,
-  onDelete
+  onDelete,
+  onChangePage
 }) => {
+
+  const handleChangePage = (val: string) => {
+    if(onChangePage) {
+      return onChangePage(val);
+    }
+  }
 
   return (
     <TableContainer>
@@ -33,13 +40,13 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
         <TableCaption>
           <div className='flex justify-end'>
             <div className='flex items-center select-none text-thirdcolor'>
-              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white'>
+              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white' onClick={() => handleChangePage('PREV')}>
                 <Icon icon="fa:chevron-left" />
               </div>
               <span className='mx-2 font-bold'>
                 Página 1
               </span>
-              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white'>
+              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white' onClick={() => handleChangePage('NEXT')}>
                 <Icon icon="fa:chevron-right" />
               </div>
             </div>

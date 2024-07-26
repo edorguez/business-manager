@@ -1,5 +1,6 @@
 'use client';
 
+import getCurrentUser from '@/app/actions/getCurrentUser';
 import { GetCustomersRequest } from '@/app/api/customers/route';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import SimpleCard from '@/app/components/cards/SimpleCard';
@@ -8,6 +9,7 @@ import SimpleTable from '@/app/components/tables/SimpleTable';
 import { ColumnType, SimpleTableColumn } from '@/app/components/tables/SimpleTable.types';
 import useDeleteModal from '@/app/hooks/useDeleteModal';
 import { BreadcrumItem } from '@/app/types';
+import { CurrentUser } from '@/app/types/auth';
 import { Customer } from '@/app/types/customer';
 import { Button, Input } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
@@ -51,23 +53,31 @@ const CustomersClient = () => {
   ]
 
   const [customerData, setCustomerData] = useState<Customer[]>([]);
+  const [offset, setOffset] = useState<number>(0);
 
   const getCustomers = useCallback(async () => {
-    let data: Customer[] = await GetCustomersRequest({ companyId: 1, limit: 10, offset: 0 });
-    const formatData: Customer[] = data.map(x => {
-      return {
-        ...x,
-        identificationNumber: `${x.identificationType}-${x.identificationNumber}`
-      }
-    })
-    setCustomerData(formatData);
-  }, [])
+    const currentUser: CurrentUser | null = getCurrentUser();
+    if (currentUser) {
+      let data: Customer[] = await GetCustomersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
+      const formatData: Customer[] = data.map(x => {
+        return {
+          ...x,
+          identificationNumber: `${x.identificationType}-${x.identificationNumber}`
+        }
+      })
+      setCustomerData(formatData);
+    }
+  }, [offset])
 
   useEffect(() => {
     getCustomers()
   }, [getCustomers]);
 
   const deleteCustomerModal = useDeleteModal();
+
+  const handleChangePage = (val: string) => {
+    setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -=10);
+  }
 
   return (
     <div>
@@ -111,7 +121,7 @@ const CustomersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={deleteCustomerModal.onOpen} />
+          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={deleteCustomerModal.onOpen} onChangePage={handleChangePage} />
         </SimpleCard>
       </div>
     </div>
