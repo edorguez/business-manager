@@ -20,6 +20,15 @@ export type CreateCustomer = {
 
 export type GetCustomer = {
   companyId: number;
+  name: string;
+  lastName: string;
+  identificationNumber: string;
   limit: number;
   offset: number;
+}
+
+export type SearchCustomer = {
+  name: string;
+  lastName: string;
+  identificationNumber: string;
 }

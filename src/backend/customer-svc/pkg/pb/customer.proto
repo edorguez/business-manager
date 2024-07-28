@@ -47,8 +47,11 @@ message GetCustomerResponse{
 
 message GetCustomersRequest{
   int64 companyId = 1;
-  int32 limit = 2;
-  int32 offset = 3;
+  optional string firstName = 2;
+  optional string lastName = 3;
+  optional string identificationNumber = 4;
+  int32 limit = 5;
+  int32 offset = 6;
 }
 
 message GetCustomersResponse{

@@ -10,7 +10,7 @@ import { ColumnType, SimpleTableColumn } from '@/app/components/tables/SimpleTab
 import useDeleteModal from '@/app/hooks/useDeleteModal';
 import { BreadcrumItem } from '@/app/types';
 import { CurrentUser } from '@/app/types/auth';
-import { Customer } from '@/app/types/customer';
+import { Customer, SearchCustomer } from '@/app/types/customer';
 import { Button, Input } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 import Link from "next/link";
@@ -52,13 +52,14 @@ const CustomersClient = () => {
     },
   ]
 
+  const [searchCustomer, setSearchCustomer] = useState<SearchCustomer>({ name: '', lastName: '', identificationNumber: '' });
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [offset, setOffset] = useState<number>(0);
 
-  const getCustomers = useCallback(async () => {
+  const getCustomers = useCallback(async (searchParams?: SearchCustomer) => {
     const currentUser: CurrentUser | null = getCurrentUser();
     if (currentUser) {
-      let data: Customer[] = await GetCustomersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
+      let data: Customer[] = await GetCustomersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset, name: searchParams?.name ?? "", lastName: searchParams?.lastName ?? "", identificationNumber: searchParams?.identificationNumber ?? "" });
       const formatData: Customer[] = data.map(x => {
         return {
           ...x,
@@ -79,6 +80,15 @@ const CustomersClient = () => {
     setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -=10);
   }
 
+  const handleChange = (event: any) => {
+    const { name, value } = event.target;
+    setSearchCustomer((prevData) => ({ ...prevData, [name]: value }));
+  }
+
+  const onSearchCustomer = () => {
+    getCustomers(searchCustomer);
+  }
+
   return (
     <div>
       <SimpleCard>
@@ -90,19 +100,19 @@ const CustomersClient = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           <div>
             <label className="text-sm">Nombre</label>
-            <Input size="sm" />
+            <Input size="sm" name="name" onChange={handleChange} />
           </div>
           <div>
             <label className="text-sm">Apellido</label>
-            <Input size="sm" />
+            <Input size="sm" name="lastName" onChange={handleChange} />
           </div>
           <div>
             <label className="text-sm">Cédula</label>
-            <Input size="sm" />
+            <Input size="sm" name="identificationNumber" onChange={handleChange} />
           </div>
           <div className="flex flex-col">
             <span className="opacity-0">.</span>
-            <Button size="sm" variant="main">
+            <Button size="sm" variant="main" onClick={onSearchCustomer}>
               <Icon icon="tabler:search" />
             </Button>
           </div>

@@ -32,6 +32,9 @@ export async function GetCustomersRequest(
 
     const res = await fetch(`${baseUrl}?` + new URLSearchParams({
       companyId: request.companyId.toString(),
+      name: request.name,
+      lastName: request.lastName,
+      idenfificationNumber: request.identificationNumber,
       limit: request.limit.toString(),
       offset: request.offset.toString()
     }).toString(), {
