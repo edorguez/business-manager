@@ -121,7 +121,7 @@ const CustomersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={deleteCustomerModal.onOpen} onChangePage={handleChangePage} />
+          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={deleteCustomerModal.onOpen} onChangePage={handleChangePage} offset={offset}/>
         </SimpleCard>
       </div>
     </div>

@@ -15,10 +15,12 @@ import {
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
 import SimpleTableField from './SimpleTableField';
+import { useState } from 'react';
 
 const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   columns,
   data,
+  offset,
   size = 'md',
   showToggleActive = false,
   showDetails = false,
@@ -28,8 +30,12 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   onChangePage
 }) => {
 
+  const [pageNumber, setPageNumber] = useState<number>(1);
+
   const handleChangePage = (val: string) => {
-    if(onChangePage) {
+    setPageNumber((prevValue) => val === 'NEXT' ? ++prevValue : --prevValue);
+
+    if (onChangePage) {
       return onChangePage(val);
     }
   }
@@ -40,15 +46,21 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
         <TableCaption>
           <div className='flex justify-end'>
             <div className='flex items-center select-none text-thirdcolor'>
-              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white' onClick={() => handleChangePage('PREV')}>
-                <Icon icon="fa:chevron-left" />
-              </div>
+              {
+                offset >= 10 &&
+                <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white' onClick={() => handleChangePage('PREV')}>
+                  <Icon icon="fa:chevron-left" />
+                </div>
+              }
               <span className='mx-2 font-bold'>
-                Página 1
+                Página {pageNumber}
               </span>
-              <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white' onClick={() => handleChangePage('NEXT')}>
-                <Icon icon="fa:chevron-right" />
-              </div>
+              {
+                data.length !== 0 &&
+                <div className='cursor-pointer p-2 rounded hover:bg-maincolor duration-150 hover:text-white' onClick={() => handleChangePage('NEXT')}>
+                  <Icon icon="fa:chevron-right" />
+                </div>
+              }
             </div>
           </div>
         </TableCaption>
@@ -112,6 +124,19 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
             </Tr>
 
           ))}
+
+          {
+            data.length === 0 && (
+              <Tr>
+                <Td colSpan={6} >
+                  <div className='flex justify-center'>
+
+                  <span>No hay registros para mostrar</span>
+                  </div>
+                </Td>
+              </Tr>
+            )
+          }
 
         </Tbody>
       </Table>

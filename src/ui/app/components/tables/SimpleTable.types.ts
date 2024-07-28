@@ -1,6 +1,7 @@
 export interface SimpleTableProps {
   columns: SimpleTableColumn[];
   data: any[];
+  offset: number;
   size?: string;
   showToggleActive?: boolean;
   showDetails?: boolean;

@@ -7,6 +7,7 @@ import SimpleTableMobile from './SimpleTableMobile';
 const SimpleTable: React.FC<SimpleTableProps> = ({
   columns,
   data,
+  offset,
   size = 'md',
   showToggleActive = false,
   showDetails = false,
@@ -19,6 +20,7 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   const tableProps: SimpleTableProps = {
     columns,
     data,
+    offset,
     size,
     showToggleActive,
     showDetails,
