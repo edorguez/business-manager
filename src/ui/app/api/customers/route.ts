@@ -34,7 +34,7 @@ export async function GetCustomersRequest(
       companyId: request.companyId.toString(),
       name: request.name,
       lastName: request.lastName,
-      idenfificationNumber: request.identificationNumber,
+      identificationNumber: request.identificationNumber,
       limit: request.limit.toString(),
       offset: request.offset.toString()
     }).toString(), {

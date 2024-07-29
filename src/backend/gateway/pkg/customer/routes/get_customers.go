@@ -15,10 +15,13 @@ import (
 func GetCustomers(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	companyId := query_params.GetId("companyId", r)
-	firstName := r.URL.Query().Get("firstName")
-	lastName := r.URL.Query().Get("lastNamefirstName")
+	firstName := r.URL.Query().Get("name")
+	lastName := r.URL.Query().Get("lastName")
 	identificationNumber := r.URL.Query().Get("identificationNumber")
 	limit, offset := query_params.GetFilter(r)
+
+	fmt.Println("hola")
+	fmt.Println(firstName)
 
 	params := &pb.GetCustomersRequest{
 		CompanyId:            companyId,

@@ -96,12 +96,12 @@ func (s *CustomerService) GetCustomers(ctx context.Context, req *customer.GetCus
 	fmt.Println("----------------")
 
 	params := db.GetCustomersParams{
+		Limit:                req.Limit,
+		Offset:               req.Offset,
 		CompanyID:            req.CompanyId,
 		FirstName:            *req.FirstName,
 		LastName:             *req.LastName,
 		IdentificationNumber: *req.IdentificationNumber,
-		Limit:                req.Limit,
-		Offset:               req.Offset,
 	}
 
 	c, err := s.Repo.GetCustomers(ctx, params)

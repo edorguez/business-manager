@@ -56,8 +56,9 @@ const CustomersClient = () => {
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [offset, setOffset] = useState<number>(0);
 
-  const getCustomers = useCallback(async (searchParams?: SearchCustomer) => {
+  const getCustomers = useCallback(async (searchParams: SearchCustomer = searchCustomer) => {
     const currentUser: CurrentUser | null = getCurrentUser();
+
     if (currentUser) {
       let data: Customer[] = await GetCustomersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset, name: searchParams?.name ?? "", lastName: searchParams?.lastName ?? "", identificationNumber: searchParams?.identificationNumber ?? "" });
       const formatData: Customer[] = data.map(x => {

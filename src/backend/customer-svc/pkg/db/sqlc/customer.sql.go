@@ -127,35 +127,35 @@ SELECT
 FROM 
   customer.customer
 WHERE
-  ((company_id = $1) OR $1 = 0) AND
-  ((first_name LIKE '%' + $2::text + '%') OR $2::text = '') AND
-  ((last_name LIKE '%' + $3::text + '%') OR $3::text = '') AND
-  ((identification_number LIKE '%' + $4::text + '%') OR $4::text = '')
+  ($3 = 0 OR company_id = $3) AND
+  ($4::text = '' OR first_name LIKE CONCAT('%', $4::text, '%')) AND
+  ($5::text = '' OR last_name LIKE CONCAT('%', $5::text, '%')) AND
+  ($6::text = '' OR identification_number LIKE CONCAT('%', $6::text, '%'))
 ORDER BY 
   id
 LIMIT 
-  $6
+  $1
 OFFSET 
-  $5
+  $2
 `
 
 type GetCustomersParams struct {
-	CompanyID            int64  `json:"company_id"`
-	FirstName            string `json:"first_name"`
-	LastName             string `json:"last_name"`
-	IdentificationNumber string `json:"identification_number"`
-	Offset               int32  `json:"offset"`
-	Limit                int32  `json:"limit"`
+	Limit                int32       `json:"limit"`
+	Offset               int32       `json:"offset"`
+	CompanyID            interface{} `json:"company_id"`
+	FirstName            string      `json:"first_name"`
+	LastName             string      `json:"last_name"`
+	IdentificationNumber string      `json:"identification_number"`
 }
 
 func (q *Queries) GetCustomers(ctx context.Context, arg GetCustomersParams) ([]CustomerCustomer, error) {
 	rows, err := q.db.QueryContext(ctx, getCustomers,
+		arg.Limit,
+		arg.Offset,
 		arg.CompanyID,
 		arg.FirstName,
 		arg.LastName,
 		arg.IdentificationNumber,
-		arg.Offset,
-		arg.Limit,
 	)
 	if err != nil {
 		return nil, err

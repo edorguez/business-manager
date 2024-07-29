@@ -47,16 +47,16 @@ SELECT
 FROM 
   customer.customer
 WHERE
-  ((company_id = sqlc.arg(company_id)) OR sqlc.arg(company_id) = 0) AND
-  ((first_name LIKE '%' + sqlc.arg(first_name)::text + '%') OR sqlc.arg(first_name)::text = '') AND
-  ((last_name LIKE '%' + sqlc.arg(last_name)::text + '%') OR sqlc.arg(last_name)::text = '') AND
-  ((identification_number LIKE '%' + sqlc.arg(identification_number)::text + '%') OR sqlc.arg(identification_number)::text = '')
+  (@company_id = 0 OR company_id = @company_id) AND
+  (@first_name::text = '' OR first_name LIKE CONCAT('%', @first_name::text, '%')) AND
+  (@last_name::text = '' OR last_name LIKE CONCAT('%', @last_name::text, '%')) AND
+  (@identification_number::text = '' OR identification_number LIKE CONCAT('%', @identification_number::text, '%'))
 ORDER BY 
   id
 LIMIT 
-  sqlc.arg('limit')
+  $1
 OFFSET 
-  sqlc.arg('offset');
+  $2;
 
 -- name: UpdateCustomer :one
 UPDATE 
