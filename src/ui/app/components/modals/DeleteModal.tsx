@@ -42,7 +42,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               <Button colorScheme='gray' onClick={deleteModal.onClose} className='w-full'>
                 Cancelar
               </Button>
-              <Button variant='third' className='ml-2 w-full'>
+              <Button variant='third' className='ml-2 w-full' onClick={onSubmit}>
                 Eliminar
               </Button>
             </div>

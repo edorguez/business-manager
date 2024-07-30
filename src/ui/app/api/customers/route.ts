@@ -1,4 +1,4 @@
-import { CreateCustomer, GetCustomer } from "@/app/types/customer";
+import { CreateCustomer, DeleteCustomer, GetCustomer } from "@/app/types/customer";
 
 const baseUrl: string = 'http://localhost:3001/api/customers';
 
@@ -45,6 +45,23 @@ export async function GetCustomersRequest(
     let response = await res.json();
 
     return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
+}
+
+export async function DeleteCustomerRequest(
+  request: DeleteCustomer
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    await fetch(`${baseUrl}/${request.id}`, {
+      method: 'DELETE',
+      headers: headers,
+    });
+
   } catch (error: any) {
     console.log(error.toString())
   }

@@ -32,3 +32,7 @@ export type SearchCustomer = {
   lastName: string;
   identificationNumber: string;
 }
+
+export type DeleteCustomer = {
+  id: number;
+}

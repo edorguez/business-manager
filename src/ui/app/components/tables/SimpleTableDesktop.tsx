@@ -40,6 +40,11 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
     }
   }
 
+  const handleDeleteItem = (val: any) => {
+    if(onDelete)
+      onDelete(val);
+  }
+
   return (
     <TableContainer>
       <Table size={size}>
@@ -114,7 +119,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
                   )}
 
                   {showDelete && (
-                    <Button size="sm" variant="third" onClick={onDelete}>
+                    <Button size="sm" variant="third" onClick={() => handleDeleteItem(dataVal) }>
                       <Icon icon="wpf:delete" />
                     </Button>
                   )}

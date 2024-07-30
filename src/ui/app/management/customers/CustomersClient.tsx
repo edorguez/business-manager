@@ -1,7 +1,7 @@
 'use client';
 
 import getCurrentUser from '@/app/actions/getCurrentUser';
-import { GetCustomersRequest } from '@/app/api/customers/route';
+import { DeleteCustomerRequest, GetCustomersRequest } from '@/app/api/customers/route';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import SimpleCard from '@/app/components/cards/SimpleCard';
 import DeleteModal from '@/app/components/modals/DeleteModal';
@@ -55,6 +55,8 @@ const CustomersClient = () => {
   const [searchCustomer, setSearchCustomer] = useState<SearchCustomer>({ name: '', lastName: '', identificationNumber: '' });
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [offset, setOffset] = useState<number>(0);
+  const deleteCustomerModal = useDeleteModal();
+  const [customerIdDelete, setCustomerIdDelete] = useState<number>(0);
 
   const getCustomers = useCallback(async (searchParams: SearchCustomer = searchCustomer) => {
     const currentUser: CurrentUser | null = getCurrentUser();
@@ -75,10 +77,8 @@ const CustomersClient = () => {
     getCustomers()
   }, [getCustomers]);
 
-  const deleteCustomerModal = useDeleteModal();
-
   const handleChangePage = (val: string) => {
-    setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -=10);
+    setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
   }
 
   const handleChange = (event: any) => {
@@ -90,10 +90,26 @@ const CustomersClient = () => {
     getCustomers(searchCustomer);
   }
 
+  const handleOpenDelete = (val: any) => {
+    setCustomerIdDelete(val.id);
+    deleteCustomerModal.onOpen();
+  }
+
+  const handleSubmitDelete = () => {
+    onDelete(customerIdDelete);
+  }
+
+  const onDelete = useCallback(async (id: number) => {
+    await DeleteCustomerRequest({ id });
+    getCustomers(searchCustomer);
+    deleteCustomerModal.onClose();
+  }, [])
+
+
   return (
     <div>
       <SimpleCard>
-        <DeleteModal onSubmit={() => { }} title="Eliminar Cliente" description="¿Estás seguro que quieres eliminar este cliente?" />
+        <DeleteModal onSubmit={handleSubmitDelete} title="Eliminar Cliente" description="¿Estás seguro que quieres eliminar este cliente?" />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />
@@ -132,7 +148,7 @@ const CustomersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={deleteCustomerModal.onOpen} onChangePage={handleChangePage} offset={offset}/>
+          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={handleOpenDelete} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>
