@@ -8,25 +8,29 @@ import SimpleCard from '@/app/components/cards/SimpleCard';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import { useEffect, useState } from 'react';
 import { CreateCustomer } from '@/app/types/customer';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { CreateCustomerRequest } from '@/app/api/customers/route';
 import { CurrentUser } from '@/app/types/auth';
 import getCurrentUser from '@/app/actions/getCurrentUser';
 
-const CreateCustomerClient = () => {
+
+const CustomerClient = () => {
   const bcItems: BreadcrumItem[] = [
     {
       label: "Clientes",
       href: "/management/customers"
     },
     {
-      label: "Crear Cliente",
+      label: "Cliente",
       href: "/management/customers/create"
     }
   ];
 
   const toast = useToast();
-  const { push } = useRouter();
+  const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const [isEdit, setIsEdit] = useState(true);
   const [formData, setFormData] = useState<CreateCustomer>({
     companyId: 0,
     firstName: '',
@@ -38,6 +42,7 @@ const CreateCustomerClient = () => {
   });
 
   useEffect(() => {
+    console.log('hola')
     const currentUser: CurrentUser | null = getCurrentUser();
     if (currentUser) {
       formData.companyId = currentUser.companyId;
@@ -55,7 +60,7 @@ const CreateCustomerClient = () => {
       console.log(createCustomer);
       if (!createCustomer.error) {
         showSuccessCreationMessage('Cliente creado exitosamente');
-        push('/management/customers');
+        router.push('/management/customers');
       } else {
         showErrorMessage(createCustomer.error);
       }
@@ -159,4 +164,4 @@ const CreateCustomerClient = () => {
   )
 }
 
-export default CreateCustomerClient;
+export default CustomerClient;

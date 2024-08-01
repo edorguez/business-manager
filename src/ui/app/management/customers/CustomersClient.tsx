@@ -11,10 +11,11 @@ import useDeleteModal from '@/app/hooks/useDeleteModal';
 import { BreadcrumItem } from '@/app/types';
 import { CurrentUser } from '@/app/types/auth';
 import { Customer, SearchCustomer } from '@/app/types/customer';
-import { Button, Input } from '@chakra-ui/react';
+import { Button, Input, useToast } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 import Link from "next/link";
 import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -52,6 +53,8 @@ const CustomersClient = () => {
     },
   ]
 
+  const toast = useToast();
+  const { push } = useRouter();
   const [searchCustomer, setSearchCustomer] = useState<SearchCustomer>({ name: '', lastName: '', identificationNumber: '' });
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [offset, setOffset] = useState<number>(0);
@@ -103,7 +106,20 @@ const CustomersClient = () => {
     await DeleteCustomerRequest({ id });
     getCustomers(searchCustomer);
     deleteCustomerModal.onClose();
+    toast({
+      title: 'Cliente',
+      description: 'Cliente eliminado exitosamente',
+      variant: 'customsuccess',
+      position: 'top-right',
+      duration: 3000,
+      isClosable: true,
+    });
   }, [])
+
+  const handleOpenDetail = (val: any) => {
+    console.log(val);
+    push(`customers/${val.id}`);
+  }
 
 
   return (
@@ -148,7 +164,7 @@ const CustomersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={handleOpenDelete} onChangePage={handleChangePage} offset={offset} />
+          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={handleOpenDelete} onDetail={handleOpenDetail} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>

@@ -27,6 +27,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   showEdit = false,
   showDelete = false,
   onDelete,
+  onDetail,
   onChangePage
 }) => {
 
@@ -43,6 +44,11 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   const handleDeleteItem = (val: any) => {
     if(onDelete)
       onDelete(val);
+  }
+
+  const handleDetailItem = (val: any) => {
+    if(onDetail)
+      onDetail(val);
   }
 
   return (
@@ -107,7 +113,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
                   )}
 
                   {showDetails && (
-                    <Button size="sm" variant="fifth">
+                    <Button size="sm" variant="fifth" onClick={() => handleDetailItem(dataVal)}>
                       <Icon icon="lucide:info" />
                     </Button>
                   )}

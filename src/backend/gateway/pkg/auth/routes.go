@@ -55,7 +55,7 @@ func loadAuthRoutes(router *mux.Router, c *config.Config) {
 
 	registerRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	registerRouter.HandleFunc("/register", ar.Register)
-	registerRouter.Use(mw.MiddlewareValidateAuth)
+	// registerRouter.Use(mw.MiddlewareValidateAuth)
 	registerRouter.Use(mw.MiddlewareValidateCreateUser)
 
 	loginRouter := baseRoute.Methods(http.MethodPost).Subrouter()
