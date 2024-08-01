@@ -1,4 +1,4 @@
-import { CreateCustomer, DeleteCustomer, GetCustomer } from "@/app/types/customer";
+import { CreateCustomer, DeleteCustomer, EditCustomer, GetCustomer, GetCustomers } from "@/app/types/customer";
 
 const baseUrl: string = 'http://localhost:3001/api/customers';
 
@@ -23,8 +23,49 @@ export async function CreateCustomerRequest(
   }
 }
 
-export async function GetCustomersRequest(
+export async function EditCustomerRequest(
+  request: EditCustomer
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    const res = await fetch(`${baseUrl}/${request.id}`, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(request),
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
+}
+
+export async function GetCustomerRequest(
   request: GetCustomer
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    const res = await fetch(`${baseUrl}/${request.id}`, {
+      method: 'GET',
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
+}
+
+export async function GetCustomersRequest(
+  request: GetCustomers
 ) {
   try {
     const headers = new Headers();

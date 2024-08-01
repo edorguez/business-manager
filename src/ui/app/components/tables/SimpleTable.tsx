@@ -15,6 +15,7 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   showDelete = false,
   onDelete,
   onDetail,
+  onEdit,
   onChangePage
 }) => {
 
@@ -29,6 +30,7 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
     showDelete,
     onDelete,
     onDetail,
+    onEdit,
     onChangePage
   };
 

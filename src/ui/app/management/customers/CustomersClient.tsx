@@ -115,9 +115,12 @@ const CustomersClient = () => {
       isClosable: true,
     });
   }, [])
+  
+  const handleOpenEdit = (val: any) => {
+    push(`customers/${val.id}?isEdit=true`);
+  }
 
   const handleOpenDetail = (val: any) => {
-    console.log(val);
     push(`customers/${val.id}`);
   }
 
@@ -164,7 +167,7 @@ const CustomersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onDelete={handleOpenDelete} onDetail={handleOpenDetail} onChangePage={handleChangePage} offset={offset} />
+          <SimpleTable columns={customerCols} data={customerData} showDetails showEdit showDelete onEdit={handleOpenEdit} onDelete={handleOpenDelete} onDetail={handleOpenDetail} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>
