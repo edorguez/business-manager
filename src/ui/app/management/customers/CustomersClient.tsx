@@ -16,6 +16,7 @@ import { Icon } from '@iconify/react';
 import Link from "next/link";
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import useLoading from '@/app/hooks/useLoading';
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -53,6 +54,7 @@ const CustomersClient = () => {
     },
   ]
 
+  const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
   const [searchCustomer, setSearchCustomer] = useState<SearchCustomer>({ name: '', lastName: '', identificationNumber: '' });
@@ -62,6 +64,7 @@ const CustomersClient = () => {
   const [customerIdDelete, setCustomerIdDelete] = useState<number>(0);
 
   const getCustomers = useCallback(async (searchParams: SearchCustomer = searchCustomer) => {
+    isLoading.onStartLoading();
     const currentUser: CurrentUser | null = getCurrentUser();
 
     if (currentUser) {
@@ -74,6 +77,7 @@ const CustomersClient = () => {
       })
       setCustomerData(formatData);
     }
+    isLoading.onEndLoading();
   }, [offset])
 
   useEffect(() => {
