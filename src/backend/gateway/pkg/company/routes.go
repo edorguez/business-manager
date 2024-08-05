@@ -17,6 +17,7 @@ type CompanyRoutes struct {
 func LoadRoutes(router *mux.Router, c *config.Config) {
 	loadCompanyRoutes(router, c)
 	loadPaymentRoutes(router, c)
+	loadPaymentTypeRoutes(router, c)
 }
 
 func loadCompanyRoutes(router *mux.Router, c *config.Config) {
@@ -75,6 +76,21 @@ func loadPaymentRoutes(router *mux.Router, c *config.Config) {
 	deleteRouter.HandleFunc("/{id:[0-9]+}", cr.DeletePayment)
 }
 
+func loadPaymentTypeRoutes(router *mux.Router, c *config.Config) {
+	baseRoute := router.PathPrefix("/paymentTypes").Subrouter()
+
+	mwc := auth.InitAuthMiddleware(c)
+	baseRoute.Use(mwc.MiddlewareValidateAuth)
+
+	cr := &CompanyRoutes{
+		config: c,
+	}
+
+	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/{id:[0-9]+}", cr.GetPaymentType)
+	getRouter.HandleFunc("", cr.GetPaymentTypes)
+}
+
 func (cr *CompanyRoutes) CreateCompany(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  CreateCompany Called --> 1")
 	routes.CreateCompany(w, r, cr.config)
@@ -123,4 +139,14 @@ func (cr *CompanyRoutes) UpdatePayment(w http.ResponseWriter, r *http.Request) {
 func (cr *CompanyRoutes) DeletePayment(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  DeletePayment Called --> 1")
 	routes.DeletePayment(w, r, cr.config)
+}
+
+func (cr *CompanyRoutes) GetPaymentType(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetPaymentType Called --> 1")
+	routes.GetPaymentType(w, r, cr.config)
+}
+
+func (cr *CompanyRoutes) GetPaymentTypes(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetPaymentTypes Called --> 1")
+	routes.GetPaymentTypes(w, r, cr.config)
 }

@@ -43,10 +43,15 @@ func main() {
 		Repo: repo.NewPaymentRepo(storage),
 	}
 
+	pts := services.PaymentTypeService{
+		Repo: repo.NewPaymentTypeRepo(storage),
+	}
+
 	grpcServer := grpc.NewServer()
 
 	pb.RegisterCompanyServiceServer(grpcServer, &cs)
 	pb.RegisterPaymentServiceServer(grpcServer, &ps)
+	pb.RegisterPaymentTypeServiceServer(grpcServer, &pts)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

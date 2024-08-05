@@ -47,12 +47,12 @@ message GetPaymentResponse{
   optional string phone = 9;
   optional string email = 10;
   int64 paymentTypeId = 11;
-  GetPaymentTypeResponse paymentType = 12;
+  GetChildPaymentTypeResponse paymentType = 12;
   int64 status = 13;
   string error = 14;
 }
 
-message GetPaymentTypeResponse{
+message GetChildPaymentTypeResponse{
   int64 id = 1;
   string name = 2;
 }
