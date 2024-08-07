@@ -64,8 +64,11 @@ const PaymentsClient = () => {
               <h3>Filtrar</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-1">
                 {
+                  <PaymentFilterCard isSelected={true} onlyAll={true} onSelectPayment={() => {}} />
+                }
+                {
                   paymentTypes.map((val: any, index: number) => (
-                    <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" isSelected={index == 0} />
+                    <PaymentFilterCard key={index} paymentType={val} isSelected={index == 0} onlyAll={false} onSelectPayment={() => {}} />
                   ))
                 }
               </div>
@@ -74,36 +77,10 @@ const PaymentsClient = () => {
           <SimpleCard>
             <div className="p-2">
               <h3>Métodos de Pago</h3>
-              <div className="mt-1">
+              {/* <div className="mt-1">
                 <PaymentCard name="Transferencia" paymentTypeEnum={0} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Pago Movil" paymentTypeEnum={1} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Binance" paymentTypeEnum={2} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Colombia" paymentTypeEnum={3} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Panama" paymentTypeEnum={4} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Paypal" paymentTypeEnum={5} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="USA" paymentTypeEnum={6} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Zelle" paymentTypeEnum={7} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Zinli" paymentTypeEnum={8} />
-              </div>
-              <div className="mt-1">
-                <PaymentCard name="Otro" paymentTypeEnum={9} />
-              </div>
+              </div> */}
+              
             </div>
           </SimpleCard>
         </div>

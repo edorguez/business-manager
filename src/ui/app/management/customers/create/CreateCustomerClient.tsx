@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { CreateCustomerRequest } from '@/app/api/customers/route';
 import { CurrentUser } from '@/app/types/auth';
 import getCurrentUser from '@/app/actions/getCurrentUser';
+import useLoading from '@/app/hooks/useLoading';
 
 const CreateCustomerClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -25,6 +26,7 @@ const CreateCustomerClient = () => {
     }
   ];
 
+  const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
   const [formData, setFormData] = useState<CreateCustomer>({
@@ -51,13 +53,15 @@ const CreateCustomerClient = () => {
 
   const onSubmit = async () => {
     if (isFormValid()) {
+      isLoading.onStartLoading();
       let createCustomer: any = await CreateCustomerRequest(formData);
-      console.log(createCustomer);
       if (!createCustomer.error) {
+        isLoading.onEndLoading();
         showSuccessCreationMessage('Cliente creado exitosamente');
         push('/management/customers');
       } else {
         showErrorMessage(createCustomer.error);
+        isLoading.onEndLoading();
       }
     } else {
       showErrorMessage('Algunos campos son requeridos o inválidos');

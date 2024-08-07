@@ -1,13 +1,12 @@
-export enum PaymentTypeEnum {
-  all,
-  transfer,
-  mobile,
-  binance,
-  colombia,
-  panama,
-  paypal,
-  usa,
-  zelle,
-  zinli,
-  other,
+export type CreatePayment = {
+  companyId: number;
+  name: string;
+  bank: string;
+  accountNumber: string;
+  accountType: string;
+  identificationNumber: string;
+  identificationType: string;
+  phone: string;
+  email: string;
+  paymentTypeId: number;
 }
