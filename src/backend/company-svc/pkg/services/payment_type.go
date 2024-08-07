@@ -9,6 +9,7 @@ import (
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
 	payment "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
+	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
 )
 
 type PaymentTypeService struct {
@@ -43,9 +44,10 @@ func (s *PaymentTypeService) GetPaymentType(ctx context.Context, req *payment.Ge
 
 	fmt.Println("PaymentType Service :  GetPaymentType - SUCCESS")
 	return &payment.GetPaymentTypeResponse{
-		Id:     p.ID,
-		Name:   p.Name,
-		Status: http.StatusOK,
+		Id:        p.ID,
+		Name:      p.Name,
+		ImagePath: type_converter.NewString(p.ImagePath),
+		Status:    http.StatusOK,
 	}, nil
 }
 
@@ -73,9 +75,10 @@ func (s *PaymentTypeService) GetPaymentTypes(ctx context.Context, req *payment.G
 	paymentTypes := make([]*payment.GetPaymentTypeResponse, 0, len(p))
 	for _, v := range p {
 		paymentTypes = append(paymentTypes, &payment.GetPaymentTypeResponse{
-			Id:     v.ID,
-			Name:   v.Name,
-			Status: http.StatusOK,
+			Id:        v.ID,
+			Name:      v.Name,
+			ImagePath: type_converter.NewString(v.ImagePath),
+			Status:    http.StatusOK,
 		})
 	}
 

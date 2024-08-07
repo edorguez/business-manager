@@ -7,27 +7,39 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
 
 const getPaymentType = `-- name: GetPaymentType :one
-SELECT 
+SELECT
   id,
   name,
+  image_path,
   created_at,
   modified_at
-FROM 
+FROM
   company.payment_type
-WHERE 
-  id = $1 
+WHERE
+  id = $1
 LIMIT 1
 `
 
-func (q *Queries) GetPaymentType(ctx context.Context, id int64) (CompanyPaymentType, error) {
+type GetPaymentTypeRow struct {
+	ID         int64          `json:"id"`
+	Name       string         `json:"name"`
+	ImagePath  sql.NullString `json:"image_path"`
+	CreatedAt  time.Time      `json:"created_at"`
+	ModifiedAt time.Time      `json:"modified_at"`
+}
+
+func (q *Queries) GetPaymentType(ctx context.Context, id int64) (GetPaymentTypeRow, error) {
 	row := q.db.QueryRowContext(ctx, getPaymentType, id)
-	var i CompanyPaymentType
+	var i GetPaymentTypeRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.ImagePath,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)
@@ -35,16 +47,17 @@ func (q *Queries) GetPaymentType(ctx context.Context, id int64) (CompanyPaymentT
 }
 
 const getPaymentTypes = `-- name: GetPaymentTypes :many
-SELECT 
+SELECT
   id,
   name,
+  image_path,
   created_at,
   modified_at
-FROM 
+FROM
   company.payment_type
-LIMIT 
+LIMIT
   $1
-OFFSET 
+OFFSET
   $2
 `
 
@@ -53,18 +66,27 @@ type GetPaymentTypesParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) GetPaymentTypes(ctx context.Context, arg GetPaymentTypesParams) ([]CompanyPaymentType, error) {
+type GetPaymentTypesRow struct {
+	ID         int64          `json:"id"`
+	Name       string         `json:"name"`
+	ImagePath  sql.NullString `json:"image_path"`
+	CreatedAt  time.Time      `json:"created_at"`
+	ModifiedAt time.Time      `json:"modified_at"`
+}
+
+func (q *Queries) GetPaymentTypes(ctx context.Context, arg GetPaymentTypesParams) ([]GetPaymentTypesRow, error) {
 	rows, err := q.db.QueryContext(ctx, getPaymentTypes, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []CompanyPaymentType{}
+	items := []GetPaymentTypesRow{}
 	for rows.Next() {
-		var i CompanyPaymentType
+		var i GetPaymentTypesRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
+			&i.ImagePath,
 			&i.CreatedAt,
 			&i.ModifiedAt,
 		); err != nil {

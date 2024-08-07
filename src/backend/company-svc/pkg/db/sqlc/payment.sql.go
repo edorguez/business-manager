@@ -103,7 +103,7 @@ SELECT
   P.payment_type_id,
   P.created_at,
   P.modified_at,
-  pt.id, pt.name, pt.created_at, pt.modified_at
+  pt.id, pt.name, pt.created_at, pt.modified_at, pt.image_path
 FROM 
   company.payment AS P
 INNER JOIN 
@@ -151,6 +151,7 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (GetPaymentRow, erro
 		&i.CompanyPaymentType.Name,
 		&i.CompanyPaymentType.CreatedAt,
 		&i.CompanyPaymentType.ModifiedAt,
+		&i.CompanyPaymentType.ImagePath,
 	)
 	return i, err
 }
@@ -170,7 +171,7 @@ SELECT
   P.payment_type_id,
   P.created_at,
   P.modified_at,
-  pt.id, pt.name, pt.created_at, pt.modified_at
+  pt.id, pt.name, pt.created_at, pt.modified_at, pt.image_path
 FROM 
   company.payment AS P
 INNER JOIN 
@@ -235,6 +236,7 @@ func (q *Queries) GetPayments(ctx context.Context, arg GetPaymentsParams) ([]Get
 			&i.CompanyPaymentType.Name,
 			&i.CompanyPaymentType.CreatedAt,
 			&i.CompanyPaymentType.ModifiedAt,
+			&i.CompanyPaymentType.ImagePath,
 		); err != nil {
 			return nil, err
 		}

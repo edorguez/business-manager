@@ -1,12 +1,16 @@
 'use client';
 
+import { GetPaymentTypesRequest } from "@/app/api/paymentType/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import PaymentCard from "@/app/components/cards/PaymentCard";
 import PaymentFilterCard from "@/app/components/cards/PaymentFilterCard";
 import SimpleCard from "@/app/components/cards/SimpleCard";
+import useLoading from "@/app/hooks/useLoading";
 import { BreadcrumItem } from "@/app/types";
+import { PaymentType } from "@/app/types/paymentType";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
 const PaymentsClient = () => {
 
@@ -17,7 +21,20 @@ const PaymentsClient = () => {
     }
   ];
 
-  const payments: any[] = [...Array(11)];
+  const isLoading = useLoading();
+  const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
+
+  const getPaymentTypes = useCallback(async () => {
+    isLoading.onStartLoading();
+    const pt = await GetPaymentTypesRequest();
+    setPaymentTypes(pt);
+    isLoading.onEndLoading();
+  }, []);
+
+  useEffect(() => {
+    getPaymentTypes();
+  }, []);
+
 
   return (
     <div>
@@ -47,7 +64,7 @@ const PaymentsClient = () => {
               <h3>Filtrar</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-1">
                 {
-                  payments.map((val: any, index: number) => (
+                  paymentTypes.map((val: any, index: number) => (
                     <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" isSelected={index == 0} />
                   ))
                 }

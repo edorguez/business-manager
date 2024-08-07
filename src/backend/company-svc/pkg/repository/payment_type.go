@@ -16,8 +16,8 @@ func NewPaymentTypeRepo(sql *db.SQLStorage) *PaymentTypeRepo {
 	}
 }
 
-func (paymentTypeRepo *PaymentTypeRepo) GetPaymentType(ctx context.Context, id int64) (db.CompanyPaymentType, error) {
-	var result db.CompanyPaymentType
+func (paymentTypeRepo *PaymentTypeRepo) GetPaymentType(ctx context.Context, id int64) (db.GetPaymentTypeRow, error) {
+	var result db.GetPaymentTypeRow
 
 	err := paymentTypeRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
@@ -33,8 +33,8 @@ func (paymentTypeRepo *PaymentTypeRepo) GetPaymentType(ctx context.Context, id i
 	return result, err
 }
 
-func (paymentTypeRepo *PaymentTypeRepo) GetPaymentTypes(ctx context.Context, arg db.GetPaymentTypesParams) ([]db.CompanyPaymentType, error) {
-	var result []db.CompanyPaymentType
+func (paymentTypeRepo *PaymentTypeRepo) GetPaymentTypes(ctx context.Context, arg db.GetPaymentTypesParams) ([]db.GetPaymentTypesRow, error) {
+	var result []db.GetPaymentTypesRow
 
 	err := paymentTypeRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error

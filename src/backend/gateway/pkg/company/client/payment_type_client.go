@@ -60,8 +60,9 @@ func GetPaymentType(id int64, c context.Context) (*contracts.GetPaymentTypeRespo
 	}
 
 	return &contracts.GetPaymentTypeResponse{
-		Id:   res.Id,
-		Name: res.Name,
+		Id:        res.Id,
+		Name:      res.Name,
+		ImagePath: res.ImagePath,
 	}, nil
 }
 
@@ -93,8 +94,9 @@ func GetPaymentTypes(params *pb.GetPaymentTypesRequest, c context.Context) ([]*c
 	pt := make([]*contracts.GetPaymentTypeResponse, 0, len(res.PaymentTypes))
 	for _, v := range res.PaymentTypes {
 		pt = append(pt, &contracts.GetPaymentTypeResponse{
-			Id:   v.Id,
-			Name: v.Name,
+			Id:        v.Id,
+			Name:      v.Name,
+			ImagePath: v.ImagePath,
 		})
 	}
 

@@ -1,24 +1,26 @@
 -- name: GetPaymentType :one
-SELECT 
+SELECT
   id,
   name,
+  image_path,
   created_at,
   modified_at
-FROM 
+FROM
   company.payment_type
-WHERE 
-  id = $1 
+WHERE
+  id = $1
 LIMIT 1;
 
 -- name: GetPaymentTypes :many
-SELECT 
+SELECT
   id,
   name,
+  image_path,
   created_at,
   modified_at
-FROM 
+FROM
   company.payment_type
-LIMIT 
+LIMIT
   $1
-OFFSET 
+OFFSET
   $2;

@@ -34,8 +34,9 @@ type CompanyPayment struct {
 }
 
 type CompanyPaymentType struct {
-	ID         int64     `json:"id"`
-	Name       string    `json:"name"`
-	CreatedAt  time.Time `json:"created_at"`
-	ModifiedAt time.Time `json:"modified_at"`
+	ID         int64          `json:"id"`
+	Name       string         `json:"name"`
+	CreatedAt  time.Time      `json:"created_at"`
+	ModifiedAt time.Time      `json:"modified_at"`
+	ImagePath  sql.NullString `json:"image_path"`
 }

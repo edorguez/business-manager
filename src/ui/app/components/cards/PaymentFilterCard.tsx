@@ -19,12 +19,12 @@ const PaymentFilterCard: React.FC<PaymentFilterCardProps> = ({
 
   return (
     <div className={`
-      shadow-md 
-      cursor-pointer 
-      hover:scale-105 
-      transition 
+      shadow-md
+      cursor-pointer
+      hover:scale-105
+      transition
       duration-150
-      rounded-md 
+      rounded-md
       p-2
       ${isSelected ? 'border-2 border-maincolor bg-maincolorhov hover:bg-maincolorhov' : 'border border-slate-200 bg-white hover:bg-thirdcolorhov'}
     `}>

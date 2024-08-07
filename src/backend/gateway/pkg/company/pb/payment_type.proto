@@ -16,8 +16,9 @@ message GetPaymentTypeRequest{
 message GetPaymentTypeResponse{
   int64 id = 1;
   string name = 2;
-  int64 status = 3;
-  string error = 4;
+  optional string imagePath = 3;
+  int64 status = 4;
+  string error = 5;
 }
 
 message GetPaymentTypesRequest{

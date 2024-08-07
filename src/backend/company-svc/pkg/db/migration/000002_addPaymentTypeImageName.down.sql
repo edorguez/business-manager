@@ -1,0 +1,1 @@
+ALTER TABLE "company"."payment_type" DROP COLUMN "image_path";

@@ -7,6 +7,10 @@ import Link from 'next/link';
 import SimpleCard from '@/app/components/cards/SimpleCard';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import PaymentFilterCard from '@/app/components/cards/PaymentFilterCard';
+import useLoading from '@/app/hooks/useLoading';
+import { useCallback, useEffect, useState } from 'react';
+import { PaymentType } from '@/app/types/paymentType';
+import { GetPaymentTypesRequest } from '@/app/api/paymentType/route';
 
 const CreatePaymentClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -20,7 +24,19 @@ const CreatePaymentClient = () => {
     }
   ];
 
-  const payments: any[] = [...Array(11)];
+  const isLoading = useLoading();
+  const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
+
+  const getPaymentTypes = useCallback(async () => {
+    isLoading.onStartLoading();
+    const pt = await GetPaymentTypesRequest();
+    setPaymentTypes(pt);
+    isLoading.onEndLoading();
+  }, []);
+
+  useEffect(() => {
+    getPaymentTypes();
+  }, []);
 
   return (
     <div>
@@ -45,7 +61,7 @@ const CreatePaymentClient = () => {
             <label className='text-sm'>Tipo de Cuenta</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-1">
               {
-                payments.map((val: any, index: number) => (
+                paymentTypes.map((val: any, index: number) => (
                   <PaymentFilterCard key={index} paymentTypeEnum={index} description="Description" isSelected={index == 0} />
                 ))
               }
