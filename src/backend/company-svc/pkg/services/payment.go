@@ -92,8 +92,9 @@ func (s *PaymentService) GetPayment(ctx context.Context, req *payment.GetPayment
 		Email:                type_converter.NewString(p.Email),
 		PaymentTypeId:        p.PaymentTypeID,
 		PaymentType: &payment.GetChildPaymentTypeResponse{
-			Id:   p.CompanyPaymentType.ID,
-			Name: p.CompanyPaymentType.Name,
+			Id:        p.CompanyPaymentType.ID,
+			Name:      p.CompanyPaymentType.Name,
+			ImagePath: type_converter.NewString(p.CompanyPaymentType.ImagePath),
 		},
 		Status: http.StatusOK,
 	}, nil
@@ -136,8 +137,9 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 			Email:                type_converter.NewString(v.Email),
 			PaymentTypeId:        v.PaymentTypeID,
 			PaymentType: &payment.GetChildPaymentTypeResponse{
-				Id:   v.CompanyPaymentType.ID,
-				Name: v.CompanyPaymentType.Name,
+				Id:        v.CompanyPaymentType.ID,
+				Name:      v.CompanyPaymentType.Name,
+				ImagePath: type_converter.NewString(v.CompanyPaymentType.ImagePath),
 			}, Status: http.StatusOK,
 		})
 	}
