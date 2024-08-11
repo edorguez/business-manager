@@ -21,6 +21,7 @@ type Querier interface {
 	GetPayments(ctx context.Context, arg GetPaymentsParams) ([]GetPaymentsRow, error)
 	UpdateCompany(ctx context.Context, arg UpdateCompanyParams) (CompanyCompany, error)
 	UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (CompanyPayment, error)
+	UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) (CompanyPayment, error)
 }
 
 var _ Querier = (*Queries)(nil)

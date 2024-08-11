@@ -26,6 +26,7 @@ type PaymentServiceClient interface {
 	GetPayment(ctx context.Context, in *GetPaymentRequest, opts ...grpc.CallOption) (*GetPaymentResponse, error)
 	GetPayments(ctx context.Context, in *GetPaymentsRequest, opts ...grpc.CallOption) (*GetPaymentsResponse, error)
 	UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error)
+	UpdatePaymentStatus(ctx context.Context, in *UpdatePaymentStatusRequest, opts ...grpc.CallOption) (*UpdatePaymentStatusResponse, error)
 	DeletePayment(ctx context.Context, in *DeletePaymentRequest, opts ...grpc.CallOption) (*DeletePaymentResponse, error)
 }
 
@@ -73,6 +74,15 @@ func (c *paymentServiceClient) UpdatePayment(ctx context.Context, in *UpdatePaym
 	return out, nil
 }
 
+func (c *paymentServiceClient) UpdatePaymentStatus(ctx context.Context, in *UpdatePaymentStatusRequest, opts ...grpc.CallOption) (*UpdatePaymentStatusResponse, error) {
+	out := new(UpdatePaymentStatusResponse)
+	err := c.cc.Invoke(ctx, "/pb.PaymentService/UpdatePaymentStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *paymentServiceClient) DeletePayment(ctx context.Context, in *DeletePaymentRequest, opts ...grpc.CallOption) (*DeletePaymentResponse, error) {
 	out := new(DeletePaymentResponse)
 	err := c.cc.Invoke(ctx, "/pb.PaymentService/DeletePayment", in, out, opts...)
@@ -90,6 +100,7 @@ type PaymentServiceServer interface {
 	GetPayment(context.Context, *GetPaymentRequest) (*GetPaymentResponse, error)
 	GetPayments(context.Context, *GetPaymentsRequest) (*GetPaymentsResponse, error)
 	UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error)
+	UpdatePaymentStatus(context.Context, *UpdatePaymentStatusRequest) (*UpdatePaymentStatusResponse, error)
 	DeletePayment(context.Context, *DeletePaymentRequest) (*DeletePaymentResponse, error)
 	mustEmbedUnimplementedPaymentServiceServer()
 }
@@ -109,6 +120,9 @@ func (UnimplementedPaymentServiceServer) GetPayments(context.Context, *GetPaymen
 }
 func (UnimplementedPaymentServiceServer) UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePayment not implemented")
+}
+func (UnimplementedPaymentServiceServer) UpdatePaymentStatus(context.Context, *UpdatePaymentStatusRequest) (*UpdatePaymentStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePaymentStatus not implemented")
 }
 func (UnimplementedPaymentServiceServer) DeletePayment(context.Context, *DeletePaymentRequest) (*DeletePaymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePayment not implemented")
@@ -198,6 +212,24 @@ func _PaymentService_UpdatePayment_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PaymentService_UpdatePaymentStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePaymentStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).UpdatePaymentStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.PaymentService/UpdatePaymentStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).UpdatePaymentStatus(ctx, req.(*UpdatePaymentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PaymentService_DeletePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeletePaymentRequest)
 	if err := dec(in); err != nil {
@@ -238,6 +270,10 @@ var PaymentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdatePayment",
 			Handler:    _PaymentService_UpdatePayment_Handler,
+		},
+		{
+			MethodName: "UpdatePaymentStatus",
+			Handler:    _PaymentService_UpdatePaymentStatus_Handler,
 		},
 		{
 			MethodName: "DeletePayment",

@@ -1,0 +1,2 @@
+
+ALTER TABLE "company"."payment" ADD COLUMN "is_active" BOOLEAN NOT NULL DEFAULT TRUE; 

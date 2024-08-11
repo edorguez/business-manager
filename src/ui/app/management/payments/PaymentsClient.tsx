@@ -47,7 +47,7 @@ const PaymentsClient = () => {
     if (currentUser) {
       let data: Payment[] = await GetPaymentsRequest({
         companyId: currentUser.companyId,
-        limit: 10,
+        limit: 30,
         offset: 0,
       });
       setPayments(data);
@@ -139,6 +139,13 @@ const PaymentsClient = () => {
                 </div>
               ))}
             </div>
+            {
+                payments.length === 0 && (
+                  <div className="h-full flex justify-center">
+                    <span className="pt-4">No hay métodos de pago creados</span>
+                  </div>
+                )
+              }
           </SimpleCard>
         </div>
       </div>

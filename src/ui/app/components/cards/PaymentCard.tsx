@@ -28,7 +28,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
           <div className="rounded-md border border-slate-200 p-1 bg-white">
             <Image src={`/images/payments/${payment.paymentType.imagePath}`} alt="Logo" width={28} height={28} />
           </div>
-          <span className="text-sm font-bold ml-2">{payment.paymentType.name}</span>
+          <span className="text-sm font-bold ml-2">{payment.name}</span>
         </div>
         <div className="flex items-center justify-end">
           <span className="text-xs font-bold text-maincolor mr-2">Activo</span>

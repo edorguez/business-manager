@@ -84,6 +84,23 @@ func (paymentRepo *PaymentRepo) UpdatePayment(ctx context.Context, arg db.Update
 	return result, err
 }
 
+func (paymentRepo *PaymentRepo) UpdatePaymentStatus(ctx context.Context, arg db.UpdatePaymentStatusParams) (db.CompanyPayment, error) {
+	var result db.CompanyPayment
+
+	err := paymentRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.UpdatePaymentStatus(ctx, arg)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
 func (paymentRepo *PaymentRepo) DeletePayment(ctx context.Context, id int64) error {
 	err := paymentRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		errDelete := q.DeletePayment(ctx, id)

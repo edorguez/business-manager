@@ -23,12 +23,13 @@ INSERT INTO
     identification_type,
     phone,
     email,
-    payment_type_id
+    payment_type_id,
+    is_active
   ) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10 
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, TRUE 
 ) 
-RETURNING id, company_id, name, bank, account_number, account_type, identification_number, identification_type, phone, email, payment_type_id, created_at, modified_at
+RETURNING id, company_id, name, bank, account_number, account_type, identification_number, identification_type, phone, email, payment_type_id, created_at, modified_at, is_active
 `
 
 type CreatePaymentParams struct {
@@ -72,6 +73,7 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (C
 		&i.PaymentTypeID,
 		&i.CreatedAt,
 		&i.ModifiedAt,
+		&i.IsActive,
 	)
 	return i, err
 }
@@ -101,6 +103,7 @@ SELECT
   P.phone,
   P.email,
   P.payment_type_id,
+  P.is_active,
   P.created_at,
   P.modified_at,
   pt.id, pt.name, pt.created_at, pt.modified_at, pt.image_path
@@ -125,6 +128,7 @@ type GetPaymentRow struct {
 	Phone                sql.NullString     `json:"phone"`
 	Email                sql.NullString     `json:"email"`
 	PaymentTypeID        int64              `json:"payment_type_id"`
+	IsActive             bool               `json:"is_active"`
 	CreatedAt            time.Time          `json:"created_at"`
 	ModifiedAt           time.Time          `json:"modified_at"`
 	CompanyPaymentType   CompanyPaymentType `json:"company_payment_type"`
@@ -145,6 +149,7 @@ func (q *Queries) GetPayment(ctx context.Context, id int64) (GetPaymentRow, erro
 		&i.Phone,
 		&i.Email,
 		&i.PaymentTypeID,
+		&i.IsActive,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 		&i.CompanyPaymentType.ID,
@@ -169,6 +174,7 @@ SELECT
   P.phone,
   P.email,
   P.payment_type_id,
+  P.is_active,
   P.created_at,
   P.modified_at,
   pt.id, pt.name, pt.created_at, pt.modified_at, pt.image_path
@@ -204,6 +210,7 @@ type GetPaymentsRow struct {
 	Phone                sql.NullString     `json:"phone"`
 	Email                sql.NullString     `json:"email"`
 	PaymentTypeID        int64              `json:"payment_type_id"`
+	IsActive             bool               `json:"is_active"`
 	CreatedAt            time.Time          `json:"created_at"`
 	ModifiedAt           time.Time          `json:"modified_at"`
 	CompanyPaymentType   CompanyPaymentType `json:"company_payment_type"`
@@ -230,6 +237,7 @@ func (q *Queries) GetPayments(ctx context.Context, arg GetPaymentsParams) ([]Get
 			&i.Phone,
 			&i.Email,
 			&i.PaymentTypeID,
+			&i.IsActive,
 			&i.CreatedAt,
 			&i.ModifiedAt,
 			&i.CompanyPaymentType.ID,
@@ -267,7 +275,7 @@ SET
   modified_at = NOW()
 WHERE 
   id = $1
-RETURNING id, company_id, name, bank, account_number, account_type, identification_number, identification_type, phone, email, payment_type_id, created_at, modified_at
+RETURNING id, company_id, name, bank, account_number, account_type, identification_number, identification_type, phone, email, payment_type_id, created_at, modified_at, is_active
 `
 
 type UpdatePaymentParams struct {
@@ -311,6 +319,45 @@ func (q *Queries) UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (C
 		&i.PaymentTypeID,
 		&i.CreatedAt,
 		&i.ModifiedAt,
+		&i.IsActive,
+	)
+	return i, err
+}
+
+const updatePaymentStatus = `-- name: UpdatePaymentStatus :one
+UPDATE 
+  company.payment
+SET 
+  is_active = $2,
+  modified_at = NOW()
+WHERE 
+  id = $1
+RETURNING id, company_id, name, bank, account_number, account_type, identification_number, identification_type, phone, email, payment_type_id, created_at, modified_at, is_active
+`
+
+type UpdatePaymentStatusParams struct {
+	ID       int64 `json:"id"`
+	IsActive bool  `json:"is_active"`
+}
+
+func (q *Queries) UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) (CompanyPayment, error) {
+	row := q.db.QueryRowContext(ctx, updatePaymentStatus, arg.ID, arg.IsActive)
+	var i CompanyPayment
+	err := row.Scan(
+		&i.ID,
+		&i.CompanyID,
+		&i.Name,
+		&i.Bank,
+		&i.AccountNumber,
+		&i.AccountType,
+		&i.IdentificationNumber,
+		&i.IdentificationType,
+		&i.Phone,
+		&i.Email,
+		&i.PaymentTypeID,
+		&i.CreatedAt,
+		&i.ModifiedAt,
+		&i.IsActive,
 	)
 	return i, err
 }

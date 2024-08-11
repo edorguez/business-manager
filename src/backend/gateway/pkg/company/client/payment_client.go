@@ -206,6 +206,36 @@ func UpdatePayment(id int64, body contracts.UpdatePaymentRequest, c context.Cont
 	return res, nil
 }
 
+func UpdatePaymentStatus(id int64, body contracts.UpdatePaymentStatusRequest, c context.Context) (*pb.UpdatePaymentStatusResponse, *contracts.Error) {
+	fmt.Println("Payment CLIENT :  UpdatePaymentStatus")
+
+	fmt.Println("Payment CLIENT :  UpdatePaymentStatus - Body")
+	fmt.Println(body)
+	fmt.Println("-----------------")
+
+	updatePaymentParams := &pb.UpdatePaymentStatusRequest{
+		Id:     int64(id),
+		Status: body.Status,
+	}
+
+	res, err := paymentServiceClient.UpdatePaymentStatus(c, updatePaymentParams)
+
+	if err != nil {
+		fmt.Println("Payment CLIENT :  UpdatePaymentStatus - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Payment CLIENT :  UpdatePaymentStatus - SUCCESS")
+	return res, nil
+}
+
 func DeletePayment(id int64, c context.Context) (*pb.DeletePaymentResponse, *contracts.Error) {
 	fmt.Println("Payment CLIENT :  DeletePayment")
 

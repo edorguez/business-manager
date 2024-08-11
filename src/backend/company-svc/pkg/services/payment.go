@@ -196,6 +196,42 @@ func (s *PaymentService) UpdatePayment(ctx context.Context, req *payment.UpdateP
 	}, nil
 }
 
+func (s *PaymentService) UpdatePaymentStatus(ctx context.Context, req *payment.UpdatePaymentStatusRequest) (*payment.UpdatePaymentStatusResponse, error) {
+	fmt.Println("Payment Service :  UpdatePaymentStatus")
+	fmt.Println("Payment Service :  UpdatePaymentStatus - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	params := db.UpdatePaymentStatusParams{
+		ID:       req.Id,
+		IsActive: req.Status,
+	}
+
+	_, err := s.Repo.UpdatePaymentStatus(ctx, params)
+	if err != nil {
+		fmt.Println("Payment Service :  UpdatePaymentStatus - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
+		return &payment.UpdatePaymentStatusResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
+	fmt.Println("Payment Service :  UpdatePaymentStatus - SUCCESS")
+	return &payment.UpdatePaymentStatusResponse{
+		Status: http.StatusNoContent,
+	}, nil
+}
+
 func (s *PaymentService) DeletePayment(ctx context.Context, req *payment.DeletePaymentRequest) (*payment.DeletePaymentResponse, error) {
 	fmt.Println("Payment Service :  DeletePayment")
 	fmt.Println("Payment Service :  DeletePayment - Req")

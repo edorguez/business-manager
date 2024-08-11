@@ -71,6 +71,8 @@ func loadPaymentRoutes(router *mux.Router, c *config.Config) {
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id:[0-9]+}", cr.UpdatePayment)
 	putRouter.Use(mw.MiddlewareValidateUpdatePayment)
+	putRouter.HandleFunc("/{id:[0-9]+}/status", cr.UpdatePaymentStatus)
+	putRouter.Use(mw.MiddlewareValidateUpdatePaymentStatus)
 
 	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/{id:[0-9]+}", cr.DeletePayment)
@@ -134,6 +136,11 @@ func (cr *CompanyRoutes) GetPayments(w http.ResponseWriter, r *http.Request) {
 func (cr *CompanyRoutes) UpdatePayment(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  UpdatePayment Called --> 1")
 	routes.UpdatePayment(w, r, cr.config)
+}
+
+func (cr *CompanyRoutes) UpdatePaymentStatus(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  UpdatePayment Called --> 1")
+	routes.UpdatePaymentStatus(w, r, cr.config)
 }
 
 func (cr *CompanyRoutes) DeletePayment(w http.ResponseWriter, r *http.Request) {

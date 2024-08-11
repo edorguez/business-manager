@@ -31,6 +31,7 @@ type CompanyPayment struct {
 	PaymentTypeID        int64          `json:"payment_type_id"`
 	CreatedAt            time.Time      `json:"created_at"`
 	ModifiedAt           time.Time      `json:"modified_at"`
+	IsActive             bool           `json:"is_active"`
 }
 
 type CompanyPaymentType struct {

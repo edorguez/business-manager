@@ -10,10 +10,11 @@ INSERT INTO
     identification_type,
     phone,
     email,
-    payment_type_id
+    payment_type_id,
+    is_active
   ) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10 
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, TRUE 
 ) 
 RETURNING *;
 
@@ -30,6 +31,7 @@ SELECT
   P.phone,
   P.email,
   P.payment_type_id,
+  P.is_active,
   P.created_at,
   P.modified_at,
   sqlc.embed(PT)
@@ -54,6 +56,7 @@ SELECT
   P.phone,
   P.email,
   P.payment_type_id,
+  P.is_active,
   P.created_at,
   P.modified_at,
   sqlc.embed(PT)
@@ -83,6 +86,16 @@ SET
   phone = $8,
   email = $9,
   payment_type_id = $10,  
+  modified_at = NOW()
+WHERE 
+  id = $1
+RETURNING *;
+
+-- name: UpdatePaymentStatus :one
+UPDATE 
+  company.payment
+SET 
+  is_active = $2,
   modified_at = NOW()
 WHERE 
   id = $1
