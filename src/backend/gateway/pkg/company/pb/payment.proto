@@ -49,8 +49,9 @@ message GetPaymentResponse{
   optional string email = 10;
   int64 paymentTypeId = 11;
   GetChildPaymentTypeResponse paymentType = 12;
-  int64 status = 13;
-  string error = 14;
+  bool isActive = 13;
+  int64 status = 14;
+  string error = 15;
 }
 
 message GetChildPaymentTypeResponse{

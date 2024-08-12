@@ -12,6 +12,7 @@ export type Payment = {
   phone: string;
   email: string;
   paymentTypeId: number;
+  isActive: boolean;
   paymentType: PaymentType;
 }
 
@@ -36,4 +37,9 @@ export type GetPayments = {
 
 export type DeletePayment = {
   id: number;
+}
+
+export type ChangeStatusPayment = {
+  id: number;
+  status: boolean;
 }

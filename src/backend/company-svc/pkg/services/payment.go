@@ -91,6 +91,7 @@ func (s *PaymentService) GetPayment(ctx context.Context, req *payment.GetPayment
 		Phone:                type_converter.NewString(p.Phone),
 		Email:                type_converter.NewString(p.Email),
 		PaymentTypeId:        p.PaymentTypeID,
+		IsActive:             p.IsActive,
 		PaymentType: &payment.GetChildPaymentTypeResponse{
 			Id:        p.CompanyPaymentType.ID,
 			Name:      p.CompanyPaymentType.Name,
@@ -136,6 +137,7 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 			Phone:                type_converter.NewString(v.Phone),
 			Email:                type_converter.NewString(v.Email),
 			PaymentTypeId:        v.PaymentTypeID,
+			IsActive:             v.IsActive,
 			PaymentType: &payment.GetChildPaymentTypeResponse{
 				Id:        v.CompanyPaymentType.ID,
 				Name:      v.CompanyPaymentType.Name,

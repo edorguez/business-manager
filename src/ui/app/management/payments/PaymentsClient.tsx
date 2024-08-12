@@ -1,7 +1,7 @@
 "use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { DeletePaymentRequest, GetPaymentsRequest } from "@/app/api/payment/route";
+import { ChangeStatusRequest, DeletePaymentRequest, GetPaymentsRequest } from "@/app/api/payment/route";
 import { GetPaymentTypesRequest } from "@/app/api/paymentType/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import PaymentCard from "@/app/components/cards/PaymentCard";
@@ -70,9 +70,11 @@ const PaymentsClient = () => {
   }
   
   const onDelete = useCallback(async (id: number) => {
+    isLoading.onStartLoading();
     await DeletePaymentRequest({ id });
     getPayments();
     deletePaymentModal.onClose();
+    isLoading.onEndLoading()
     toast({
       title: 'Método de Pago',
       description: 'Método de pago eliminado exitosamente',
@@ -81,6 +83,13 @@ const PaymentsClient = () => {
       duration: 3000,
       isClosable: true,
     });
+  }, [])
+
+  const onChangeStatus = useCallback(async (id: number, status: boolean) => {
+    isLoading.onStartLoading();
+    await ChangeStatusRequest({ id: id, status:  status});
+    getPayments();
+    isLoading.onEndLoading()
   }, [])
 
   return (
@@ -135,7 +144,7 @@ const PaymentsClient = () => {
               <h3>Métodos de Pago</h3>
               {payments.map((item) => (
                 <div key={item.id} className="mt-1">
-                  <PaymentCard payment={item} onDelete={handleOpenDelete} />
+                  <PaymentCard payment={item} onDelete={handleOpenDelete} onChangeStatus={onChangeStatus} />
                 </div>
               ))}
             </div>

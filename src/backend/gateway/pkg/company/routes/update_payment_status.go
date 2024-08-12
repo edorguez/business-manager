@@ -17,7 +17,7 @@ func UpdatePaymentStatus(w http.ResponseWriter, r *http.Request, c *config.Confi
 	fmt.Println("API Gateway :  UpdatePaymentStatus")
 
 	// We got our body through context, since we saved it in a middleware
-	body := r.Context().Value(contracts.UpdatePaymentStatusRequest{}).(contracts.UpdatePaymentStatusRequest)
+	// body := r.Context().Value(contracts.UpdatePaymentStatusRequest{}).(contracts.UpdatePaymentStatusRequest)
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -29,8 +29,15 @@ func UpdatePaymentStatus(w http.ResponseWriter, r *http.Request, c *config.Confi
 	}
 
 	fmt.Println("API Gateway :  UpdatePaymentStatus - Body")
-	fmt.Println(body)
+	fmt.Println(r.Body)
 	fmt.Println("-----------------")
+
+	var body contracts.UpdatePaymentStatusRequest
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		fmt.Println(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	if err := client.InitPaymentServiceClient(c); err != nil {
 		json.NewEncoder(w).Encode(&contracts.Error{

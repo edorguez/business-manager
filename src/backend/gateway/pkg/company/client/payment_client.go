@@ -109,6 +109,7 @@ func GetPayment(id int64, c context.Context) (*contracts.GetPaymentResponse, *co
 		Phone:                res.Phone,
 		Email:                res.Email,
 		PaymentTypeId:        res.PaymentTypeId,
+		IsActive:             res.IsActive,
 		PaymentType: &contracts.GetPaymentTypeResponse{
 			Id:        res.PaymentType.Id,
 			Name:      res.PaymentType.Name,
@@ -156,6 +157,7 @@ func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts
 			Phone:                v.Phone,
 			Email:                v.Email,
 			PaymentTypeId:        v.PaymentTypeId,
+			IsActive:             v.IsActive,
 			PaymentType: &contracts.GetPaymentTypeResponse{
 				Id:        v.PaymentType.Id,
 				Name:      v.PaymentType.Name,

@@ -9,16 +9,23 @@ import { Payment } from "@/app/types/payment";
 interface PaymentCardProps {
   payment: Payment;
   onDelete?: (id: number) => void;
+  onChangeStatus?: (id: number, status: boolean) => void;
 }
 
 const PaymentCard: React.FC<PaymentCardProps> = ({
   payment,
-  onDelete
+  onDelete,
+  onChangeStatus
 }) => {
 
   const handleDelete = (id: number) => {
     if(onDelete)
       onDelete(id);
+  }
+  
+  const handleChangeStatus = (id: number, status: boolean) => {
+    if(onChangeStatus)
+      onChangeStatus(id, status);
   }
 
   return (
@@ -32,7 +39,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
         </div>
         <div className="flex items-center justify-end">
           <span className="text-xs font-bold text-maincolor mr-2">Activo</span>
-          <Switch size='md' colorScheme='main' />
+          <Switch size='md' colorScheme='main' isChecked={payment.isActive} onChange={() => handleChangeStatus(payment.id, !payment.isActive)}/>
           <div className="flex ml-4">
             <Button size="sm" variant="fifth">
               <Icon icon="lucide:info" />

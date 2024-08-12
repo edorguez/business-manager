@@ -1,4 +1,4 @@
-import { CreatePayment, DeletePayment, GetPayments } from "@/app/types/payment";
+import { ChangeStatusPayment, CreatePayment, DeletePayment, GetPayments } from "@/app/types/payment";
 
 const baseUrl: string = 'http://localhost:3001/api/payments';
 
@@ -19,7 +19,7 @@ export async function CreatePaymentRequest(
 
     return response;
   } catch (error: any) {
-    console.log(error.toString())
+    console.log(error.toString());
   }
 }
 
@@ -43,7 +43,7 @@ export async function GetPaymentsRequest(
 
     return response;
   } catch (error: any) {
-    console.log(error.toString())
+    console.log(error.toString());
   }
 }
 
@@ -60,6 +60,27 @@ export async function DeletePaymentRequest(
     });
 
   } catch (error: any) {
-    console.log(error.toString())
+    console.log(error.toString());
+  }
+}
+
+export async function ChangeStatusRequest(
+  request: ChangeStatusPayment
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    const res = await fetch(`${baseUrl}/${request.id}/status`, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(request),
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString());
   }
 }

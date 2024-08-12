@@ -13,4 +13,5 @@ type GetPaymentResponse struct {
 	Email                *string                 `json:"email"`
 	PaymentTypeId        int64                   `json:"paymentTypeId"`
 	PaymentType          *GetPaymentTypeResponse `json:"paymentType"`
+	IsActive             bool                    `json:"isActive"`
 }
