@@ -10,17 +10,16 @@ import { useCallback, useEffect, useState } from "react";
 import { CreateCustomer } from "@/app/types/customer";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import {
-  CreateCustomerRequest,
   EditCustomerRequest,
   GetCustomerRequest,
 } from "@/app/api/customers/route";
-import { CurrentUser } from "@/app/types/auth";
-import getCurrentUser from "@/app/actions/getCurrentUser";
+import useLoading from "@/app/hooks/useLoading";
 
 const CustomerClient = () => {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
+  const isLoading = useLoading();
 
   const bcItems: BreadcrumItem[] = [
     {
@@ -75,11 +74,14 @@ const CustomerClient = () => {
 
   const onSubmit = async () => {
     if (isFormValid()) {
+      isLoading.onStartLoading();
       let editCustomer: any = await EditCustomerRequest({id: +params.customerId, ...formData});
       if (editCustomer?.error) {
         showErrorMessage(editCustomer.error);
+        isLoading.onEndLoading();
       } else {
-        showSuccessCreationMessage("Cliente editado exitosamente");
+        showSuccessEditMessage("Cliente editado exitosamente");
+        isLoading.onEndLoading();
         router.push("/management/customers");
       }
     } else {
@@ -96,7 +98,7 @@ const CustomerClient = () => {
     return true;
   };
 
-  const showSuccessCreationMessage = (msg: string) => {
+  const showSuccessEditMessage = (msg: string) => {
     toast({
       title: "Cliente",
       description: msg,

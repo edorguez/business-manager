@@ -29,6 +29,24 @@ export type CreatePayment = {
   paymentTypeId: number;
 }
 
+export type EditPayment = {
+  id: number;
+  companyId: number;
+  name: string;
+  bank: string;
+  accountNumber: string;
+  accountType: string;
+  identificationNumber: string;
+  identificationType: string;
+  phone: string;
+  email: string;
+  paymentTypeId: number;
+}
+
+export type GetPayment = {
+  id: number;
+}
+
 export type GetPayments = {
   companyId: number;
   limit: number;

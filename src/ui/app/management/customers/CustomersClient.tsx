@@ -128,7 +128,6 @@ const CustomersClient = () => {
     push(`customers/${val.id}`);
   }
 
-
   return (
     <div>
       <SimpleCard>

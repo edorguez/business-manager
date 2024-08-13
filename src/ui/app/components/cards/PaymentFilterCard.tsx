@@ -8,7 +8,7 @@ interface PaymentFilterCardProps {
   paymentType?: PaymentType;
   isSelected: boolean;
   onlyAll: boolean;
-  onSelectPayment: (val: number) => void;
+  onSelectPayment?: (val: number) => void;
 }
 
 const PaymentFilterCard: React.FC<PaymentFilterCardProps> = ({
@@ -19,7 +19,7 @@ const PaymentFilterCard: React.FC<PaymentFilterCardProps> = ({
 }) => {
 
   const handleSelectPayment = () => {
-    if(paymentType)
+    if(paymentType && onSelectPayment)
       onSelectPayment(paymentType.id);
   }
 

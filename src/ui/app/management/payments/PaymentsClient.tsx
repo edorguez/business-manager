@@ -16,6 +16,7 @@ import { Payment } from "@/app/types/payment";
 import { PaymentType } from "@/app/types/paymentType";
 import { Button, useToast } from "@chakra-ui/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 const PaymentsClient = () => {
@@ -26,6 +27,7 @@ const PaymentsClient = () => {
     },
   ];
 
+  const { push } = useRouter();
   const isLoading = useLoading();
   const toast = useToast();
   const deletePaymentModal = useDeleteModal();
@@ -91,6 +93,14 @@ const PaymentsClient = () => {
     getPayments();
     isLoading.onEndLoading()
   }, [])
+  
+  const handleOpenEdit = (id: number) => {
+    push(`payments/${id}?isEdit=true`);
+  }
+
+  const handleOpenDetail = (id: number) => {
+    push(`payments/${id}`);
+  }
 
   return (
     <div>
@@ -144,7 +154,7 @@ const PaymentsClient = () => {
               <h3>Métodos de Pago</h3>
               {payments.map((item) => (
                 <div key={item.id} className="mt-1">
-                  <PaymentCard payment={item} onDelete={handleOpenDelete} onChangeStatus={onChangeStatus} />
+                  <PaymentCard payment={item} onDelete={handleOpenDelete} onDetails={handleOpenDetail} onEdit={handleOpenEdit} onChangeStatus={onChangeStatus} />
                 </div>
               ))}
             </div>

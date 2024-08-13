@@ -9,18 +9,32 @@ import { Payment } from "@/app/types/payment";
 interface PaymentCardProps {
   payment: Payment;
   onDelete?: (id: number) => void;
+  onEdit?: (id: number) => void;
+  onDetails?: (id: number) => void;
   onChangeStatus?: (id: number, status: boolean) => void;
 }
 
 const PaymentCard: React.FC<PaymentCardProps> = ({
   payment,
   onDelete,
+  onEdit,
+  onDetails,
   onChangeStatus
 }) => {
 
   const handleDelete = (id: number) => {
     if(onDelete)
       onDelete(id);
+  }
+  
+  const handleEdit = (id: number) => {
+    if(onEdit)
+      onEdit(id);
+  }
+  
+  const handleDetails = (id: number) => {
+    if(onDetails)
+      onDetails(id);
   }
   
   const handleChangeStatus = (id: number, status: boolean) => {
@@ -41,11 +55,11 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
           <span className="text-xs font-bold text-maincolor mr-2">Activo</span>
           <Switch size='md' colorScheme='main' isChecked={payment.isActive} onChange={() => handleChangeStatus(payment.id, !payment.isActive)}/>
           <div className="flex ml-4">
-            <Button size="sm" variant="fifth">
+            <Button size="sm" variant="fifth" onClick={() => handleDetails(payment.id)}>
               <Icon icon="lucide:info" />
             </Button>
 
-            <Button size="sm" variant="main" className="mx-1">
+            <Button size="sm" variant="main" className="mx-1" onClick={() => handleEdit(payment.id)}>
               <Icon icon="lucide:edit" />
             </Button>
 
