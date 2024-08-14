@@ -108,9 +108,10 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 	fmt.Println("----------------")
 
 	params := db.GetPaymentsParams{
-		CompanyID: req.CompanyId,
-		Limit:     req.Limit,
-		Offset:    req.Offset,
+		CompanyID:     req.CompanyId,
+		PaymentTypeID: req.PaymentTypeId,
+		Limit:         req.Limit,
+		Offset:        req.Offset,
 	}
 
 	p, err := s.Repo.GetPayments(ctx, params)

@@ -34,6 +34,7 @@ const PaymentsClient = () => {
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [paymentIdDelete, setPaymentIdDelete] = useState<number>(0);
+  const [filterPaymentIdSelected, setFilterPaymentIdSelected] = useState<number>(0);
 
   const getPaymentTypes = useCallback(async () => {
     isLoading.onStartLoading();
@@ -42,13 +43,15 @@ const PaymentsClient = () => {
     isLoading.onEndLoading();
   }, []);
 
-  const getPayments = useCallback(async () => {
+  const getPayments = useCallback(async (paymentTypeId: number) => {
+    console.log('aaj carga')
     isLoading.onStartLoading();
     const currentUser: CurrentUser | null = getCurrentUser();
 
     if (currentUser) {
       let data: Payment[] = await GetPaymentsRequest({
         companyId: currentUser.companyId,
+        paymentTypeId: paymentTypeId,
         limit: 30,
         offset: 0,
       });
@@ -59,7 +62,7 @@ const PaymentsClient = () => {
 
   useEffect(() => {
     getPaymentTypes();
-    getPayments();
+    getPayments(filterPaymentIdSelected);
   }, []);
   
   const handleOpenDelete = (id: number) => {
@@ -74,7 +77,7 @@ const PaymentsClient = () => {
   const onDelete = useCallback(async (id: number) => {
     isLoading.onStartLoading();
     await DeletePaymentRequest({ id });
-    getPayments();
+    getPayments(filterPaymentIdSelected);
     deletePaymentModal.onClose();
     isLoading.onEndLoading()
     toast({
@@ -90,7 +93,7 @@ const PaymentsClient = () => {
   const onChangeStatus = useCallback(async (id: number, status: boolean) => {
     isLoading.onStartLoading();
     await ChangeStatusRequest({ id: id, status:  status});
-    getPayments();
+    getPayments(filterPaymentIdSelected);
     isLoading.onEndLoading()
   }, [])
   
@@ -100,6 +103,11 @@ const PaymentsClient = () => {
 
   const handleOpenDetail = (id: number) => {
     push(`payments/${id}`);
+  }
+  
+  const handleFilterPaymentType = (id: number) => {
+    setFilterPaymentIdSelected(id);
+    getPayments(id);
   }
 
   return (
@@ -132,18 +140,18 @@ const PaymentsClient = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-1">
                 {
                   <PaymentFilterCard
-                    isSelected={true}
+                    isSelected={filterPaymentIdSelected === 0}
                     onlyAll={true}
-                    onSelectPayment={() => {}}
+                    onSelectPayment={handleFilterPaymentType}
                   />
                 }
                 {paymentTypes.map((val: any, index: number) => (
                   <PaymentFilterCard
                     key={index}
                     paymentType={val}
-                    isSelected={index == 0}
+                    isSelected={filterPaymentIdSelected === val.id}
                     onlyAll={false}
-                    onSelectPayment={() => {}}
+                    onSelectPayment={handleFilterPaymentType}
                   />
                 ))}
               </div>

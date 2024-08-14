@@ -49,6 +49,7 @@ export type GetPayment = {
 
 export type GetPayments = {
   companyId: number;
+  paymentTypeId: number;
   limit: number;
   offset: number;
 }

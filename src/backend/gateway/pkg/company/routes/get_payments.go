@@ -15,6 +15,7 @@ import (
 func GetPayments(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	companyId := query_params.GetId("companyId", r)
+	paymentTypeId := query_params.GetId("paymentTypeId", r)
 	limit, offset := query_params.GetFilter(r)
 
 	if companyId <= 0 {
@@ -26,10 +27,20 @@ func GetPayments(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		return
 	}
 
+	if paymentTypeId < 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Payment Type ID is required in order to get results",
+		})
+		return
+	}
+
 	params := &pb.GetPaymentsRequest{
-		CompanyId: companyId,
-		Limit:     limit,
-		Offset:    offset,
+		CompanyId:     companyId,
+		PaymentTypeId: paymentTypeId,
+		Limit:         limit,
+		Offset:        offset,
 	}
 
 	if err := client.InitPaymentServiceClient(c); err != nil {

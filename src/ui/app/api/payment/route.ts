@@ -70,6 +70,7 @@ export async function GetPaymentsRequest(
 
     const res = await fetch(`${baseUrl}?` + new URLSearchParams({
       companyId: request.companyId.toString(),
+      paymentTypeId: request.paymentTypeId.toString(),
       limit: request.limit.toString(),
       offset: request.offset.toString()
     }).toString(), {

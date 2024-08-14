@@ -183,19 +183,21 @@ FROM
 INNER JOIN 
   company.payment_type AS PT ON P.payment_type_id = PT.id
 WHERE
-  (P.company_id = $1) OR $1 = 0
+  ((P.company_id = $1) OR $1 = 0) AND
+  ((P.payment_type_id = $2) OR $2 = 0)
 ORDER BY 
   P.id
 LIMIT 
-  $2
-OFFSET 
   $3
+OFFSET 
+  $4
 `
 
 type GetPaymentsParams struct {
-	CompanyID int64 `json:"company_id"`
-	Limit     int32 `json:"limit"`
-	Offset    int32 `json:"offset"`
+	CompanyID     int64 `json:"company_id"`
+	PaymentTypeID int64 `json:"payment_type_id"`
+	Limit         int32 `json:"limit"`
+	Offset        int32 `json:"offset"`
 }
 
 type GetPaymentsRow struct {
@@ -217,7 +219,12 @@ type GetPaymentsRow struct {
 }
 
 func (q *Queries) GetPayments(ctx context.Context, arg GetPaymentsParams) ([]GetPaymentsRow, error) {
-	rows, err := q.db.QueryContext(ctx, getPayments, arg.CompanyID, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, getPayments,
+		arg.CompanyID,
+		arg.PaymentTypeID,
+		arg.Limit,
+		arg.Offset,
+	)
 	if err != nil {
 		return nil, err
 	}

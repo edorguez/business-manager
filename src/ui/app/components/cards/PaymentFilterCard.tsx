@@ -15,13 +15,12 @@ const PaymentFilterCard: React.FC<PaymentFilterCardProps> = ({
   paymentType,
   isSelected,
   onlyAll,
-  onSelectPayment
+  onSelectPayment,
 }) => {
-
   const handleSelectPayment = () => {
-    if(paymentType && onSelectPayment)
-      onSelectPayment(paymentType.id);
-  }
+    if (paymentType && onSelectPayment) onSelectPayment(paymentType.id);
+    else if (onlyAll && onSelectPayment) onSelectPayment(0);
+  };
 
   return (
     <div

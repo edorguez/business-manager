@@ -62,8 +62,9 @@ message GetChildPaymentTypeResponse{
 
 message GetPaymentsRequest{
   int64 companyId = 1;
-  int32 limit = 2;
-  int32 offset = 3;
+  int64 paymentTypeId = 2;
+  int32 limit = 3;
+  int32 offset = 4;
 }
 
 message GetPaymentsResponse{

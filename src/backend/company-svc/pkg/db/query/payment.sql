@@ -65,13 +65,14 @@ FROM
 INNER JOIN 
   company.payment_type AS PT ON P.payment_type_id = PT.id
 WHERE
-  (P.company_id = $1) OR $1 = 0
+  ((P.company_id = $1) OR $1 = 0) AND
+  ((P.payment_type_id = $2) OR $2 = 0)
 ORDER BY 
   P.id
 LIMIT 
-  $2
+  $3
 OFFSET 
-  $3;
+  $4;
 
 -- name: UpdatePayment :one
 UPDATE 
