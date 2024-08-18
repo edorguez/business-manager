@@ -11,6 +11,7 @@ type Product struct {
 	Name          string    `json:"name" bson:"name"`
 	Description   *string   `json:"description" bson:"description"`
 	Sku           *string   `json:"sku" bson:"sku"`
+	Quantity      uint64    `json:"quantity" bson:"quantity"`
 	Price         uint64    `json:"price" bson:"price"`
 	Images        []string  `json:"images" bson:"images"`
 	ProductStatus uint32    `json:"productStatus" bson:"productStatus"`
@@ -24,6 +25,7 @@ type GetProduct struct {
 	Name          string             `json:"name" bson:"name"`
 	Description   *string            `json:"description" bson:"description"`
 	Sku           *string            `json:"sku" bson:"sku"`
+	Quantity      uint64             `json:"quantity" bson:"quantity"`
 	Price         uint64             `json:"price" bson:"price"`
 	Images        []string           `json:"images" bson:"images"`
 	ProductStatus uint32             `json:"productStatus" bson:"productStatus"`

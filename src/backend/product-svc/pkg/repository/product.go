@@ -88,6 +88,7 @@ func (productRepo *ProductRepo) UpdateProduct(ctx context.Context, id primitive.
 		"name":          arg.Name,
 		"description":   arg.Description,
 		"sku":           arg.Sku,
+		"quantity":      arg.Quantity,
 		"price":         arg.Price,
 		"images":        arg.Images,
 		"productStatus": arg.ProductStatus,
