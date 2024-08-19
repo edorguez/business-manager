@@ -23,6 +23,14 @@ const SimpleTableField: React.FC<SimpleTableFieldProps> = ({
       return <Image src={data[col.key]} alt="" width={38} height={38} />
     }
 
+    if(col.type == ColumnType.ArrayImageFirst) {
+      let imageSrc: string = '/images/products/no_product.png';
+      if(data[col.key]) {
+        imageSrc = data[col.key][0];
+      }
+      return <Image src={imageSrc} alt="" width={38} height={38} />
+    }
+
     if(col.type == ColumnType.Number) {
       return data[col.key]
     }

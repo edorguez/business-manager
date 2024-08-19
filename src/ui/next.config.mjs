@@ -4,9 +4,9 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'marketplace.canva.com',
-      },
+        protocol: 'https', //DELETE THIS OBJECT
+        hostname: 'marketplace.canva.com', // DELETE THIS OBJECT
+      }
     ],
   },
 };

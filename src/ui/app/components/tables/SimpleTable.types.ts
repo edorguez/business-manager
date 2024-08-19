@@ -23,6 +23,8 @@ export interface SimpleTableColumn {
 export enum ColumnType {
   String,
   Image,
+  ArrayImage,
+  ArrayImageFirst,
   Number,
   Money
 }

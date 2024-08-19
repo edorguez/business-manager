@@ -1,31 +1,38 @@
 'use client';
 
+import getCurrentUser from "@/app/actions/getCurrentUser";
+import { DeleteProductRequest, GetProductsRequest } from "@/app/api/products/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import DeleteModal from "@/app/components/modals/DeleteModal";
 import SimpleTable from "@/app/components/tables/SimpleTable";
 import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
 import useDeleteModal from "@/app/hooks/useDeleteModal";
+import useLoading from "@/app/hooks/useLoading";
 import { BreadcrumItem } from "@/app/types";
+import { CurrentUser } from "@/app/types/auth";
 import { Product } from "@/app/types/product";
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input, useToast } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 
 const ProductsClient = () => {
+  
   const bcItems: BreadcrumItem[] = [
     {
       label: "Productos",
-      href: "/management/products"
-    }
+      href: "/management/products",
+    },
   ];
-
+  
   const productCols: SimpleTableColumn[] = [
     {
-      key: "imageUrl",
+      key: "images",
       name: "",
-      type: ColumnType.Image
+      type: ColumnType.ArrayImageFirst
     },
     {
       key: "name",
@@ -49,95 +56,81 @@ const ProductsClient = () => {
     },
   ]
 
-  const productData: Product[] = [
-    {
-      id: 1,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 2,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 3,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 4,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 5,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 6,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 7,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 8,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 9,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-    {
-      id: 10,
-      name: "Camisa",
-      imageUrl: "https://marketplace.canva.com/print-mockup/bundle/E9Me4jcyzMX/fit:female,pages:double-sided,surface:marketplace/product:171618,surface:marketplace/EAFam5QLuIc/1/0/933w/canva-black-white-typography-motivation-tshirt-WKRZLU21i2c.png?sig=bc03703936ce8090247068bcf3a44f0e&width=800",
-      sku: "H19V2312",
-      quantity: 100,
-      price: 999.99
-    },
-  ]
-
+  const { push } = useRouter();
+  const isLoading = useLoading();
+  const toast = useToast();
   const deleteProductModal = useDeleteModal();
+  const [offset, setOffset] = useState<number>(0);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [productIdDelete, setProductIdDelete] = useState<number>(0);
 
+  const getProducts = useCallback(async () => {
+    isLoading.onStartLoading();
+    const currentUser: CurrentUser | null = getCurrentUser();
+
+    if (currentUser) {
+      let data: Product[] = await GetProductsRequest({
+        companyId: currentUser.companyId,
+        limit: 10,
+        offset: offset,
+      });
+      setProducts(data);
+    }
+    isLoading.onEndLoading();
+  }, [offset]);
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+  
+  const handleChangePage = (val: string) => {
+    setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
+  }
+
+  const handleOpenDelete = (id: number) => {
+    setProductIdDelete(id);
+    deleteProductModal.onOpen();
+  }
+
+  const handleSubmitDelete = () => {
+    onDelete(productIdDelete);
+  }
+  
+  const onDelete = useCallback(async (id: number) => {
+    isLoading.onStartLoading();
+    await DeleteProductRequest({ id });
+    getProducts();
+    deleteProductModal.onClose();
+    isLoading.onEndLoading()
+    toast({
+      title: 'Producto',
+      description: 'Producto eliminado exitosamente',
+      variant: 'customsuccess',
+      position: 'top-right',
+      duration: 3000,
+      isClosable: true,
+    });
+  }, [])
+
+  const onChangeStatus = useCallback(async (id: number, status: boolean) => {
+    isLoading.onStartLoading();
+    // await ChangeStatusRequest({ id: id, status:  status});
+    getProducts();
+    isLoading.onEndLoading()
+  }, [])
+  
+  const handleOpenEdit = (id: number) => {
+    push(`products/${id}?isEdit=true`);
+  }
+
+  const handleOpenDetail = (id: number) => {
+    push(`products/${id}`);
+  }
+  
   return (
     <div>
       <SimpleCard>
-        <DeleteModal onSubmit={() => { }} title="Eliminar Producto" description="¿Estás seguro que quieres eliminar este producto?" />
+        <DeleteModal onSubmit={handleSubmitDelete} title="Eliminar PRoducto" description="¿Estás seguro que quieres eliminar este producto?" />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />
@@ -172,7 +165,7 @@ const ProductsClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={productCols} data={productData} showToggleActive showDetails showEdit showDelete onDelete={deleteProductModal.onOpen} />
+          <SimpleTable columns={productCols} data={products} showToggleActive showDetails showEdit showDelete onDelete={deleteProductModal.onOpen} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>

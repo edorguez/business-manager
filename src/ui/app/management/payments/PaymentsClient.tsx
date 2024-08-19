@@ -44,7 +44,6 @@ const PaymentsClient = () => {
   }, []);
 
   const getPayments = useCallback(async (paymentTypeId: number) => {
-    console.log('aaj carga')
     isLoading.onStartLoading();
     const currentUser: CurrentUser | null = getCurrentUser();
 
