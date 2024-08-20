@@ -38,6 +38,10 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 	putRouter.HandleFunc("/{id}", cr.UpdateProduct)
 	putRouter.Use(mw.MiddlewareValidateUpdateProduct)
 
+	putStatusRoutes := baseRoute.Methods(http.MethodPut).Subrouter()
+	putStatusRoutes.HandleFunc("/{id}/status", cr.UpdateProductStatus)
+	putStatusRoutes.Use(mw.MiddlewareValidateUpdateProductStatus)
+
 	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/{id}", cr.DeleteProduct)
 }
@@ -60,6 +64,11 @@ func (cr *ProductRoutes) GetProducts(w http.ResponseWriter, r *http.Request) {
 func (cr *ProductRoutes) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  UpdateProduct Called --> 1")
 	routes.UpdateProduct(w, r, cr.config)
+}
+
+func (cr *ProductRoutes) UpdateProductStatus(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  UpdateProductStatus Called --> 1")
+	routes.UpdateProductStatus(w, r, cr.config)
 }
 
 func (cr *ProductRoutes) DeleteProduct(w http.ResponseWriter, r *http.Request) {

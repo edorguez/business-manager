@@ -1,4 +1,4 @@
-import { CreateProduct, DeleteProduct, EditProduct, GetProduct, GetProducts } from "@/app/types/product";
+import { ChangeStatusProduct, CreateProduct, DeleteProduct, EditProduct, GetProduct, GetProducts } from "@/app/types/product";
 
 const baseUrl: string = 'http://localhost:3001/api/products';
 
@@ -44,6 +44,23 @@ export async function EditProductRequest(
     return response;
   } catch (error: any) {
     console.log(error.toString())
+  }
+}
+
+export async function ChangeStatusRequest(
+  request: ChangeStatusProduct
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    await fetch(`${baseUrl}/${request.id}/status`, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(request),
+    });
+  } catch (error: any) {
+    console.log(error.toString());
   }
 }
 

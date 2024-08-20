@@ -171,14 +171,13 @@ func UpdateProduct(id string, body contracts.UpdateProductRequest, c context.Con
 	fmt.Println("-----------------")
 
 	updateProductParams := &pb.UpdateProductRequest{
-		Id:            id,
-		Name:          body.Name,
-		Description:   body.Description,
-		Sku:           body.Sku,
-		Quantity:      body.Quantity,
-		Price:         body.Price,
-		Images:        body.Images,
-		ProductStatus: body.ProductStatus,
+		Id:          id,
+		Name:        body.Name,
+		Description: body.Description,
+		Sku:         body.Sku,
+		Quantity:    body.Quantity,
+		Price:       body.Price,
+		Images:      body.Images,
 	}
 
 	res, err := productServiceClient.UpdateProduct(c, updateProductParams)
@@ -196,6 +195,41 @@ func UpdateProduct(id string, body contracts.UpdateProductRequest, c context.Con
 	}
 
 	fmt.Println("Product CLIENT :  UpdateProduct - SUCCESS")
+	return res, nil
+}
+
+func UpdateProductStatus(id string, body contracts.UpdateProductStatusRequest, c context.Context) (*pb.UpdateProductStatusResponse, *contracts.Error) {
+	fmt.Println("Product CLIENT :  UpdateProductStatus")
+
+	fmt.Println("Product CLIENT :  UpdateProductStatus - Body")
+	fmt.Println(body)
+	fmt.Println("-----------------")
+
+	var status uint32 = 0
+	if body.ProductStatus != nil {
+		status = uint32(*body.ProductStatus)
+	}
+
+	updateProductParams := &pb.UpdateProductStatusRequest{
+		Id:            id,
+		ProductStatus: status,
+	}
+
+	res, err := productServiceClient.UpdateProductStatus(c, updateProductParams)
+
+	if err != nil {
+		fmt.Println("Product CLIENT :  UpdateProductStatus - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Product CLIENT :  UpdateProductStatus - SUCCESS")
 	return res, nil
 }
 

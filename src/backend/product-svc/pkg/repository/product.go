@@ -85,13 +85,27 @@ func (productRepo *ProductRepo) UpdateProduct(ctx context.Context, id primitive.
 	opts := options.Update().SetUpsert(true)
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{
-		"name":          arg.Name,
-		"description":   arg.Description,
-		"sku":           arg.Sku,
-		"quantity":      arg.Quantity,
-		"price":         arg.Price,
-		"images":        arg.Images,
-		"productStatus": arg.ProductStatus,
+		"name":        arg.Name,
+		"description": arg.Description,
+		"sku":         arg.Sku,
+		"quantity":    arg.Quantity,
+		"price":       arg.Price,
+		"images":      arg.Images,
+		"modifiedAt":  time.Now(),
+	},
+	}
+
+	_, err := collection.UpdateOne(ctx, filter, update, opts)
+	return err
+}
+
+func (productRepo *ProductRepo) UpdateProductStatus(ctx context.Context, id primitive.ObjectID, status uint32) error {
+	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+
+	opts := options.Update().SetUpsert(true)
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{
+		"productStatus": status,
 		"modifiedAt":    time.Now(),
 	},
 	}

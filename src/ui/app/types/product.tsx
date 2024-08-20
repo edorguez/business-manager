@@ -6,6 +6,7 @@ export type Product = {
   sku: string;
   quantity: number;
   price: number;
+  productStatus: number;
 }
 
 export type CreateProduct = {
@@ -48,4 +49,9 @@ export type SearchProduct = {
 
 export type DeleteProduct = {
   id: number;
+}
+
+export type ChangeStatusProduct = {
+  id: number;
+  productStatus: number;
 }

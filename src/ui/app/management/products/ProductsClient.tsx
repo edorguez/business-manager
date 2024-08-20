@@ -1,7 +1,7 @@
 'use client';
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { DeleteProductRequest, GetProductsRequest } from "@/app/api/products/route";
+import { ChangeStatusRequest, DeleteProductRequest, GetProductsRequest } from "@/app/api/products/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import DeleteModal from "@/app/components/modals/DeleteModal";
@@ -74,6 +74,12 @@ const ProductsClient = () => {
         limit: 10,
         offset: offset,
       });
+      data = data.map(x => {
+        return {
+          ...x,
+          isActive: x.productStatus === 1 ? true : false
+        }
+      });
       setProducts(data);
     }
     isLoading.onEndLoading();
@@ -81,7 +87,7 @@ const ProductsClient = () => {
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [getProducts]);
   
   const handleChangePage = (val: string) => {
     setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
@@ -114,7 +120,7 @@ const ProductsClient = () => {
 
   const onChangeStatus = useCallback(async (id: number, status: boolean) => {
     isLoading.onStartLoading();
-    // await ChangeStatusRequest({ id: id, status:  status});
+    await ChangeStatusRequest({ id: id, productStatus: status ? 1 : 0});
     getProducts();
     isLoading.onEndLoading()
   }, [])
@@ -165,7 +171,7 @@ const ProductsClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={productCols} data={products} showToggleActive showDetails showEdit showDelete onDelete={deleteProductModal.onOpen} onChangePage={handleChangePage} offset={offset} />
+          <SimpleTable columns={productCols} data={products} showToggleActive showDetails showEdit showDelete onDelete={deleteProductModal.onOpen} onChangeStatus={onChangeStatus} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>

@@ -147,13 +147,12 @@ func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateP
 	fmt.Println("----------------")
 
 	params := models.Product{
-		Name:          req.Name,
-		Description:   req.Description,
-		Sku:           req.Sku,
-		Quantity:      req.Quantity,
-		Price:         req.Price,
-		Images:        req.Images,
-		ProductStatus: req.ProductStatus,
+		Name:        req.Name,
+		Description: req.Description,
+		Sku:         req.Sku,
+		Quantity:    req.Quantity,
+		Price:       req.Price,
+		Images:      req.Images,
 	}
 
 	objID, err := primitive.ObjectIDFromHex(req.Id)
@@ -177,6 +176,37 @@ func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateP
 
 	fmt.Println("Product Service :  UpdateProduct - SUCCESS")
 	return &product.UpdateProductResponse{
+		Status: http.StatusNoContent,
+	}, nil
+}
+
+func (s *ProductService) UpdateProductStatus(ctx context.Context, req *product.UpdateProductStatusRequest) (*product.UpdateProductStatusResponse, error) {
+	fmt.Println("Product Service :  UpdateProductStatus")
+	fmt.Println("Product Service :  UpdateProductStatus - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	objID, err := primitive.ObjectIDFromHex(req.Id)
+	if err != nil {
+		return &product.UpdateProductStatusResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	err = s.Repo.UpdateProductStatus(ctx, objID, req.ProductStatus)
+	if err != nil {
+		fmt.Println("Product Service :  UpdateProductStatus - ERROR")
+		fmt.Println(err.Error())
+
+		return &product.UpdateProductStatusResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	fmt.Println("Product Service :  UpdateProductStatus - SUCCESS")
+	return &product.UpdateProductStatusResponse{
 		Status: http.StatusNoContent,
 	}, nil
 }

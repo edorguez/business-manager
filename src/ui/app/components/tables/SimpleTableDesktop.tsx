@@ -29,7 +29,8 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   onDelete,
   onDetail,
   onEdit,
-  onChangePage
+  onChangePage,
+  onChangeStatus
 }) => {
 
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -55,6 +56,11 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
   const handleDetailItem = (val: any) => {
     if(onDetail)
       onDetail(val);
+  }
+  
+  const handleChangeStatus = (id: number, status: boolean) => {
+    if(onChangeStatus)
+      onChangeStatus(id, status);
   }
 
   return (
@@ -114,7 +120,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
                   {showToggleActive && (
                     <div className='mr-2 flex items-center justify-center'>
                       <span className="text-xs font-bold text-maincolor mr-2">Activo</span>
-                      <Switch size='md' colorScheme='main' />
+                      <Switch size='md' colorScheme='main' isChecked={dataVal.isActive} onChange={() => handleChangeStatus(dataVal.id, !dataVal.isActive)}/>
                     </div>
                   )}
 
