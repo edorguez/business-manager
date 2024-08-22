@@ -11,7 +11,7 @@ export interface SimpleTableProps {
   onDetail?: (val: any) => void;
   onEdit?: (val: any) => void;
   onChangePage?: (val: string) => void;
-  onChangeStatus?: (id: number, status: boolean) => void;
+  onChangeStatus?: (id: any, status: boolean) => void;
 }
 
 export interface SimpleTableColumn {

@@ -119,7 +119,7 @@ const CustomersClient = () => {
       isClosable: true,
     });
   }, [])
-  
+
   const handleOpenEdit = (val: any) => {
     push(`customers/${val.id}?isEdit=true`);
   }

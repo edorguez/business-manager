@@ -57,8 +57,8 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
     if(onDetail)
       onDetail(val);
   }
-  
-  const handleChangeStatus = (id: number, status: boolean) => {
+
+  const handleChangeStatus = (id: any, status: boolean) => {
     if(onChangeStatus)
       onChangeStatus(id, status);
   }

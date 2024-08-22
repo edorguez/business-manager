@@ -1,5 +1,5 @@
 export type Product = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   images: string[];
@@ -21,7 +21,7 @@ export type CreateProduct = {
 }
 
 export type EditProduct = {
-  id: number;
+  id: string;
   companyId: number;
   name: string;
   description: string;
@@ -33,7 +33,7 @@ export type EditProduct = {
 }
 
 export type GetProduct = {
-  id: number;
+  id: string;
 }
 
 export type GetProducts = {
@@ -48,10 +48,10 @@ export type SearchProduct = {
 }
 
 export type DeleteProduct = {
-  id: number;
+  id: string;
 }
 
 export type ChangeStatusProduct = {
-  id: number;
+  id: string;
   productStatus: number;
 }

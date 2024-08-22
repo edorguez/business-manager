@@ -20,14 +20,14 @@ import { useCallback, useEffect, useState } from "react";
 
 
 const ProductsClient = () => {
-  
+
   const bcItems: BreadcrumItem[] = [
     {
       label: "Productos",
       href: "/management/products",
     },
   ];
-  
+
   const productCols: SimpleTableColumn[] = [
     {
       key: "images",
@@ -62,7 +62,7 @@ const ProductsClient = () => {
   const deleteProductModal = useDeleteModal();
   const [offset, setOffset] = useState<number>(0);
   const [products, setProducts] = useState<Product[]>([]);
-  const [productIdDelete, setProductIdDelete] = useState<number>(0);
+  const [productIdDelete, setProductIdDelete] = useState<string>("");
 
   const getProducts = useCallback(async () => {
     isLoading.onStartLoading();
@@ -88,12 +88,12 @@ const ProductsClient = () => {
   useEffect(() => {
     getProducts();
   }, [getProducts]);
-  
+
   const handleChangePage = (val: string) => {
     setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
   }
 
-  const handleOpenDelete = (id: number) => {
+  const handleOpenDelete = (id: string) => {
     setProductIdDelete(id);
     deleteProductModal.onOpen();
   }
@@ -101,8 +101,8 @@ const ProductsClient = () => {
   const handleSubmitDelete = () => {
     onDelete(productIdDelete);
   }
-  
-  const onDelete = useCallback(async (id: number) => {
+
+  const onDelete = useCallback(async (id: string) => {
     isLoading.onStartLoading();
     await DeleteProductRequest({ id });
     getProducts();
@@ -118,21 +118,24 @@ const ProductsClient = () => {
     });
   }, [])
 
-  const onChangeStatus = useCallback(async (id: number, status: boolean) => {
+  const onChangeStatus = useCallback(async (id: string, status: boolean) => {
     isLoading.onStartLoading();
     await ChangeStatusRequest({ id: id, productStatus: status ? 1 : 0});
     getProducts();
     isLoading.onEndLoading()
   }, [])
-  
-  const handleOpenEdit = (id: number) => {
-    push(`products/${id}?isEdit=true`);
+
+  const handleOpenEdit = (val: any) => {
+    push(`products/${val.id}?isEdit=true`);
   }
 
-  const handleOpenDetail = (id: number) => {
-    push(`products/${id}`);
+  const handleOpenDetail = (val: any) => {
+    console.log('hola')
+    console.log(val)
+    console.log(val.id);
+    push(`products/${val.id}`);
   }
-  
+
   return (
     <div>
       <SimpleCard>
@@ -171,7 +174,7 @@ const ProductsClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={productCols} data={products} showToggleActive showDetails showEdit showDelete onDelete={deleteProductModal.onOpen} onChangeStatus={onChangeStatus} onChangePage={handleChangePage} offset={offset} />
+          <SimpleTable columns={productCols} data={products} showToggleActive showDetails showEdit showDelete onEdit={handleOpenEdit} onDelete={handleOpenDelete} onDetail={handleOpenDetail} onChangeStatus={onChangeStatus} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>
