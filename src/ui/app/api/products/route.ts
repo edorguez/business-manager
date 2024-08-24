@@ -33,15 +33,14 @@ export async function EditProductRequest(
     const headers = new Headers();
     headers.append("Authorization", <string>localStorage.getItem('token'));
 
+    request.price = +request.price;
+    request.quantity = +request.quantity;
+
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: 'PUT',
       headers: headers,
       body: JSON.stringify(request),
     });
-
-    let response = await res.json();
-
-    return response;
   } catch (error: any) {
     console.log(error.toString())
   }

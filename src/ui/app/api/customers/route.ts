@@ -35,10 +35,6 @@ export async function EditCustomerRequest(
       headers: headers,
       body: JSON.stringify(request),
     });
-
-    let response = await res.json();
-
-    return response;
   } catch (error: any) {
     console.log(error.toString())
   }

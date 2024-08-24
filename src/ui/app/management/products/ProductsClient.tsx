@@ -130,9 +130,6 @@ const ProductsClient = () => {
   }
 
   const handleOpenDetail = (val: any) => {
-    console.log('hola')
-    console.log(val)
-    console.log(val.id);
     push(`products/${val.id}`);
   }
 

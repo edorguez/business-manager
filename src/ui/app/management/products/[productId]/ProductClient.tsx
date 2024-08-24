@@ -19,8 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 const ProductClient = () => {
@@ -69,7 +68,7 @@ const ProductClient = () => {
         productStatus: product.status,
       });
     }
-  }, [params.customerId]);
+  }, [params.productId]);
 
   useEffect(() => {
     let paramIsEdit = searchParams.get("isEdit");
@@ -224,7 +223,7 @@ const ProductClient = () => {
           <div className="p-1">
             <label className="text-sm">Imágenes</label>
             <div className="border rounded py-5 px-3">
-              <ImagesUpload />
+              <ImagesUpload showAddImage={isEdit} />
             </div>
           </div>
         </SimpleCard>

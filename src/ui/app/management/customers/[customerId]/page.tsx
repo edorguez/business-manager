@@ -11,4 +11,4 @@ const CustomerPage = () => {
   )
 }
 
-export default CustomerPage; 
+export default CustomerPage;
