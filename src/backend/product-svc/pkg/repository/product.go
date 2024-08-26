@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
@@ -55,6 +56,8 @@ func (productRepo *ProductRepo) GetProduct(ctx context.Context, id primitive.Obj
 
 type GetProductsParams struct {
 	CompanyId int64
+	Name      *string
+	Sku       *string
 	Limit     int32
 	Offset    int32
 }
@@ -64,7 +67,32 @@ func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProducts
 
 	var result []models.GetProduct
 	options := options.Find().SetLimit(int64(arg.Limit)).SetSkip(int64(arg.Offset))
-	cursor, err := collection.Find(ctx, bson.M{"companyId": arg.CompanyId}, options)
+
+	query := bson.M{
+		"companyId": arg.CompanyId,
+	}
+
+	if arg.Name != nil {
+		if len(*arg.Name) > 0 {
+			query["name"] = primitive.Regex{
+				Pattern: *arg.Name,
+				Options: "i",
+			}
+		}
+	}
+
+	if arg.Sku != nil {
+		if len(*arg.Sku) > 0 {
+			query["sku"] = primitive.Regex{
+				Pattern: *arg.Sku,
+				Options: "i",
+			}
+		}
+	}
+
+	fmt.Println(query)
+
+	cursor, err := collection.Find(ctx, query, options)
 	if err != nil {
 		return nil, err
 	}

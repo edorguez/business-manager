@@ -38,6 +38,8 @@ export type GetProduct = {
 
 export type GetProducts = {
   companyId: number;
+  name: string;
+  sku: string;
   limit: number;
   offset: number;
 }

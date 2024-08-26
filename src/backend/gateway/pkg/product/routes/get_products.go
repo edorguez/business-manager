@@ -15,10 +15,14 @@ import (
 func GetProducts(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	companyId := query_params.GetId("companyId", r)
+	name := r.URL.Query().Get("name")
+	sku := r.URL.Query().Get("sku")
 	limit, offset := query_params.GetFilter(r)
 
 	params := &pb.GetProductsRequest{
 		CompanyId: companyId,
+		Name:      &name,
+		Sku:       &sku,
 		Limit:     limit,
 		Offset:    offset,
 	}

@@ -104,6 +104,8 @@ func (s *ProductService) GetProducts(ctx context.Context, req *product.GetProduc
 
 	params := repo.GetProductsParams{
 		CompanyId: req.CompanyId,
+		Name:      req.Name,
+		Sku:       req.Sku,
 		Limit:     req.Limit,
 		Offset:    req.Offset,
 	}

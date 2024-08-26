@@ -11,7 +11,7 @@ import useDeleteModal from "@/app/hooks/useDeleteModal";
 import useLoading from "@/app/hooks/useLoading";
 import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
-import { Product } from "@/app/types/product";
+import { Product, SearchProduct } from "@/app/types/product";
 import { Button, Input, useToast } from "@chakra-ui/react";
 import { Icon } from '@iconify/react';
 import Link from "next/link";
@@ -60,17 +60,20 @@ const ProductsClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const deleteProductModal = useDeleteModal();
+  const [searchProduct, setSearchProduct] = useState<SearchProduct>({ name: '', sku: '' });
   const [offset, setOffset] = useState<number>(0);
   const [products, setProducts] = useState<Product[]>([]);
   const [productIdDelete, setProductIdDelete] = useState<string>("");
 
-  const getProducts = useCallback(async () => {
+  const getProducts = useCallback(async (searchParams: SearchProduct) => {
     isLoading.onStartLoading();
     const currentUser: CurrentUser | null = getCurrentUser();
 
     if (currentUser) {
       let data: Product[] = await GetProductsRequest({
         companyId: currentUser.companyId,
+        name: searchParams.name ?? '',
+        sku: searchParams.sku ?? '',
         limit: 10,
         offset: offset,
       });
@@ -86,11 +89,20 @@ const ProductsClient = () => {
   }, [offset]);
 
   useEffect(() => {
-    getProducts();
+    getProducts(searchProduct);
   }, [getProducts]);
 
   const handleChangePage = (val: string) => {
     setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
+  }
+  
+  const handleChange = (event: any) => {
+    const { name, value } = event.target;
+    setSearchProduct((prevData) => ({ ...prevData, [name]: value }));
+  }
+
+  const onSearchProduct = () => {
+    getProducts(searchProduct);
   }
 
   const handleOpenDelete = (id: string) => {
@@ -105,7 +117,7 @@ const ProductsClient = () => {
   const onDelete = useCallback(async (id: string) => {
     isLoading.onStartLoading();
     await DeleteProductRequest({ id });
-    getProducts();
+    getProducts(searchProduct);
     deleteProductModal.onClose();
     isLoading.onEndLoading()
     toast({
@@ -121,7 +133,7 @@ const ProductsClient = () => {
   const onChangeStatus = useCallback(async (id: string, status: boolean) => {
     isLoading.onStartLoading();
     await ChangeStatusRequest({ id: id, productStatus: status ? 1 : 0});
-    getProducts();
+    getProducts(searchProduct);
     isLoading.onEndLoading()
   }, [])
 
@@ -144,15 +156,15 @@ const ProductsClient = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           <div>
             <label className="text-sm">Producto</label>
-            <Input size="sm" />
+            <Input size="sm" name="name" onChange={handleChange} />
           </div>
           <div>
             <label className="text-sm">SKU</label>
-            <Input size="sm" />
+            <Input size="sm" name="sku" onChange={handleChange} />
           </div>
           <div className="flex flex-col">
             <span className="opacity-0">.</span>
-            <Button size="sm" variant="main">
+            <Button size="sm" variant="main" onClick={onSearchProduct}>
               <Icon icon="tabler:search" />
             </Button>
           </div>

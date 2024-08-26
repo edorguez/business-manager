@@ -92,6 +92,8 @@ export async function GetProductsRequest(
 
     const res = await fetch(`${baseUrl}?` + new URLSearchParams({
       companyId: request.companyId.toString(),
+      name: request.name.trim(),
+      sku: request.sku.trim(),
       limit: request.limit.toString(),
       offset: request.offset.toString()
     }).toString(), {
