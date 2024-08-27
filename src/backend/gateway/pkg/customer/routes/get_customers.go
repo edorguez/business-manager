@@ -20,9 +20,6 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	identificationNumber := r.URL.Query().Get("identificationNumber")
 	limit, offset := query_params.GetFilter(r)
 
-	fmt.Println("hola")
-	fmt.Println(firstName)
-
 	params := &pb.GetCustomersRequest{
 		CompanyId:            companyId,
 		FirstName:            &firstName,
@@ -46,7 +43,6 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		fmt.Println("API Gateway :  GetCustomers - ERROR")
 		json.NewEncoder(w).Encode(err)
 		return
-
 	}
 
 	fmt.Println("API Gateway :  GetCustomers - SUCCESS")

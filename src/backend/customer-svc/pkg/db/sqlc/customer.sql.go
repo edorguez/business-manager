@@ -189,6 +189,48 @@ func (q *Queries) GetCustomers(ctx context.Context, arg GetCustomersParams) ([]C
 	return items, nil
 }
 
+const getCustomersByMonths = `-- name: GetCustomersByMonths :many
+SELECT 
+    DATE_TRUNC('month', created_at) AS month_interval,
+    COUNT(*) AS record_count
+FROM 
+    customer.customer
+WHERE
+  $1 = 0 OR company_id = $1
+GROUP BY 
+    month_interval
+ORDER BY 
+    month_interval
+`
+
+type GetCustomersByMonthsRow struct {
+	MonthInterval int64 `json:"month_interval"`
+	RecordCount   int64 `json:"record_count"`
+}
+
+func (q *Queries) GetCustomersByMonths(ctx context.Context, companyID interface{}) ([]GetCustomersByMonthsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getCustomersByMonths, companyID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCustomersByMonthsRow{}
+	for rows.Next() {
+		var i GetCustomersByMonthsRow
+		if err := rows.Scan(&i.MonthInterval, &i.RecordCount); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateCustomer = `-- name: UpdateCustomer :one
 UPDATE 
   customer.customer

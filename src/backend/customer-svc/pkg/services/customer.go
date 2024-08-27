@@ -136,6 +136,37 @@ func (s *CustomerService) GetCustomers(ctx context.Context, req *customer.GetCus
 	}, nil
 }
 
+func (s *CustomerService) GetCustomersByMonths(ctx context.Context, req *customer.GetCustomersByMonthsRequest) (*customer.GetCustomersByMonthsResponse, error) {
+	fmt.Println("Customer Service :  GetCustomersByMonths")
+	fmt.Println("Customer Service :  GetCustomersByMonths - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	c, err := s.Repo.GetCustomersByMonths(ctx, req.CompanyId)
+	if err != nil {
+		fmt.Println("Customer Service :  GetCustomersByMonths - ERROR")
+		fmt.Println(err.Error())
+		return &customer.GetCustomersByMonthsResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	customers := make([]*customer.CustomerByMonth, 0, len(c))
+	for _, v := range c {
+		customers = append(customers, &customer.CustomerByMonth{
+			MonthInterval: v.MonthInterval,
+			RecordCount:   v.RecordCount,
+		})
+	}
+
+	fmt.Println("Customer Service :  GetCustomersByMonths - SUCCESS")
+	return &customer.GetCustomersByMonthsResponse{
+		Customers: customers,
+		Status:    http.StatusOK,
+	}, nil
+}
+
 func (s *CustomerService) UpdateCustomer(ctx context.Context, req *customer.UpdateCustomerRequest) (*customer.UpdateCustomerResponse, error) {
 	fmt.Println("Customer Service :  UpdateCustomer")
 	fmt.Println("Customer Service :  UpdateCustomer - Req")

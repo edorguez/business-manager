@@ -158,6 +158,53 @@ func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contrac
 	return cr, nil
 }
 
+func GetCustomersByMonths(params *pb.GetCustomersByMonthsRequest, c context.Context) ([]*contracts.GetCustomerByMonthsResponse, *contracts.Error) {
+	fmt.Println("Customer CLIENT :  GetCustomerByMonths")
+
+	if params.CompanyId <= 0 {
+		error := &contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Company ID is required in order to get results",
+		}
+
+		return nil, error
+	}
+
+	res, err := customerServiceClient.GetCustomersByMonths(c, params)
+
+	if err != nil {
+		fmt.Println("Customer CLIENT :  GetCustomersByMonths - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	if res.Status != http.StatusOK {
+		error := &contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		}
+
+		return nil, error
+	}
+
+	cr := make([]*contracts.GetCustomerByMonthsResponse, 0, len(res.Customers))
+	for _, v := range res.Customers {
+		cr = append(cr, &contracts.GetCustomerByMonthsResponse{
+			MonthInterval: v.MonthInterval,
+			RecordCount:   v.RecordCount,
+		})
+	}
+
+	fmt.Println("Customer CLIENT :  GetCustomersByMonths - SUCCESS")
+	return cr, nil
+}
+
 func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c context.Context) (*pb.UpdateCustomerResponse, *contracts.Error) {
 	fmt.Println("Customer CLIENT :  UpdateCustomer")
 

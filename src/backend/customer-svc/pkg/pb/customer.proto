@@ -8,6 +8,7 @@ service CustomerService{
   rpc CreateCustomer(CreateCustomerRequest) returns (CreateCustomerResponse);
   rpc GetCustomer(GetCustomerRequest) returns (GetCustomerResponse);
   rpc GetCustomers(GetCustomersRequest) returns (GetCustomersResponse);
+  rpc GetCustomersByMonths(GetCustomersByMonthsRequest) returns (GetCustomersByMonthsResponse);
   rpc UpdateCustomer(UpdateCustomerRequest) returns (UpdateCustomerResponse);
   rpc DeleteCustomer(DeleteCustomerRequest) returns (DeleteCustomerResponse);
 }
@@ -58,6 +59,21 @@ message GetCustomersResponse{
   repeated GetCustomerResponse customers = 1;
   int64 status = 2;
   string error = 3;
+}
+
+message GetCustomersByMonthsRequest{
+  int64 companyId = 1;
+}
+
+message GetCustomersByMonthsResponse{
+  repeated CustomerByMonth customers = 1;
+  int64 status = 2;
+  string error = 3;
+}
+
+message CustomerByMonth {
+	int64 monthInterval = 1;
+	int64 recordCount = 2;
 }
 
 message UpdateCustomerRequest{

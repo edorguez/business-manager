@@ -78,3 +78,16 @@ DELETE FROM
   customer.customer
 WHERE 
   id = $1;
+
+-- name: GetCustomersByMonths :many
+SELECT 
+    DATE_TRUNC('month', created_at) AS month_interval,
+    COUNT(*) AS record_count
+FROM 
+    customer.customer
+WHERE
+  @company_id = 0 OR company_id = @company_id
+GROUP BY 
+    month_interval
+ORDER BY 
+    month_interval;

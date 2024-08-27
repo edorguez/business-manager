@@ -25,6 +25,7 @@ type CustomerServiceClient interface {
 	CreateCustomer(ctx context.Context, in *CreateCustomerRequest, opts ...grpc.CallOption) (*CreateCustomerResponse, error)
 	GetCustomer(ctx context.Context, in *GetCustomerRequest, opts ...grpc.CallOption) (*GetCustomerResponse, error)
 	GetCustomers(ctx context.Context, in *GetCustomersRequest, opts ...grpc.CallOption) (*GetCustomersResponse, error)
+	GetCustomersByMonths(ctx context.Context, in *GetCustomersByMonthsRequest, opts ...grpc.CallOption) (*GetCustomersByMonthsResponse, error)
 	UpdateCustomer(ctx context.Context, in *UpdateCustomerRequest, opts ...grpc.CallOption) (*UpdateCustomerResponse, error)
 	DeleteCustomer(ctx context.Context, in *DeleteCustomerRequest, opts ...grpc.CallOption) (*DeleteCustomerResponse, error)
 }
@@ -64,6 +65,15 @@ func (c *customerServiceClient) GetCustomers(ctx context.Context, in *GetCustome
 	return out, nil
 }
 
+func (c *customerServiceClient) GetCustomersByMonths(ctx context.Context, in *GetCustomersByMonthsRequest, opts ...grpc.CallOption) (*GetCustomersByMonthsResponse, error) {
+	out := new(GetCustomersByMonthsResponse)
+	err := c.cc.Invoke(ctx, "/pb.CustomerService/GetCustomersByMonths", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *customerServiceClient) UpdateCustomer(ctx context.Context, in *UpdateCustomerRequest, opts ...grpc.CallOption) (*UpdateCustomerResponse, error) {
 	out := new(UpdateCustomerResponse)
 	err := c.cc.Invoke(ctx, "/pb.CustomerService/UpdateCustomer", in, out, opts...)
@@ -89,6 +99,7 @@ type CustomerServiceServer interface {
 	CreateCustomer(context.Context, *CreateCustomerRequest) (*CreateCustomerResponse, error)
 	GetCustomer(context.Context, *GetCustomerRequest) (*GetCustomerResponse, error)
 	GetCustomers(context.Context, *GetCustomersRequest) (*GetCustomersResponse, error)
+	GetCustomersByMonths(context.Context, *GetCustomersByMonthsRequest) (*GetCustomersByMonthsResponse, error)
 	UpdateCustomer(context.Context, *UpdateCustomerRequest) (*UpdateCustomerResponse, error)
 	DeleteCustomer(context.Context, *DeleteCustomerRequest) (*DeleteCustomerResponse, error)
 	mustEmbedUnimplementedCustomerServiceServer()
@@ -106,6 +117,9 @@ func (UnimplementedCustomerServiceServer) GetCustomer(context.Context, *GetCusto
 }
 func (UnimplementedCustomerServiceServer) GetCustomers(context.Context, *GetCustomersRequest) (*GetCustomersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCustomers not implemented")
+}
+func (UnimplementedCustomerServiceServer) GetCustomersByMonths(context.Context, *GetCustomersByMonthsRequest) (*GetCustomersByMonthsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomersByMonths not implemented")
 }
 func (UnimplementedCustomerServiceServer) UpdateCustomer(context.Context, *UpdateCustomerRequest) (*UpdateCustomerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustomer not implemented")
@@ -180,6 +194,24 @@ func _CustomerService_GetCustomers_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CustomerService_GetCustomersByMonths_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCustomersByMonthsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerServiceServer).GetCustomersByMonths(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.CustomerService/GetCustomersByMonths",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerServiceServer).GetCustomersByMonths(ctx, req.(*GetCustomersByMonthsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CustomerService_UpdateCustomer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateCustomerRequest)
 	if err := dec(in); err != nil {
@@ -234,6 +266,10 @@ var CustomerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCustomers",
 			Handler:    _CustomerService_GetCustomers_Handler,
+		},
+		{
+			MethodName: "GetCustomersByMonths",
+			Handler:    _CustomerService_GetCustomersByMonths_Handler,
 		},
 		{
 			MethodName: "UpdateCustomer",

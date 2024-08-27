@@ -96,3 +96,20 @@ func (clientRepo *CustomerRepo) DeleteCustomer(ctx context.Context, id int64) er
 
 	return err
 }
+
+func (clientRepo *CustomerRepo) GetCustomersByMonths(ctx context.Context, companyID int64) ([]db.GetCustomersByMonthsRow, error) {
+	var result []db.GetCustomersByMonthsRow
+
+	err := clientRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.GetCustomersByMonths(ctx, companyID)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}

@@ -28,6 +28,7 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/{id:[0-9]+}", cr.GetCustomer)
+	getRouter.HandleFunc("/months", cr.GetCustomersByMonths)
 	getRouter.HandleFunc("", cr.GetCustomers)
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
@@ -55,6 +56,11 @@ func (cr *CustomerRoutes) GetCustomer(w http.ResponseWriter, r *http.Request) {
 func (cr *CustomerRoutes) GetCustomers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  GetCustomers Called --> 1")
 	routes.GetCustomers(w, r, cr.config)
+}
+
+func (cr *CustomerRoutes) GetCustomersByMonths(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetCustomersByMonths Called --> 1")
+	routes.GetCustomersByMonths(w, r, cr.config)
 }
 
 func (cr *CustomerRoutes) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
