@@ -1,6 +1,8 @@
 package contracts
 
+import "time"
+
 type GetCustomerByMonthsResponse struct {
-	MonthInterval int64 `json:"monthInterval"`
-	RecordCount   int64 `json:"recordCount"`
+	MonthInterval time.Time `json:"monthInterval"`
+	RecordCount   int64     `json:"recordCount"`
 }

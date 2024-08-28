@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package pb;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package= "github.com/EdoRguez/business-manager/gateway/customer/pb";
 
 service CustomerService{
@@ -72,7 +74,7 @@ message GetCustomersByMonthsResponse{
 }
 
 message CustomerByMonth {
-	int64 monthInterval = 1;
+	google.protobuf.Timestamp monthInterval = 1;
 	int64 recordCount = 2;
 }
 

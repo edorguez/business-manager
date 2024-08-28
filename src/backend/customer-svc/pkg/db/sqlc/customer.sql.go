@@ -8,6 +8,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createCustomer = `-- name: CreateCustomer :one
@@ -191,7 +192,7 @@ func (q *Queries) GetCustomers(ctx context.Context, arg GetCustomersParams) ([]C
 
 const getCustomersByMonths = `-- name: GetCustomersByMonths :many
 SELECT 
-    DATE_TRUNC('month', created_at) AS month_interval,
+    DATE_TRUNC('month', created_at)::timestamp AS month_interval,
     COUNT(*) AS record_count
 FROM 
     customer.customer
@@ -204,8 +205,8 @@ ORDER BY
 `
 
 type GetCustomersByMonthsRow struct {
-	MonthInterval int64 `json:"month_interval"`
-	RecordCount   int64 `json:"record_count"`
+	MonthInterval time.Time `json:"month_interval"`
+	RecordCount   int64     `json:"record_count"`
 }
 
 func (q *Queries) GetCustomersByMonths(ctx context.Context, companyID interface{}) ([]GetCustomersByMonthsRow, error) {

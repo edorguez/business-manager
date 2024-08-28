@@ -81,7 +81,7 @@ WHERE
 
 -- name: GetCustomersByMonths :many
 SELECT 
-    DATE_TRUNC('month', created_at) AS month_interval,
+    DATE_TRUNC('month', created_at)::timestamp AS month_interval,
     COUNT(*) AS record_count
 FROM 
     customer.customer

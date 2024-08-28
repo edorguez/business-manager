@@ -196,7 +196,7 @@ func GetCustomersByMonths(params *pb.GetCustomersByMonthsRequest, c context.Cont
 	cr := make([]*contracts.GetCustomerByMonthsResponse, 0, len(res.Customers))
 	for _, v := range res.Customers {
 		cr = append(cr, &contracts.GetCustomerByMonthsResponse{
-			MonthInterval: v.MonthInterval,
+			MonthInterval: v.MonthInterval.AsTime(),
 			RecordCount:   v.RecordCount,
 		})
 	}

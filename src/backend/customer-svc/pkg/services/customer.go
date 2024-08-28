@@ -10,6 +10,7 @@ import (
 	customer "github.com/EdoRguez/business-manager/customer-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/customer-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/customer-svc/pkg/util/type_converter"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type CustomerService struct {
@@ -155,7 +156,7 @@ func (s *CustomerService) GetCustomersByMonths(ctx context.Context, req *custome
 	customers := make([]*customer.CustomerByMonth, 0, len(c))
 	for _, v := range c {
 		customers = append(customers, &customer.CustomerByMonth{
-			MonthInterval: v.MonthInterval,
+			MonthInterval: timestamppb.New(v.MonthInterval),
 			RecordCount:   v.RecordCount,
 		})
 	}
