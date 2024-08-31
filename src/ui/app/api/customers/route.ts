@@ -1,4 +1,4 @@
-import { CreateCustomer, DeleteCustomer, EditCustomer, GetCustomer, GetCustomers } from "@/app/types/customer";
+import { CreateCustomer, DeleteCustomer, EditCustomer, GetCustomer, GetCustomers, GetCustomersByMonths } from "@/app/types/customer";
 
 const baseUrl: string = 'http://localhost:3001/api/customers';
 
@@ -74,6 +74,28 @@ export async function GetCustomersRequest(
       identificationNumber: request.identificationNumber.trim(),
       limit: request.limit.toString(),
       offset: request.offset.toString()
+    }).toString(), {
+      method: 'GET',
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
+}
+
+export async function GetCustomersByMonthsRequest(
+  request: GetCustomersByMonths
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    const res = await fetch(`${baseUrl}/months?` + new URLSearchParams({
+      companyId: request.companyId.toString(),
     }).toString(), {
       method: 'GET',
       headers: headers,

@@ -8,6 +8,11 @@ export type Customer = {
   email: string;
 }
 
+export type CustomerByMonth = {
+  monthInterval: Date;
+  recordCount: number;
+}
+
 export type CreateCustomer = {
   companyId: number;
   firstName: string;
@@ -42,6 +47,10 @@ export type GetCustomers = {
   offset: number;
 }
 
+export type GetCustomersByMonths = {
+  companyId: number;
+}
+
 export type SearchCustomer = {
   name: string;
   lastName: string;
@@ -50,4 +59,10 @@ export type SearchCustomer = {
 
 export type DeleteCustomer = {
   id: number;
+}
+
+export type CustomerMonths = {
+  oneMonth: CustomerByMonth | null;
+  twoMonths: CustomerByMonth | null;
+  threeMonths: CustomerByMonth | null;
 }
