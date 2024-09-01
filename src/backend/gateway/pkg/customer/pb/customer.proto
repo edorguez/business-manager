@@ -65,17 +65,13 @@ message GetCustomersResponse{
 
 message GetCustomersByMonthsRequest{
   int64 companyId = 1;
+  int32 months = 2;
 }
 
 message GetCustomersByMonthsResponse{
-  repeated CustomerByMonth customers = 1;
+	repeated google.protobuf.Timestamp createdAt = 1;
   int64 status = 2;
   string error = 3;
-}
-
-message CustomerByMonth {
-	google.protobuf.Timestamp monthInterval = 1;
-	int64 recordCount = 2;
 }
 
 message UpdateCustomerRequest{

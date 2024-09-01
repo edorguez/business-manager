@@ -96,6 +96,7 @@ export async function GetCustomersByMonthsRequest(
 
     const res = await fetch(`${baseUrl}/months?` + new URLSearchParams({
       companyId: request.companyId.toString(),
+      months: request.months.toString()
     }).toString(), {
       method: 'GET',
       headers: headers,

@@ -143,7 +143,12 @@ func (s *CustomerService) GetCustomersByMonths(ctx context.Context, req *custome
 	fmt.Println(req)
 	fmt.Println("----------------")
 
-	c, err := s.Repo.GetCustomersByMonths(ctx, req.CompanyId)
+	params := db.GetCustomersByMonthsParams{
+		CompanyID: req.CompanyId,
+		Months:    req.Months,
+	}
+
+	c, err := s.Repo.GetCustomersByMonths(ctx, params)
 	if err != nil {
 		fmt.Println("Customer Service :  GetCustomersByMonths - ERROR")
 		fmt.Println(err.Error())
@@ -153,17 +158,14 @@ func (s *CustomerService) GetCustomersByMonths(ctx context.Context, req *custome
 		}, nil
 	}
 
-	customers := make([]*customer.CustomerByMonth, 0, len(c))
+	customers := make([]*timestamppb.Timestamp, 0, len(c))
 	for _, v := range c {
-		customers = append(customers, &customer.CustomerByMonth{
-			MonthInterval: timestamppb.New(v.MonthInterval),
-			RecordCount:   v.RecordCount,
-		})
+		customers = append(customers, timestamppb.New(v))
 	}
 
 	fmt.Println("Customer Service :  GetCustomersByMonths - SUCCESS")
 	return &customer.GetCustomersByMonthsResponse{
-		Customers: customers,
+		CreatedAt: customers,
 		Status:    http.StatusOK,
 	}, nil
 }

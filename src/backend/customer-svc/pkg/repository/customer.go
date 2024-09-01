@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	db "github.com/EdoRguez/business-manager/customer-svc/pkg/db/sqlc"
 )
@@ -97,13 +98,13 @@ func (clientRepo *CustomerRepo) DeleteCustomer(ctx context.Context, id int64) er
 	return err
 }
 
-func (clientRepo *CustomerRepo) GetCustomersByMonths(ctx context.Context, companyID int64) ([]db.GetCustomersByMonthsRow, error) {
-	var result []db.GetCustomersByMonthsRow
+func (clientRepo *CustomerRepo) GetCustomersByMonths(ctx context.Context, arg db.GetCustomersByMonthsParams) ([]time.Time, error) {
+	var result []time.Time
 
 	err := clientRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
 
-		result, err = q.GetCustomersByMonths(ctx, companyID)
+		result, err = q.GetCustomersByMonths(ctx, arg)
 		if err != nil {
 			return err
 		}

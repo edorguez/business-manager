@@ -15,9 +15,11 @@ import (
 func GetCustomersByMonths(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	companyId := query_params.GetId("companyId", r)
+	months := query_params.GetId("months", r)
 
 	params := &pb.GetCustomersByMonthsRequest{
 		CompanyId: companyId,
+		Months:    int32(months),
 	}
 
 	if err := client.InitCustomerServiceClient(c); err != nil {

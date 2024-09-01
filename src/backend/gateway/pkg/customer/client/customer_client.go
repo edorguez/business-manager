@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
@@ -158,13 +159,24 @@ func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contrac
 	return cr, nil
 }
 
-func GetCustomersByMonths(params *pb.GetCustomersByMonthsRequest, c context.Context) ([]*contracts.GetCustomerByMonthsResponse, *contracts.Error) {
+func GetCustomersByMonths(params *pb.GetCustomersByMonthsRequest, c context.Context) (*contracts.GetCustomerByMonthsResponse, *contracts.Error) {
 	fmt.Println("Customer CLIENT :  GetCustomerByMonths")
+
+	fmt.Println(params)
 
 	if params.CompanyId <= 0 {
 		error := &contracts.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Company ID is required in order to get results",
+		}
+
+		return nil, error
+	}
+
+	if params.Months <= 0 {
+		error := &contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Months number is required in order to get results",
 		}
 
 		return nil, error
@@ -193,16 +205,17 @@ func GetCustomersByMonths(params *pb.GetCustomersByMonthsRequest, c context.Cont
 		return nil, error
 	}
 
-	cr := make([]*contracts.GetCustomerByMonthsResponse, 0, len(res.Customers))
-	for _, v := range res.Customers {
-		cr = append(cr, &contracts.GetCustomerByMonthsResponse{
-			MonthInterval: v.MonthInterval.AsTime(),
-			RecordCount:   v.RecordCount,
-		})
+	cr := make([]time.Time, 0, len(res.CreatedAt))
+	for _, v := range res.CreatedAt {
+		cr = append(cr, v.AsTime())
+	}
+
+	result := &contracts.GetCustomerByMonthsResponse{
+		Dates: cr,
 	}
 
 	fmt.Println("Customer CLIENT :  GetCustomersByMonths - SUCCESS")
-	return cr, nil
+	return result, nil
 }
 
 func UpdateCustomer(id int64, body contracts.UpdateCustomerRequest, c context.Context) (*pb.UpdateCustomerResponse, *contracts.Error) {

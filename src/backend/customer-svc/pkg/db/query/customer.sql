@@ -81,13 +81,11 @@ WHERE
 
 -- name: GetCustomersByMonths :many
 SELECT 
-    DATE_TRUNC('month', created_at)::timestamp AS month_interval,
-    COUNT(*) AS record_count
+    created_at
 FROM 
     customer.customer
 WHERE
-  @company_id = 0 OR company_id = @company_id
-GROUP BY 
-    month_interval
-ORDER BY 
-    month_interval;
+  (@company_id = 0 OR company_id = @company_id) AND
+  (created_at >  CURRENT_DATE - (sqlc.arg(months)::int * INTERVAL '1 MONTH'))
+ORDER BY
+  created_at;

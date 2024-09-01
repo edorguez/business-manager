@@ -192,36 +192,34 @@ func (q *Queries) GetCustomers(ctx context.Context, arg GetCustomersParams) ([]C
 
 const getCustomersByMonths = `-- name: GetCustomersByMonths :many
 SELECT 
-    DATE_TRUNC('month', created_at)::timestamp AS month_interval,
-    COUNT(*) AS record_count
+    created_at
 FROM 
     customer.customer
 WHERE
-  $1 = 0 OR company_id = $1
-GROUP BY 
-    month_interval
-ORDER BY 
-    month_interval
+  ($1 = 0 OR company_id = $1) AND
+  (created_at >  CURRENT_DATE - ($2::int * INTERVAL '1 MONTH'))
+ORDER BY
+  created_at
 `
 
-type GetCustomersByMonthsRow struct {
-	MonthInterval time.Time `json:"month_interval"`
-	RecordCount   int64     `json:"record_count"`
+type GetCustomersByMonthsParams struct {
+	CompanyID interface{} `json:"company_id"`
+	Months    int32       `json:"months"`
 }
 
-func (q *Queries) GetCustomersByMonths(ctx context.Context, companyID interface{}) ([]GetCustomersByMonthsRow, error) {
-	rows, err := q.db.QueryContext(ctx, getCustomersByMonths, companyID)
+func (q *Queries) GetCustomersByMonths(ctx context.Context, arg GetCustomersByMonthsParams) ([]time.Time, error) {
+	rows, err := q.db.QueryContext(ctx, getCustomersByMonths, arg.CompanyID, arg.Months)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetCustomersByMonthsRow{}
+	items := []time.Time{}
 	for rows.Next() {
-		var i GetCustomersByMonthsRow
-		if err := rows.Scan(&i.MonthInterval, &i.RecordCount); err != nil {
+		var created_at time.Time
+		if err := rows.Scan(&created_at); err != nil {
 			return nil, err
 		}
-		items = append(items, i)
+		items = append(items, created_at)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err
