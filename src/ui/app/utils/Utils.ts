@@ -1,5 +1,6 @@
 import resolveConfig from "tailwindcss/resolveConfig";
 import config from "../../tailwind.config";
+import dayjs from "dayjs";
 
 export const tailwindConfig = () => {
   // Tailwind config
@@ -22,9 +23,29 @@ export const hexToRGB = (h: any) => {
   return `${+r},${+g},${+b}`;
 };
 
-export const formatValue = (value: any) => Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  maximumSignificantDigits: 3,
-  notation: 'compact',
-}).format(value);
+export const formatValue = (value: any) =>
+  Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumSignificantDigits: 3,
+    notation: "compact",
+  }).format(value);
+
+export const formatTitleValue = (value: any): string => {
+  if (dayjs(value).isValid()) {
+    return dayjs(value).format("DD/MM/YYYY");
+  }
+
+  return value;
+};
+
+export const convertToTimezone = (date: Date, targetTimezoneOffset: number) => {
+  // Get the timezone offset for the original date (in minutes)
+  const originalTimezoneOffset = date.getTimezoneOffset();
+  // Calculate the difference in timezone offsets
+  const offsetDifference = targetTimezoneOffset - originalTimezoneOffset;
+  // Create a new date adjusted by the difference
+  const targetDate = new Date(date.getTime() + offsetDifference * 60000);
+
+  return targetDate;
+}

@@ -4,7 +4,7 @@ import LineChartSimple from "../charts/LineChartSimple";
 import { hexToRGB, tailwindConfig } from "@/app/utils/Utils";
 
 interface SimpleLineChartCardProps {
-  labels: string[],
+  labels: any[],
   data: any[]
 }
 

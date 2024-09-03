@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { chartColors } from "./ChartjsConfig";
-import { Chart, Filler, LineController, LineElement, LinearScale, PointElement, TimeScale, Tooltip } from "chart.js";
-import { formatValue } from "@/app/utils/Utils";
+import { Chart, ChartData, Filler, LineController, LineElement, LinearScale, PointElement, TimeScale, Tooltip, TooltipItem } from "chart.js";
+import { formatTitleValue, formatValue } from "@/app/utils/Utils";
 import 'chartjs-adapter-moment';
 
 interface LineChartSimpleProps {
@@ -30,6 +30,7 @@ const LineChartSimple: React.FC<LineChartSimpleProps> = ({
       type: "line",
       data: data,
       options: {
+        backgroundColor: chartAreaBg.light,
         // chartArea: {
         //   backgroundColor: chartAreaBg.dark,
         // },
@@ -53,8 +54,16 @@ const LineChartSimple: React.FC<LineChartSimpleProps> = ({
         plugins: {
           tooltip: {
             callbacks: {
+              title: (tooltipItems: TooltipItem<'line'>[]): string => {
+                // Access the first tooltip item
+                const tooltipItem: any = tooltipItems[0];
+                // Use the label from the data
+                const label = tooltipItem.label;
+                // Return your custom title
+                return formatTitleValue(label);
+            },
               //title: () => false, // Disable tooltip title
-              label: (context) => formatValue(context.parsed.y),
+              // label: (context) => formatValue(context.parsed.y),
             },
             bodyColor: tooltipBodyColor.dark,
             backgroundColor: tooltipBgColor.dark,

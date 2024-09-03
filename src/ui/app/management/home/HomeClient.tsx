@@ -10,38 +10,64 @@ import SimpleLineChartCard from "@/app/components/cards/SimpleLineChartCard";
 import useLoading from "@/app/hooks/useLoading";
 import { CurrentUser } from "@/app/types/auth";
 import { CustomerByMonth, CustomerMonths } from "@/app/types/customer";
+import { convertToTimezone, formatTitleValue } from "@/app/utils/Utils";
+import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 
 const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
+  let now: Date = new Date();
+
+  const array30Days: Date[] = Array.from({ length: 30 }, (_, days) => {
+    let day = new Date(now) // clone "now"
+    day.setDate(now.getDate() - days) // change the date
+    // let format = dayjs(day).format('DD/MM/YYYY');
+    return day;
+  });
+
+  const array60Days: Date[] = Array.from({ length: 60 }, (_, days) => {
+    let day = new Date(now) // clone "now"
+    day.setDate(now.getDate() - days) // change the date
+    // let format = dayjs(day).format('DD/MM/YYYY');
+    return day;
+  });
+
+  const array90Days: Date[] = Array.from({ length: 90 }, (_, days) => {
+    let day = new Date(now) // clone "now"
+    day.setDate(now.getDate() - days) // change the date
+    // let format = dayjs(day).format('DD/MM/YYYY');
+    return day;
+  });
+
   let result: CustomerMonths = {
     oneMonth: {
-      labels: [],
-      data: []
+      labels: array30Days,
+      data: Array(30).fill(0)
     },
     twoMonths: {
-      labels: [],
-      data: []
+      labels: array60Days ,
+      data: Array(60).fill(0)
     },
     threeMonths: {
-      labels: [],
-      data: []
+      labels: array90Days,
+      data: Array(90).fill(0)
     },
   };
 
   for (let key in dates) {
-    // Transform date depending on user's timezone
     let baseDate: Date = new Date(dates[key]);
-    let timeOffsetInMS: number = new Date().getTimezoneOffset() * 60000;
-    baseDate.setTime(baseDate.getTime() + timeOffsetInMS);
+    convertToTimezone(baseDate, new Date().getTimezoneOffset());
 
     const currentUserMonth: number = new Date().getMonth();
 
     if (baseDate.getMonth() === currentUserMonth) {
-      result.oneMonth.data.push(baseDate);
+      const idx: number = array30Days.findIndex(x => x.toLocaleDateString() === baseDate.toLocaleDateString());
+      result.oneMonth.data[idx] += 1;
     } else if (baseDate.getMonth() === currentUserMonth - 1) {
-      result.twoMonths.data.push(baseDate);
+      const idx: number = array60Days.findIndex(x => x.toLocaleDateString() === baseDate.toLocaleDateString());
+      result.twoMonths.data[idx] += 1;
     } else if (baseDate.getMonth() === currentUserMonth - 2) {
-      result.threeMonths.data.push(baseDate);
+      const idx: number = array90Days.findIndex(x => x.toLocaleDateString() === baseDate.toLocaleDateString());
+      result.threeMonths.data[idx] += 1;
     }
   }
 
