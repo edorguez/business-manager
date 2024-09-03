@@ -20,21 +20,18 @@ const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
   const array30Days: Date[] = Array.from({ length: 30 }, (_, days) => {
     let day = new Date(now) // clone "now"
     day.setDate(now.getDate() - days) // change the date
-    // let format = dayjs(day).format('DD/MM/YYYY');
     return day;
   });
 
   const array60Days: Date[] = Array.from({ length: 60 }, (_, days) => {
     let day = new Date(now) // clone "now"
     day.setDate(now.getDate() - days) // change the date
-    // let format = dayjs(day).format('DD/MM/YYYY');
     return day;
   });
 
   const array90Days: Date[] = Array.from({ length: 90 }, (_, days) => {
     let day = new Date(now) // clone "now"
     day.setDate(now.getDate() - days) // change the date
-    // let format = dayjs(day).format('DD/MM/YYYY');
     return day;
   });
 
