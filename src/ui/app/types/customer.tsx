@@ -62,7 +62,7 @@ export type DeleteCustomer = {
 }
 
 export type CustomerMonths = {
-  oneMonth: { labels: Date[], data: number[] };
-  twoMonths: { labels: Date[], data: number[] };
-  threeMonths: { labels: Date[], data: number[] };
+  oneMonth: { labels: Date[], data: number[], total: number };
+  twoMonths: { labels: Date[], data: number[], total: number };
+  threeMonths: { labels: Date[], data: number[], total: number };
 }

@@ -5,12 +5,18 @@ import { hexToRGB, tailwindConfig } from "@/app/utils/Utils";
 
 interface SimpleLineChartCardProps {
   labels: any[],
-  data: any[]
+  data: any[],
+  title: string,
+  subtitle: string,
+  total: string
 }
 
 const SimpleLineChartCard: React.FC<SimpleLineChartCardProps> = ({
   labels,
-  data
+  data,
+  title,
+  subtitle,
+  total
 }) => {
   const chartData = {
     labels: labels,
@@ -63,18 +69,18 @@ const SimpleLineChartCard: React.FC<SimpleLineChartCardProps> = ({
     <div className="bg-white shadow-lg rounded-md">
       <div className="px-5 pt-5">
         <h2 className="text-md font-semibold text-maincolor mb-2">
-          Acme Plus
+          {title}
         </h2>
         <div className="text-xs font-semibold text-black uppercase mb-1">
-          Sales
+          {subtitle}
         </div>
         <div className="flex items-start">
           <div className="text-2xl font-bold text-black mr-2">
-            $24,780
+            {total}
           </div>
-          <div className="text-sm font-semibold text-white px-1.5 bg-emerald-500 rounded-full">
+          {/* <div className="text-sm font-semibold text-white px-1.5 bg-emerald-500 rounded-full">
             +49%
-          </div>
+          </div> */}
         </div>
       </div>
       {/* Chart built with Chart.js 3 */}

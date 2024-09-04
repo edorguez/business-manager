@@ -40,7 +40,7 @@ const LineChartSimple: React.FC<LineChartSimpleProps> = ({
         scales: {
           y: {
             display: false,
-            beginAtZero: true,
+            beginAtZero: false,
           },
           x: {
             type: "time",

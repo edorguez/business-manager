@@ -3,15 +3,12 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { GetCustomersByMonthsRequest } from "@/app/api/customers/route";
 import WelcomeBanner from "@/app/components/banners/WelcomeBanner";
-import BarChartCard from "@/app/components/cards/BarChartCard";
-import DoughnutChartCard from "@/app/components/cards/DoughnutChartCard";
 import ListCard from "@/app/components/cards/ListCard";
 import SimpleLineChartCard from "@/app/components/cards/SimpleLineChartCard";
 import useLoading from "@/app/hooks/useLoading";
 import { CurrentUser } from "@/app/types/auth";
 import { CustomerByMonth, CustomerMonths } from "@/app/types/customer";
 import { convertToTimezone, formatTitleValue } from "@/app/utils/Utils";
-import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 
 const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
@@ -38,15 +35,18 @@ const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
   let result: CustomerMonths = {
     oneMonth: {
       labels: array30Days,
-      data: Array(30).fill(0)
+      data: Array(30).fill(0),
+      total: 0
     },
     twoMonths: {
       labels: array60Days ,
-      data: Array(60).fill(0)
+      data: Array(60).fill(0),
+      total: 0
     },
     threeMonths: {
       labels: array90Days,
-      data: Array(90).fill(0)
+      data: Array(90).fill(0),
+      total: 0
     },
   };
 
@@ -58,13 +58,16 @@ const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
 
     if (baseDate.getMonth() === currentUserMonth) {
       const idx: number = array30Days.findIndex(x => x.toLocaleDateString() === baseDate.toLocaleDateString());
-      result.oneMonth.data[idx] += 1;
+      result.oneMonth.data[idx]++;
+      result.oneMonth.total++;
     } else if (baseDate.getMonth() === currentUserMonth - 1) {
       const idx: number = array60Days.findIndex(x => x.toLocaleDateString() === baseDate.toLocaleDateString());
       result.twoMonths.data[idx] += 1;
+      result.twoMonths.total++;
     } else if (baseDate.getMonth() === currentUserMonth - 2) {
       const idx: number = array90Days.findIndex(x => x.toLocaleDateString() === baseDate.toLocaleDateString());
       result.threeMonths.data[idx] += 1;
+      result.threeMonths.total++;
     }
   }
 
@@ -100,9 +103,9 @@ const HomeClient = () => {
 
       {customerMonths && customerMonthsLabels && (
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <SimpleLineChartCard data={customerMonths.threeMonths.data} labels={customerMonths.threeMonths.labels}/>
-          <SimpleLineChartCard data={customerMonths.twoMonths.data} labels={customerMonths.twoMonths.labels} />
-          <SimpleLineChartCard data={customerMonths.oneMonth.data} labels={customerMonths.oneMonth.labels} />
+          <SimpleLineChartCard data={customerMonths.threeMonths.data} labels={customerMonths.threeMonths.labels} title="3 Meses" subtitle="Clientes" total={customerMonths.threeMonths.total.toString()}/>
+          <SimpleLineChartCard data={customerMonths.twoMonths.data} labels={customerMonths.twoMonths.labels} title="2 Meses" subtitle="Clientes" total={customerMonths.twoMonths.total.toString()} />
+          <SimpleLineChartCard data={customerMonths.oneMonth.data} labels={customerMonths.oneMonth.labels} title="1 Mes" subtitle="Clientes" total={customerMonths.oneMonth.total.toString()} />
         </div>
       )}
 

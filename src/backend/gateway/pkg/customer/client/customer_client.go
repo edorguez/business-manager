@@ -162,8 +162,6 @@ func GetCustomers(params *pb.GetCustomersRequest, c context.Context) ([]*contrac
 func GetCustomersByMonths(params *pb.GetCustomersByMonthsRequest, c context.Context) (*contracts.GetCustomerByMonthsResponse, *contracts.Error) {
 	fmt.Println("Customer CLIENT :  GetCustomerByMonths")
 
-	fmt.Println(params)
-
 	if params.CompanyId <= 0 {
 		error := &contracts.Error{
 			Status: http.StatusBadRequest,
