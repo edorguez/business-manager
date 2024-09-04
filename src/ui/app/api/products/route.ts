@@ -1,4 +1,4 @@
-import { ChangeStatusProduct, CreateProduct, DeleteProduct, EditProduct, GetProduct, GetProducts } from "@/app/types/product";
+import { ChangeStatusProduct, CreateProduct, DeleteProduct, EditProduct, GetLatestProducts, GetProduct, GetProducts } from "@/app/types/product";
 
 const baseUrl: string = 'http://localhost:3001/api/products';
 
@@ -96,6 +96,29 @@ export async function GetProductsRequest(
       sku: request.sku.trim(),
       limit: request.limit.toString(),
       offset: request.offset.toString()
+    }).toString(), {
+      method: 'GET',
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
+}
+
+export async function GetLatestProductsRequest(
+  request: GetLatestProducts
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    const res = await fetch(`${baseUrl}/latest?` + new URLSearchParams({
+      companyId: request.companyId.toString(),
+      limit: request.limit.toString(),
     }).toString(), {
       method: 'GET',
       headers: headers,

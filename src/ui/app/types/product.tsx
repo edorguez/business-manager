@@ -44,6 +44,11 @@ export type GetProducts = {
   offset: number;
 }
 
+export type GetLatestProducts = {
+  companyId: number;
+  limit: number;
+}
+
 export type SearchProduct = {
   name: string;
   sku: string;

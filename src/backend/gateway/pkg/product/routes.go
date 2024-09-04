@@ -27,6 +27,7 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 	mw := MiddlewareConfig{}
 
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/latest", cr.GetLatestProducts)
 	getRouter.HandleFunc("/{id}", cr.GetProduct)
 	getRouter.HandleFunc("", cr.GetProducts)
 
@@ -59,6 +60,11 @@ func (cr *ProductRoutes) GetProduct(w http.ResponseWriter, r *http.Request) {
 func (cr *ProductRoutes) GetProducts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  GetProducts Called --> 1")
 	routes.GetProducts(w, r, cr.config)
+}
+
+func (cr *ProductRoutes) GetLatestProducts(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetLatestProducts Called --> 1")
+	routes.GetLatestProducts(w, r, cr.config)
 }
 
 func (cr *ProductRoutes) UpdateProduct(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
@@ -90,7 +89,35 @@ func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProducts
 		}
 	}
 
-	fmt.Println(query)
+	cursor, err := collection.Find(ctx, query, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(context.Background()) {
+		var product models.GetProduct
+		cursor.Decode(&product)
+		result = append(result, product)
+	}
+
+	return result, nil
+}
+
+type GetLatestProductsParams struct {
+	CompanyId int64
+	Limit     int32
+}
+
+func (productRepo *ProductRepo) GetLatestProducts(ctx context.Context, arg GetLatestProductsParams) ([]models.GetProduct, error) {
+	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+
+	var result []models.GetProduct
+	options := options.Find().SetLimit(int64(arg.Limit)).SetSort(bson.D{{Key: "createdAt", Value: -1}})
+
+	query := bson.M{
+		"companyId": arg.CompanyId,
+	}
 
 	cursor, err := collection.Find(ctx, query, options)
 	if err != nil {

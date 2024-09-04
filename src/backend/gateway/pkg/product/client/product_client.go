@@ -72,9 +72,6 @@ func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *c
 
 	res, err := productServiceClient.GetProduct(c, params)
 
-	fmt.Println("product clinet")
-	fmt.Println(res)
-
 	if err != nil {
 		fmt.Println("Product CLIENT :  GetProduct - ERROR")
 		fmt.Println(err.Error())
@@ -125,6 +122,60 @@ func GetProducts(params *pb.GetProductsRequest, c context.Context) ([]*contracts
 
 	if err != nil {
 		fmt.Println("Product CLIENT :  GetProducts - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	if res.Status != http.StatusOK {
+		error := &contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		}
+
+		return nil, error
+	}
+
+	pr := make([]*contracts.GetProductResponse, 0, len(res.Products))
+	for _, v := range res.Products {
+		pr = append(pr, &contracts.GetProductResponse{
+			Id:            v.Id,
+			CompanyId:     v.CompanyId,
+			Name:          v.Name,
+			Description:   v.Description,
+			Sku:           v.Sku,
+			Quantity:      v.Quantity,
+			Price:         v.Price,
+			Images:        v.Images,
+			ProductStatus: v.ProductStatus,
+		})
+	}
+
+	fmt.Println("Product CLIENT :  GetProducts - SUCCESS")
+	return pr, nil
+}
+
+func GetLatestProducts(params *pb.GetLatestProductsRequest, c context.Context) ([]*contracts.GetProductResponse, *contracts.Error) {
+	fmt.Println("Product CLIENT :  GetLatestProduct")
+
+	if params.CompanyId <= 0 {
+		error := &contracts.Error{
+			Status: http.StatusBadRequest,
+			Error:  "Company ID is required in order to get results",
+		}
+
+		return nil, error
+	}
+
+	res, err := productServiceClient.GetLatestProducts(c, params)
+
+	if err != nil {
+		fmt.Println("Product CLIENT :  GetLatestProducts - ERROR")
 		fmt.Println(err.Error())
 
 		error := &contracts.Error{

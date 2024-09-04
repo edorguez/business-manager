@@ -54,7 +54,7 @@ const ProductsClient = () => {
       name: "precio",
       type: ColumnType.Money
     },
-  ]
+  ];
 
   const { push } = useRouter();
   const isLoading = useLoading();
@@ -95,7 +95,7 @@ const ProductsClient = () => {
   const handleChangePage = (val: string) => {
     setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
   }
-  
+
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setSearchProduct((prevData) => ({ ...prevData, [name]: value }));

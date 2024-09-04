@@ -2,26 +2,46 @@
 
 import { useEffect, useRef, useState } from "react";
 import { chartColors } from "./ChartjsConfig";
-import { Chart, ChartData, Filler, LineController, LineElement, LinearScale, PointElement, TimeScale, Tooltip, TooltipItem } from "chart.js";
+import {
+  Chart,
+  ChartData,
+  Filler,
+  LineController,
+  LineElement,
+  LinearScale,
+  PointElement,
+  TimeScale,
+  Tooltip,
+  TooltipItem,
+} from "chart.js";
 import { formatTitleValue, formatValue } from "@/app/utils/Utils";
-import 'chartjs-adapter-moment';
+import "chartjs-adapter-moment";
 
 interface LineChartSimpleProps {
-  data: any,
-  width: number,
-  height: number
+  data: any;
+  width: number;
+  height: number;
 }
 
-Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip);
+Chart.register(
+  LineController,
+  LineElement,
+  Filler,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Tooltip
+);
 
 const LineChartSimple: React.FC<LineChartSimpleProps> = ({
   data,
   width,
-  height
+  height,
 }) => {
   const [chart, setChart] = useState<any>(null);
   const canvas = useRef(null);
-  const { tooltipBodyColor, tooltipBgColor, tooltipBorderColor, chartAreaBg } = chartColors;
+  const { tooltipBodyColor, tooltipBgColor, tooltipBorderColor, chartAreaBg } =
+    chartColors;
 
   useEffect(() => {
     const ctx: any = canvas.current;
@@ -54,14 +74,14 @@ const LineChartSimple: React.FC<LineChartSimpleProps> = ({
         plugins: {
           tooltip: {
             callbacks: {
-              title: (tooltipItems: TooltipItem<'line'>[]): string => {
+              title: (tooltipItems: TooltipItem<"line">[]): string => {
                 // Access the first tooltip item
                 const tooltipItem: any = tooltipItems[0];
                 // Use the label from the data
                 const label = tooltipItem.label;
                 // Return your custom title
                 return formatTitleValue(label);
-            },
+              },
               //title: () => false, // Disable tooltip title
               // label: (context) => formatValue(context.parsed.y),
             },

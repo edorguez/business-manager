@@ -142,6 +142,49 @@ func (s *ProductService) GetProducts(ctx context.Context, req *product.GetProduc
 	}, nil
 }
 
+func (s *ProductService) GetLatestProducts(ctx context.Context, req *product.GetLatestProductsRequest) (*product.GetLatestProductsResponse, error) {
+	fmt.Println("Product Service :  GetLatestProducts")
+	fmt.Println("Product Service :  GetLatestProducts - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	params := repo.GetLatestProductsParams{
+		CompanyId: req.CompanyId,
+		Limit:     req.Limit,
+	}
+
+	p, err := s.Repo.GetLatestProducts(ctx, params)
+	if err != nil {
+		fmt.Println("Product Service :  GetLatestProducts - ERROR")
+		fmt.Println(err.Error())
+		return &product.GetLatestProductsResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	products := make([]*product.GetProductResponse, 0, len(p))
+	for _, v := range p {
+		products = append(products, &product.GetProductResponse{
+			Id:            v.Id.Hex(),
+			CompanyId:     v.CompanyId,
+			Name:          v.Name,
+			Description:   v.Description,
+			Sku:           v.Sku,
+			Quantity:      v.Quantity,
+			Price:         v.Price,
+			Images:        v.Images,
+			ProductStatus: v.ProductStatus,
+		})
+	}
+
+	fmt.Println("Product Service :  GetLatestProducts - SUCCESS")
+	return &product.GetLatestProductsResponse{
+		Products: products,
+		Status:   http.StatusOK,
+	}, nil
+}
+
 func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateProductRequest) (*product.UpdateProductResponse, error) {
 	fmt.Println("Product Service :  UpdateProduct")
 	fmt.Println("Product Service :  UpdateProduct - Req")

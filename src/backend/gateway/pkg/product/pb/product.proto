@@ -8,6 +8,7 @@ service ProductService{
   rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
   rpc GetProducts(GetProductsRequest) returns (GetProductsResponse);
+  rpc GetLatestProducts(GetLatestProductsRequest) returns (GetLatestProductsResponse);
   rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
   rpc UpdateProductStatus(UpdateProductStatusRequest) returns (UpdateProductStatusResponse);
   rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
@@ -57,6 +58,17 @@ message GetProductsRequest{
 }
 
 message GetProductsResponse{
+  repeated GetProductResponse products = 1;
+  int64 status = 2;
+  string error = 3;
+}
+
+message GetLatestProductsRequest{
+  int64 companyId = 1;
+  int32 limit = 2;
+}
+
+message GetLatestProductsResponse{
   repeated GetProductResponse products = 1;
   int64 status = 2;
   string error = 3;

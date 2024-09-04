@@ -21,8 +21,6 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateProduct(next http.Handler) ht
 			return
 		}
 
-		fmt.Println("beamos")
-
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateProduct")
