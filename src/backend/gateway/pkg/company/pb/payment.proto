@@ -8,6 +8,7 @@ service PaymentService{
   rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
   rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
   rpc GetPayments(GetPaymentsRequest) returns (GetPaymentsResponse);
+  rpc GetPaymentsTypes(GetPaymentsTypesRequest) returns (GetPaymentsTypesResponse);
   rpc UpdatePayment(UpdatePaymentRequest) returns (UpdatePaymentResponse);
   rpc UpdatePaymentStatus(UpdatePaymentStatusRequest) returns (UpdatePaymentStatusResponse);
   rpc DeletePayment(DeletePaymentRequest) returns (DeletePaymentResponse);
@@ -71,6 +72,24 @@ message GetPaymentsResponse{
   repeated GetPaymentResponse payments = 1;
   int64 status = 2;
   string error = 3;
+}
+
+message GetPaymentsTypesRequest{
+  int64 companyId = 1;
+}
+
+message GetPaymentsTypesResponse{
+  repeated PaymentType paymentsTypes = 1;
+  int64 status = 2;
+  string error = 3;
+}
+
+message PaymentType {
+  int64 id = 1;
+  int64 companyId = 2;
+  int64 paymentTypeId = 11;
+  GetChildPaymentTypeResponse paymentType = 12;
+  bool isActive = 13;
 }
 
 message UpdatePaymentRequest{

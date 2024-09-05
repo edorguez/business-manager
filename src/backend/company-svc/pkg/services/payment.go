@@ -148,10 +148,47 @@ func (s *PaymentService) GetPayments(ctx context.Context, req *payment.GetPaymen
 	}
 
 	fmt.Println("Payment Service :  GetPayments - SUCCESS")
-	fmt.Println(payments)
 	return &payment.GetPaymentsResponse{
 		Payments: payments,
 		Status:   http.StatusOK,
+	}, nil
+}
+
+func (s *PaymentService) GetPaymentsTypes(ctx context.Context, req *payment.GetPaymentsTypesRequest) (*payment.GetPaymentsTypesResponse, error) {
+	fmt.Println("Payment Service :  GetPaymentsTypes")
+	fmt.Println("Payment Service :  GetPaymentsTypes - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	p, err := s.Repo.GetPaymentsTypes(ctx, req.CompanyId)
+	if err != nil {
+		fmt.Println("Payment Service :  GetPaymentsTypes - ERROR")
+		fmt.Println(err.Error())
+		return &payment.GetPaymentsTypesResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	payments := make([]*payment.PaymentType, 0, len(p))
+	for _, v := range p {
+		payments = append(payments, &payment.PaymentType{
+			Id:            v.ID,
+			CompanyId:     v.CompanyID,
+			PaymentTypeId: v.PaymentTypeID,
+			IsActive:      v.IsActive,
+			PaymentType: &payment.GetChildPaymentTypeResponse{
+				Id:        v.CompanyPaymentType.ID,
+				Name:      v.CompanyPaymentType.Name,
+				ImagePath: type_converter.NewString(v.CompanyPaymentType.ImagePath),
+			},
+		})
+	}
+
+	fmt.Println("Payment Service :  GetPaymentsTypes - SUCCESS")
+	return &payment.GetPaymentsTypesResponse{
+		PaymentsTypes: payments,
+		Status:        http.StatusOK,
 	}, nil
 }
 

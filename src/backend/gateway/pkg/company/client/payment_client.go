@@ -170,6 +170,50 @@ func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts
 	return pr, nil
 }
 
+func GetPaymentsTypes(params *pb.GetPaymentsTypesRequest, c context.Context) ([]*contracts.GetPaymentsTypesResponse, *contracts.Error) {
+	fmt.Println("Payment CLIENT :  GetPaymentsTypes")
+
+	res, err := paymentServiceClient.GetPaymentsTypes(c, params)
+
+	if err != nil {
+		fmt.Println("Payment CLIENT :  GetPaymentsTypes - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+		return nil, error
+	}
+
+	if res.Status != http.StatusOK {
+		error := &contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		}
+
+		return nil, error
+	}
+
+	pr := make([]*contracts.GetPaymentsTypesResponse, 0, len(res.PaymentsTypes))
+	for _, v := range res.PaymentsTypes {
+		pr = append(pr, &contracts.GetPaymentsTypesResponse{
+			Id:            v.Id,
+			CompanyId:     v.CompanyId,
+			PaymentTypeId: v.PaymentTypeId,
+			IsActive:      v.IsActive,
+			PaymentType: &contracts.GetPaymentTypeResponse{
+				Id:        v.PaymentType.Id,
+				Name:      v.PaymentType.Name,
+				ImagePath: v.PaymentType.ImagePath,
+			},
+		})
+	}
+
+	fmt.Println("Payment CLIENT :  GetPaymentsTypes - SUCCESS")
+	return pr, nil
+}
+
 func UpdatePayment(id int64, body contracts.UpdatePaymentRequest, c context.Context) (*pb.UpdatePaymentResponse, *contracts.Error) {
 	fmt.Println("Payment CLIENT :  UpdatePayment")
 

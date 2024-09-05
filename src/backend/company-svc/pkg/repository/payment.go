@@ -67,6 +67,23 @@ func (paymentRepo *PaymentRepo) GetPayments(ctx context.Context, arg db.GetPayme
 	return result, err
 }
 
+func (paymentRepo *PaymentRepo) GetPaymentsTypes(ctx context.Context, companyID int64) ([]db.GetPaymentsTypesRow, error) {
+	var result []db.GetPaymentsTypesRow
+
+	err := paymentRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.GetPaymentsTypes(ctx, companyID)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
 func (paymentRepo *PaymentRepo) UpdatePayment(ctx context.Context, arg db.UpdatePaymentParams) (db.CompanyPayment, error) {
 	var result db.CompanyPayment
 

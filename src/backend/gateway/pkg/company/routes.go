@@ -61,6 +61,7 @@ func loadPaymentRoutes(router *mux.Router, c *config.Config) {
 	mw := MiddlewareConfig{}
 
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/types", cr.GetPaymentsTypes)
 	getRouter.HandleFunc("/{id:[0-9]+}", cr.GetPayment)
 	getRouter.HandleFunc("", cr.GetPayments)
 
@@ -133,6 +134,11 @@ func (cr *CompanyRoutes) GetPayment(w http.ResponseWriter, r *http.Request) {
 func (cr *CompanyRoutes) GetPayments(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  GetPayments Called --> 1")
 	routes.GetPayments(w, r, cr.config)
+}
+
+func (cr *CompanyRoutes) GetPaymentsTypes(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetPaymentsTypes Called --> 1")
+	routes.GetPaymentsTypes(w, r, cr.config)
 }
 
 func (cr *CompanyRoutes) UpdatePayment(w http.ResponseWriter, r *http.Request) {

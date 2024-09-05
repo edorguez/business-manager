@@ -266,6 +266,64 @@ func (q *Queries) GetPayments(ctx context.Context, arg GetPaymentsParams) ([]Get
 	return items, nil
 }
 
+const getPaymentsTypes = `-- name: GetPaymentsTypes :many
+SELECT 
+  P.id,
+  P.company_id,
+  P.payment_type_id,
+  P.is_active,
+  pt.id, pt.name, pt.created_at, pt.modified_at, pt.image_path
+FROM 
+  company.payment AS P
+INNER JOIN 
+  company.payment_type AS PT ON P.payment_type_id = PT.id
+WHERE
+  P.company_id = $1 OR $1 = 0
+ORDER BY 
+  P.id
+`
+
+type GetPaymentsTypesRow struct {
+	ID                 int64              `json:"id"`
+	CompanyID          int64              `json:"company_id"`
+	PaymentTypeID      int64              `json:"payment_type_id"`
+	IsActive           bool               `json:"is_active"`
+	CompanyPaymentType CompanyPaymentType `json:"company_payment_type"`
+}
+
+func (q *Queries) GetPaymentsTypes(ctx context.Context, companyID int64) ([]GetPaymentsTypesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPaymentsTypes, companyID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetPaymentsTypesRow{}
+	for rows.Next() {
+		var i GetPaymentsTypesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.CompanyID,
+			&i.PaymentTypeID,
+			&i.IsActive,
+			&i.CompanyPaymentType.ID,
+			&i.CompanyPaymentType.Name,
+			&i.CompanyPaymentType.CreatedAt,
+			&i.CompanyPaymentType.ModifiedAt,
+			&i.CompanyPaymentType.ImagePath,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updatePayment = `-- name: UpdatePayment :one
 UPDATE 
   company.payment

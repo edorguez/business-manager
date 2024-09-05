@@ -25,6 +25,7 @@ type PaymentServiceClient interface {
 	CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error)
 	GetPayment(ctx context.Context, in *GetPaymentRequest, opts ...grpc.CallOption) (*GetPaymentResponse, error)
 	GetPayments(ctx context.Context, in *GetPaymentsRequest, opts ...grpc.CallOption) (*GetPaymentsResponse, error)
+	GetPaymentsTypes(ctx context.Context, in *GetPaymentsTypesRequest, opts ...grpc.CallOption) (*GetPaymentsTypesResponse, error)
 	UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error)
 	UpdatePaymentStatus(ctx context.Context, in *UpdatePaymentStatusRequest, opts ...grpc.CallOption) (*UpdatePaymentStatusResponse, error)
 	DeletePayment(ctx context.Context, in *DeletePaymentRequest, opts ...grpc.CallOption) (*DeletePaymentResponse, error)
@@ -65,6 +66,15 @@ func (c *paymentServiceClient) GetPayments(ctx context.Context, in *GetPaymentsR
 	return out, nil
 }
 
+func (c *paymentServiceClient) GetPaymentsTypes(ctx context.Context, in *GetPaymentsTypesRequest, opts ...grpc.CallOption) (*GetPaymentsTypesResponse, error) {
+	out := new(GetPaymentsTypesResponse)
+	err := c.cc.Invoke(ctx, "/pb.PaymentService/GetPaymentsTypes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *paymentServiceClient) UpdatePayment(ctx context.Context, in *UpdatePaymentRequest, opts ...grpc.CallOption) (*UpdatePaymentResponse, error) {
 	out := new(UpdatePaymentResponse)
 	err := c.cc.Invoke(ctx, "/pb.PaymentService/UpdatePayment", in, out, opts...)
@@ -99,6 +109,7 @@ type PaymentServiceServer interface {
 	CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error)
 	GetPayment(context.Context, *GetPaymentRequest) (*GetPaymentResponse, error)
 	GetPayments(context.Context, *GetPaymentsRequest) (*GetPaymentsResponse, error)
+	GetPaymentsTypes(context.Context, *GetPaymentsTypesRequest) (*GetPaymentsTypesResponse, error)
 	UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error)
 	UpdatePaymentStatus(context.Context, *UpdatePaymentStatusRequest) (*UpdatePaymentStatusResponse, error)
 	DeletePayment(context.Context, *DeletePaymentRequest) (*DeletePaymentResponse, error)
@@ -117,6 +128,9 @@ func (UnimplementedPaymentServiceServer) GetPayment(context.Context, *GetPayment
 }
 func (UnimplementedPaymentServiceServer) GetPayments(context.Context, *GetPaymentsRequest) (*GetPaymentsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPayments not implemented")
+}
+func (UnimplementedPaymentServiceServer) GetPaymentsTypes(context.Context, *GetPaymentsTypesRequest) (*GetPaymentsTypesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPaymentsTypes not implemented")
 }
 func (UnimplementedPaymentServiceServer) UpdatePayment(context.Context, *UpdatePaymentRequest) (*UpdatePaymentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePayment not implemented")
@@ -194,6 +208,24 @@ func _PaymentService_GetPayments_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PaymentService_GetPaymentsTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPaymentsTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).GetPaymentsTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.PaymentService/GetPaymentsTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).GetPaymentsTypes(ctx, req.(*GetPaymentsTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PaymentService_UpdatePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdatePaymentRequest)
 	if err := dec(in); err != nil {
@@ -266,6 +298,10 @@ var PaymentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPayments",
 			Handler:    _PaymentService_GetPayments_Handler,
+		},
+		{
+			MethodName: "GetPaymentsTypes",
+			Handler:    _PaymentService_GetPaymentsTypes_Handler,
 		},
 		{
 			MethodName: "UpdatePayment",

@@ -73,6 +73,22 @@ LIMIT
   $3
 OFFSET 
   $4;
+  
+-- name: GetPaymentsTypes :many
+SELECT 
+  P.id,
+  P.company_id,
+  P.payment_type_id,
+  P.is_active,
+  sqlc.embed(PT)
+FROM 
+  company.payment AS P
+INNER JOIN 
+  company.payment_type AS PT ON P.payment_type_id = PT.id
+WHERE
+  P.company_id = $1 OR $1 = 0
+ORDER BY 
+  P.id;
 
 -- name: UpdatePayment :one
 UPDATE 
