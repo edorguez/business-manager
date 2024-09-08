@@ -54,6 +54,18 @@ export type GetPayments = {
   offset: number;
 }
 
+export type GetPaymentsTypes = {
+  companyId: number;
+}
+
+export type PaymentTypeChart = {
+  id: number;
+  companyId: number;
+  paymentTypeId: number;
+  isActive: boolean;
+  paymentType: PaymentType;
+}
+
 export type DeletePayment = {
   id: number;
 }

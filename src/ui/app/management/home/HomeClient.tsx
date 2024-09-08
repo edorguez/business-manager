@@ -2,14 +2,17 @@
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { GetCustomersByMonthsRequest } from "@/app/api/customers/route";
+import { GetPaymentsTypesRequest } from "@/app/api/payment/route";
 import { GetLatestProductsRequest } from "@/app/api/products/route";
 import WelcomeBanner from "@/app/components/banners/WelcomeBanner";
+import DoughnutChartCard, { DoughnutChartCardProps } from "@/app/components/cards/DoughnutChartCard";
 import ListCard from "@/app/components/cards/ListCard";
 import SimpleLineChartCard from "@/app/components/cards/SimpleLineChartCard";
 import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
 import useLoading from "@/app/hooks/useLoading";
 import { CurrentUser } from "@/app/types/auth";
 import { CustomerByMonth, CustomerMonths } from "@/app/types/customer";
+import { PaymentTypeChart } from "@/app/types/payment";
 import { Product } from "@/app/types/product";
 import { convertToTimezone, formatTitleValue } from "@/app/utils/Utils";
 import { useCallback, useEffect, useState } from "react";
@@ -83,10 +86,33 @@ const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
   return result;
 };
 
+const formatPaymentsTypes = (payments: PaymentTypeChart[]): DoughnutChartCardProps => {
+  let result: DoughnutChartCardProps = {
+    title: 'Métodos de Pago Populares',
+    labels: [],
+    data: []
+  }
+
+  for(let key in payments) {
+    let paymentTypeName: string = payments[key].paymentType.name;
+
+    if(!result.labels.includes(paymentTypeName)) {
+      result.labels.push(payments[key].paymentType.name);
+      result.data.push(1);
+    } else {
+      let paymentIdx: number = result.labels.indexOf(paymentTypeName);
+      result.data[paymentIdx]++;
+    }
+  }
+
+  return result;
+}
+
 const HomeClient = () => {
   const isLoading = useLoading();
   const [customerMonths, setCustomerMonths] = useState<CustomerMonths>();
   const [products, setProducts] = useState<Product[]>([]);
+  const [paymentsTypes, setPaymentsTypes] = useState<DoughnutChartCardProps>();
 
   const productCols: SimpleTableColumn[] = [
     {
@@ -138,11 +164,25 @@ const HomeClient = () => {
     }
     isLoading.onEndLoading();
   }, []);
+  
+  const getPaymentsTypes = useCallback(async () => {
+    isLoading.onStartLoading();
+    const currentUser: CurrentUser | null = getCurrentUser();
+
+    if (currentUser) {
+      let data: PaymentTypeChart[] = await GetPaymentsTypesRequest({
+        companyId: currentUser.companyId,
+      });
+      setPaymentsTypes(formatPaymentsTypes(data));
+    }
+    isLoading.onEndLoading();
+  }, []);
 
   useEffect(() => {
     getCustomersByMonths();
     getLatestProducts();
-  }, [getCustomersByMonths]);
+    getPaymentsTypes()
+  }, [getCustomersByMonths, getLatestProducts, getPaymentsTypes]);
 
   return (
     <>
@@ -179,7 +219,11 @@ const HomeClient = () => {
       </div> */}
 
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* <DoughnutChartCard /> */}
+        {
+          paymentsTypes && (
+          <DoughnutChartCard title={paymentsTypes.title} labels={paymentsTypes.labels} data={paymentsTypes.data} />
+          )
+        }
         <ListCard title="Últimos Productos" columns={productCols} data={products} />
       </div>
     </>

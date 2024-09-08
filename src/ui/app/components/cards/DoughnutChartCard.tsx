@@ -1,26 +1,36 @@
 "use client";
 
-import { tailwindConfig } from "@/app/utils/Utils";
 import DoughnutChart from "../charts/DoughnutChart";
 
-const DoughnutChartCard = () => {
+export interface DoughnutChartCardProps {
+  title: string;
+  labels: string[];
+  data: number[];
+} 
+
+const DoughnutChartCard: React.FC<DoughnutChartCardProps> = ({
+  title,
+  labels,
+  data
+}) => {
   const chartData = {
-    labels: ["United States", "Italy", "Other"],
+    labels: labels,
     datasets: [
       {
-        label: "Top Countries",
-        data: [35, 30, 35],
+        label: title,
+        data: data,
         backgroundColor: [
-          tailwindConfig().theme.colors.indigo[500],
-          tailwindConfig().theme.colors.blue[400],
-          tailwindConfig().theme.colors.indigo[800],
+          '#14A098',
+          '#CB2D6F',
+          '#501F3A',
+          '#0F292F',
         ],
         hoverBackgroundColor: [
-          tailwindConfig().theme.colors.indigo[600],
-          tailwindConfig().theme.colors.blue[500],
-          tailwindConfig().theme.colors.indigo[900],
+          '#0e716d',
+          '#922050',
+          '#250e1b',
+          '#061113',
         ],
-        borderWidth: 0,
       },
     ],
   };
@@ -29,7 +39,7 @@ const DoughnutChartCard = () => {
     <div className="bg-white shadow-lg rounded-md">
       <header className="px-5 py-4">
         <h2 className="font-semibold text-md text-maincolor">
-          Top Countries
+          { title }
         </h2>
       </header>
       <DoughnutChart data={chartData} width={389} height={260} />

@@ -1,4 +1,4 @@
-import { ChangeStatusPayment, CreatePayment, DeletePayment, EditPayment, GetPayment, GetPayments } from "@/app/types/payment";
+import { ChangeStatusPayment, CreatePayment, DeletePayment, EditPayment, GetPayment, GetPayments, GetPaymentsTypes } from "@/app/types/payment";
 
 const baseUrl: string = 'http://localhost:3001/api/payments';
 
@@ -73,6 +73,28 @@ export async function GetPaymentsRequest(
       paymentTypeId: request.paymentTypeId.toString(),
       limit: request.limit.toString(),
       offset: request.offset.toString()
+    }).toString(), {
+      method: 'GET',
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString());
+  }
+}
+
+export async function GetPaymentsTypesRequest(
+  request: GetPaymentsTypes
+) {
+  try {
+    const headers = new Headers();
+    headers.append("Authorization", <string>localStorage.getItem('token'));
+
+    const res = await fetch(`${baseUrl}/types?` + new URLSearchParams({
+      companyId: request.companyId.toString()
     }).toString(), {
       method: 'GET',
       headers: headers,
