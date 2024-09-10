@@ -41,7 +41,13 @@ func (w *JWTWrapper) ValidateToken(signedToken string) error {
 		return err
 	}
 
-	if !token.Valid {
+	tokenExpirationDate, _ := token.Claims.GetExpirationTime()
+
+	fmt.Println(tokenExpirationDate)
+	fmt.Println(tokenExpirationDate.Unix())
+	fmt.Println(time.Now().Unix())
+
+	if !token.Valid || tokenExpirationDate.Unix() < time.Now().Unix() {
 		return fmt.Errorf("Invalid token")
 	}
 

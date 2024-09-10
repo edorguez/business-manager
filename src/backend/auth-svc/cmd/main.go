@@ -41,7 +41,7 @@ func main() {
 		Jwt: jwt_manager.JWTWrapper{
 			SecretKey:       c.JWTSecretKey,
 			Issuer:          "auth-svc",
-			ExpirationHours: 24 * 365,
+			ExpirationHours: 24 * 7,
 		},
 	}
 
