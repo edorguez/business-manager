@@ -8,4 +8,5 @@ export type CurrentUser = {
   email: string;
   roleId: number;
   companyId: number;
+  exp: number;
 }
