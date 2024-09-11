@@ -1,4 +1,5 @@
 import { ChangeStatusProduct, CreateProduct, DeleteProduct, EditProduct, GetLatestProducts, GetProduct, GetProducts } from "@/app/types/product";
+import Cookies from 'js-cookie';
 
 const baseUrl: string = 'http://localhost:3001/api/products';
 
@@ -7,7 +8,8 @@ export async function CreateProductRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     request.price = +request.price;
     request.quantity = +request.quantity;
@@ -31,7 +33,8 @@ export async function EditProductRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     request.price = +request.price;
     request.quantity = +request.quantity;
@@ -51,7 +54,8 @@ export async function ChangeStatusRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     await fetch(`${baseUrl}/${request.id}/status`, {
       method: 'PUT',
@@ -68,7 +72,8 @@ export async function GetProductRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: 'GET',
@@ -88,7 +93,8 @@ export async function GetProductsRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}?` + new URLSearchParams({
       companyId: request.companyId.toString(),
@@ -114,7 +120,8 @@ export async function GetLatestProductsRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/latest?` + new URLSearchParams({
       companyId: request.companyId.toString(),
@@ -137,7 +144,8 @@ export async function DeleteProductRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     await fetch(`${baseUrl}/${request.id}`, {
       method: 'DELETE',

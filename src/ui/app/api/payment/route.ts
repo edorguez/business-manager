@@ -1,4 +1,5 @@
 import { ChangeStatusPayment, CreatePayment, DeletePayment, EditPayment, GetPayment, GetPayments, GetPaymentsTypes } from "@/app/types/payment";
+import Cookies from 'js-cookie';
 
 const baseUrl: string = 'http://localhost:3001/api/payments';
 
@@ -7,7 +8,8 @@ export async function CreatePaymentRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(baseUrl, {
       method: 'POST',
@@ -28,7 +30,8 @@ export async function EditPaymentRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: 'PUT',
@@ -46,7 +49,8 @@ export async function GetPaymentRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: 'GET',
@@ -66,7 +70,8 @@ export async function GetPaymentsRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}?` + new URLSearchParams({
       companyId: request.companyId.toString(),
@@ -91,7 +96,8 @@ export async function GetPaymentsTypesRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/types?` + new URLSearchParams({
       companyId: request.companyId.toString()
@@ -113,7 +119,8 @@ export async function DeletePaymentRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     await fetch(`${baseUrl}/${request.id}`, {
       method: 'DELETE',
@@ -130,7 +137,8 @@ export async function ChangeStatusRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     await fetch(`${baseUrl}/${request.id}/status`, {
       method: 'PUT',

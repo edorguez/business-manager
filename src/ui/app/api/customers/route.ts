@@ -1,4 +1,5 @@
 import { CreateCustomer, DeleteCustomer, EditCustomer, GetCustomer, GetCustomers, GetCustomersByMonths } from "@/app/types/customer";
+import Cookies from 'js-cookie';
 
 const baseUrl: string = 'http://localhost:3001/api/customers';
 
@@ -7,7 +8,8 @@ export async function CreateCustomerRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(baseUrl, {
       method: 'POST',
@@ -28,7 +30,8 @@ export async function EditCustomerRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: 'PUT',
@@ -45,7 +48,8 @@ export async function GetCustomerRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: 'GET',
@@ -65,7 +69,8 @@ export async function GetCustomersRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}?` + new URLSearchParams({
       companyId: request.companyId.toString(),
@@ -92,7 +97,8 @@ export async function GetCustomersByMonthsRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/months?` + new URLSearchParams({
       companyId: request.companyId.toString(),
@@ -115,7 +121,8 @@ export async function DeleteCustomerRequest(
 ) {
   try {
     const headers = new Headers();
-    headers.append("Authorization", <string>localStorage.getItem('token'));
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
 
     await fetch(`${baseUrl}/${request.id}`, {
       method: 'DELETE',

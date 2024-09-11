@@ -1,4 +1,7 @@
+'use server'
+
 import { Login } from "@/app/types/auth"
+import { cookies } from "next/headers";
 
 export async function login(
   request: Login,
@@ -11,7 +14,7 @@ export async function login(
     let response = await res.json();
 
     if(!response.error) {
-      localStorage.setItem("token", `Bearer ${response.token}`);
+      cookies().set('token', `Bearer ${response.token}`);
     }
 
     return response;

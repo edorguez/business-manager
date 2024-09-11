@@ -7,8 +7,10 @@ import { useState } from 'react';
 import { Login } from '../types/auth';
 import { login } from '../api/auth/route';
 import { useRouter } from 'next/navigation';
+import useLoading from '../hooks/useLoading';
 
 const LoginClient = () => {
+  const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
   const [formData, setFormData] = useState<Login>({ email: '', password: '' });
@@ -19,6 +21,7 @@ const LoginClient = () => {
   }
 
   const onLogin = async () => {
+    isLoading.onStartLoading();
     let result: any = await login(formData);
     if (!result.error) {
       push('/management/home');
