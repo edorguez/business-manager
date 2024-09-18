@@ -144,7 +144,7 @@ export default function Home() {
               <div className="flex flex-col p-6 bg-maincolor rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold text-white mb-4">Pro</h3>
                 <p className="text-4xl font-bold text-white mb-4">
-                  $30<span className="text-xl text-gray-200">/mensual</span>
+                  $25<span className="text-xl text-gray-200">/mensual</span>
                 </p>
                 <ul className="mb-6 space-y-2 text-white">
                   <li className="flex items-center">

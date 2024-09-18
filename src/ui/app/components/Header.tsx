@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Avatar, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import deleteUserSession from "../actions/deleteUserSession";
@@ -13,6 +13,10 @@ const Header = () => {
   const onCloseSession = () => {
     deleteUserSession();
     push('/login');
+  }
+  
+  const onAccount = () => {
+    push('/management/account');
   }
 
   return (
@@ -31,6 +35,11 @@ const Header = () => {
               <Avatar name='User Profile' src='/images/user_profile.png' size="sm" />
             </MenuButton>
             <MenuList>
+              <MenuItem onClick={onAccount}>
+                <Icon icon="mdi:user" />
+                Cuenta
+              </MenuItem>
+              <MenuDivider />
               <MenuItem onClick={onCloseSession}>
                 <Icon icon="ci:exit" />
                 Cerrar Sesión

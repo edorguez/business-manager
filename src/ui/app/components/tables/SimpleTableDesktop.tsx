@@ -96,69 +96,70 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((dataVal: any, dataIndex: number) => (
-            <Tr
-              key={dataIndex}
-              className="hover:bg-thirdcolorhov transition duration-150 text-sm"
-            >
-              {columns.map((col: SimpleTableColumn, colIndex: number) => (
-                <Td key={colIndex}>
-                  {<SimpleTableField data={dataVal} col={col} />}
+          {data.length > 0 &&
+            data.map((dataVal: any, dataIndex: number) => (
+              <Tr
+                key={dataIndex}
+                className="hover:bg-thirdcolorhov transition duration-150 text-sm"
+              >
+                {columns.map((col: SimpleTableColumn, colIndex: number) => (
+                  <Td key={colIndex}>
+                    {<SimpleTableField data={dataVal} col={col} />}
+                  </Td>
+                ))}
+
+                <Td>
+                  <div className="flex justify-end">
+                    {showToggleActive && (
+                      <div className="mr-2 flex items-center justify-center">
+                        <span className="text-xs font-bold text-maincolor mr-2">
+                          Activo
+                        </span>
+                        <Switch
+                          size="md"
+                          colorScheme="main"
+                          isChecked={dataVal.isActive}
+                          onChange={() =>
+                            handleChangeStatus(dataVal.id, !dataVal.isActive)
+                          }
+                        />
+                      </div>
+                    )}
+
+                    {showDetails && (
+                      <Button
+                        size="sm"
+                        variant="fifth"
+                        onClick={() => handleDetailItem(dataVal)}
+                      >
+                        <Icon icon="lucide:info" />
+                      </Button>
+                    )}
+
+                    {showEdit && (
+                      <Button
+                        size="sm"
+                        variant="main"
+                        className="mx-1"
+                        onClick={() => handleEditItem(dataVal)}
+                      >
+                        <Icon icon="lucide:edit" />
+                      </Button>
+                    )}
+
+                    {showDelete && (
+                      <Button
+                        size="sm"
+                        variant="third"
+                        onClick={() => handleDeleteItem(dataVal)}
+                      >
+                        <Icon icon="wpf:delete" />
+                      </Button>
+                    )}
+                  </div>
                 </Td>
-              ))}
-
-              <Td>
-                <div className="flex justify-end">
-                  {showToggleActive && (
-                    <div className="mr-2 flex items-center justify-center">
-                      <span className="text-xs font-bold text-maincolor mr-2">
-                        Activo
-                      </span>
-                      <Switch
-                        size="md"
-                        colorScheme="main"
-                        isChecked={dataVal.isActive}
-                        onChange={() =>
-                          handleChangeStatus(dataVal.id, !dataVal.isActive)
-                        }
-                      />
-                    </div>
-                  )}
-
-                  {showDetails && (
-                    <Button
-                      size="sm"
-                      variant="fifth"
-                      onClick={() => handleDetailItem(dataVal)}
-                    >
-                      <Icon icon="lucide:info" />
-                    </Button>
-                  )}
-
-                  {showEdit && (
-                    <Button
-                      size="sm"
-                      variant="main"
-                      className="mx-1"
-                      onClick={() => handleEditItem(dataVal)}
-                    >
-                      <Icon icon="lucide:edit" />
-                    </Button>
-                  )}
-
-                  {showDelete && (
-                    <Button
-                      size="sm"
-                      variant="third"
-                      onClick={() => handleDeleteItem(dataVal)}
-                    >
-                      <Icon icon="wpf:delete" />
-                    </Button>
-                  )}
-                </div>
-              </Td>
-            </Tr>
-          ))}
+              </Tr>
+            ))}
 
           {data.length === 0 && (
             <Tr>
