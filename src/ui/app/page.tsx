@@ -2,47 +2,35 @@
 
 import { Button, Input } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <header className="px-4 lg:px-6 h-16 flex items-center bg-maincolor">
-        <a className="flex items-center justify-center" href="#">
-          <span className="sr-only">Your SaaS Company</span>
-          <svg
-            className="h-6 w-6 text-white"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-            <path d="M3 6h18" />
-            <path d="m16 10-4 4-4-4" />
-          </svg>
-          <span className="ml-2 text-2xl font-bold text-white">SaaSy</span>
-        </a>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <div className="flex items-center justify-center">
+          <Image src="/images/logo.png" alt="Logo" width={28} height={28} />
+          <span className="ml-2 text-2xl font-bold text-white">
+            Business Manager
+          </span>
+        </div>
+        <nav className="ml-auto sm:flex gap-4 sm:gap-6 hidden">
           <a
             className="text-sm font-medium hover:underline underline-offset-4 text-white"
-            href="#"
+            href="#features"
           >
             Características
           </a>
           <a
             className="text-sm font-medium hover:underline underline-offset-4 text-white"
-            href="#"
+            href="#plans"
           >
             Planes
           </a>
           <a
             className="text-sm font-medium hover:underline underline-offset-4 text-white"
-            href="#"
+            href="https://wa.link/zsqo0x"
+            target="_blank"
           >
             Contáctanos
           </a>
@@ -62,12 +50,19 @@ export default function Home() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button variant="third">Comenzar</Button>
+                <Button variant="third">
+                  <a href="https://wa.link/zsqo0x" target="_blank">
+                    Comenzar
+                  </a>
+                </Button>
               </div>
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
+        <section
+          className="w-full py-12 md:py-24 lg:py-32 bg-gray-100"
+          id="features"
+        >
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-14">
               Características
@@ -108,7 +103,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-white">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-white" id="plans">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-14">
               Planes
@@ -119,48 +114,66 @@ export default function Home() {
                   Básico
                 </h3>
                 <p className="text-4xl font-bold mb-4">
-                  $19<span className="text-xl text-gray-500">/mo</span>
+                  $15<span className="text-xl text-gray-500">/mensual</span>
                 </p>
                 <ul className="mb-6 space-y-2">
                   <li className="flex items-center">
-                    <Icon icon="material-symbols-light:check" /> 5 Projects
+                    <Icon icon="material-symbols-light:check" /> Tienda online
                   </li>
                   <li className="flex items-center">
-                    <Icon icon="material-symbols-light:check" /> 10GB Storage
+                    <Icon icon="material-symbols-light:check" /> Pedidos por
+                    WhatsApp
                   </li>
                   <li className="flex items-center">
-                    <Icon icon="material-symbols-light:check" /> Basic Analytics
+                    <Icon icon="material-symbols-light:check" /> Analíticas
+                  </li>
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> Registro de
+                    clientes
+                  </li>
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> Registro de
+                    productos (limitado)
+                  </li>
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> Registro de
+                    métodos de pago (limitado)
                   </li>
                 </ul>
-                <Button className="mt-auto bg-maincolor text-white hover:bg-maincolorhov">
-                  Choose Plan
-                </Button>
               </div>
               <div className="flex flex-col p-6 bg-maincolor rounded-lg shadow-lg">
                 <h3 className="text-2xl font-bold text-white mb-4">Pro</h3>
                 <p className="text-4xl font-bold text-white mb-4">
-                  $49<span className="text-xl text-gray-200">/mo</span>
+                  $30<span className="text-xl text-gray-200">/mensual</span>
                 </p>
                 <ul className="mb-6 space-y-2 text-white">
                   <li className="flex items-center">
-                    <Icon icon="material-symbols-light:check" /> Unlimited
-                    Projects
+                    <Icon icon="material-symbols-light:check" /> Tienda online
                   </li>
                   <li className="flex items-center">
-                    <Icon icon="material-symbols-light:check" /> 100GB Storage
+                    <Icon icon="material-symbols-light:check" /> Pedidos por
+                    WhatsApp
                   </li>
                   <li className="flex items-center">
-                    <Icon icon="material-symbols-light:check" /> Advanced
-                    Analytics
+                    <Icon icon="material-symbols-light:check" /> Analíticas
                   </li>
                   <li className="flex items-center">
-                    <Icon icon="material-symbols-light:check" /> Priority
-                    Support
+                    <Icon icon="material-symbols-light:check" /> Registro de
+                    clientes
+                  </li>
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> Registro de
+                    productos
+                  </li>
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> Registro de
+                    métodos de pago
+                  </li>
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> Creación de
+                    multiples usuarios
                   </li>
                 </ul>
-                <Button className="mt-auto bg-white text-maincolor hover:bg-gray-100">
-                  Choose Plan
-                </Button>
               </div>
             </div>
           </div>
@@ -179,7 +192,9 @@ export default function Home() {
               </div>
               <div className="w-full max-w-sm space-y-2">
                 <Button variant="main">
-                  Comenzar
+                  <a href="https://wa.link/zsqo0x" target="_blank">
+                    Comenzar
+                  </a>
                 </Button>
               </div>
             </div>
@@ -188,7 +203,7 @@ export default function Home() {
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500">
-          © {new Date().getFullYear()} Business Manager.
+          © {new Date().getFullYear()} Business Manager
         </p>
         {/* <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <a
