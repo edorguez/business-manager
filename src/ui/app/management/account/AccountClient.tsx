@@ -30,6 +30,8 @@ import { EditCompanyRequest, GetCompanyRequest } from "@/app/api/companies/route
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import useLoading from "@/app/hooks/useLoading";
+import { EditUser, User } from "@/app/types/user";
+import { GetUserRequest } from "@/app/api/users/route";
 
 const AccountClient = () => {
 
@@ -41,11 +43,21 @@ const AccountClient = () => {
     name: '',
     imageUrl: ''
   });
-  const [email, setEmail] = useState("sofia.davis@example.com");
+  const [userFormData, setUserFormData] = useState<EditUser>({
+    id: 0,
+    roleId: 0,
+    email: '',
+    password: ''
+  });
 
   const handleCompanyFormChange = (event: any) => {
     const { name, value } = event.target;
     setCompanyFormData((prev) => ({...prev, [name]: value}));
+  }
+  
+  const handleUserFormChange = (event: any) => {
+    const { name, value } = event.target;
+    setUserFormData((prev) => ({...prev, [name]: value}));
   }
 
   const getCompany = useCallback(async () => {
@@ -66,9 +78,30 @@ const AccountClient = () => {
       isLoading.onEndLoading();
     }
   }, [])
+  
+  const getUser = useCallback(async () => {
+    const currentUser: CurrentUser | null = getCurrentUser();
+    if(currentUser) {
+      isLoading.onStartLoading();
+      let user: User = await GetUserRequest({
+        id: currentUser?.id,
+      });
+      if (user) {
+        setUserFormData({
+          id: user.id ?? 0,
+          roleId: user.roleId ?? 0,
+          email: user.email ?? '',
+          password: ''
+        });
+      }
+
+      isLoading.onEndLoading();
+    }
+  }, [])
 
   useEffect(() => {
-    getCompany()
+    getCompany();
+    getUser();
   }, [getCompany])
 
   const isCompanyFormValid = (): boolean => {
@@ -170,25 +203,26 @@ const AccountClient = () => {
                   <Heading size="md" mb={2}>
                     Ajuste de Cuenta
                   </Heading>
-                  <Text size="sm" color="gray.500">Actualiza los datos de tu cuenta</Text>
+                  <Text size="sm" color="gray.500">Actualiza el correo de tu usuario</Text>
                   <FormControl>
                     <label className="text-sm">Correo</label>
-                    <Input size="sm" value="sofiadavis" />
+                    <Input size="sm" name="email" value={userFormData.email} onChange={handleUserFormChange} />
                   </FormControl>
-                  <FormControl>
-                    <label className="text-sm">Contraseña Vieja</label>
-                    <Input size="sm" type="password" value="English" />
-                  </FormControl>
+                  <Button variant="main" alignSelf="flex-start" className="mt-4">
+                    Actualizar Correo
+                  </Button>
+                  <hr className="my-4" />
+                  <Text size="sm" color="gray.500">Cambiar tu contraseña</Text>
                   <FormControl>
                     <label className="text-sm">Contraseña Nueva</label>
-                    <Input size="sm" type="password" value="English" />
+                    <Input size="sm" type="password" />
                   </FormControl>
                   <FormControl>
                     <label className="text-sm">Repetir Contraseña Nueva</label>
-                    <Input size="sm" type="password" value="English" />
+                    <Input size="sm" type="password" />
                   </FormControl>
                   <Button variant="main" alignSelf="flex-start" className="mt-4">
-                    Actualizar Cuenta
+                    Cambiar Contraseña
                   </Button>
                 </VStack>
               </TabPanel>
