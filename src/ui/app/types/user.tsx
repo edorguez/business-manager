@@ -15,3 +15,14 @@ export type EditUser = {
   email: string;
   password: string;
 }
+
+export type EditEmail = {
+  id: number;
+  email: string;
+}
+
+export type EditPassword = {
+  id: number;
+  password: string;
+  passwordRepeat: string;
+}

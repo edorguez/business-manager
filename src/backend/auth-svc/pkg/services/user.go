@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 
 	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
 	auth "github.com/EdoRguez/business-manager/auth-svc/pkg/pb"
@@ -178,6 +179,97 @@ func (s *UserService) DeleteUser(ctx context.Context, req *auth.DeleteUserReques
 
 	fmt.Println("Auth Service :  DeleteUser - SUCCESS")
 	return &auth.DeleteUserResponse{
+		Status: http.StatusNoContent,
+	}, nil
+}
+
+func (s *UserService) UpdateEmail(ctx context.Context, req *auth.UpdateEmailRequest) (*auth.UpdateEmailResponse, error) {
+	fmt.Println("Auth Service :  UpdateEmail")
+	fmt.Println("Auth Service :  UpdateEmail - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Auth Service :  UpdateEmail - ERROR")
+		fmt.Println(err.Error())
+		return &auth.UpdateEmailResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if strings.ToLower(u.Email) == strings.ToLower(req.Email) {
+		fmt.Println("Auth Service :  UpdateEmail - ERROR")
+		fmt.Println("Email already exists")
+		return &auth.UpdateEmailResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "Email already exists",
+		}, nil
+	}
+
+	params := db.UpdateEmailParams{
+		ID:    req.Id,
+		Email: req.Email,
+	}
+
+	_, err = s.Repo.UpdateEmail(ctx, params)
+	if err != nil {
+		fmt.Println("Auth Service :  UpdateEmail - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
+		return &auth.UpdateEmailResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
+	fmt.Println("Auth Service :  UpdateEmail - SUCCESS")
+	return &auth.UpdateEmailResponse{
+		Status: http.StatusNoContent,
+	}, nil
+}
+
+func (s *UserService) UpdatePassword(ctx context.Context, req *auth.UpdatePasswordRequest) (*auth.UpdatePasswordResponse, error) {
+	fmt.Println("Auth Service :  UpdatePassword")
+	fmt.Println("Auth Service :  UpdatePassword - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	params := db.UpdatePasswordParams{
+		ID:           req.Id,
+		PasswordHash: password_hash.HashPassword(req.Password),
+	}
+
+	_, err := s.Repo.UpdatePassword(ctx, params)
+	if err != nil {
+		fmt.Println("Auth Service :  UpdatePassword - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
+		return &auth.UpdatePasswordResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
+	fmt.Println("Auth Service :  UpdatePassword - SUCCESS")
+	return &auth.UpdatePasswordResponse{
 		Status: http.StatusNoContent,
 	}, nil
 }

@@ -79,3 +79,23 @@ DELETE FROM
   auth.user
 WHERE 
   id = $1;
+
+-- name: UpdateEmail :one
+UPDATE 
+  auth.user
+SET 
+  email = $2,
+  modified_at = NOW()
+WHERE 
+  id = $1
+RETURNING *;
+
+-- name: UpdatePassword :one
+UPDATE 
+  auth.user
+SET 
+  password_hash = $2,
+  modified_at = NOW()
+WHERE 
+  id = $1
+RETURNING *;

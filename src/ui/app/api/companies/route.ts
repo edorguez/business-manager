@@ -32,6 +32,8 @@ export async function EditCompanyRequest(
     const token = Cookies.get('token');
     headers.append("Authorization", <string>token);
 
+    request.name = request.name.trim();
+
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: 'PUT',
       headers: headers,

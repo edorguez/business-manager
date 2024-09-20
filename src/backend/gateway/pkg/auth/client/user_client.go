@@ -194,3 +194,63 @@ func DeleteUser(id int64, c context.Context) (*pb.DeleteUserResponse, *contracts
 	fmt.Println("User CLIENT :  DeleteUser - SUCCESS")
 	return res, nil
 }
+
+func UpdateEmail(id int64, body contracts.UpdateEmailRequest, c context.Context) (*pb.UpdateEmailResponse, *contracts.Error) {
+	fmt.Println("User CLIENT :  UpdateEmail")
+
+	fmt.Println("User CLIENT :  UpdateEmail - Body")
+	fmt.Println(body)
+	fmt.Println("-----------------")
+
+	updateUserParams := &pb.UpdateEmailRequest{
+		Id:    id,
+		Email: body.Email,
+	}
+
+	res, err := userServiceClient.UpdateEmail(c, updateUserParams)
+
+	if err != nil {
+		fmt.Println("User CLIENT :  UpdateEmail - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("User CLIENT :  UpdateEmail - SUCCESS")
+	return res, nil
+}
+
+func UpdatePassword(id int64, body contracts.UpdatePasswordRequest, c context.Context) (*pb.UpdatePasswordResponse, *contracts.Error) {
+	fmt.Println("User CLIENT :  UpdatePassword")
+
+	fmt.Println("User CLIENT :  UpdatePassword - Body")
+	fmt.Println(body)
+	fmt.Println("-----------------")
+
+	updateUserParams := &pb.UpdatePasswordRequest{
+		Id:       id,
+		Password: body.Password,
+	}
+
+	res, err := userServiceClient.UpdatePassword(c, updateUserParams)
+
+	if err != nil {
+		fmt.Println("User CLIENT :  UpdatePassword - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("User CLIENT :  UpdatePassword - SUCCESS")
+	return res, nil
+}

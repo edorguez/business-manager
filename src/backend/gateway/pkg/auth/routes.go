@@ -36,6 +36,14 @@ func loadUserRoutes(router *mux.Router, c *config.Config) {
 	postRouter.HandleFunc("", ar.CreateUser)
 	postRouter.Use(mw.MiddlewareValidateCreateUser)
 
+	putRouteEmail := baseRoute.Methods(http.MethodPut).Subrouter()
+	putRouteEmail.HandleFunc("/{id:[0-9]+}/email", ar.UpdateEmail)
+	putRouteEmail.Use(mw.MiddlewareValidateUpdateEmail)
+
+	putRoutePassword := baseRoute.Methods(http.MethodPut).Subrouter()
+	putRoutePassword.HandleFunc("/{id:[0-9]+}/password", ar.UpdatePassword)
+	putRoutePassword.Use(mw.MiddlewareValidateUpdatePassword)
+
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id:[0-9]+}", ar.UpdateUser)
 	putRouter.Use(mw.MiddlewareValidateUpdateUser)
@@ -81,6 +89,16 @@ func (ar *AuthRoutes) GetUsers(w http.ResponseWriter, r *http.Request) {
 func (ar *AuthRoutes) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  UpdateUser Called --> 1")
 	routes.UpdateUser(w, r, ar.config)
+}
+
+func (ar *AuthRoutes) UpdateEmail(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  UpdateEmail Called --> 1")
+	routes.UpdateEmail(w, r, ar.config)
+}
+
+func (ar *AuthRoutes) UpdatePassword(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  UpdatePassword Called --> 1")
+	routes.UpdatePassword(w, r, ar.config)
 }
 
 func (ar *AuthRoutes) DeleteUser(w http.ResponseWriter, r *http.Request) {

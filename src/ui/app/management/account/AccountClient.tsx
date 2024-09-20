@@ -30,8 +30,9 @@ import { EditCompanyRequest, GetCompanyRequest } from "@/app/api/companies/route
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import useLoading from "@/app/hooks/useLoading";
-import { EditUser, User } from "@/app/types/user";
-import { GetUserRequest } from "@/app/api/users/route";
+import { EditEmail, EditPassword, EditUser, User } from "@/app/types/user";
+import { EditEmailRequest, EditPasswordRequest, GetUserRequest } from "@/app/api/users/route";
+import { isValidEmail } from "@/app/utils/Utils";
 
 const AccountClient = () => {
 
@@ -43,11 +44,14 @@ const AccountClient = () => {
     name: '',
     imageUrl: ''
   });
-  const [userFormData, setUserFormData] = useState<EditUser>({
+  const [emailFormData, setEmailFormData] = useState<EditEmail>({
     id: 0,
-    roleId: 0,
     email: '',
-    password: ''
+  });
+  const [passwordFormData, setPasswordFormData] = useState<EditPassword>({
+    id: 0,
+    password: '',
+    passwordRepeat: '',
   });
 
   const handleCompanyFormChange = (event: any) => {
@@ -55,9 +59,14 @@ const AccountClient = () => {
     setCompanyFormData((prev) => ({...prev, [name]: value}));
   }
   
-  const handleUserFormChange = (event: any) => {
+  const handleEmailFormChange = (event: any) => {
     const { name, value } = event.target;
-    setUserFormData((prev) => ({...prev, [name]: value}));
+    setEmailFormData((prev) => ({...prev, [name]: value}));
+  }
+  
+  const handlePasswordFormChange = (event: any) => {
+    const { name, value } = event.target;
+    setPasswordFormData((prev) => ({...prev, [name]: value}));
   }
 
   const getCompany = useCallback(async () => {
@@ -87,11 +96,14 @@ const AccountClient = () => {
         id: currentUser?.id,
       });
       if (user) {
-        setUserFormData({
+        setEmailFormData({
           id: user.id ?? 0,
-          roleId: user.roleId ?? 0,
           email: user.email ?? '',
-          password: ''
+        });
+        setPasswordFormData({
+          id: user.id ?? 0,
+          password: '',
+          passwordRepeat: ''
         });
       }
 
@@ -104,8 +116,28 @@ const AccountClient = () => {
     getUser();
   }, [getCompany])
 
+  const handleSpaceKeyDown = (event: any) => {
+    if (event.key === ' ') {
+      event.preventDefault();
+    }
+  }
+
   const isCompanyFormValid = (): boolean => {
     if (!companyFormData.name) return false;
+
+    return true;
+  };
+  
+  const isEmailFormValid = (): boolean => {
+    if (!emailFormData.email) return false;
+    if(!isValidEmail(emailFormData.email)) return false;
+
+    return true;
+  };
+  
+  const isPasswordFormValid = (): boolean => {
+    if (!passwordFormData.password || !passwordFormData.passwordRepeat) return false;
+    if (passwordFormData.password !== passwordFormData.passwordRepeat) return false;
 
     return true;
   };
@@ -123,6 +155,39 @@ const AccountClient = () => {
       }
     } else {
       showErrorMessage("Algunos campos son requeridos o inválidos");
+    }
+  }
+  
+  const onEmailSubmit = async () => {
+    if (isEmailFormValid()) {
+      isLoading.onStartLoading();
+      let editEmail: any = await EditEmailRequest(emailFormData);
+      if (editEmail?.error) {
+        isLoading.onEndLoading();
+        showErrorMessage("Correo ya existe");
+      } else {
+        isLoading.onEndLoading();
+        showSuccessCreationMessage("Correo actualizado exitosamente");
+      }
+    } else {
+      showErrorMessage("Algunos campos son requeridos o inválidos");
+    }
+  }
+  
+  const onPasswordSubmit = async () => {
+    if (isPasswordFormValid()) {
+      isLoading.onStartLoading();
+      let editPassword: any = await EditPasswordRequest(passwordFormData);
+      if (editPassword?.error) {
+        isLoading.onEndLoading();
+        showErrorMessage(editPassword.error);
+      } else {
+        isLoading.onEndLoading();
+        showSuccessCreationMessage("Contraseña cambiada exitosamente");
+        setPasswordFormData((prev) => ({...prev, password: '', passwordRepeat: ''}))
+      }
+    } else {
+      showErrorMessage("Algunos campos son requeridos, inválidos o las contraseñas no son iguales");
     }
   }
 
@@ -206,22 +271,22 @@ const AccountClient = () => {
                   <Text size="sm" color="gray.500">Actualiza el correo de tu usuario</Text>
                   <FormControl>
                     <label className="text-sm">Correo</label>
-                    <Input size="sm" name="email" value={userFormData.email} onChange={handleUserFormChange} />
+                    <Input size="sm" name="email" value={emailFormData.email} onChange={handleEmailFormChange} />
                   </FormControl>
-                  <Button variant="main" alignSelf="flex-start" className="mt-4">
+                  <Button variant="main" alignSelf="flex-start" className="mt-4" onClick={onEmailSubmit}>
                     Actualizar Correo
                   </Button>
                   <hr className="my-4" />
                   <Text size="sm" color="gray.500">Cambiar tu contraseña</Text>
                   <FormControl>
                     <label className="text-sm">Contraseña Nueva</label>
-                    <Input size="sm" type="password" />
+                    <Input size="sm" type="password" name="password" maxLength={20} value={passwordFormData.password} onChange={handlePasswordFormChange} onKeyDown={handleSpaceKeyDown} />
                   </FormControl>
                   <FormControl>
                     <label className="text-sm">Repetir Contraseña Nueva</label>
-                    <Input size="sm" type="password" />
+                    <Input size="sm" type="password" name="passwordRepeat" maxLength={20} value={passwordFormData.passwordRepeat} onChange={handlePasswordFormChange} onKeyDown={handleSpaceKeyDown} />
                   </FormControl>
-                  <Button variant="main" alignSelf="flex-start" className="mt-4">
+                  <Button variant="main" alignSelf="flex-start" className="mt-4" onClick={onPasswordSubmit}>
                     Cambiar Contraseña
                   </Button>
                 </VStack>

@@ -113,3 +113,37 @@ func (userRepo *UserRepo) DeleteUser(ctx context.Context, id int64) error {
 
 	return err
 }
+
+func (userRepo *UserRepo) UpdateEmail(ctx context.Context, arg db.UpdateEmailParams) (db.AuthUser, error) {
+	var result db.AuthUser
+
+	err := userRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.UpdateEmail(ctx, arg)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
+func (userRepo *UserRepo) UpdatePassword(ctx context.Context, arg db.UpdatePasswordParams) (db.AuthUser, error) {
+	var result db.AuthUser
+
+	err := userRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.UpdatePassword(ctx, arg)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}

@@ -64,7 +64,7 @@ const LoginClient = () => {
                   </div>
                   <div className='mt-2'>
                     <label className='text-sm'>Contraseña</label>
-                    <Input size="sm" type='password' name='password' value={formData.password} onChange={handleChange} onKeyDown={handleKeyDown} />
+                    <Input size="sm" type='password' name='password' maxLength={20} value={formData.password} onChange={handleChange} onKeyDown={handleKeyDown} />
                   </div>
                   <div className="mt-3">
                     <Button variant="main" className='w-full' onClick={onLogin}>
