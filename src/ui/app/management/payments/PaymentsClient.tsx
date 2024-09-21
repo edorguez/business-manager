@@ -7,9 +7,9 @@ import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import PaymentCard from "@/app/components/cards/PaymentCard";
 import PaymentFilterCard from "@/app/components/cards/PaymentFilterCard";
 import SimpleCard from "@/app/components/cards/SimpleCard";
-import DeleteModal from "@/app/components/modals/DeleteModal";
-import useDeleteModal from "@/app/hooks/useDeleteModal";
+import WarningModal from "@/app/components/modals/WarningModal";
 import useLoading from "@/app/hooks/useLoading";
+import useWarningModal from "@/app/hooks/useWarningModal";
 import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { Payment } from "@/app/types/payment";
@@ -30,7 +30,7 @@ const PaymentsClient = () => {
   const { push } = useRouter();
   const isLoading = useLoading();
   const toast = useToast();
-  const deletePaymentModal = useDeleteModal();
+  const deletePaymentModal = useWarningModal();
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [paymentIdDelete, setPaymentIdDelete] = useState<number>(0);
@@ -112,7 +112,7 @@ const PaymentsClient = () => {
   return (
     <div>
       <SimpleCard>
-        <DeleteModal onSubmit={handleSubmitDelete} title="Eliminar Método de Pago" description="¿Estás seguro que quieres eliminar este método de pago?" />
+        <WarningModal onSubmit={handleSubmitDelete} title="Eliminar Método de Pago" description="¿Estás seguro que quieres eliminar este método de pago?" confirmText="Eliminar" />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />

@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 
-interface DeleteModalStore {
+interface WarningModalStore {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
 }
 
-const useDeleteModal = create<DeleteModalStore>((set) => ({
+const useWarningModal = create<WarningModalStore>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false })
 }));
 
 
-export default useDeleteModal;
+export default useWarningModal;

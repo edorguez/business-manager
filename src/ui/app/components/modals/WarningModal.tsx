@@ -1,6 +1,6 @@
 "use client";
 
-import useDeleteModal from '@/app/hooks/useDeleteModal';
+import useWarningModal from '@/app/hooks/useWarningModal';
 import {
   Modal,
   ModalOverlay,
@@ -9,23 +9,26 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
+import { Warning } from 'postcss';
 
-interface DeleteModalProps {
+interface WarningModalProps {
   title: string;
   description: string;
+  confirmText: string;
   onSubmit: () => void;
 }
 
-const DeleteModal: React.FC<DeleteModalProps> = ({
+const WarningModal: React.FC<WarningModalProps> = ({
   title,
   description,
+  confirmText,
   onSubmit
 }) => {
-  const deleteModal = useDeleteModal();
+  const warningModal = useWarningModal();
 
   return (
     <>
-      <Modal isOpen={deleteModal.isOpen} onClose={deleteModal.onClose}>
+      <Modal isOpen={warningModal.isOpen} onClose={warningModal.onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalBody>
@@ -39,11 +42,11 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               <span className='text-sm mt-2'>{description}</span>
             </div>
             <div className='mt-7 mb-4 flex'>
-              <Button colorScheme='gray' onClick={deleteModal.onClose} className='w-full'>
+              <Button colorScheme='gray' onClick={warningModal.onClose} className='w-full'>
                 Cancelar
               </Button>
               <Button variant='third' className='ml-2 w-full' onClick={onSubmit}>
-                Eliminar
+                { confirmText }
               </Button>
             </div>
           </ModalBody>
@@ -53,4 +56,4 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   )
 }
 
-export default DeleteModal;
+export default WarningModal;

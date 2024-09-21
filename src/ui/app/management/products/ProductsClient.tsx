@@ -4,11 +4,11 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { ChangeStatusRequest, DeleteProductRequest, GetProductsRequest } from "@/app/api/products/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
-import DeleteModal from "@/app/components/modals/DeleteModal";
+import WarningModal from "@/app/components/modals/WarningModal";
 import SimpleTable from "@/app/components/tables/SimpleTable";
 import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
-import useDeleteModal from "@/app/hooks/useDeleteModal";
 import useLoading from "@/app/hooks/useLoading";
+import useWarningModal from "@/app/hooks/useWarningModal";
 import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { Product, SearchProduct } from "@/app/types/product";
@@ -59,7 +59,7 @@ const ProductsClient = () => {
   const { push } = useRouter();
   const isLoading = useLoading();
   const toast = useToast();
-  const deleteProductModal = useDeleteModal();
+  const deleteProductModal = useWarningModal();
   const [searchProduct, setSearchProduct] = useState<SearchProduct>({ name: '', sku: '' });
   const [offset, setOffset] = useState<number>(0);
   const [products, setProducts] = useState<Product[]>([]);
@@ -148,7 +148,7 @@ const ProductsClient = () => {
   return (
     <div>
       <SimpleCard>
-        <DeleteModal onSubmit={handleSubmitDelete} title="Eliminar PRoducto" description="¿Estás seguro que quieres eliminar este producto?" />
+        <WarningModal onSubmit={handleSubmitDelete} title="Eliminar PRoducto" description="¿Estás seguro que quieres eliminar este producto?" confirmText="Eliminar" />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />

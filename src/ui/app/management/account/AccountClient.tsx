@@ -26,52 +26,65 @@ import {
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import ImagesUpload from "@/app/components/uploads/ImagesUpload";
 import { Company, EditCompany } from "@/app/types/company";
-import { EditCompanyRequest, GetCompanyRequest } from "@/app/api/companies/route";
+import {
+  EditCompanyRequest,
+  GetCompanyRequest,
+} from "@/app/api/companies/route";
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import useLoading from "@/app/hooks/useLoading";
 import { EditEmail, EditPassword, EditUser, User } from "@/app/types/user";
-import { EditEmailRequest, EditPasswordRequest, GetUserRequest } from "@/app/api/users/route";
+import {
+  EditEmailRequest,
+  EditPasswordRequest,
+  GetUserRequest,
+} from "@/app/api/users/route";
 import { isValidEmail } from "@/app/utils/Utils";
+import useWarningModal from "@/app/hooks/useWarningModal";
+import WarningModal from "@/app/components/modals/WarningModal";
+import { useRouter } from "next/navigation";
+import deleteUserSession from "@/app/actions/deleteUserSession";
 
 const AccountClient = () => {
-
+  const { push } = useRouter();
   const isLoading = useLoading();
   const toast = useToast();
+  const confirmChangeModal = useWarningModal();
+  const minPasswordLength: number = 6;
 
   const [companyFormData, setCompanyFormData] = useState<EditCompany>({
     id: 0,
-    name: '',
-    imageUrl: ''
+    name: "",
+    imageUrl: "",
   });
   const [emailFormData, setEmailFormData] = useState<EditEmail>({
     id: 0,
-    email: '',
+    email: "",
   });
   const [passwordFormData, setPasswordFormData] = useState<EditPassword>({
     id: 0,
-    password: '',
-    passwordRepeat: '',
+    password: "",
+    passwordRepeat: "",
   });
 
   const handleCompanyFormChange = (event: any) => {
     const { name, value } = event.target;
-    setCompanyFormData((prev) => ({...prev, [name]: value}));
-  }
-  
+    setCompanyFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleEmailFormChange = (event: any) => {
     const { name, value } = event.target;
-    setEmailFormData((prev) => ({...prev, [name]: value}));
-  }
-  
+    setEmailFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handlePasswordFormChange = (event: any) => {
     const { name, value } = event.target;
-    setPasswordFormData((prev) => ({...prev, [name]: value}));
-  }
+    setPasswordFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const getCompany = useCallback(async () => {
     const currentUser: CurrentUser | null = getCurrentUser();
-    if(currentUser) {
+    if (currentUser) {
       isLoading.onStartLoading();
       let company: Company = await GetCompanyRequest({
         id: currentUser?.companyId,
@@ -80,17 +93,17 @@ const AccountClient = () => {
         setCompanyFormData({
           id: company.id ?? 0,
           name: company.name ?? "",
-          imageUrl: company.imageUrl ?? ""
+          imageUrl: company.imageUrl ?? "",
         });
       }
 
       isLoading.onEndLoading();
     }
-  }, [])
-  
+  }, []);
+
   const getUser = useCallback(async () => {
     const currentUser: CurrentUser | null = getCurrentUser();
-    if(currentUser) {
+    if (currentUser) {
       isLoading.onStartLoading();
       let user: User = await GetUserRequest({
         id: currentUser?.id,
@@ -98,46 +111,49 @@ const AccountClient = () => {
       if (user) {
         setEmailFormData({
           id: user.id ?? 0,
-          email: user.email ?? '',
+          email: user.email ?? "",
         });
         setPasswordFormData({
           id: user.id ?? 0,
-          password: '',
-          passwordRepeat: ''
+          password: "",
+          passwordRepeat: "",
         });
       }
 
       isLoading.onEndLoading();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     getCompany();
     getUser();
-  }, [getCompany])
+  }, [getCompany, getUser]);
 
   const handleSpaceKeyDown = (event: any) => {
-    if (event.key === ' ') {
+    if (event.key === " ") {
       event.preventDefault();
     }
-  }
+  };
 
   const isCompanyFormValid = (): boolean => {
     if (!companyFormData.name) return false;
 
     return true;
   };
-  
+
   const isEmailFormValid = (): boolean => {
     if (!emailFormData.email) return false;
-    if(!isValidEmail(emailFormData.email)) return false;
+    if (!isValidEmail(emailFormData.email)) return false;
 
     return true;
   };
-  
+
   const isPasswordFormValid = (): boolean => {
-    if (!passwordFormData.password || !passwordFormData.passwordRepeat) return false;
-    if (passwordFormData.password !== passwordFormData.passwordRepeat) return false;
+    if (!passwordFormData.password || !passwordFormData.passwordRepeat)
+      return false;
+    if (passwordFormData.password !== passwordFormData.passwordRepeat)
+      return false;
+    if (passwordFormData.password.length < minPasswordLength) return false;
 
     return true;
   };
@@ -156,24 +172,27 @@ const AccountClient = () => {
     } else {
       showErrorMessage("Algunos campos son requeridos o inválidos");
     }
-  }
-  
+  };
+
   const onEmailSubmit = async () => {
+    confirmChangeModal.onClose();
     if (isEmailFormValid()) {
       isLoading.onStartLoading();
       let editEmail: any = await EditEmailRequest(emailFormData);
       if (editEmail?.error) {
         isLoading.onEndLoading();
-        showErrorMessage("Correo ya existe");
+        showErrorMessage("Correo ya está en uso");
       } else {
         isLoading.onEndLoading();
         showSuccessCreationMessage("Correo actualizado exitosamente");
+        deleteUserSession();
+        push("/login");
       }
     } else {
       showErrorMessage("Algunos campos son requeridos o inválidos");
     }
-  }
-  
+  };
+
   const onPasswordSubmit = async () => {
     if (isPasswordFormValid()) {
       isLoading.onStartLoading();
@@ -184,12 +203,18 @@ const AccountClient = () => {
       } else {
         isLoading.onEndLoading();
         showSuccessCreationMessage("Contraseña cambiada exitosamente");
-        setPasswordFormData((prev) => ({...prev, password: '', passwordRepeat: ''}))
+        setPasswordFormData((prev) => ({
+          ...prev,
+          password: "",
+          passwordRepeat: "",
+        }));
       }
     } else {
-      showErrorMessage("Algunos campos son requeridos, inválidos o las contraseñas no son iguales");
+      showErrorMessage(
+        "La contraseña es requerida, mínimo 6 caracteres o las contraseñas no son iguales"
+      );
     }
-  }
+  };
 
   const showSuccessCreationMessage = (msg: string) => {
     toast({
@@ -216,15 +241,18 @@ const AccountClient = () => {
   return (
     <Container maxW="4xl" py={8}>
       <SimpleCard>
+        <WarningModal
+          onSubmit={onEmailSubmit}
+          title="Actualizar Correo"
+          description="¿Estás seguro que quieres actualizar tu correo? Tendrás que volver a iniciar sesión una vez hagas el cambio"
+          confirmText="Aceptar"
+        />
         <div className="p-4">
           <Flex align="center" gap={4}>
-            <Avatar
-              size="xl"
-              src="/placeholder.svg?height=80&width=80"
-            />
+            <Avatar size="xl" src="/placeholder.svg?height=80&width=80" />
             <Box>
               <Heading size="lg" className="break-all">
-                { companyFormData.name }
+                {companyFormData.name}
               </Heading>
             </Box>
           </Flex>
@@ -255,10 +283,15 @@ const AccountClient = () => {
                   <FormControl>
                     <label className="text-sm">Imagen</label>
                     <div className="border rounded py-5 px-3">
-                        <ImagesUpload maxImagesNumber={1} showAddImage={true} />
+                      <ImagesUpload maxImagesNumber={1} showAddImage={true} />
                     </div>
                   </FormControl>
-                  <Button variant="main" alignSelf="flex-start" className="mt-4" onClick={onCompanySubmit}>
+                  <Button
+                    variant="main"
+                    alignSelf="flex-start"
+                    className="mt-4"
+                    onClick={onCompanySubmit}
+                  >
                     Guardar Cambios
                   </Button>
                 </VStack>
@@ -268,25 +301,62 @@ const AccountClient = () => {
                   <Heading size="md" mb={2}>
                     Ajuste de Cuenta
                   </Heading>
-                  <Text size="sm" color="gray.500">Actualiza el correo de tu usuario</Text>
+                  <Text size="sm" color="gray.500">
+                    Actualiza el correo de tu usuario
+                  </Text>
                   <FormControl>
                     <label className="text-sm">Correo</label>
-                    <Input size="sm" name="email" value={emailFormData.email} onChange={handleEmailFormChange} />
+                    <Input
+                      size="sm"
+                      name="email"
+                      value={emailFormData.email}
+                      onChange={handleEmailFormChange}
+                    />
                   </FormControl>
-                  <Button variant="main" alignSelf="flex-start" className="mt-4" onClick={onEmailSubmit}>
+                  <Button
+                    variant="main"
+                    alignSelf="flex-start"
+                    className="mt-4"
+                    onClick={() => {
+                      confirmChangeModal.onOpen();
+                    }}
+                  >
                     Actualizar Correo
                   </Button>
                   <hr className="my-4" />
-                  <Text size="sm" color="gray.500">Cambiar tu contraseña</Text>
+                  <Text size="sm" color="gray.500">
+                    Cambiar tu contraseña
+                  </Text>
                   <FormControl>
                     <label className="text-sm">Contraseña Nueva</label>
-                    <Input size="sm" type="password" name="password" maxLength={20} value={passwordFormData.password} onChange={handlePasswordFormChange} onKeyDown={handleSpaceKeyDown} />
+                    <Input
+                      size="sm"
+                      type="password"
+                      name="password"
+                      maxLength={20}
+                      value={passwordFormData.password}
+                      onChange={handlePasswordFormChange}
+                      onKeyDown={handleSpaceKeyDown}
+                    />
                   </FormControl>
                   <FormControl>
                     <label className="text-sm">Repetir Contraseña Nueva</label>
-                    <Input size="sm" type="password" name="passwordRepeat" maxLength={20} value={passwordFormData.passwordRepeat} onChange={handlePasswordFormChange} onKeyDown={handleSpaceKeyDown} />
+                    <Input
+                      size="sm"
+                      type="password"
+                      name="passwordRepeat"
+                      maxLength={20}
+                      value={passwordFormData.passwordRepeat}
+                      onChange={handlePasswordFormChange}
+                      onKeyDown={handleSpaceKeyDown}
+                    />
                   </FormControl>
-                  <Button variant="main" alignSelf="flex-start" className="mt-4" onClick={onPasswordSubmit}>
+                  <Button
+                    variant="main"
+                    alignSelf="flex-start"
+                    className="mt-4"
+                    onClick={onPasswordSubmit}
+                  >
                     Cambiar Contraseña
                   </Button>
                 </VStack>

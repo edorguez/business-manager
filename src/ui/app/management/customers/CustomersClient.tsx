@@ -4,10 +4,8 @@ import getCurrentUser from '@/app/actions/getCurrentUser';
 import { DeleteCustomerRequest, GetCustomersRequest } from '@/app/api/customers/route';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import SimpleCard from '@/app/components/cards/SimpleCard';
-import DeleteModal from '@/app/components/modals/DeleteModal';
 import SimpleTable from '@/app/components/tables/SimpleTable';
 import { ColumnType, SimpleTableColumn } from '@/app/components/tables/SimpleTable.types';
-import useDeleteModal from '@/app/hooks/useDeleteModal';
 import { BreadcrumItem } from '@/app/types';
 import { CurrentUser } from '@/app/types/auth';
 import { Customer, SearchCustomer } from '@/app/types/customer';
@@ -17,6 +15,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useLoading from '@/app/hooks/useLoading';
+import useWarningModal from '@/app/hooks/useWarningModal';
+import WarningModal from '@/app/components/modals/WarningModal';
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -60,7 +60,7 @@ const CustomersClient = () => {
   const [searchCustomer, setSearchCustomer] = useState<SearchCustomer>({ name: '', lastName: '', identificationNumber: '' });
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [offset, setOffset] = useState<number>(0);
-  const deleteCustomerModal = useDeleteModal();
+  const deleteCustomerModal = useWarningModal();
   const [customerIdDelete, setCustomerIdDelete] = useState<number>(0);
 
   const getCustomers = useCallback(async (searchParams: SearchCustomer = searchCustomer) => {
@@ -131,7 +131,7 @@ const CustomersClient = () => {
   return (
     <div>
       <SimpleCard>
-        <DeleteModal onSubmit={handleSubmitDelete} title="Eliminar Cliente" description="¿Estás seguro que quieres eliminar este cliente?" />
+        <WarningModal onSubmit={handleSubmitDelete} title="Eliminar Cliente" description="¿Estás seguro que quieres eliminar este cliente?" confirmText="Eliminar" />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />
