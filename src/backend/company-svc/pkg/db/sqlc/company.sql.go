@@ -19,7 +19,7 @@ INSERT INTO
 VALUES (
   $1, $2 
 ) 
-RETURNING id, name, image_url, created_at, modified_at
+RETURNING id, name, image_url, plan_id, created_at, modified_at
 `
 
 type CreateCompanyParams struct {
@@ -34,6 +34,7 @@ func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) (C
 		&i.ID,
 		&i.Name,
 		&i.ImageUrl,
+		&i.PlanID,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)
@@ -57,6 +58,7 @@ SELECT
   id,
   name,
   image_url,
+  plan_id,
   created_at,
   modified_at
 FROM 
@@ -87,6 +89,7 @@ func (q *Queries) GetCompanies(ctx context.Context, arg GetCompaniesParams) ([]C
 			&i.ID,
 			&i.Name,
 			&i.ImageUrl,
+			&i.PlanID,
 			&i.CreatedAt,
 			&i.ModifiedAt,
 		); err != nil {
@@ -108,6 +111,7 @@ SELECT
   id,
   name,
   image_url,
+  plan_id,
   created_at,
   modified_at
 FROM 
@@ -124,6 +128,7 @@ func (q *Queries) GetCompany(ctx context.Context, id int64) (CompanyCompany, err
 		&i.ID,
 		&i.Name,
 		&i.ImageUrl,
+		&i.PlanID,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)
@@ -139,7 +144,7 @@ SET
   modified_at = NOW()
 WHERE 
   id = $1
-RETURNING id, name, image_url, created_at, modified_at
+RETURNING id, name, image_url, plan_id, created_at, modified_at
 `
 
 type UpdateCompanyParams struct {
@@ -155,6 +160,7 @@ func (q *Queries) UpdateCompany(ctx context.Context, arg UpdateCompanyParams) (C
 		&i.ID,
 		&i.Name,
 		&i.ImageUrl,
+		&i.PlanID,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)

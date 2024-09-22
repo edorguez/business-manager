@@ -14,6 +14,7 @@ SELECT
   id,
   name,
   image_url,
+  plan_id,
   created_at,
   modified_at
 FROM 
@@ -27,6 +28,7 @@ SELECT
   id,
   name,
   image_url,
+  plan_id,
   created_at,
   modified_at
 FROM 

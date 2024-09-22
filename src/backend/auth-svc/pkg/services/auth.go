@@ -101,7 +101,7 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 		}, nil
 	}
 
-	token, err := s.Jwt.GenerateToken(u.ID, u.Email, u.RoleID, u.CompanyID)
+	token, err := s.Jwt.GenerateToken(u.ID, u.Email, u.RoleID, u.CompanyID, u.RoleID, u.RoleID)
 	if err != nil {
 		fmt.Println("Auth Service :  Login - ERROR")
 		fmt.Println(err.Error())

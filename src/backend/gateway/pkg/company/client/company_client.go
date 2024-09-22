@@ -92,6 +92,7 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *co
 		Id:       res.Id,
 		Name:     res.Name,
 		ImageUrl: res.ImageUrl,
+		PlanId:   res.PlanId,
 	}, nil
 }
 
@@ -126,6 +127,7 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 			Id:       v.Id,
 			Name:     v.Name,
 			ImageUrl: v.ImageUrl,
+			PlanId:   v.PlanId,
 		})
 	}
 

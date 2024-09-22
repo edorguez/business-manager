@@ -13,6 +13,7 @@ type CompanyCompany struct {
 	ID         int64          `json:"id"`
 	Name       string         `json:"name"`
 	ImageUrl   sql.NullString `json:"image_url"`
+	PlanID     int64          `json:"plan_id"`
 	CreatedAt  time.Time      `json:"created_at"`
 	ModifiedAt time.Time      `json:"modified_at"`
 }
@@ -40,4 +41,12 @@ type CompanyPaymentType struct {
 	CreatedAt  time.Time      `json:"created_at"`
 	ModifiedAt time.Time      `json:"modified_at"`
 	ImagePath  sql.NullString `json:"image_path"`
+}
+
+type CompanyPlan struct {
+	ID          int64          `json:"id"`
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+	CreatedAt   time.Time      `json:"created_at"`
+	ModifiedAt  time.Time      `json:"modified_at"`
 }

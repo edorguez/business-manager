@@ -75,6 +75,7 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 		Id:       c.ID,
 		Name:     c.Name,
 		ImageUrl: type_converter.NewString(c.ImageUrl),
+		PlanId:   c.PlanID,
 		Status:   http.StatusOK,
 	}, nil
 }
@@ -106,6 +107,7 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 			Id:       v.ID,
 			Name:     v.Name,
 			ImageUrl: type_converter.NewString(v.ImageUrl),
+			PlanId:   v.PlanID,
 			Status:   http.StatusOK,
 		})
 	}

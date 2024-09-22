@@ -31,8 +31,9 @@ message GetCompanyResponse{
   int64 id = 1;
   string name = 2;
   optional string imageUrl = 3;
-  int64 status = 4;
-  string error = 5;
+  int64 plan_id = 4;
+  int64 status = 5;
+  string error = 6;
 }
 
 message GetCompaniesRequest{
