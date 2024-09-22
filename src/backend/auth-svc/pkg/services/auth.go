@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/auth-svc/pkg/client"
+	"github.com/EdoRguez/business-manager/auth-svc/pkg/config"
 	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
 	auth "github.com/EdoRguez/business-manager/auth-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
@@ -14,15 +16,15 @@ import (
 )
 
 type AuthService struct {
-	Repo *repo.UserRepo
-	Jwt  jwt_manager.JWTWrapper
+	Repo   *repo.UserRepo
+	Jwt    jwt_manager.JWTWrapper
+	Config *config.Config
 	auth.UnimplementedAuthServiceServer
 }
 
 func (s *AuthService) Register(ctx context.Context, req *auth.RegisterRequest) (*auth.RegisterResponse, error) {
 	fmt.Println("Auth Service :  Register")
 	fmt.Println("Auth Service :  Register - Req")
-	fmt.Println(req)
 	fmt.Println("----------------")
 
 	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
@@ -70,7 +72,6 @@ func (s *AuthService) Register(ctx context.Context, req *auth.RegisterRequest) (
 func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.LoginResponse, error) {
 	fmt.Println("Auth Service :  Login")
 	fmt.Println("Auth Service :  Login - Req")
-	fmt.Println(req)
 	fmt.Println("----------------")
 
 	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
@@ -101,7 +102,24 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 		}, nil
 	}
 
-	token, err := s.Jwt.GenerateToken(u.ID, u.Email, u.RoleID, u.CompanyID, u.RoleID, u.RoleID)
+	if err := client.InitCompanyServiceClient(s.Config); err != nil {
+		return &auth.LoginResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	company, errCompany := client.GetCompany(u.CompanyID, ctx)
+
+	if errCompany != nil {
+		fmt.Println("Auth Service :  Login - ERROR")
+		return &auth.LoginResponse{
+			Status: http.StatusInternalServerError,
+			Error:  errCompany.Error(),
+		}, nil
+	}
+
+	token, err := s.Jwt.GenerateToken(u.ID, u.Email, u.RoleID, u.CompanyID, company.PlanId)
 	if err != nil {
 		fmt.Println("Auth Service :  Login - ERROR")
 		fmt.Println(err.Error())
@@ -121,7 +139,6 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 func (s *AuthService) Validate(ctx context.Context, req *auth.ValidateRequest) (*auth.ValidateResponse, error) {
 	fmt.Println("Auth Service :  Validate")
 	fmt.Println("Auth Service :  Validate - Req")
-	fmt.Println(req)
 	fmt.Println("----------------")
 
 	err := s.Jwt.ValidateToken(req.Token)

@@ -43,6 +43,7 @@ func main() {
 			Issuer:          "auth-svc",
 			ExpirationHours: 24 * 7,
 		},
+		Config: &c,
 	}
 
 	us := services.UserService{
