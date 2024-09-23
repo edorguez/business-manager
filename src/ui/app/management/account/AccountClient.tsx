@@ -7,11 +7,8 @@ import {
   Container,
   Flex,
   FormControl,
-  FormLabel,
   Heading,
   Input,
-  Stack,
-  Switch,
   Tab,
   TabList,
   TabPanel,
@@ -20,7 +17,6 @@ import {
   Text,
   VStack,
   Avatar,
-  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import SimpleCard from "@/app/components/cards/SimpleCard";
@@ -44,11 +40,13 @@ import useWarningModal from "@/app/hooks/useWarningModal";
 import WarningModal from "@/app/components/modals/WarningModal";
 import { useRouter } from "next/navigation";
 import deleteUserSession from "@/app/actions/deleteUserSession";
+import isUserAdmin from "@/app/actions/isUserAdmin";
 
 const AccountClient = () => {
   const { push } = useRouter();
   const isLoading = useLoading();
   const toast = useToast();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const confirmChangeModal = useWarningModal();
   const minPasswordLength: number = 6;
 
@@ -125,6 +123,9 @@ const AccountClient = () => {
   }, []);
 
   useEffect(() => {
+    const user: CurrentUser | null = getCurrentUser();
+    if (user) setIsAdmin(isUserAdmin(user.roleId));
+
     getCompany();
     getUser();
   }, [getCompany, getUser]);
@@ -278,22 +279,28 @@ const AccountClient = () => {
                       maxLength={50}
                       value={companyFormData.name}
                       onChange={handleCompanyFormChange}
+                      disabled={!isAdmin}
                     />
                   </FormControl>
                   <FormControl>
                     <label className="text-sm">Imagen</label>
                     <div className="border rounded py-5 px-3">
-                      <ImagesUpload maxImagesNumber={1} showAddImage={true} />
+                      <ImagesUpload
+                        maxImagesNumber={1}
+                        showAddImage={isAdmin}
+                      />
                     </div>
                   </FormControl>
-                  <Button
-                    variant="main"
-                    alignSelf="flex-start"
-                    className="mt-4"
-                    onClick={onCompanySubmit}
-                  >
-                    Guardar Cambios
-                  </Button>
+                  {isAdmin && (
+                    <Button
+                      variant="main"
+                      alignSelf="flex-start"
+                      className="mt-4"
+                      onClick={onCompanySubmit}
+                    >
+                      Guardar Cambios
+                    </Button>
+                  )}
                 </VStack>
               </TabPanel>
               <TabPanel>
