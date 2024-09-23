@@ -1,26 +1,32 @@
-'use client';
+"use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { ChangeStatusRequest, DeleteProductRequest, GetProductsRequest } from "@/app/api/products/route";
+import {
+  ChangeStatusRequest,
+  DeleteProductRequest,
+  GetProductsRequest,
+} from "@/app/api/products/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import WarningModal from "@/app/components/modals/WarningModal";
 import SimpleTable from "@/app/components/tables/SimpleTable";
-import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
+import {
+  ColumnType,
+  SimpleTableColumn,
+} from "@/app/components/tables/SimpleTable.types";
 import useLoading from "@/app/hooks/useLoading";
 import useWarningModal from "@/app/hooks/useWarningModal";
 import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { Product, SearchProduct } from "@/app/types/product";
+import { PLAN_ID, PRODUCT } from "@/app/utils/constants";
 import { Button, Input, useToast } from "@chakra-ui/react";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-
 const ProductsClient = () => {
-
   const bcItems: BreadcrumItem[] = [
     {
       label: "Productos",
@@ -32,27 +38,27 @@ const ProductsClient = () => {
     {
       key: "images",
       name: "",
-      type: ColumnType.ArrayImageFirst
+      type: ColumnType.ArrayImageFirst,
     },
     {
       key: "name",
       name: "Producto",
-      type: ColumnType.String
+      type: ColumnType.String,
     },
     {
       key: "sku",
       name: "SKU",
-      type: ColumnType.String
+      type: ColumnType.String,
     },
     {
       key: "quantity",
       name: "Cantidad",
-      type: ColumnType.Number
+      type: ColumnType.Number,
     },
     {
       key: "price",
       name: "precio",
-      type: ColumnType.Money
+      type: ColumnType.Money,
     },
   ];
 
@@ -60,95 +66,114 @@ const ProductsClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const deleteProductModal = useWarningModal();
-  const [searchProduct, setSearchProduct] = useState<SearchProduct>({ name: '', sku: '' });
+  const [searchProduct, setSearchProduct] = useState<SearchProduct>({
+    name: "",
+    sku: "",
+  });
   const [offset, setOffset] = useState<number>(0);
   const [products, setProducts] = useState<Product[]>([]);
   const [productIdDelete, setProductIdDelete] = useState<string>("");
+  const [showCreateBtn, setShowCreateBtn] = useState<boolean>(false);
 
-  const getProducts = useCallback(async (searchParams: SearchProduct) => {
-    isLoading.onStartLoading();
-    const currentUser: CurrentUser | null = getCurrentUser();
+  const getProducts = useCallback(
+    async (searchParams: SearchProduct) => {
+      isLoading.onStartLoading();
+      const currentUser: CurrentUser | null = getCurrentUser();
 
-    if (currentUser) {
-      let data: Product[] = await GetProductsRequest({
-        companyId: currentUser.companyId,
-        name: searchParams.name ?? '',
-        sku: searchParams.sku ?? '',
-        limit: 10,
-        offset: offset,
-      });
-      data = data.map(x => {
-        return {
-          ...x,
-          isActive: x.productStatus === 1 ? true : false
-        }
-      });
-      setProducts(data);
-    }
-    isLoading.onEndLoading();
-  }, [offset]);
+      if (currentUser) {
+        let data: Product[] = await GetProductsRequest({
+          companyId: currentUser.companyId,
+          name: searchParams.name ?? "",
+          sku: searchParams.sku ?? "",
+          limit: 10,
+          offset: offset,
+        });
+        data = data.map((x) => {
+          return {
+            ...x,
+            isActive: x.productStatus === 1 ? true : false,
+          };
+        });
+
+        setShowCreateBtn(
+          currentUser.planId === PLAN_ID.PRO ||
+            data.length < PRODUCT.MAX_BASIC_PLAN_ITEMS
+        );
+        setProducts(data);
+      }
+      isLoading.onEndLoading();
+    },
+    [offset]
+  );
 
   useEffect(() => {
     getProducts(searchProduct);
   }, [getProducts]);
 
   const handleChangePage = (val: string) => {
-    setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
-  }
+    setOffset((prevValue) =>
+      val === "NEXT" ? (prevValue += 10) : (prevValue -= 10)
+    );
+  };
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setSearchProduct((prevData) => ({ ...prevData, [name]: value }));
-  }
+  };
 
   const onSearchProduct = () => {
     getProducts(searchProduct);
-  }
+  };
 
   const handleOpenDelete = (id: string) => {
     setProductIdDelete(id);
     deleteProductModal.onOpen();
-  }
+  };
 
   const handleSubmitDelete = () => {
     onDelete(productIdDelete);
-  }
+  };
 
   const onDelete = useCallback(async (id: string) => {
     isLoading.onStartLoading();
     await DeleteProductRequest({ id });
     getProducts(searchProduct);
     deleteProductModal.onClose();
-    isLoading.onEndLoading()
+    isLoading.onEndLoading();
     toast({
-      title: 'Producto',
-      description: 'Producto eliminado exitosamente',
-      variant: 'customsuccess',
-      position: 'top-right',
+      title: "Producto",
+      description: "Producto eliminado exitosamente",
+      variant: "customsuccess",
+      position: "top-right",
       duration: 3000,
       isClosable: true,
     });
-  }, [])
+  }, []);
 
   const onChangeStatus = useCallback(async (id: string, status: boolean) => {
     isLoading.onStartLoading();
-    await ChangeStatusRequest({ id: id, productStatus: status ? 1 : 0});
+    await ChangeStatusRequest({ id: id, productStatus: status ? 1 : 0 });
     getProducts(searchProduct);
-    isLoading.onEndLoading()
-  }, [])
+    isLoading.onEndLoading();
+  }, []);
 
   const handleOpenEdit = (val: any) => {
     push(`products/${val.id}?isEdit=true`);
-  }
+  };
 
   const handleOpenDetail = (val: any) => {
     push(`products/${val.id}`);
-  }
+  };
 
   return (
     <div>
       <SimpleCard>
-        <WarningModal onSubmit={handleSubmitDelete} title="Eliminar PRoducto" description="¿Estás seguro que quieres eliminar este producto?" confirmText="Eliminar" />
+        <WarningModal
+          onSubmit={handleSubmitDelete}
+          title="Eliminar PRoducto"
+          description="¿Estás seguro que quieres eliminar este producto?"
+          confirmText="Eliminar"
+        />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />
@@ -171,11 +196,13 @@ const ProductsClient = () => {
           <div className="xl:col-start-6">
             <div className="flex flex-col">
               <span className="opacity-0">.</span>
-              <Link href="/management/products/create">
-                <Button size="sm" variant="main" className="w-full">
-                  Crear Producto
-                </Button>
-              </Link>
+              {showCreateBtn && (
+                <Link href="/management/products/create">
+                  <Button size="sm" variant="main" className="w-full">
+                    Crear Producto
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -183,12 +210,24 @@ const ProductsClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={productCols} data={products} showToggleActive showDetails showEdit showDelete onEdit={handleOpenEdit} onDelete={handleOpenDelete} onDetail={handleOpenDetail} onChangeStatus={onChangeStatus} onChangePage={handleChangePage} offset={offset} />
+          <SimpleTable
+            columns={productCols}
+            data={products}
+            showToggleActive
+            showDetails
+            showEdit
+            showDelete
+            onEdit={handleOpenEdit}
+            onDelete={handleOpenDelete}
+            onDetail={handleOpenDetail}
+            onChangeStatus={onChangeStatus}
+            onChangePage={handleChangePage}
+            offset={offset}
+          />
         </SimpleCard>
       </div>
     </div>
-  )
-
-}
+  );
+};
 
 export default ProductsClient;

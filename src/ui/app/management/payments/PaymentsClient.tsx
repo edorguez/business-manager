@@ -1,7 +1,11 @@
 "use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { ChangeStatusRequest, DeletePaymentRequest, GetPaymentsRequest } from "@/app/api/payment/route";
+import {
+  ChangeStatusRequest,
+  DeletePaymentRequest,
+  GetPaymentsRequest,
+} from "@/app/api/payment/route";
 import { GetPaymentTypesRequest } from "@/app/api/paymentType/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import PaymentCard from "@/app/components/cards/PaymentCard";
@@ -14,6 +18,7 @@ import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { Payment } from "@/app/types/payment";
 import { PaymentType } from "@/app/types/paymentType";
+import { PAYMENT, PLAN_ID } from "@/app/utils/constants";
 import { Button, useToast } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,7 +39,9 @@ const PaymentsClient = () => {
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [paymentIdDelete, setPaymentIdDelete] = useState<number>(0);
-  const [filterPaymentIdSelected, setFilterPaymentIdSelected] = useState<number>(0);
+  const [filterPaymentIdSelected, setFilterPaymentIdSelected] =
+    useState<number>(0);
+  const [showCreateBtn, setShowCreateBtn] = useState<boolean>(false);
 
   const getPaymentTypes = useCallback(async () => {
     isLoading.onStartLoading();
@@ -54,6 +61,10 @@ const PaymentsClient = () => {
         limit: 30,
         offset: 0,
       });
+      setShowCreateBtn(
+        currentUser.planId === PLAN_ID.PRO ||
+          data.length < PAYMENT.MAX_BASIC_PLAN_ITEMS
+      );
       setPayments(data);
     }
     isLoading.onEndLoading();
@@ -63,56 +74,61 @@ const PaymentsClient = () => {
     getPaymentTypes();
     getPayments(filterPaymentIdSelected);
   }, []);
-  
+
   const handleOpenDelete = (id: number) => {
     setPaymentIdDelete(id);
     deletePaymentModal.onOpen();
-  }
+  };
 
   const handleSubmitDelete = () => {
     onDelete(paymentIdDelete);
-  }
-  
+  };
+
   const onDelete = useCallback(async (id: number) => {
     isLoading.onStartLoading();
     await DeletePaymentRequest({ id });
     getPayments(filterPaymentIdSelected);
     deletePaymentModal.onClose();
-    isLoading.onEndLoading()
+    isLoading.onEndLoading();
     toast({
-      title: 'Método de Pago',
-      description: 'Método de pago eliminado exitosamente',
-      variant: 'customsuccess',
-      position: 'top-right',
+      title: "Método de Pago",
+      description: "Método de pago eliminado exitosamente",
+      variant: "customsuccess",
+      position: "top-right",
       duration: 3000,
       isClosable: true,
     });
-  }, [])
+  }, []);
 
   const onChangeStatus = useCallback(async (id: number, status: boolean) => {
     isLoading.onStartLoading();
-    await ChangeStatusRequest({ id: id, status:  status});
+    await ChangeStatusRequest({ id: id, status: status });
     getPayments(filterPaymentIdSelected);
-    isLoading.onEndLoading()
-  }, [])
-  
+    isLoading.onEndLoading();
+  }, []);
+
   const handleOpenEdit = (id: number) => {
     push(`payments/${id}?isEdit=true`);
-  }
+  };
 
   const handleOpenDetail = (id: number) => {
     push(`payments/${id}`);
-  }
-  
+  };
+
   const handleFilterPaymentType = (id: number) => {
     setFilterPaymentIdSelected(id);
     getPayments(id);
-  }
+  };
 
   return (
     <div>
       <SimpleCard>
-        <WarningModal onSubmit={handleSubmitDelete} title="Eliminar Método de Pago" description="¿Estás seguro que quieres eliminar este método de pago?" confirmText="Eliminar" />
+        <WarningModal
+          onSubmit={handleSubmitDelete}
+          title="Eliminar Método de Pago"
+          description="¿Estás seguro que quieres eliminar este método de pago?"
+          confirmText="Eliminar"
+        />
         <BreadcrumbNavigation items={bcItems} />
 
         <hr className="my-3" />
@@ -122,11 +138,13 @@ const PaymentsClient = () => {
             <h1 className="ml-2 font-bold">Métodos de Pago</h1>
           </div>
           <div className="lg:col-start-5">
-            <Link href="/management/payments/create">
-              <Button size="sm" variant="main" className="w-full">
-                Crear Método de Pago
-              </Button>
-            </Link>
+            {showCreateBtn && (
+              <Link href="/management/payments/create">
+                <Button size="sm" variant="main" className="w-full">
+                  Crear Método de Pago
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </SimpleCard>
@@ -161,17 +179,21 @@ const PaymentsClient = () => {
               <h3>Métodos de Pago</h3>
               {payments.map((item) => (
                 <div key={item.id} className="mt-1">
-                  <PaymentCard payment={item} onDelete={handleOpenDelete} onDetails={handleOpenDetail} onEdit={handleOpenEdit} onChangeStatus={onChangeStatus} />
+                  <PaymentCard
+                    payment={item}
+                    onDelete={handleOpenDelete}
+                    onDetails={handleOpenDetail}
+                    onEdit={handleOpenEdit}
+                    onChangeStatus={onChangeStatus}
+                  />
                 </div>
               ))}
             </div>
-            {
-                payments.length === 0 && (
-                  <div className="h-full flex justify-center">
-                    <span className="pt-4">No hay métodos de pago creados</span>
-                  </div>
-                )
-              }
+            {payments.length === 0 && (
+              <div className="h-full flex justify-center">
+                <span className="pt-4">No hay métodos de pago creados</span>
+              </div>
+            )}
           </SimpleCard>
         </div>
       </div>
