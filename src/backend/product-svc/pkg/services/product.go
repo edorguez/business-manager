@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/EdoRguez/business-manager/product-svc/pkg/client"
+	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
+	"github.com/EdoRguez/business-manager/product-svc/pkg/constants"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
 	product "github.com/EdoRguez/business-manager/product-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/product-svc/pkg/repository"
@@ -13,7 +16,8 @@ import (
 )
 
 type ProductService struct {
-	Repo *repo.ProductRepo
+	Repo   *repo.ProductRepo
+	Config *config.Config
 	product.UnimplementedProductServiceServer
 }
 
@@ -22,6 +26,48 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 	fmt.Println("Product Service :  CreateProduct - Req")
 	fmt.Println(req)
 	fmt.Println("----------------")
+
+	if err := client.InitCompanyServiceClient(s.Config); err != nil {
+		return &product.CreateProductResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	company, errCompany := client.GetCompany(req.CompanyId, ctx)
+
+	if errCompany != nil {
+		fmt.Println("Product Service :  CreateProduct - ERROR")
+		return &product.CreateProductResponse{
+			Status: http.StatusInternalServerError,
+			Error:  errCompany.Error(),
+		}, nil
+	}
+
+	if company.PlanId == constants.PLAN_ID_BASIC {
+		ps, err := s.Repo.GetProducts(ctx, repo.GetProductsParams{
+			CompanyId: req.CompanyId,
+			Offset:    0,
+			Limit:     constants.MAX_BASIC_PLAN_PRODUCTS,
+		})
+
+		if err != nil {
+			fmt.Println("Product Service :  CreateProduct - ERROR")
+			fmt.Println(err.Error())
+			return &product.CreateProductResponse{
+				Status: http.StatusInternalServerError,
+				Error:  err.Error(),
+			}, nil
+		}
+
+		if len(ps) >= constants.MAX_BASIC_PLAN_PRODUCTS {
+			fmt.Println("Product Service :  CreateProduct - ERROR")
+			return &product.CreateProductResponse{
+				Status: http.StatusUnauthorized,
+				Error:  "Can't create product, upgrade your plan to create more products",
+			}, nil
+		}
+	}
 
 	createProductParams := models.Product{
 		CompanyId:     req.CompanyId,

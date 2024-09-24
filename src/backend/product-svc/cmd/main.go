@@ -34,7 +34,8 @@ func main() {
 	fmt.Println("Client Service ON: ", c.Port)
 
 	ps := services.ProductService{
-		Repo: repo.NewProductRepo(mongoClient, c),
+		Repo:   repo.NewProductRepo(mongoClient, c),
+		Config: &c,
 	}
 
 	grpcServer := grpc.NewServer()

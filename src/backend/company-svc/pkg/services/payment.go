@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EdoRguez/business-manager/company-svc/pkg/constants"
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
 	payment "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
@@ -13,7 +14,8 @@ import (
 )
 
 type PaymentService struct {
-	Repo *repo.PaymentRepo
+	Repo        *repo.PaymentRepo
+	CompanyRepo *repo.CompanyRepo
 	payment.UnimplementedPaymentServiceServer
 }
 
@@ -22,6 +24,41 @@ func (s *PaymentService) CreatePayment(ctx context.Context, req *payment.CreateP
 	fmt.Println("Payment Service :  CreatePayment - Req")
 	fmt.Println(req)
 	fmt.Println("----------------")
+
+	company, errCompany := s.CompanyRepo.GetCompany(ctx, req.CompanyId)
+
+	if errCompany != nil {
+		fmt.Println("Payment Service :  CreatePayment - ERROR")
+		return &payment.CreatePaymentResponse{
+			Status: http.StatusInternalServerError,
+			Error:  errCompany.Error(),
+		}, nil
+	}
+
+	if company.PlanID == constants.PLAN_ID_BASIC {
+		ps, err := s.Repo.GetPayments(ctx, db.GetPaymentsParams{
+			CompanyID: req.CompanyId,
+			Offset:    0,
+			Limit:     constants.MAX_BASIC_PLAN_PAYMENTS,
+		})
+
+		if err != nil {
+			fmt.Println("Payment Service :  CreatePayment - ERROR")
+			fmt.Println(err.Error())
+			return &payment.CreatePaymentResponse{
+				Status: http.StatusInternalServerError,
+				Error:  err.Error(),
+			}, nil
+		}
+
+		if len(ps) >= constants.MAX_BASIC_PLAN_PAYMENTS {
+			fmt.Println("Payment Service :  CreatePayment - ERROR")
+			return &payment.CreatePaymentResponse{
+				Status: http.StatusUnauthorized,
+				Error:  "Can't create payment, upgrade your plan to create more payments",
+			}, nil
+		}
+	}
 
 	createPaymentParams := db.CreatePaymentParams{
 		CompanyID:            req.CompanyId,

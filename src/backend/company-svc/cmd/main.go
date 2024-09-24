@@ -40,7 +40,8 @@ func main() {
 	}
 
 	ps := services.PaymentService{
-		Repo: repo.NewPaymentRepo(storage),
+		Repo:        repo.NewPaymentRepo(storage),
+		CompanyRepo: repo.NewCompanyRepo(storage),
 	}
 
 	pts := services.PaymentTypeService{
