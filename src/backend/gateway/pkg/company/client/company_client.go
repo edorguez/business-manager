@@ -9,6 +9,7 @@ import (
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var companyServiceClient pb.CompanyServiceClient
@@ -35,8 +36,9 @@ func CreateCompany(body contracts.CreateCompanyRequest, c context.Context) (*pb.
 	fmt.Println("-----------------")
 
 	createCompanyParams := &pb.CreateCompanyRequest{
-		Name:     body.Name,
-		ImageUrl: body.ImageUrl,
+		Name:            body.Name,
+		ImageUrl:        body.ImageUrl,
+		LastPaymentDate: timestamppb.New(body.LastPaymentDate),
 	}
 
 	res, err := companyServiceClient.CreateCompany(c, createCompanyParams)
@@ -89,10 +91,11 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *co
 	}
 
 	return &contracts.GetCompanyResponse{
-		Id:       res.Id,
-		Name:     res.Name,
-		ImageUrl: res.ImageUrl,
-		PlanId:   res.PlanId,
+		Id:              res.Id,
+		Name:            res.Name,
+		ImageUrl:        res.ImageUrl,
+		PlanId:          res.PlanId,
+		LastPaymentDate: res.LastPaymentDate.AsTime(),
 	}, nil
 }
 
@@ -124,10 +127,11 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 	cr := make([]*contracts.GetCompanyResponse, 0, len(res.Companies))
 	for _, v := range res.Companies {
 		cr = append(cr, &contracts.GetCompanyResponse{
-			Id:       v.Id,
-			Name:     v.Name,
-			ImageUrl: v.ImageUrl,
-			PlanId:   v.PlanId,
+			Id:              v.Id,
+			Name:            v.Name,
+			ImageUrl:        v.ImageUrl,
+			PlanId:          v.PlanId,
+			LastPaymentDate: v.LastPaymentDate.AsTime(),
 		})
 	}
 

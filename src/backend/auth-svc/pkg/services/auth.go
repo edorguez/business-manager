@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/client"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/config"
@@ -116,6 +117,14 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 		return &auth.LoginResponse{
 			Status: http.StatusInternalServerError,
 			Error:  errCompany.Error(),
+		}, nil
+	}
+
+	if company.LastPaymentDate.AsTime().Before(time.Now()) {
+		fmt.Println("Auth Service :  Login - ERROR")
+		return &auth.LoginResponse{
+			Status: http.StatusUnauthorized,
+			Error:  "Can't log in because of last payment",
 		}, nil
 	}
 

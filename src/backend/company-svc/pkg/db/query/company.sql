@@ -2,10 +2,11 @@
 INSERT INTO 
   company.company (
     name,
-    image_url
+    image_url,
+    last_payment_date
   ) 
 VALUES (
-  $1, $2 
+  $1, $2, $3
 ) 
 RETURNING *;
 
@@ -15,6 +16,7 @@ SELECT
   name,
   image_url,
   plan_id,
+  last_payment_date,
   created_at,
   modified_at
 FROM 
@@ -29,6 +31,7 @@ SELECT
   name,
   image_url,
   plan_id,
+  last_payment_date,
   created_at,
   modified_at
 FROM 

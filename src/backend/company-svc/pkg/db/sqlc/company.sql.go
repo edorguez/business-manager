@@ -8,33 +8,37 @@ package db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createCompany = `-- name: CreateCompany :one
 INSERT INTO 
   company.company (
     name,
-    image_url
+    image_url,
+    last_payment_date
   ) 
 VALUES (
-  $1, $2 
+  $1, $2, $3
 ) 
-RETURNING id, name, image_url, plan_id, created_at, modified_at
+RETURNING id, name, image_url, plan_id, last_payment_date, created_at, modified_at
 `
 
 type CreateCompanyParams struct {
-	Name     string         `json:"name"`
-	ImageUrl sql.NullString `json:"image_url"`
+	Name            string         `json:"name"`
+	ImageUrl        sql.NullString `json:"image_url"`
+	LastPaymentDate time.Time      `json:"last_payment_date"`
 }
 
 func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) (CompanyCompany, error) {
-	row := q.db.QueryRowContext(ctx, createCompany, arg.Name, arg.ImageUrl)
+	row := q.db.QueryRowContext(ctx, createCompany, arg.Name, arg.ImageUrl, arg.LastPaymentDate)
 	var i CompanyCompany
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.ImageUrl,
 		&i.PlanID,
+		&i.LastPaymentDate,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)
@@ -59,6 +63,7 @@ SELECT
   name,
   image_url,
   plan_id,
+  last_payment_date,
   created_at,
   modified_at
 FROM 
@@ -90,6 +95,7 @@ func (q *Queries) GetCompanies(ctx context.Context, arg GetCompaniesParams) ([]C
 			&i.Name,
 			&i.ImageUrl,
 			&i.PlanID,
+			&i.LastPaymentDate,
 			&i.CreatedAt,
 			&i.ModifiedAt,
 		); err != nil {
@@ -112,6 +118,7 @@ SELECT
   name,
   image_url,
   plan_id,
+  last_payment_date,
   created_at,
   modified_at
 FROM 
@@ -129,6 +136,7 @@ func (q *Queries) GetCompany(ctx context.Context, id int64) (CompanyCompany, err
 		&i.Name,
 		&i.ImageUrl,
 		&i.PlanID,
+		&i.LastPaymentDate,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)
@@ -144,7 +152,7 @@ SET
   modified_at = NOW()
 WHERE 
   id = $1
-RETURNING id, name, image_url, plan_id, created_at, modified_at
+RETURNING id, name, image_url, plan_id, last_payment_date, created_at, modified_at
 `
 
 type UpdateCompanyParams struct {
@@ -161,6 +169,7 @@ func (q *Queries) UpdateCompany(ctx context.Context, arg UpdateCompanyParams) (C
 		&i.Name,
 		&i.ImageUrl,
 		&i.PlanID,
+		&i.LastPaymentDate,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)

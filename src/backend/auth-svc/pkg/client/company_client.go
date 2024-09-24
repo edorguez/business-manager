@@ -49,9 +49,10 @@ func GetCompany(id int64, c context.Context) (*pb.GetCompanyResponse, error) {
 	}
 
 	return &pb.GetCompanyResponse{
-		Id:       res.Id,
-		Name:     res.Name,
-		ImageUrl: res.ImageUrl,
-		PlanId:   res.PlanId,
+		Id:              res.Id,
+		Name:            res.Name,
+		ImageUrl:        res.ImageUrl,
+		PlanId:          res.PlanId,
+		LastPaymentDate: res.LastPaymentDate,
 	}, nil
 }

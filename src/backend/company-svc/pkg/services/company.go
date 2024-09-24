@@ -10,6 +10,7 @@ import (
 	company "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type CompanyService struct {
@@ -24,8 +25,9 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 	fmt.Println("----------------")
 
 	createCompanyParams := db.CreateCompanyParams{
-		Name:     req.Name,
-		ImageUrl: type_converter.NewSqlNullString(req.ImageUrl),
+		Name:            req.Name,
+		ImageUrl:        type_converter.NewSqlNullString(req.ImageUrl),
+		LastPaymentDate: req.LastPaymentDate.AsTime(),
 	}
 
 	c, err := s.Repo.CreateCompany(ctx, createCompanyParams)
@@ -72,11 +74,12 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 
 	fmt.Println("Company Service :  GetCompany - SUCCESS")
 	return &company.GetCompanyResponse{
-		Id:       c.ID,
-		Name:     c.Name,
-		ImageUrl: type_converter.NewString(c.ImageUrl),
-		PlanId:   c.PlanID,
-		Status:   http.StatusOK,
+		Id:              c.ID,
+		Name:            c.Name,
+		ImageUrl:        type_converter.NewString(c.ImageUrl),
+		PlanId:          c.PlanID,
+		LastPaymentDate: timestamppb.New(c.LastPaymentDate),
+		Status:          http.StatusOK,
 	}, nil
 }
 
@@ -104,11 +107,12 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 	companies := make([]*company.GetCompanyResponse, 0, len(c))
 	for _, v := range c {
 		companies = append(companies, &company.GetCompanyResponse{
-			Id:       v.ID,
-			Name:     v.Name,
-			ImageUrl: type_converter.NewString(v.ImageUrl),
-			PlanId:   v.PlanID,
-			Status:   http.StatusOK,
+			Id:              v.ID,
+			Name:            v.Name,
+			ImageUrl:        type_converter.NewString(v.ImageUrl),
+			PlanId:          v.PlanID,
+			LastPaymentDate: timestamppb.New(v.LastPaymentDate),
+			Status:          http.StatusOK,
 		})
 	}
 
