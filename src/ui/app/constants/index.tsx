@@ -37,8 +37,32 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
   },
   {
+    title: 'Usuarios',
+    path: '/management/users',
+    icon: <Icon icon="fluent:people-team-20-filled" />,
+  },
+  {
     title: 'Help',
     path: '/help',
     icon: <Icon icon="lucide:help-circle" width="20" height="20" />,
   },
 ];
+
+export class USER_ROLE_ID {
+    public static SUPER_ADMIN = 1;
+    public static ADMIN = 2;
+    public static REGULAR = 3;
+}
+
+export class PLAN_ID {
+    public static BASIC = 1;
+    public static PRO = 2;
+}
+
+export class PRODUCT {
+    public static MAX_BASIC_PLAN_ITEMS = 10;
+}
+
+export class PAYMENT {
+    public static MAX_BASIC_PLAN_ITEMS = 5;
+}

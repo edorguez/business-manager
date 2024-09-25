@@ -5,6 +5,13 @@ export type User = {
   email: string;
 }
 
+export type CreateUser = {
+  companyId: number;
+  roleId: number;
+  email: string;
+  password: string;
+}
+
 export type GetUser = {
   id: number;
 }
