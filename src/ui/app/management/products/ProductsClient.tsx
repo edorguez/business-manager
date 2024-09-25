@@ -125,8 +125,8 @@ const ProductsClient = () => {
     getProducts(searchProduct);
   };
 
-  const handleOpenDelete = (id: string) => {
-    setProductIdDelete(id);
+  const handleOpenDelete = (product: any) => {
+    setProductIdDelete(product.id);
     deleteProductModal.onOpen();
   };
 

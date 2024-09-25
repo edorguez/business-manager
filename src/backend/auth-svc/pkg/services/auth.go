@@ -124,7 +124,7 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 		fmt.Println("Auth Service :  Login - ERROR")
 		return &auth.LoginResponse{
 			Status: http.StatusUnauthorized,
-			Error:  "Can't log in because of last payment",
+			Error:  "Can't log in because of last payment, please contact support",
 		}, nil
 	}
 

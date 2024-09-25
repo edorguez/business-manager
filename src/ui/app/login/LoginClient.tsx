@@ -28,7 +28,7 @@ const LoginClient = () => {
     } else {
       toast({
         title: 'Error',
-        description: 'Correo o contraseña incorrecto',
+        description: result.error,
         variant: 'customerror',
         position: 'top-right',
         duration: 4000,
