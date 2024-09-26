@@ -64,22 +64,26 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 
 const getUser = `-- name: GetUser :one
 SELECT 
-  id,
-  company_id,
-  role_id,
-  email 
+  U.id,
+  U.company_id,
+  U.role_id,
+  U.email,
+  r.id, r.name, r.description, r.created_at, r.modified_at
 FROM 
-  auth.user
+  auth.user AS U
+INNER JOIN
+  auth.role AS R ON R.id = U.role_id
 WHERE 
-  id = $1 
+  U.id = $1 
 LIMIT 1
 `
 
 type GetUserRow struct {
-	ID        int64  `json:"id"`
-	CompanyID int64  `json:"company_id"`
-	RoleID    int64  `json:"role_id"`
-	Email     string `json:"email"`
+	ID        int64    `json:"id"`
+	CompanyID int64    `json:"company_id"`
+	RoleID    int64    `json:"role_id"`
+	Email     string   `json:"email"`
+	AuthRole  AuthRole `json:"auth_role"`
 }
 
 func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
@@ -90,6 +94,11 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
 		&i.CompanyID,
 		&i.RoleID,
 		&i.Email,
+		&i.AuthRole.ID,
+		&i.AuthRole.Name,
+		&i.AuthRole.Description,
+		&i.AuthRole.CreatedAt,
+		&i.AuthRole.ModifiedAt,
 	)
 	return i, err
 }
@@ -131,16 +140,19 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 
 const getUsers = `-- name: GetUsers :many
 SELECT 
-  id,
-  company_id,
-  role_id,
-  email 
+  U.id,
+  U.company_id,
+  U.role_id,
+  U.email,
+  r.id, r.name, r.description, r.created_at, r.modified_at
 FROM 
-  auth.user
+  auth.user AS U
+INNER JOIN
+  auth.role AS R ON R.id = U.role_id
 WHERE
-  (company_id = $1) OR $1 = 0
+  (U.company_id = $1) OR $1 = 0
 ORDER BY 
-  id
+  U.id
 LIMIT 
   $2
 OFFSET 
@@ -154,10 +166,11 @@ type GetUsersParams struct {
 }
 
 type GetUsersRow struct {
-	ID        int64  `json:"id"`
-	CompanyID int64  `json:"company_id"`
-	RoleID    int64  `json:"role_id"`
-	Email     string `json:"email"`
+	ID        int64    `json:"id"`
+	CompanyID int64    `json:"company_id"`
+	RoleID    int64    `json:"role_id"`
+	Email     string   `json:"email"`
+	AuthRole  AuthRole `json:"auth_role"`
 }
 
 func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersRow, error) {
@@ -174,6 +187,11 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersR
 			&i.CompanyID,
 			&i.RoleID,
 			&i.Email,
+			&i.AuthRole.ID,
+			&i.AuthRole.Name,
+			&i.AuthRole.Description,
+			&i.AuthRole.CreatedAt,
+			&i.AuthRole.ModifiedAt,
 		); err != nil {
 			return nil, err
 		}

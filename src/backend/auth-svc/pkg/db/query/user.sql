@@ -13,14 +13,17 @@ RETURNING *;
 
 -- name: GetUser :one
 SELECT 
-  id,
-  company_id,
-  role_id,
-  email 
+  U.id,
+  U.company_id,
+  U.role_id,
+  U.email,
+  sqlc.embed(R)
 FROM 
-  auth.user
+  auth.user AS U
+INNER JOIN
+  auth.role AS R ON R.id = U.role_id
 WHERE 
-  id = $1 
+  U.id = $1 
 LIMIT 1;
 
 -- name: GetUserByEmail :one
@@ -36,19 +39,21 @@ WHERE
   email = $1 
 LIMIT 1;
 
-
 -- name: GetUsers :many
 SELECT 
-  id,
-  company_id,
-  role_id,
-  email 
+  U.id,
+  U.company_id,
+  U.role_id,
+  U.email,
+  sqlc.embed(R)
 FROM 
-  auth.user
+  auth.user AS U
+INNER JOIN
+  auth.role AS R ON R.id = U.role_id
 WHERE
-  (company_id = $1) OR $1 = 0
+  (U.company_id = $1) OR $1 = 0
 ORDER BY 
-  id
+  U.id
 LIMIT 
   $2
 OFFSET 

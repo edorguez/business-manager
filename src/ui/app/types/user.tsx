@@ -16,6 +16,12 @@ export type GetUser = {
   id: number;
 }
 
+export type GetUsers = {
+  companyId: number;
+  limit: number;
+  offset: number;
+}
+
 export type EditUser = {
   id: number;
   roleId: number;
@@ -32,4 +38,8 @@ export type EditPassword = {
   id: number;
   password: string;
   passwordRepeat: string;
+}
+
+export type DeleteUser = {
+  id: number;
 }

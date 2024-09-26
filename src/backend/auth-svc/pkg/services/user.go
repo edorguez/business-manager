@@ -79,7 +79,11 @@ func (s *UserService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*a
 		CompanyId: c.CompanyID,
 		RoleId:    c.RoleID,
 		Email:     c.Email,
-		Status:    http.StatusOK,
+		Role: &auth.Role{
+			Id:   c.AuthRole.ID,
+			Name: c.AuthRole.Name,
+		},
+		Status: http.StatusOK,
 	}, nil
 }
 
@@ -112,7 +116,11 @@ func (s *UserService) GetUsers(ctx context.Context, req *auth.GetUsersRequest) (
 			CompanyId: v.CompanyID,
 			RoleId:    v.RoleID,
 			Email:     v.Email,
-			Status:    http.StatusOK,
+			Role: &auth.Role{
+				Id:   v.AuthRole.ID,
+				Name: v.AuthRole.Name,
+			},
+			Status: http.StatusOK,
 		})
 	}
 

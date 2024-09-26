@@ -1,6 +1,7 @@
 "use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { DeleteUserRequest, GetUsersRequest } from "@/app/api/users/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import WarningModal from "@/app/components/modals/WarningModal";
@@ -15,7 +16,6 @@ import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { User } from "@/app/types/user";
 import { Button, useToast } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -54,14 +54,8 @@ const UsersClient = () => {
     const currentUser: CurrentUser | null = getCurrentUser();
 
     if (currentUser) {
-      //   let data: Customer[] = await GetCustomersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset, name: searchParams?.name ?? "", lastName: searchParams?.lastName ?? "", identificationNumber: searchParams?.identificationNumber ?? "" });
-      //   const formatData: Customer[] = data.map(x => {
-      //     return {
-      //       ...x,
-      //       identificationNumber: `${x.identificationType}-${x.identificationNumber}`
-      //     }
-      //   })
-      //   setCustomerData(formatData);
+        let data: User[] = await GetUsersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
+        setUserData(data);
     }
     isLoading.onEndLoading();
   }, [offset]);
@@ -86,9 +80,9 @@ const UsersClient = () => {
   };
 
   const onDelete = useCallback(async (id: number) => {
-    // await DeleteCustomerRequest({ id });
-    // getCustomers(searchCustomer);
-    // deleteCustomerModal.onClose();
+    await DeleteUserRequest({ id });
+    getUsers();
+    deleteUserModal.onClose();
     toast({
       title: "Usuario",
       description: "Usuario eliminado exitosamente",
