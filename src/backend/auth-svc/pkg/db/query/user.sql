@@ -16,10 +16,7 @@ SELECT
   id,
   company_id,
   role_id,
-  email,
-  password_hash,
-  created_at,
-  modified_at
+  email 
 FROM 
   auth.user
 WHERE 
@@ -32,9 +29,7 @@ SELECT
   company_id,
   role_id,
   email,
-  password_hash,
-  created_at,
-  modified_at
+  password_hash
 FROM 
   auth.user
 WHERE 
@@ -47,10 +42,7 @@ SELECT
   id,
   company_id,
   role_id,
-  email,
-  password_hash,
-  created_at,
-  modified_at
+  email 
 FROM 
   auth.user
 WHERE

@@ -33,8 +33,8 @@ func (userRepo *UserRepo) CreateUser(ctx context.Context, arg db.CreateUserParam
 	return result, err
 }
 
-func (userRepo *UserRepo) GetUser(ctx context.Context, id int64) (db.AuthUser, error) {
-	var result db.AuthUser
+func (userRepo *UserRepo) GetUser(ctx context.Context, id int64) (db.GetUserRow, error) {
+	var result db.GetUserRow
 
 	err := userRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
@@ -50,8 +50,8 @@ func (userRepo *UserRepo) GetUser(ctx context.Context, id int64) (db.AuthUser, e
 	return result, err
 }
 
-func (userRepo *UserRepo) GetUserByEmail(ctx context.Context, email string) (db.AuthUser, error) {
-	var result db.AuthUser
+func (userRepo *UserRepo) GetUserByEmail(ctx context.Context, email string) (db.GetUserByEmailRow, error) {
+	var result db.GetUserByEmailRow
 
 	err := userRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
@@ -67,8 +67,8 @@ func (userRepo *UserRepo) GetUserByEmail(ctx context.Context, email string) (db.
 	return result, err
 }
 
-func (userRepo *UserRepo) GetUsers(ctx context.Context, arg db.GetUsersParams) ([]db.AuthUser, error) {
-	var result []db.AuthUser
+func (userRepo *UserRepo) GetUsers(ctx context.Context, arg db.GetUsersParams) ([]db.GetUsersRow, error) {
+	var result []db.GetUsersRow
 
 	err := userRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error

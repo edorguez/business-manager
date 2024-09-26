@@ -13,9 +13,9 @@ type Querier interface {
 	DeleteUser(ctx context.Context, id int64) error
 	GetRole(ctx context.Context, id int64) (AuthRole, error)
 	GetRoles(ctx context.Context, arg GetRolesParams) ([]AuthRole, error)
-	GetUser(ctx context.Context, id int64) (AuthUser, error)
-	GetUserByEmail(ctx context.Context, email string) (AuthUser, error)
-	GetUsers(ctx context.Context, arg GetUsersParams) ([]AuthUser, error)
+	GetUser(ctx context.Context, id int64) (GetUserRow, error)
+	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
+	GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersRow, error)
 	UpdateEmail(ctx context.Context, arg UpdateEmailParams) (AuthUser, error)
 	UpdatePassword(ctx context.Context, arg UpdatePasswordParams) (AuthUser, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (AuthUser, error)

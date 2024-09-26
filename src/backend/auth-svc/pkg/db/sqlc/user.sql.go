@@ -67,10 +67,7 @@ SELECT
   id,
   company_id,
   role_id,
-  email,
-  password_hash,
-  created_at,
-  modified_at
+  email 
 FROM 
   auth.user
 WHERE 
@@ -78,17 +75,21 @@ WHERE
 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id int64) (AuthUser, error) {
+type GetUserRow struct {
+	ID        int64  `json:"id"`
+	CompanyID int64  `json:"company_id"`
+	RoleID    int64  `json:"role_id"`
+	Email     string `json:"email"`
+}
+
+func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
 	row := q.db.QueryRowContext(ctx, getUser, id)
-	var i AuthUser
+	var i GetUserRow
 	err := row.Scan(
 		&i.ID,
 		&i.CompanyID,
 		&i.RoleID,
 		&i.Email,
-		&i.PasswordHash,
-		&i.CreatedAt,
-		&i.ModifiedAt,
 	)
 	return i, err
 }
@@ -99,9 +100,7 @@ SELECT
   company_id,
   role_id,
   email,
-  password_hash,
-  created_at,
-  modified_at
+  password_hash
 FROM 
   auth.user
 WHERE 
@@ -109,17 +108,23 @@ WHERE
 LIMIT 1
 `
 
-func (q *Queries) GetUserByEmail(ctx context.Context, email string) (AuthUser, error) {
+type GetUserByEmailRow struct {
+	ID           int64  `json:"id"`
+	CompanyID    int64  `json:"company_id"`
+	RoleID       int64  `json:"role_id"`
+	Email        string `json:"email"`
+	PasswordHash string `json:"password_hash"`
+}
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
 	row := q.db.QueryRowContext(ctx, getUserByEmail, email)
-	var i AuthUser
+	var i GetUserByEmailRow
 	err := row.Scan(
 		&i.ID,
 		&i.CompanyID,
 		&i.RoleID,
 		&i.Email,
 		&i.PasswordHash,
-		&i.CreatedAt,
-		&i.ModifiedAt,
 	)
 	return i, err
 }
@@ -129,10 +134,7 @@ SELECT
   id,
   company_id,
   role_id,
-  email,
-  password_hash,
-  created_at,
-  modified_at
+  email 
 FROM 
   auth.user
 WHERE
@@ -151,23 +153,27 @@ type GetUsersParams struct {
 	Offset    int32 `json:"offset"`
 }
 
-func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]AuthUser, error) {
+type GetUsersRow struct {
+	ID        int64  `json:"id"`
+	CompanyID int64  `json:"company_id"`
+	RoleID    int64  `json:"role_id"`
+	Email     string `json:"email"`
+}
+
+func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersRow, error) {
 	rows, err := q.db.QueryContext(ctx, getUsers, arg.CompanyID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []AuthUser{}
+	items := []GetUsersRow{}
 	for rows.Next() {
-		var i AuthUser
+		var i GetUsersRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.CompanyID,
 			&i.RoleID,
 			&i.Email,
-			&i.PasswordHash,
-			&i.CreatedAt,
-			&i.ModifiedAt,
 		); err != nil {
 			return nil, err
 		}
