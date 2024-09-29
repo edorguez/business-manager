@@ -11,8 +11,8 @@ import (
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (AuthUser, error)
 	DeleteUser(ctx context.Context, id int64) error
-	GetRole(ctx context.Context, id int64) (AuthRole, error)
-	GetRoles(ctx context.Context, arg GetRolesParams) ([]AuthRole, error)
+	GetRole(ctx context.Context, id int64) (GetRoleRow, error)
+	GetRoles(ctx context.Context) ([]GetRolesRow, error)
 	GetUser(ctx context.Context, id int64) (GetUserRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersRow, error)

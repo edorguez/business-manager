@@ -30,7 +30,7 @@ const UsersClient = () => {
 
   const usersCols: SimpleTableColumn[] = [
     {
-      key: "rol",
+      key: "roleName",
       name: "Rol",
       type: ColumnType.String,
     },
@@ -55,7 +55,13 @@ const UsersClient = () => {
 
     if (currentUser) {
         let data: User[] = await GetUsersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
-        setUserData(data);
+        const formatData: User[] = data.map(x => {
+        return {
+          ...x,
+          roleName: x.role.name
+        }
+      })
+        setUserData(formatData);
     }
     isLoading.onEndLoading();
   }, [offset]);

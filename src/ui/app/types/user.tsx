@@ -1,8 +1,11 @@
+import { Role } from "./role";
+
 export type User = {
   id: number;
   companyId: number;
   roleId: number;
   email: string;
+  role: Role;
 }
 
 export type CreateUser = {

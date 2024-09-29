@@ -7,15 +7,14 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const getRole = `-- name: GetRole :one
 SELECT 
   id,
   name,
-  description,
-  created_at,
-  modified_at
+  description
 FROM 
   auth.role
 WHERE 
@@ -23,16 +22,16 @@ WHERE
 LIMIT 1
 `
 
-func (q *Queries) GetRole(ctx context.Context, id int64) (AuthRole, error) {
+type GetRoleRow struct {
+	ID          int64          `json:"id"`
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+}
+
+func (q *Queries) GetRole(ctx context.Context, id int64) (GetRoleRow, error) {
 	row := q.db.QueryRowContext(ctx, getRole, id)
-	var i AuthRole
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Description,
-		&i.CreatedAt,
-		&i.ModifiedAt,
-	)
+	var i GetRoleRow
+	err := row.Scan(&i.ID, &i.Name, &i.Description)
 	return i, err
 }
 
@@ -40,40 +39,29 @@ const getRoles = `-- name: GetRoles :many
 SELECT 
   id,
   name,
-  description,
-  created_at,
-  modified_at
+  description
 FROM 
   auth.role
 ORDER BY 
   id
-LIMIT 
-  $1
-OFFSET 
-  $2
 `
 
-type GetRolesParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+type GetRolesRow struct {
+	ID          int64          `json:"id"`
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
 }
 
-func (q *Queries) GetRoles(ctx context.Context, arg GetRolesParams) ([]AuthRole, error) {
-	rows, err := q.db.QueryContext(ctx, getRoles, arg.Limit, arg.Offset)
+func (q *Queries) GetRoles(ctx context.Context) ([]GetRolesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getRoles)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []AuthRole{}
+	items := []GetRolesRow{}
 	for rows.Next() {
-		var i AuthRole
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Description,
-			&i.CreatedAt,
-			&i.ModifiedAt,
-		); err != nil {
+		var i GetRolesRow
+		if err := rows.Scan(&i.ID, &i.Name, &i.Description); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

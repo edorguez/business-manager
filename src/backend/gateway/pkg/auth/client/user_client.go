@@ -131,6 +131,10 @@ func GetUsers(params *pb.GetUsersRequest, c context.Context) ([]*contracts.GetUs
 			CompanyId: v.CompanyId,
 			RoleId:    v.RoleId,
 			Email:     v.Email,
+			Role: contracts.GetRoleResponse{
+				Id:   v.Role.Id,
+				Name: v.Role.Name,
+			},
 		})
 	}
 

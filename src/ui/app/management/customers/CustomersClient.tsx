@@ -81,7 +81,7 @@ const CustomersClient = () => {
   }, [offset])
 
   useEffect(() => {
-    getCustomers()
+    getCustomers();
   }, [getCustomers]);
 
   const handleChangePage = (val: string) => {

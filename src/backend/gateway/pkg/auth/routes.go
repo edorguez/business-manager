@@ -16,6 +16,7 @@ type AuthRoutes struct {
 func LoadRoutes(router *mux.Router, c *config.Config) {
 	loadUserRoutes(router, c)
 	loadAuthRoutes(router, c)
+	loadRoleRoutes(router, c)
 }
 
 func loadUserRoutes(router *mux.Router, c *config.Config) {
@@ -71,6 +72,21 @@ func loadAuthRoutes(router *mux.Router, c *config.Config) {
 	loginRouter.Use(mw.MiddlewareValidateLogin)
 }
 
+func loadRoleRoutes(router *mux.Router, c *config.Config) {
+	baseRoute := router.PathPrefix("/roles").Subrouter()
+
+	ar := &AuthRoutes{
+		config: c,
+	}
+
+	mw := InitAuthMiddleware(c)
+	baseRoute.Use(mw.MiddlewareValidateAuth)
+
+	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/{id:[0-9]+}", ar.GetRole)
+	getRouter.HandleFunc("", ar.GetRoles)
+}
+
 func (ar *AuthRoutes) CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  CreateUser Called --> 1")
 	routes.CreateUser(w, r, ar.config)
@@ -114,4 +130,14 @@ func (ar *AuthRoutes) Register(w http.ResponseWriter, r *http.Request) {
 func (ar *AuthRoutes) Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  Login Called --> 1")
 	routes.Login(w, r, ar.config)
+}
+
+func (ar *AuthRoutes) GetRole(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetRole Called --> 1")
+	routes.GetRole(w, r, ar.config)
+}
+
+func (ar *AuthRoutes) GetRoles(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetRoles Called --> 1")
+	routes.GetRoles(w, r, ar.config)
 }

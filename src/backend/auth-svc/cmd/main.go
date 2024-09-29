@@ -50,10 +50,15 @@ func main() {
 		Repo: repo.NewUserRepo(storage),
 	}
 
+	ro := services.RoleService{
+		Repo: repo.NewRoleRepo(storage),
+	}
+
 	grpcServer := grpc.NewServer()
 
 	pb.RegisterAuthServiceServer(grpcServer, &as)
 	pb.RegisterUserServiceServer(grpcServer, &us)
+	pb.RegisterRoleServiceServer(grpcServer, &ro)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

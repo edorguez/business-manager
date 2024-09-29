@@ -1,16 +1,18 @@
 "use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { GetRolesRequest } from "@/app/api/roles/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import useLoading from "@/app/hooks/useLoading";
 import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
+import { Role } from "@/app/types/role";
 import { CreateUser } from "@/app/types/user";
 import { Button, Input, Link, Select, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const CreateUserClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -27,6 +29,7 @@ const CreateUserClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
+  const [roles, setRoles] = useState<Role[]>([]);
   const [formData, setFormData] = useState<CreateUser>({
     companyId: 0,
     roleId: 0,
@@ -34,12 +37,21 @@ const CreateUserClient = () => {
     password: "",
   });
 
+  const getRoles = useCallback(async () => {
+    isLoading.onStartLoading();
+    let data: Role[] = await GetRolesRequest();
+    setRoles(data);
+    isLoading.onEndLoading();
+  }, []);
+
   useEffect(() => {
     const currentUser: CurrentUser | null = getCurrentUser();
     if (currentUser) {
       formData.companyId = currentUser.companyId;
     }
-  }, []);
+
+    getRoles();
+  }, [getRoles]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
@@ -142,16 +154,19 @@ const CreateUserClient = () => {
             </label>
             <Select
               size="sm"
-              name="rolId"
+              name="roleId"
               value={formData.roleId}
               onChange={handleChange}
             >
               <option value="">-</option>
-              <option value="V">V</option>
-              <option value="E">E</option>
-              <option value="P">P</option>
-              <option value="J">J</option>
-              <option value="G">G</option>
+              {roles &&
+                roles.map((val: Role, index: number) => {
+                  return (
+                    <option key={index} value={val.id}>
+                      {val.name}
+                    </option>
+                  );
+                })}
             </Select>
           </div>
         </SimpleCard>

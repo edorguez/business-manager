@@ -2,9 +2,7 @@
 SELECT 
   id,
   name,
-  description,
-  created_at,
-  modified_at
+  description
 FROM 
   auth.role
 WHERE 
@@ -15,15 +13,8 @@ LIMIT 1;
 SELECT 
   id,
   name,
-  description,
-  created_at,
-  modified_at
+  description
 FROM 
   auth.role
 ORDER BY 
-  id
-LIMIT 
-  $1
-OFFSET 
-  $2;
-
+  id;
