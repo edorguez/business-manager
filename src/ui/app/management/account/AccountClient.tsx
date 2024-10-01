@@ -41,6 +41,7 @@ import WarningModal from "@/app/components/modals/WarningModal";
 import { useRouter } from "next/navigation";
 import deleteUserSession from "@/app/actions/deleteUserSession";
 import isUserAdmin from "@/app/actions/isUserAdmin";
+import { PASSWORD } from "@/app/constants";
 
 const AccountClient = () => {
   const { push } = useRouter();
@@ -48,7 +49,6 @@ const AccountClient = () => {
   const toast = useToast();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const confirmChangeModal = useWarningModal();
-  const minPasswordLength: number = 6;
 
   const [companyFormData, setCompanyFormData] = useState<EditCompany>({
     id: 0,
@@ -154,7 +154,8 @@ const AccountClient = () => {
       return false;
     if (passwordFormData.password !== passwordFormData.passwordRepeat)
       return false;
-    if (passwordFormData.password.length < minPasswordLength) return false;
+    if (passwordFormData.password.length < PASSWORD.MIN_PASSWORD_LEGTH)
+      return false;
 
     return true;
   };
@@ -318,6 +319,7 @@ const AccountClient = () => {
                       name="email"
                       value={emailFormData.email}
                       onChange={handleEmailFormChange}
+                      max={100}
                     />
                   </FormControl>
                   <Button

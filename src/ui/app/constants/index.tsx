@@ -66,3 +66,7 @@ export class PRODUCT {
 export class PAYMENT {
     public static MAX_BASIC_PLAN_ITEMS = 5;
 }
+
+export class PASSWORD {
+    public static MIN_PASSWORD_LEGTH = 6;
+}

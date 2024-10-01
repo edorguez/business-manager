@@ -1,4 +1,5 @@
 import {
+  CreateUser,
   DeleteUser,
   EditEmail,
   EditPassword,
@@ -9,6 +10,28 @@ import {
 import Cookies from "js-cookie";
 
 const baseUrl: string = "http://localhost:3001/api/users";
+
+export async function CreateUserRequest(request: CreateUser) {
+  try {
+    const headers = new Headers();
+    const token = Cookies.get("token");
+    headers.append("Authorization", <string>token);
+
+    request.roleId = +request.roleId;
+
+    const res = await fetch(baseUrl, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(request),
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString());
+  }
+}
 
 export async function GetUserRequest(request: GetUser) {
   try {

@@ -1,4 +1,4 @@
-import { USER_ROLE_ID } from "../utils/constants";
+import { USER_ROLE_ID } from "../constants";
 
 export default function isUserAdmin(userRoleId: number): boolean {
   return (

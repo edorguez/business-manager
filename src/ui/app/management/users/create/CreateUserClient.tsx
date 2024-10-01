@@ -2,13 +2,16 @@
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { GetRolesRequest } from "@/app/api/roles/route";
+import { CreateUserRequest } from "@/app/api/users/route";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
+import { PASSWORD, USER_ROLE_ID } from "@/app/constants";
 import useLoading from "@/app/hooks/useLoading";
 import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { Role } from "@/app/types/role";
 import { CreateUser } from "@/app/types/user";
+import { isValidEmail } from "@/app/utils/Utils";
 import { Button, Input, Link, Select, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
@@ -40,7 +43,7 @@ const CreateUserClient = () => {
   const getRoles = useCallback(async () => {
     isLoading.onStartLoading();
     let data: Role[] = await GetRolesRequest();
-    setRoles(data);
+    setRoles(data.filter((x) => x.id !== USER_ROLE_ID.SUPER_ADMIN));
     isLoading.onEndLoading();
   }, []);
 
@@ -58,27 +61,36 @@ const CreateUserClient = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
+  const handleSpaceKeyDown = (event: any) => {
+    if (event.key === " ") {
+      event.preventDefault();
+    }
+  };
+
   const onSubmit = async () => {
     if (isFormValid()) {
       isLoading.onStartLoading();
-      //   let createCustomer: any = await CreateCustomerRequest(formData);
-      //   if (!createCustomer.error) {
-      //     isLoading.onEndLoading();
-      //     showSuccessCreationMessage('Cliente creado exitosamente');
-      //     push('/management/customers');
-      //   } else {
-      //     showErrorMessage(createCustomer.error);
-      //     isLoading.onEndLoading();
-      //   }
+      let createUser: any = await CreateUserRequest(formData);
+      if (!createUser.error) {
+        isLoading.onEndLoading();
+        showSuccessCreationMessage("Usuario creado exitosamente");
+        push("/management/users");
+      } else {
+        showErrorMessage(createUser.error);
+        isLoading.onEndLoading();
+      }
     } else {
       showErrorMessage("Algunos campos son requeridos o inválidos");
     }
   };
 
   const isFormValid = (): boolean => {
+    if (!formData.companyId) return false;
     if (!formData.roleId) return false;
     if (!formData.email) return false;
+    if (!isValidEmail(formData.email)) return false;
     if (!formData.password) return false;
+    if (formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH) return false;
 
     return true;
   };
@@ -133,7 +145,7 @@ const CreateUserClient = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              maxLength={20}
+              maxLength={100}
             />
           </div>
           <div className="mt-2">
@@ -146,6 +158,7 @@ const CreateUserClient = () => {
               value={formData.password}
               onChange={handleChange}
               maxLength={20}
+              onKeyDown={handleSpaceKeyDown}
             />
           </div>
           <div className="mt-2">
