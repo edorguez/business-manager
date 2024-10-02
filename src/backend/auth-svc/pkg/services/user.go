@@ -156,6 +156,25 @@ func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserReques
 	fmt.Println(req)
 	fmt.Println("----------------")
 
+	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Auth Service :  Updateuser - ERROR")
+		fmt.Println(err.Error())
+		return &auth.UpdateUserResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if u.Email == req.Email && u.ID != req.Id {
+		fmt.Println("Auth Service :  UpdateUser - ERROR")
+		fmt.Println("User already exists")
+		return &auth.UpdateUserResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "User already exists",
+		}, nil
+	}
+
 	params := db.UpdateUserParams{
 		ID:           req.Id,
 		RoleID:       req.RoleId,
@@ -163,7 +182,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserReques
 		PasswordHash: password_hash.HashPassword(req.Password),
 	}
 
-	_, err := s.Repo.UpdateUser(ctx, params)
+	_, err = s.Repo.UpdateUser(ctx, params)
 	if err != nil {
 		fmt.Println("Auth Service :  UpdateUser - ERROR")
 		fmt.Println(err.Error())
