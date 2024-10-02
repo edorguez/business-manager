@@ -24,6 +24,25 @@ func (s *UserService) CreateUser(ctx context.Context, req *auth.CreateUserReques
 	fmt.Println(req)
 	fmt.Println("----------------")
 
+	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Auth Service :  CreateUser - ERROR")
+		fmt.Println(err.Error())
+		return &auth.CreateUserResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if u.Email == req.Email {
+		fmt.Println("Auth Service :  CreateUser - ERROR")
+		fmt.Println("User already exists")
+		return &auth.CreateUserResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "User already exists",
+		}, nil
+	}
+
 	createUserParams := db.CreateUserParams{
 		CompanyID:    req.CompanyId,
 		RoleID:       req.RoleId,
