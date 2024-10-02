@@ -45,6 +45,7 @@ const CustomerClient = () => {
   });
 
   const getCustomer = useCallback(async () => {
+    isLoading.onStartLoading();
     let customer: any = await GetCustomerRequest({ id: +params.customerId });
     if (customer) {
       setFormData({
@@ -57,6 +58,7 @@ const CustomerClient = () => {
         phone: customer.phone ?? "",
       });
     }
+    isLoading.onEndLoading();
   }, [params.customerId]);
 
   useEffect(() => {

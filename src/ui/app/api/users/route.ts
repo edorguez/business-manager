@@ -17,6 +17,8 @@ export async function CreateUserRequest(request: CreateUser) {
     const token = Cookies.get("token");
     headers.append("Authorization", <string>token);
 
+    request.email = request.email.trim();
+    request.password = request.password.trim();
     request.roleId = +request.roleId;
 
     const res = await fetch(baseUrl, {
@@ -87,6 +89,7 @@ export async function EditUserRequest(request: EditUser) {
 
     request.email = request.email.trim();
     request.password = request.password.trim();
+    request.roleId = +request.roleId;
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: "PUT",

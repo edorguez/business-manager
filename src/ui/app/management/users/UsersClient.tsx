@@ -54,14 +54,18 @@ const UsersClient = () => {
     const currentUser: CurrentUser | null = getCurrentUser();
 
     if (currentUser) {
-        let data: User[] = await GetUsersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
-        const formatData: User[] = data.map(x => {
+      let data: User[] = await GetUsersRequest({
+        companyId: currentUser.companyId,
+        limit: 10,
+        offset: offset,
+      });
+      const formatData: User[] = data.map((x) => {
         return {
           ...x,
-          roleName: x.role.name
-        }
-      })
-        setUserData(formatData);
+          roleName: x.role.name,
+        };
+      });
+      setUserData(formatData);
     }
     isLoading.onEndLoading();
   }, [offset]);
@@ -77,8 +81,15 @@ const UsersClient = () => {
   };
 
   const handleOpenDelete = (val: any) => {
-    setUserIdDelete(val.id);
-    deleteUserModal.onOpen();
+    const currentUser: CurrentUser | null = getCurrentUser();
+    if (currentUser) {
+      if (currentUser.id === val.id) {
+        showErrorMessage('No puedes eliminar tu mismo usuario');
+      } else {
+        setUserIdDelete(val.id);
+        deleteUserModal.onOpen();
+      }
+    }
   };
 
   const handleSubmitDelete = () => {
@@ -107,6 +118,17 @@ const UsersClient = () => {
     push(`users/${val.id}`);
   };
 
+  const showErrorMessage = (msg: string) => {
+    toast({
+      title: "Error",
+      description: msg,
+      variant: "customerror",
+      position: "top-right",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
   return (
     <div>
       <SimpleCard>
@@ -126,7 +148,7 @@ const UsersClient = () => {
               <span className="opacity-0">.</span>
               <Link href="/management/users/create">
                 <Button size="sm" variant="main" className="w-full">
-                  Crear Cliente
+                  Crear Usuario
                 </Button>
               </Link>
             </div>

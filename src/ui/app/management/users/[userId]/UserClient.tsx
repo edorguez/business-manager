@@ -1,40 +1,43 @@
 "use client";
 
-import getCurrentUser from "@/app/actions/getCurrentUser";
-import { GetRolesRequest } from "@/app/api/roles/route";
-import { CreateUserRequest } from "@/app/api/users/route";
-import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
-import SimpleCard from "@/app/components/cards/SimpleCard";
-import { PASSWORD, USER_ROLE_ID } from "@/app/constants";
-import useLoading from "@/app/hooks/useLoading";
+import { Button, Input, Select, useToast } from "@chakra-ui/react";
 import { BreadcrumItem } from "@/app/types";
-import { CurrentUser } from "@/app/types/auth";
-import { Role } from "@/app/types/role";
-import { CreateUser } from "@/app/types/user";
-import { isValidEmail } from "@/app/utils/Utils";
-import { Button, Input, Link, Select, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import SimpleCard from "@/app/components/cards/SimpleCard";
+import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
+import useLoading from "@/app/hooks/useLoading";
+import { EditUserRequest, GetUserRequest } from "@/app/api/users/route";
+import { Role } from "@/app/types/role";
+import { EditUser } from "@/app/types/user";
+import { GetRolesRequest } from "@/app/api/roles/route";
+import { PASSWORD, USER_ROLE_ID } from "@/app/constants";
+import { isValidEmail } from "@/app/utils/Utils";
 
-const CreateUserClient = () => {
+const UserClient = () => {
+  const isLoading = useLoading();
+  const toast = useToast();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const { push } = useRouter();
+
   const bcItems: BreadcrumItem[] = [
     {
-      label: "Userios",
+      label: "Usuarios",
       href: "/management/users",
     },
     {
-      label: "Crear Usuario",
-      href: "/management/users/create",
+      label: "Usuario",
+      href: `/management/users/${params.userId}`,
     },
   ];
 
-  const isLoading = useLoading();
-  const toast = useToast();
-  const { push } = useRouter();
+  const [isEdit, setIsEdit] = useState(false);
   const [roles, setRoles] = useState<Role[]>([]);
-  const [formData, setFormData] = useState<CreateUser>({
-    companyId: 0,
+  const [formData, setFormData] = useState<EditUser>({
+    id: 0,
     roleId: 0,
     email: "",
     password: "",
@@ -47,12 +50,26 @@ const CreateUserClient = () => {
     isLoading.onEndLoading();
   }, []);
 
-  useEffect(() => {
-    const currentUser: CurrentUser | null = getCurrentUser();
-    if (currentUser) {
-      formData.companyId = currentUser.companyId;
+  const getUser = useCallback(async () => {
+    isLoading.onStartLoading();
+    let user: any = await GetUserRequest({ id: +params.userId });
+    if (user) {
+      setFormData({
+        id: user.id,
+        roleId: user.roleId,
+        email: user.email,
+        password: "",
+      });
     }
+    isLoading.onEndLoading();
+  }, [params.customerId]);
 
+  useEffect(() => {
+    let paramIsEdit = searchParams.get("isEdit");
+    if (paramIsEdit) {
+      setIsEdit(true);
+    }
+    getUser();
     getRoles();
   }, [getRoles]);
 
@@ -70,13 +87,13 @@ const CreateUserClient = () => {
   const onSubmit = async () => {
     if (isFormValid()) {
       isLoading.onStartLoading();
-      let createUser: any = await CreateUserRequest(formData);
-      if (!createUser.error) {
+      let editUser: any = await EditUserRequest(formData);
+      if (!editUser?.error) {
         isLoading.onEndLoading();
-        showSuccessCreationMessage("Usuario creado exitosamente");
+        showSuccessEditMessage("Usuario editado exitosamente");
         push("/management/users");
       } else {
-        showErrorMessage(createUser.error);
+        showErrorMessage(editUser.error);
         isLoading.onEndLoading();
       }
     } else {
@@ -85,7 +102,6 @@ const CreateUserClient = () => {
   };
 
   const isFormValid = (): boolean => {
-    if (!formData.companyId) return false;
     if (!formData.roleId) return false;
     if (!formData.email) return false;
     if (!isValidEmail(formData.email)) return false;
@@ -95,7 +111,7 @@ const CreateUserClient = () => {
     return true;
   };
 
-  const showSuccessCreationMessage = (msg: string) => {
+  const showSuccessEditMessage = (msg: string) => {
     toast({
       title: "Usuario",
       description: msg,
@@ -130,7 +146,7 @@ const CreateUserClient = () => {
               </div>
             </Link>
           </div>
-          <h1 className="ml-2 font-bold">Crear Usuario</h1>
+          <h1 className="ml-2 font-bold">{`${isEdit ? 'Editar' : ''} Usuario`}</h1>
         </div>
       </SimpleCard>
 
@@ -146,21 +162,25 @@ const CreateUserClient = () => {
               value={formData.email}
               onChange={handleChange}
               maxLength={100}
+              disabled={!isEdit}
             />
           </div>
-          <div className="mt-2">
-            <label className="text-sm">
-              Contraseña <span className="text-thirdcolor">*</span>
-            </label>
-            <Input
-              size="sm"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              maxLength={20}
-              onKeyDown={handleSpaceKeyDown}
-            />
-          </div>
+          {isEdit && (
+            <div className="mt-2">
+              <label className="text-sm">
+                Contraseña <span className="text-thirdcolor">*</span>
+              </label>
+              <Input
+                size="sm"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                maxLength={20}
+                onKeyDown={handleSpaceKeyDown}
+              />
+            </div>
+          )}
+
           <div className="mt-2">
             <label className="text-sm">
               Rol <span className="text-thirdcolor">*</span>
@@ -170,6 +190,7 @@ const CreateUserClient = () => {
               name="roleId"
               value={formData.roleId}
               onChange={handleChange}
+              disabled={!isEdit}
             >
               <option value="">-</option>
               {roles &&
@@ -185,13 +206,15 @@ const CreateUserClient = () => {
         </SimpleCard>
       </div>
 
-      <div className="mt-3">
-        <Button variant="main" className="w-full" onClick={onSubmit}>
-          Crear
-        </Button>
-      </div>
+      {isEdit && (
+        <div className="mt-3">
+          <Button variant="main" className="w-full" onClick={onSubmit}>
+            Editar
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
 
-export default CreateUserClient;
+export default UserClient;
