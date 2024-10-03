@@ -17,6 +17,7 @@ SELECT
   U.company_id,
   U.role_id,
   U.email,
+  U.password_hash,
   sqlc.embed(R)
 FROM 
   auth.user AS U

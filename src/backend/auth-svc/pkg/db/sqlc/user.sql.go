@@ -68,6 +68,7 @@ SELECT
   U.company_id,
   U.role_id,
   U.email,
+  U.password_hash,
   r.id, r.name, r.description, r.created_at, r.modified_at
 FROM 
   auth.user AS U
@@ -79,11 +80,12 @@ LIMIT 1
 `
 
 type GetUserRow struct {
-	ID        int64    `json:"id"`
-	CompanyID int64    `json:"company_id"`
-	RoleID    int64    `json:"role_id"`
-	Email     string   `json:"email"`
-	AuthRole  AuthRole `json:"auth_role"`
+	ID           int64    `json:"id"`
+	CompanyID    int64    `json:"company_id"`
+	RoleID       int64    `json:"role_id"`
+	Email        string   `json:"email"`
+	PasswordHash string   `json:"password_hash"`
+	AuthRole     AuthRole `json:"auth_role"`
 }
 
 func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
@@ -94,6 +96,7 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
 		&i.CompanyID,
 		&i.RoleID,
 		&i.Email,
+		&i.PasswordHash,
 		&i.AuthRole.ID,
 		&i.AuthRole.Name,
 		&i.AuthRole.Description,

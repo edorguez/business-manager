@@ -29,7 +29,7 @@ export type EditUser = {
   id: number;
   roleId: number;
   email: string;
-  password: string;
+  password: string | null;
 }
 
 export type EditEmail = {

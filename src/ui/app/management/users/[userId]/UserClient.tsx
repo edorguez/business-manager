@@ -42,7 +42,7 @@ const UserClient = () => {
     id: 0,
     roleId: 0,
     email: "",
-    password: "",
+    password: null,
   });
 
   const getRoles = useCallback(async () => {
@@ -65,7 +65,7 @@ const UserClient = () => {
         id: user.id,
         roleId: user.roleId,
         email: user.email,
-        password: "",
+        password: null,
       });
     }
     isLoading.onEndLoading();
@@ -112,8 +112,7 @@ const UserClient = () => {
     if (!formData.roleId) return false;
     if (!formData.email) return false;
     if (!isValidEmail(formData.email)) return false;
-    if (!formData.password) return false;
-    if (formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH) return false;
+    if (formData.password && formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH) return false;
 
     return true;
   };
@@ -175,12 +174,12 @@ const UserClient = () => {
           {isEdit && (
             <div className="mt-2">
               <label className="text-sm">
-                Contraseña <span className="text-thirdcolor">*</span>
+                Contraseña
               </label>
               <Input
                 size="sm"
                 name="password"
-                value={formData.password}
+                value={formData.password ?? ''}
                 onChange={handleChange}
                 maxLength={20}
                 onKeyDown={handleSpaceKeyDown}

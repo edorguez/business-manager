@@ -88,8 +88,9 @@ export async function EditUserRequest(request: EditUser) {
     headers.append("Authorization", <string>token);
 
     request.email = request.email.trim();
-    request.password = request.password.trim();
     request.roleId = +request.roleId;
+    if(request.password)
+      request.password = request.password.trim();
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: "PUT",

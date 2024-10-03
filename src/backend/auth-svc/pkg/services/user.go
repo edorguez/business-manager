@@ -175,11 +175,27 @@ func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserReques
 		}, nil
 	}
 
+	oldUser, errOldUser := s.Repo.GetUser(ctx, req.Id)
+	if errOldUser != nil {
+		fmt.Println("Auth Service :  Updateuser - ERROR")
+		fmt.Println(err.Error())
+		return &auth.UpdateUserResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	// req.Password is an optional parameter, if we don't send it, then, set the original value
+	passwordHash := oldUser.PasswordHash
+	if req.Password != nil {
+		passwordHash = password_hash.HashPassword(*req.Password)
+	}
+
 	params := db.UpdateUserParams{
 		ID:           req.Id,
 		RoleID:       req.RoleId,
 		Email:        req.Email,
-		PasswordHash: password_hash.HashPassword(req.Password),
+		PasswordHash: passwordHash,
 	}
 
 	_, err = s.Repo.UpdateUser(ctx, params)
