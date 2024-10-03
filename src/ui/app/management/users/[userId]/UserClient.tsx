@@ -15,6 +15,8 @@ import { EditUser } from "@/app/types/user";
 import { GetRolesRequest } from "@/app/api/roles/route";
 import { PASSWORD, USER_ROLE_ID } from "@/app/constants";
 import { isValidEmail } from "@/app/utils/Utils";
+import { CurrentUser } from "@/app/types/auth";
+import getCurrentUser from "@/app/actions/getCurrentUser";
 
 const UserClient = () => {
   const isLoading = useLoading();
@@ -54,6 +56,11 @@ const UserClient = () => {
     isLoading.onStartLoading();
     let user: any = await GetUserRequest({ id: +params.userId });
     if (user) {
+      const currentUser: CurrentUser | null = getCurrentUser();
+      if(currentUser && user.id === currentUser.id) {
+        push("/management/users");
+      }
+
       setFormData({
         id: user.id,
         roleId: user.roleId,

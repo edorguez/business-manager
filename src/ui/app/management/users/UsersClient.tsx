@@ -59,12 +59,19 @@ const UsersClient = () => {
         limit: 10,
         offset: offset,
       });
-      const formatData: User[] = data.map((x) => {
-        return {
-          ...x,
-          roleName: x.role.name,
+
+      const formatData: User[] = data.reduce((res: User[], item: User) => {
+        const formatUser = {
+          ...item,
+          roleName: item.role.name,
         };
-      });
+
+        if (formatUser.id !== currentUser.id) {
+          res.push(formatUser);
+        }
+
+        return res;
+      }, []);
       setUserData(formatData);
     }
     isLoading.onEndLoading();
@@ -84,7 +91,7 @@ const UsersClient = () => {
     const currentUser: CurrentUser | null = getCurrentUser();
     if (currentUser) {
       if (currentUser.id === val.id) {
-        showErrorMessage('No puedes eliminar tu mismo usuario');
+        showErrorMessage("No puedes eliminar tu mismo usuario");
       } else {
         setUserIdDelete(val.id);
         deleteUserModal.onOpen();
