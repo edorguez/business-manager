@@ -48,11 +48,18 @@ export const convertToTimezone = (date: Date, targetTimezoneOffset: number) => {
   const targetDate = new Date(date.getTime() + offsetDifference * 60000);
 
   return targetDate;
-}
+};
 
 export const isValidEmail = (email: string): boolean => {
-  if(!email) return false;
+  if (!email) return false;
 
   let re = /^\S+@\S+\.\S+$/;
   return re.test(email);
-}
+};
+
+export const validateUserInRoles = (
+  roleIds: number[],
+  userRoleId: number
+): boolean => {
+  return roleIds.some((x) => x === userRoleId);
+};

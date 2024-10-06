@@ -10,6 +10,9 @@ import { SideNavItem } from "../types";
 import { Icon } from "@iconify/react";
 import { motion, useCycle } from "framer-motion";
 import deleteUserSession from "../actions/deleteUserSession";
+import { CurrentUser } from "../types/auth";
+import getCurrentUser from "../actions/getCurrentUser";
+import { validateUserInRoles } from "../utils/Utils";
 
 type MenuItemWithSubMenuProps = {
   item: SideNavItem;
@@ -41,6 +44,7 @@ const HeaderMobile = () => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
   const [isOpen, toggleOpen] = useCycle(false, true);
+  const [currentUser, setCurrentUser] = useState<CurrentUser>();
 
   const onCloseSession = () => {
     toggleOpen();
@@ -52,6 +56,13 @@ const HeaderMobile = () => {
     toggleOpen();
     push("/management/account");
   };
+
+  useEffect(() => {
+    const user: CurrentUser | null = getCurrentUser();
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
 
   return (
     <motion.nav
@@ -72,28 +83,35 @@ const HeaderMobile = () => {
         className="absolute grid w-full gap-3 px-10 py-16"
       >
         {SIDENAV_ITEMS.map((item, idx) => {
-          return (
-            <div key={idx}>
-              {item.submenu ? (
-                <MenuItemWithSubMenu item={item} toggleOpen={toggleOpen} />
-              ) : (
-                <MenuItem>
-                  <Link
-                    href={item.path}
-                    onClick={() => toggleOpen()}
-                    className={`flex items-center w-full text-lg text-black ${
-                      item.path === pathname ? "font-bold" : ""
-                    }`}
-                  >
-                    {item.icon}
-                    <span className="ml-2">{item.title}</span>
-                  </Link>
-                </MenuItem>
-              )}
+          if (
+            currentUser &&
+            validateUserInRoles(item.roleIds, currentUser.roleId)
+          ) {
+            return (
+              <div key={idx}>
+                {item.submenu ? (
+                  <MenuItemWithSubMenu item={item} toggleOpen={toggleOpen} />
+                ) : (
+                  <MenuItem>
+                    <Link
+                      href={item.path}
+                      onClick={() => toggleOpen()}
+                      className={`flex items-center w-full text-lg text-black ${
+                        item.path === pathname ? "font-bold" : ""
+                      }`}
+                    >
+                      {item.icon}
+                      <span className="ml-2">{item.title}</span>
+                    </Link>
+                  </MenuItem>
+                )}
 
-              <MenuItem className="my-3 h-px w-full bg-gray-300" />
-            </div>
-          );
+                <MenuItem className="my-3 h-px w-full bg-gray-300" />
+              </div>
+            );
+          } else {
+            return null;
+          }
         })}
         <MenuItem>
           <button

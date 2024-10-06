@@ -14,12 +14,12 @@ import {
   ColumnType,
   SimpleTableColumn,
 } from "@/app/components/tables/SimpleTable.types";
+import { PLAN_ID, PRODUCT } from "@/app/constants";
 import useLoading from "@/app/hooks/useLoading";
 import useWarningModal from "@/app/hooks/useWarningModal";
 import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { Product, SearchProduct } from "@/app/types/product";
-import { PLAN_ID, PRODUCT } from "@/app/utils/constants";
 import { Button, Input, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";

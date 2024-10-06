@@ -39,7 +39,6 @@ const LoginClient = () => {
 
   const handleKeyDown = (event: any) => {
     if (event.key === 'Enter') {
-      isLoading.onStartLoading();
       onLogin();
     }
   }
