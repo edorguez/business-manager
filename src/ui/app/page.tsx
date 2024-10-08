@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 
