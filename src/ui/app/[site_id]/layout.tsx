@@ -1,5 +1,4 @@
 import { Inter } from "next/font/google";
-import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import Providers from "../components/Providers";
 
@@ -14,9 +13,9 @@ export default async function SiteLayout({
 }) {
   const result: any = {}; //await readSiteById(params?.site_id);
 
-  if (!result) {
-    notFound();
-  }
+  // if (!result) {
+  //   notFound();
+  // }
 
   const siteName = result?.[0]?.site_name;
   const siteDomain = result?.[0]?.site_custom_domain;
@@ -25,21 +24,25 @@ export default async function SiteLayout({
   const siteCover = result?.[0]?.site_cover_image;
 
   return (
-    <>
-      <head>
-        <title>{siteName}</title>
-        <meta name="site_name" content={siteName} />
-        <meta name="description" content={siteDescription} />
-        {siteCover && <meta name="image" content={siteCover} />}
-        <meta
-          name="url"
-          content={siteDomain + "." + process.env.NEXT_PUBLIC_FRONTEND_URL}
-        ></meta>
-        {siteLogo && <link rel="icon" href={siteLogo} />}
-      </head>
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-      </body>
-    </>
+    // <html>
+    //   <head>
+    //     <title>{siteName}</title>
+    //     <meta name="site_name" content={siteName} />
+    //     <meta name="description" content={siteDescription} />
+    //     {siteCover && <meta name="image" content={siteCover} />}
+    //     <meta
+    //       name="url"
+    //       content={siteDomain + "." + process.env.NEXT_PUBLIC_FRONTEND_URL}
+    //     ></meta>
+    //     {siteLogo && <link rel="icon" href={siteLogo} />}
+    //   </head>
+    //   <body className={inter.className}>
+    <div className={inter.className}>
+      {children}
+
+        {/* <Providers>{children}</Providers> */}
+    </div>
+    //   </body>
+    // </html>
   );
 }
