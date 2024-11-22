@@ -12,7 +12,7 @@ import { useRouter, useParams, useSearchParams } from "next/navigation";
 import {
   EditCustomerRequest,
   GetCustomerRequest,
-} from "@/app/api/customers/route";
+} from "@/app/services/customers";
 import useLoading from "@/app/hooks/useLoading";
 
 const CustomerClient = () => {

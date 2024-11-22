@@ -1,7 +1,7 @@
 'use client';
 
 import getCurrentUser from '@/app/actions/getCurrentUser';
-import { DeleteCustomerRequest, GetCustomersRequest } from '@/app/api/customers/route';
+import { DeleteCustomerRequest, GetCustomersRequest } from '@/app/services/customers';
 import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import SimpleCard from '@/app/components/cards/SimpleCard';
 import SimpleTable from '@/app/components/tables/SimpleTable';

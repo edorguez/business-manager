@@ -2,9 +2,9 @@
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import isValidLogin from "@/app/actions/isValidLogin";
-import { GetCustomersByMonthsRequest } from "@/app/api/customers/route";
-import { GetPaymentsTypesRequest } from "@/app/api/payment/route";
-import { GetLatestProductsRequest } from "@/app/api/products/route";
+import { GetCustomersByMonthsRequest } from "@/app/services/customers";
+import { GetPaymentsTypesRequest } from "@/app/services/payment";
+import { GetLatestProductsRequest } from "@/app/services/products";
 import WelcomeBanner from "@/app/components/banners/WelcomeBanner";
 import DoughnutChartCard, { DoughnutChartCardProps } from "@/app/components/cards/DoughnutChartCard";
 import ListCard from "@/app/components/cards/ListCard";

@@ -3,7 +3,7 @@
 import {
   EditProductRequest,
   GetProductRequest,
-} from "@/app/api/products/route";
+} from "@/app/services/products";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import ImagesUpload from "@/app/components/uploads/ImagesUpload";

@@ -3,7 +3,7 @@
 import useWhatsappMessage from "@/app/hooks/useWhatsappMessage";
 import { WhatsappMessage } from "@/app/types/whatsapp";
 import { useEffect, useRef, useState } from "react";
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 interface MessageListProps {
   messages: WhatsappMessage[]
@@ -61,14 +61,14 @@ const MessageList: React.FC<MessageListProps> = ({
             {message.fromMe && (
               <label className="text-sm">
                 {message.message}
-                <small className="ml-1.5 text-[10px] text-slate-400 select-none">{getDateMessageFormat(message.date)}</small>
+                <small className="ml-1.5 text-[10px] text-slate-400 select-none">{getDateMessageFormat(message.date.toDateString())}</small>
               </label>
             )}
 
             {!message.fromMe && (
               <label className="text-sm">
                 {message.message}
-                <small className="ml-1.5 text-[10px] text-slate-400 select-none">{getDateMessageFormat(message.date)}</small>
+                <small className="ml-1.5 text-[10px] text-slate-400 select-none">{getDateMessageFormat(message.date.toDateString())}</small>
               </label>
             )}
 

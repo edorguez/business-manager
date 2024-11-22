@@ -1,8 +1,8 @@
 "use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { GetRolesRequest } from "@/app/api/roles/route";
-import { CreateUserRequest } from "@/app/api/users/route";
+import { GetRolesRequest } from "@/app/services/roles";
+import { CreateUserRequest } from "@/app/services/users";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import { PASSWORD, USER_ROLE_ID } from "@/app/constants";

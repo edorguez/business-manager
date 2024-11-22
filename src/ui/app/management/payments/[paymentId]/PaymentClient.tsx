@@ -1,7 +1,7 @@
 "use client";
 
-import { EditPaymentRequest, GetPaymentRequest } from "@/app/api/payment/route";
-import { GetPaymentTypesRequest } from "@/app/api/paymentType/route";
+import { EditPaymentRequest, GetPaymentRequest } from "@/app/services/payment";
+import { GetPaymentTypesRequest } from "@/app/services/paymentType";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import PaymentFilterCard from "@/app/components/cards/PaymentFilterCard";
 import SimpleCard from "@/app/components/cards/SimpleCard";

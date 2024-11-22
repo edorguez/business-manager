@@ -9,7 +9,7 @@ import BreadcrumbNavigation from '@/app/components/BreadcrumbNavigation';
 import { useEffect, useState } from 'react';
 import { CreateCustomer } from '@/app/types/customer';
 import { useRouter } from 'next/navigation';
-import { CreateCustomerRequest } from '@/app/api/customers/route';
+import { CreateCustomerRequest } from '@/app/services/customers';
 import { CurrentUser } from '@/app/types/auth';
 import getCurrentUser from '@/app/actions/getCurrentUser';
 import useLoading from '@/app/hooks/useLoading';

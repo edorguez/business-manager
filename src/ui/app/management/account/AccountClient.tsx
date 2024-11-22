@@ -25,7 +25,7 @@ import { Company, EditCompany } from "@/app/types/company";
 import {
   EditCompanyRequest,
   GetCompanyRequest,
-} from "@/app/api/companies/route";
+} from "@/app/services/companies";
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import useLoading from "@/app/hooks/useLoading";
@@ -34,7 +34,7 @@ import {
   EditEmailRequest,
   EditPasswordRequest,
   GetUserRequest,
-} from "@/app/api/users/route";
+} from "@/app/services/users";
 import { isValidEmail } from "@/app/utils/Utils";
 import useWarningModal from "@/app/hooks/useWarningModal";
 import WarningModal from "@/app/components/modals/WarningModal";

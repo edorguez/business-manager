@@ -10,10 +10,10 @@ import PaymentFilterCard from '@/app/components/cards/PaymentFilterCard';
 import useLoading from '@/app/hooks/useLoading';
 import { useCallback, useEffect, useState } from 'react';
 import { PaymentType } from '@/app/types/paymentType';
-import { GetPaymentTypesRequest } from '@/app/api/paymentType/route';
+import { GetPaymentTypesRequest } from '@/app/services/paymentType';
 import { useRouter } from 'next/navigation';
 import { CreatePayment } from '@/app/types/payment';
-import { CreatePaymentRequest } from '@/app/api/payment/route';
+import { CreatePaymentRequest } from '@/app/services/payment';
 import { CurrentUser } from '@/app/types/auth';
 import getCurrentUser from '@/app/actions/getCurrentUser';
 

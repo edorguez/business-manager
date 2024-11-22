@@ -46,18 +46,24 @@ function handleSubdomains(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const site_id = 'hola'; //response[0]?.site_id;
+  const site_id = response[0]?.site_id;
   const tenantSubdomain = response[0]?.site_subdomain;
   const mainDomain = response[0]?.site_custom_domain;
 
+
+  console.log('values')
+  console.log(site_id)
+  console.log(tenantSubdomain)
+  console.log(mainDomain)
+
   // Determine which domain to use for rewriting
-  const rewriteDomain = tenantSubdomain; // || mainDomain;
+  const rewriteDomain = tenantSubdomain || mainDomain;
 
   console.log("Hostname:", hostname);
   console.log("Current Host:", currentHost);
   console.log("Rewrite Domain:", rewriteDomain);
 
-  if(true) {//if (rewriteDomain) {
+  if (rewriteDomain) {
     // Rewrite the URL to the tenant-specific path, using the site_id
     return NextResponse.rewrite(new URL(`/${site_id}${pathname}`, request.url));
   }

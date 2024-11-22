@@ -5,7 +5,7 @@ import {
   ChangeStatusRequest,
   DeleteProductRequest,
   GetProductsRequest,
-} from "@/app/api/products/route";
+} from "@/app/services/products";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import WarningModal from "@/app/components/modals/WarningModal";

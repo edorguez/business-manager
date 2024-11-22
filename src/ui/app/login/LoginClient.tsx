@@ -5,7 +5,7 @@ import SimpleCard from '../components/cards/SimpleCard';
 import { Button, Container, Input, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Login } from '../types/auth';
-import { login } from '../api/auth/route';
+import { login } from '../services/auth';
 import { useRouter } from 'next/navigation';
 import useLoading from '../hooks/useLoading';
 

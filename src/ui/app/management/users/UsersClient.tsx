@@ -1,7 +1,7 @@
 "use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { DeleteUserRequest, GetUsersRequest } from "@/app/api/users/route";
+import { DeleteUserRequest, GetUsersRequest } from "@/app/services/users";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import WarningModal from "@/app/components/modals/WarningModal";

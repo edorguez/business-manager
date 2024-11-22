@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import { CreateProduct } from "@/app/types/product";
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { CreateProductRequest } from "@/app/api/products/route";
+import { CreateProductRequest } from "@/app/services/products";
 
 const CreateProductClient = () => {
   const bcItems: BreadcrumItem[] = [

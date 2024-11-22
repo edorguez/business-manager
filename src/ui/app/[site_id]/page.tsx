@@ -64,12 +64,11 @@ export default function Hola() {
 
   return (
     <div>
-         <h1 className="bg-rose-800">HOLAAAAAAAAAAAAA</h1>
       <div className="min-h-screen bg-gray-100">
         {/* Header */}
         <header className="bg-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-green-500">Burger Haven</h1>
+            <h1 className="text-2xl font-bold text-green-500">Burger Haven 111222</h1>
             <div className="flex items-center space-x-4">
               <Button colorScheme="green" onClick={onOpen}>
                 Cart ({getTotalItems()})

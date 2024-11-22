@@ -5,8 +5,8 @@ import {
   ChangeStatusRequest,
   DeletePaymentRequest,
   GetPaymentsRequest,
-} from "@/app/api/payment/route";
-import { GetPaymentTypesRequest } from "@/app/api/paymentType/route";
+} from "@/app/services/payment";
+import { GetPaymentTypesRequest } from "@/app/services/paymentType";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import PaymentCard from "@/app/components/cards/PaymentCard";
 import PaymentFilterCard from "@/app/components/cards/PaymentFilterCard";
