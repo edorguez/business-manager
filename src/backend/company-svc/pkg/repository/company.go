@@ -50,6 +50,23 @@ func (companyRepo *CompanyRepo) GetCompany(ctx context.Context, id int64) (db.Co
 	return result, err
 }
 
+func (companyRepo *CompanyRepo) GetCompanyByName(ctx context.Context, name string) (db.CompanyCompany, error) {
+	var result db.CompanyCompany
+
+	err := companyRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.GetCompanyByName(ctx, name)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
 func (companyRepo *CompanyRepo) GetCompanies(ctx context.Context, arg db.GetCompaniesParams) ([]db.CompanyCompany, error) {
 	var result []db.CompanyCompany
 

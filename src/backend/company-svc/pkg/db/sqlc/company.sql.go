@@ -143,6 +143,37 @@ func (q *Queries) GetCompany(ctx context.Context, id int64) (CompanyCompany, err
 	return i, err
 }
 
+const getCompanyByName = `-- name: GetCompanyByName :one
+SELECT 
+  id,
+  name,
+  image_url,
+  plan_id,
+  last_payment_date,
+  created_at,
+  modified_at
+FROM 
+  company.company
+WHERE 
+  LOWER(name) = LOWER($1)
+LIMIT 1
+`
+
+func (q *Queries) GetCompanyByName(ctx context.Context, lower string) (CompanyCompany, error) {
+	row := q.db.QueryRowContext(ctx, getCompanyByName, lower)
+	var i CompanyCompany
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.ImageUrl,
+		&i.PlanID,
+		&i.LastPaymentDate,
+		&i.CreatedAt,
+		&i.ModifiedAt,
+	)
+	return i, err
+}
+
 const updateCompany = `-- name: UpdateCompany :one
 UPDATE 
   company.company

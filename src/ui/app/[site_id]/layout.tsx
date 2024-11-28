@@ -1,48 +1,56 @@
+"use client";
+
 import { Inter } from "next/font/google";
-import { ReactNode } from "react";
-import Providers from "../components/Providers";
+import { ReactNode, useCallback, useEffect, useState } from "react";
+import { MoonLoader } from "react-spinners";
+import { Company } from "../types/company";
+import { GetCompanyByNameRequest } from "../services/companies";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default async function SiteLayout({
+export default function SiteLayout({
   params,
   children,
 }: {
   params: { site_id: string };
   children: ReactNode;
 }) {
-  const result: any = {}; //await readSiteById(params?.site_id);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  
+  const getCompany = useCallback(async () => {
+    let company: Company = await GetCompanyByNameRequest(params.site_id);
+    console.log(company);
+     if(!company?.id) {
+      // I need to create my not found route
+      router.push('/404')
+     }
+  }, [params.site_id, router]);
 
-  // if (!result) {
-  //   notFound();
-  // }
-
-  const siteName = result?.[0]?.site_name;
-  const siteDomain = result?.[0]?.site_custom_domain;
-  const siteDescription = result?.[0]?.site_description;
-  const siteLogo = result?.[0]?.site_logo;
-  const siteCover = result?.[0]?.site_cover_image;
+  useEffect(() => {
+    getCompany();
+  }, [getCompany])
 
   return (
-    // <html>
-    //   <head>
-    //     <title>{siteName}</title>
-    //     <meta name="site_name" content={siteName} />
-    //     <meta name="description" content={siteDescription} />
-    //     {siteCover && <meta name="image" content={siteCover} />}
-    //     <meta
-    //       name="url"
-    //       content={siteDomain + "." + process.env.NEXT_PUBLIC_FRONTEND_URL}
-    //     ></meta>
-    //     {siteLogo && <link rel="icon" href={siteLogo} />}
-    //   </head>
-    //   <body className={inter.className}>
-    <div className={inter.className}>
-      {children}
-
-        {/* <Providers>{children}</Providers> */}
-    </div>
-    //   </body>
-    // </html>
+    <>
+      {isLoading && (
+        <div className="w-screen h-screen bg-white absolute z-50 flex justify-center items-center">
+          <MoonLoader
+            color={"#14A098"}
+            loading={isLoading}
+            size={150}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      )}
+      
+      {!isLoading && (
+        <div className={inter.className}>
+          {children}
+        </div>
+      )}
+    </>
   );
 }

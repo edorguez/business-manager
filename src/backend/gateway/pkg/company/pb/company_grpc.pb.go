@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type CompanyServiceClient interface {
 	CreateCompany(ctx context.Context, in *CreateCompanyRequest, opts ...grpc.CallOption) (*CreateCompanyResponse, error)
 	GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*GetCompanyResponse, error)
+	GetCompanyByName(ctx context.Context, in *GetCompanyByNameRequest, opts ...grpc.CallOption) (*GetCompanyByNameResponse, error)
 	GetCompanies(ctx context.Context, in *GetCompaniesRequest, opts ...grpc.CallOption) (*GetCompaniesResponse, error)
 	UpdateCompany(ctx context.Context, in *UpdateCompanyRequest, opts ...grpc.CallOption) (*UpdateCompanyResponse, error)
 	DeleteCompany(ctx context.Context, in *DeleteCompanyRequest, opts ...grpc.CallOption) (*DeleteCompanyResponse, error)
@@ -49,6 +50,15 @@ func (c *companyServiceClient) CreateCompany(ctx context.Context, in *CreateComp
 func (c *companyServiceClient) GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*GetCompanyResponse, error) {
 	out := new(GetCompanyResponse)
 	err := c.cc.Invoke(ctx, "/pb.CompanyService/GetCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) GetCompanyByName(ctx context.Context, in *GetCompanyByNameRequest, opts ...grpc.CallOption) (*GetCompanyByNameResponse, error) {
+	out := new(GetCompanyByNameResponse)
+	err := c.cc.Invoke(ctx, "/pb.CompanyService/GetCompanyByName", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,6 +98,7 @@ func (c *companyServiceClient) DeleteCompany(ctx context.Context, in *DeleteComp
 type CompanyServiceServer interface {
 	CreateCompany(context.Context, *CreateCompanyRequest) (*CreateCompanyResponse, error)
 	GetCompany(context.Context, *GetCompanyRequest) (*GetCompanyResponse, error)
+	GetCompanyByName(context.Context, *GetCompanyByNameRequest) (*GetCompanyByNameResponse, error)
 	GetCompanies(context.Context, *GetCompaniesRequest) (*GetCompaniesResponse, error)
 	UpdateCompany(context.Context, *UpdateCompanyRequest) (*UpdateCompanyResponse, error)
 	DeleteCompany(context.Context, *DeleteCompanyRequest) (*DeleteCompanyResponse, error)
@@ -103,6 +114,9 @@ func (UnimplementedCompanyServiceServer) CreateCompany(context.Context, *CreateC
 }
 func (UnimplementedCompanyServiceServer) GetCompany(context.Context, *GetCompanyRequest) (*GetCompanyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompany not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetCompanyByName(context.Context, *GetCompanyByNameRequest) (*GetCompanyByNameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCompanyByName not implemented")
 }
 func (UnimplementedCompanyServiceServer) GetCompanies(context.Context, *GetCompaniesRequest) (*GetCompaniesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompanies not implemented")
@@ -158,6 +172,24 @@ func _CompanyService_GetCompany_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CompanyServiceServer).GetCompany(ctx, req.(*GetCompanyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_GetCompanyByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCompanyByNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).GetCompanyByName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.CompanyService/GetCompanyByName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).GetCompanyByName(ctx, req.(*GetCompanyByNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -230,6 +262,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCompany",
 			Handler:    _CompanyService_GetCompany_Handler,
+		},
+		{
+			MethodName: "GetCompanyByName",
+			Handler:    _CompanyService_GetCompanyByName_Handler,
 		},
 		{
 			MethodName: "GetCompanies",

@@ -24,6 +24,27 @@ export async function GetCompanyRequest(
   }
 }
 
+export async function GetCompanyByNameRequest(
+  name: string
+) {
+  try {
+    const headers = new Headers();
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
+
+    const res = await fetch(`${baseUrl}/name/${name}`, {
+      method: 'GET',
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
+}
+
 export async function EditCompanyRequest(
   request: EditCompany
 ) {

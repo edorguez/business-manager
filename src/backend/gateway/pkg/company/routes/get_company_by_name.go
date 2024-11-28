@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
+	"strings"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
@@ -12,14 +12,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
+func GetCompanyByName(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
+	name := vars["name"]
+	if name == "" {
 		json.NewEncoder(w).Encode(&contracts.Error{
 			Status: http.StatusBadRequest,
-			Error:  "Unable to convert ID",
+			Error:  "Name param must be provided",
 		})
 		return
 	}
@@ -32,15 +32,15 @@ func GetCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		return
 	}
 
-	res, errCompany := client.GetCompany(int64(id), r.Context())
+	res, errCompany := client.GetCompanyByName(strings.ToLower(name), r.Context())
 
 	if errCompany != nil {
-		fmt.Println("API Gateway :  GetCompany - ERROR")
+		fmt.Println("API Gateway :  GetCompanyByName - ERROR")
 		json.NewEncoder(w).Encode(errCompany)
 		return
 	}
 
-	fmt.Println("API Gateway :  GetCompany - SUCCESS")
+	fmt.Println("API Gateway :  GetCompanyByNmae - SUCCESS")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(res)
 }

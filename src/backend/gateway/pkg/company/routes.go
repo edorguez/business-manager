@@ -24,7 +24,6 @@ func loadCompanyRoutes(router *mux.Router, c *config.Config) {
 	baseRoute := router.PathPrefix("/companies").Subrouter()
 
 	mwc := auth.InitAuthMiddleware(c)
-	baseRoute.Use(mwc.MiddlewareValidateAuth)
 
 	cr := &CompanyRoutes{
 		config: c,
@@ -35,17 +34,24 @@ func loadCompanyRoutes(router *mux.Router, c *config.Config) {
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/{id:[0-9]+}", cr.GetCompany)
 	getRouter.HandleFunc("", cr.GetCompanies)
+	getRouter.Use(mwc.MiddlewareValidateAuth)
+
+	getCompanyByNameRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getCompanyByNameRouter.HandleFunc("/name/{name}", cr.GetCompanyByName)
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("", cr.CreateCompany)
 	postRouter.Use(mw.MiddlewareValidateCreateCompany)
+	postRouter.Use(mwc.MiddlewareValidateAuth)
 
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id:[0-9]+}", cr.UpdateCompany)
 	putRouter.Use(mw.MiddlewareValidateUpdateCompany)
+	putRouter.Use(mwc.MiddlewareValidateAuth)
 
 	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/{id:[0-9]+}", cr.DeleteCompany)
+	deleteRouter.Use(mwc.MiddlewareValidateAuth)
 }
 
 func loadPaymentRoutes(router *mux.Router, c *config.Config) {
@@ -104,6 +110,11 @@ func (cr *CompanyRoutes) CreateCompany(w http.ResponseWriter, r *http.Request) {
 func (cr *CompanyRoutes) GetCompany(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  GetCompany Called --> 1")
 	routes.GetCompany(w, r, cr.config)
+}
+
+func (cr *CompanyRoutes) GetCompanyByName(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetCompanyByName Called --> 1")
+	routes.GetCompanyByName(w, r, cr.config)
 }
 
 func (cr *CompanyRoutes) GetCompanies(w http.ResponseWriter, r *http.Request) {
