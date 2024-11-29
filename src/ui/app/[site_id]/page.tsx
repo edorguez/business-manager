@@ -14,11 +14,13 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useData } from "./layout";
+import { useCallback, useEffect, useState } from "react";
 import { Company } from "../types/company";
 import { Product } from "../types/product";
 import ProductCard from "../components/cards/ProductCard";
+import { GetCompanyByNameRequest } from "../services/companies";
+import { useParams, useRouter } from "next/navigation";
+import useGeneralLoading from "../hooks/useGeneralLoading";
 
 interface CartItem extends Product {
   quantity: number;
@@ -80,7 +82,35 @@ const products: Product[] = [
 const SitePage = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const data: Company = useData();
+  // const data: Company = useData();
+
+
+  const router = useRouter();
+  const params = useParams();
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  const isLoading = useGeneralLoading();
+  const [company, setCompany] = useState<Company | null>(null);
+  
+  const getCompany = useCallback(async () => {
+    let getCompany: Company = await GetCompanyByNameRequest(params.site_id.toString());
+    console.log(getCompany);
+     if(!getCompany?.id || getCompany?.lastPaymentDate < new Date()) {
+      console.log('EPA FUERA');
+      // I need to create my not found route
+      router.push('/404')
+     } else {
+      setCompany(getCompany)
+      // setIsLoading(false);
+
+      setTimeout(() => {
+        isLoading.onEndLoading();
+      }, 2000);
+     }
+  }, [params.site_id, router]);
+
+  useEffect(() => {
+    getCompany();
+  }, [getCompany])
 
   const addToCart = (product: Product): void => {
     setCart((prevCart) => {
