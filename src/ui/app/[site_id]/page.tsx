@@ -8,10 +8,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
@@ -21,92 +17,46 @@ import ProductCard from "../components/cards/ProductCard";
 import { GetCompanyByNameRequest } from "../services/companies";
 import { useParams, useRouter } from "next/navigation";
 import useGeneralLoading from "../hooks/useGeneralLoading";
+import { GetProductsRequest } from "../services/products";
 
 interface CartItem extends Product {
   quantity: number;
 }
 
-const products: Product[] = [
-  {
-    id: "1",
-    name: "Classic Burger",
-    description: "Juicy beef patty with fresh toppings",
-    price: 9.99,
-    images: ["/placeholder.svg?height=200&width=200"],
-    sku: '',
-    quantity: 1,
-    productStatus: 1
-  },
-  {
-    id: "2",
-    name: "Classic Burger",
-    description: "Juicy beef patty with fresh toppings",
-    price: 9.99,
-    images: ["/placeholder.svg?height=200&width=200"],
-    sku: '',
-    quantity: 1,
-    productStatus: 1
-  },
-  {
-    id: "3",
-    name: "Classic Burger",
-    description: "Juicy beef patty with fresh toppings",
-    price: 9.99,
-    images: ["/placeholder.svg?height=200&width=200"],
-    sku: '',
-    quantity: 1,
-    productStatus: 1
-  },
-  {
-    id: "4",
-    name: "Classic Burger",
-    description: "Juicy beef patty with fresh toppings",
-    price: 9.99,
-    images: ["/placeholder.svg?height=200&width=200"],
-    sku: '',
-    quantity: 1,
-    productStatus: 1
-  },
-  {
-    id: "5",
-    name: "Classic Burger",
-    description: "Juicy beef patty with fresh toppings",
-    price: 9.99,
-    images: ["/placeholder.svg?height=200&width=200"],
-    sku: '',
-    quantity: 1,
-    productStatus: 1
-  },
-];
-
 const SitePage = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const data: Company = useData();
-
-
   const router = useRouter();
   const params = useParams();
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
   const isLoading = useGeneralLoading();
   const [company, setCompany] = useState<Company | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   
   const getCompany = useCallback(async () => {
     let getCompany: Company = await GetCompanyByNameRequest(params.site_id.toString());
-    console.log(getCompany);
      if(!getCompany?.id || getCompany?.lastPaymentDate < new Date()) {
       console.log('EPA FUERA');
       // I need to create my not found route
       router.push('/404')
      } else {
-      setCompany(getCompany)
-      // setIsLoading(false);
-
-      setTimeout(() => {
-        isLoading.onEndLoading();
-      }, 2000);
+      setCompany(getCompany);
+      getProductsByCompanyId(getCompany);
+      
+      isLoading.onEndLoading();
      }
   }, [params.site_id, router]);
+
+  const getProductsByCompanyId = useCallback(async (comp: Company) => {
+    let getProducts: Product[] = await GetProductsRequest({
+      companyId: comp.id,
+      name: '',
+      sku: '',
+      limit: 10,
+      offset: 0
+    });
+
+    setProducts(getProducts);
+  }, []);
 
   useEffect(() => {
     getCompany();
@@ -127,20 +77,20 @@ const SitePage = () => {
     });
   };
 
-  // const removeFromCart = (productId: number): void => {
-  //   setCart((prevCart) => {
-  //     const existingItem = prevCart.find((item) => item.id === productId);
-  //     if (existingItem && existingItem.quantity === 1) {
-  //       return prevCart.filter((item) => item.id !== productId);
-  //     } else {
-  //       return prevCart.map((item) =>
-  //         item.id === productId
-  //           ? { ...item, quantity: item.quantity - 1 }
-  //           : item
-  //       );
-  //     }
-  //   });
-  // };
+  const removeFromCart = (productId: string): void => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === productId);
+      if (existingItem && existingItem.quantity === 1) {
+        return prevCart.filter((item) => item.id !== productId);
+      } else {
+        return prevCart.map((item) =>
+          item.id === productId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        );
+      }
+    });
+  };
 
   const getTotalPrice = (): string => {
     return cart
@@ -159,31 +109,22 @@ const SitePage = () => {
         <header className="bg-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-green-500">
-              Burger Haven
+              { company?.name }
             </h1>
             <div className="flex items-center space-x-4">
               <Button colorScheme="green" onClick={onOpen}>
-                Cart ({getTotalItems()})
+                Carrito ({getTotalItems()})
               </Button>
-              <Menu>
-                <MenuButton as={Button}>Account</MenuButton>
-                <MenuList>
-                  <MenuItem>Profile</MenuItem>
-                  <MenuItem>Orders</MenuItem>
-                  <MenuItem>Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
-                </MenuList>
-              </Menu>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
         <main className="container mx-auto px-4 py-8">
-          <h2 className="text-2xl font-semibold mb-6">Our Menu</h2>
+          {/* <h2 className="text-2xl font-semibold mb-6">Our Menu</h2> */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} onAddToCard={() => { alert("hola") }} />
+              <ProductCard key={product.id} product={product} onAddToCard={() => { addToCart(product) }} />
             ))}
           </div>
         </main>
@@ -193,10 +134,10 @@ const SitePage = () => {
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>Your Cart</DrawerHeader>
+            <DrawerHeader>Carrito</DrawerHeader>
             <DrawerBody>
               {cart.length === 0 ? (
-                <p>Your cart is empty.</p>
+                <p>Carrito vacío.</p>
               ) : (
                 <>
                   {cart.map((item) => (
@@ -213,7 +154,7 @@ const SitePage = () => {
                       <div className="flex items-center">
                         <Button
                           size="sm"
-                          // onClick={() => removeFromCart(item.id)}
+                          onClick={() => removeFromCart(item.id)}
                         >
                           -
                         </Button>
@@ -230,7 +171,7 @@ const SitePage = () => {
                       <span className="font-bold">${getTotalPrice()}</span>
                     </div>
                     <Button colorScheme="green" width="100%">
-                      Proceed to Checkout
+                      Realizar Pago
                     </Button>
                   </div>
                 </>

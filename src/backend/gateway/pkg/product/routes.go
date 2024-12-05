@@ -18,7 +18,6 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 	baseRoute := router.PathPrefix("/products").Subrouter()
 
 	mwc := auth.InitAuthMiddleware(c)
-	baseRoute.Use(mwc.MiddlewareValidateAuth)
 
 	cr := &ProductRoutes{
 		config: c,
@@ -29,22 +28,29 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/latest", cr.GetLatestProducts)
 	getRouter.HandleFunc("/{id}", cr.GetProduct)
-	getRouter.HandleFunc("", cr.GetProducts)
+	getRouter.Use(mwc.MiddlewareValidateAuth)
+
+	getProductsRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getProductsRouter.HandleFunc("", cr.GetProducts)
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("", cr.CreateProduct)
 	postRouter.Use(mw.MiddlewareValidateCreateProduct)
+	postRouter.Use(mwc.MiddlewareValidateAuth)
 
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id}", cr.UpdateProduct)
 	putRouter.Use(mw.MiddlewareValidateUpdateProduct)
+	putRouter.Use(mwc.MiddlewareValidateAuth)
 
 	putStatusRoutes := baseRoute.Methods(http.MethodPut).Subrouter()
 	putStatusRoutes.HandleFunc("/{id}/status", cr.UpdateProductStatus)
+	putStatusRoutes.Use(mwc.MiddlewareValidateAuth)
 	putStatusRoutes.Use(mw.MiddlewareValidateUpdateProductStatus)
 
 	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/{id}", cr.DeleteProduct)
+	deleteRouter.Use(mwc.MiddlewareValidateAuth)
 }
 
 func (pr *ProductRoutes) CreateProduct(w http.ResponseWriter, r *http.Request) {

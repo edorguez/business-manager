@@ -63,3 +63,7 @@ export const validateUserInRoles = (
 ): boolean => {
   return roleIds.some((x) => x === userRoleId);
 };
+
+export const numberMoveDecimal = (num: number, places: number): number => {
+  return num / Math.pow(10, places);
+};
