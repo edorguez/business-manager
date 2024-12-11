@@ -66,7 +66,7 @@ const SitePage = () => {
               { company?.name }
             </h1>
             <div className="flex items-center space-x-4">
-              <Button colorScheme="green" onClick={cart.onOpen}>
+              <Button variant="main" onClick={cart.onOpen}>
                 Carrito ({getTotalItems()})
               </Button>
             </div>

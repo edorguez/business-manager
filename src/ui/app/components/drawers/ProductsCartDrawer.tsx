@@ -1,5 +1,6 @@
 "use client";
 
+import useCheckoutModal from "@/app/hooks/useCheckoutModal";
 import useProductsCart from "@/app/hooks/useProductsCart";
 import { numberMoveDecimal } from "@/app/utils/Utils";
 import {
@@ -11,17 +12,25 @@ import {
   DrawerHeader,
   DrawerOverlay,
 } from "@chakra-ui/react";
+import CheckoutModal from "../modals/CheckoutModal";
 
 const ProductsCartDrawer = () => {
   const cart = useProductsCart();
+  const checkoutModal = useCheckoutModal();
 
   const getTotalPrice = (): string => {
     let res: number = cart.items.reduce((total, item) => total + numberMoveDecimal(item.price, 2) * item.quantity, 0);
     return res.toFixed(2);
   };
 
+  const onCheckout = (): void => {
+    cart.onClose();
+    checkoutModal.onOpen();
+  }
+
   return (
     <>
+      <CheckoutModal />
       <Drawer isOpen={cart.isOpen} placement="right" onClose={cart.onClose}>
         <DrawerOverlay />
         <DrawerContent>
@@ -64,8 +73,8 @@ const ProductsCartDrawer = () => {
                     <span className="font-semibold">Total:</span>
                     <span className="font-bold">${getTotalPrice()}</span>
                   </div>
-                  <Button colorScheme="green" width="100%">
-                    Realizar Pago
+                  <Button variant="main" width="100%" onClick={onCheckout}>
+                    Realizar Pedido
                   </Button>
                 </div>
               </>

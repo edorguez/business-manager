@@ -28,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 ${numberMoveDecimal(product.price, 2)}
             </span>
             <Button
-                colorScheme="green"
+                variant="main"
                 size="sm"
                 onClick={() => onAddToCard()}
             >
