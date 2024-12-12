@@ -6,5 +6,6 @@ use (
 	gateway
 	product-svc
 	whatsapp-svc
-  auth-svc
+  	auth-svc
+	order-svc
 )

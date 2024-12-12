@@ -18,6 +18,7 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 	baseRoute := router.PathPrefix("/customers").Subrouter()
 
 	mwc := auth.InitAuthMiddleware(c)
+	baseRoute.Use(mwc.MiddlewareValidateAuth)
 
 	cr := &CustomerRoutes{
 		config: c,
@@ -29,7 +30,6 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 	getRouter.HandleFunc("/{id:[0-9]+}", cr.GetCustomer)
 	getRouter.HandleFunc("/months", cr.GetCustomersByMonths)
 	getRouter.HandleFunc("", cr.GetCustomers)
-	getRouter.Use(mwc.MiddlewareValidateAuth)
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("", cr.CreateCustomer)
@@ -38,11 +38,9 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id:[0-9]+}", cr.UpdateCustomer)
 	putRouter.Use(mw.MiddlewareValidateUpdateCustomer)
-	putRouter.Use(mwc.MiddlewareValidateAuth)
 
 	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/{id:[0-9]+}", cr.DeleteCustomer)
-	deleteRouter.Use(mwc.MiddlewareValidateAuth)
 }
 
 func (cr *CustomerRoutes) CreateCustomer(w http.ResponseWriter, r *http.Request) {
