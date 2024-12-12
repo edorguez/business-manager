@@ -19,6 +19,7 @@ import {
   useSteps,
 } from "@chakra-ui/react";
 import CreateCustomerComponent from "../customers/CreateCustomer";
+import SuccessCheckout from "../checkout/SuccessCheckout";
 
 const CheckoutModal = () => {
   const checkoutModal = useCheckoutModal();
@@ -30,7 +31,7 @@ const CheckoutModal = () => {
 
   return (
     <>
-      <Modal isOpen={checkoutModal.isOpen} onClose={checkoutModal.onClose}>
+      <Modal closeOnOverlayClick={false} isOpen={checkoutModal.isOpen} onClose={checkoutModal.onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalBody className="my-3">
@@ -72,6 +73,12 @@ const CheckoutModal = () => {
                 activeStep == 0 &&
                 <div className="mt-7">
                     <CreateCustomerComponent />
+                </div>
+            }
+            {
+                activeStep == 1 &&
+                <div className="mt-7">
+                    <SuccessCheckout />
                 </div>
             }
           </ModalBody>
