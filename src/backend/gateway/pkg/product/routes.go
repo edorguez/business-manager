@@ -54,7 +54,7 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 }
 
 func (pr *ProductRoutes) CreateProduct(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("API Gateway :  Createproduct Called --> 1")
+	fmt.Println("API Gateway :  CreateProduct Called --> 1")
 	routes.CreateProduct(w, r, pr.config)
 }
 

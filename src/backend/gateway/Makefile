@@ -10,3 +10,4 @@ proto:
 	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative pkg/auth/pb/user.proto --experimental_allow_proto3_optional
 	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative pkg/auth/pb/auth.proto --experimental_allow_proto3_optional
 	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative pkg/auth/pb/role.proto --experimental_allow_proto3_optional
+	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative pkg/order/pb/order.proto --experimental_allow_proto3_optional

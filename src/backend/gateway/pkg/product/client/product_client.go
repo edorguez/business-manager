@@ -28,7 +28,7 @@ func InitProductServiceClient(c *config.Config) error {
 }
 
 func CreateProduct(body contracts.CreateProductRequest, c context.Context) (*pb.CreateProductResponse, *contracts.Error) {
-	fmt.Println("Proudct CLIENT :  CreateProduct")
+	fmt.Println("Product CLIENT :  CreateProduct")
 
 	fmt.Println("Product CLIENT :  CreateProduct - Body")
 	fmt.Println(body)
@@ -59,7 +59,7 @@ func CreateProduct(body contracts.CreateProductRequest, c context.Context) (*pb.
 		return nil, error
 	}
 
-	fmt.Println("API Gateway :  CreateProduct - SUCCESS")
+	fmt.Println("Product CLIENT :  CreateProduct - SUCCESS")
 	return res, nil
 }
 

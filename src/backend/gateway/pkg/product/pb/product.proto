@@ -107,4 +107,3 @@ message DeleteProductResponse{
   int64 status = 1;
   string error = 2;
 }
-
