@@ -1,12 +1,13 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
 
 	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
+	"github.com/EdoRguez/business-manager/order-svc/pkg/pb"
+	"github.com/EdoRguez/business-manager/order-svc/pkg/services"
 	"google.golang.org/grpc"
 )
 
@@ -21,22 +22,15 @@ func main() {
 		log.Fatalln("Failed to listing:", err)
 	}
 
-	mongoClient, err := db.ConnectMongoDb(c.DBSource)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	defer mongoClient.Disconnect(context.Background())
-
 	fmt.Println("Client Service ON: ", c.Port)
 
-	ps := services.ProductService{
-		Repo:   repo.NewProductRepo(mongoClient, c),
+	ps := services.OrderService{
 		Config: &c,
 	}
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterProductServiceServer(grpcServer, &ps)
+	pb.RegisterOrderServiceServer(grpcServer, &ps)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)
