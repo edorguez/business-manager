@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/pb"
+	customer "github.com/EdoRguez/business-manager/customer-svc/pkg/pb"
 	"github.com/EdoRguez/business-manager/order-svc/pkg/client"
 	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
 	order "github.com/EdoRguez/business-manager/order-svc/pkg/pb"
@@ -31,11 +31,13 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 	}
 
 	var wg sync.WaitGroup
-
 	wg.Add(1)
+
+	errCust := make(chan error)
 	go func() {
 		defer wg.Done()
-		_, err := client.CreateCustomer(&pb.CreateCustomerRequest{
+		defer close(errCust)
+		_, err := client.CreateCustomer(&customer.CreateCustomerRequest{
 			CompanyId:            req.CompanyId,
 			FirstName:            req.Customer.FirstName,
 			LastName:             req.Customer.LastName,
@@ -47,10 +49,20 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 		if err != nil {
 			fmt.Println("Order Service :  CreateOrder - ERROR")
 			fmt.Println(err.Error())
+			errCust <- err
 		}
+
+		errCust <- nil
 	}()
 
 	wg.Wait()
+
+	if (<-errCust) != nil {
+		return &order.CreateOrderResponse{
+			Status: http.StatusInternalServerError,
+			Error:  (<-errCust).Error(),
+		}, nil
+	}
 
 	fmt.Println("Order Service :  CreateOrder - SUCCESS")
 	return &order.CreateOrderResponse{
