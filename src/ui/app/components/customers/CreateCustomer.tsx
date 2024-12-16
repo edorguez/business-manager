@@ -6,8 +6,16 @@ import { CreateCustomer } from "@/app/types/customer";
 import { useState } from "react";
 import useLoading from "@/app/hooks/useLoading";
 
-const CreateCustomerComponent = () => {
-  const isLoading = useLoading();
+interface CreateCustomerProps {
+  onStartCreateCustomer: () => void
+  onEndCreateCustomer: () => void
+}
+
+const CreateCustomerComponent: React.FC<CreateCustomerProps> = ({
+  onStartCreateCustomer,
+  onEndCreateCustomer,
+}) => {
+  const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
   const toast = useToast();
 
   const [formData, setFormData] = useState<CreateCustomer>({
@@ -27,8 +35,9 @@ const CreateCustomerComponent = () => {
 
   const onSubmit = async () => {
     if (isFormValid()) {
-      console.log("fino");
-      isLoading.onStartLoading();
+      setIsCreateLoading(true);
+      onStartCreateCustomer();
+      
       //   let createCustomer: any = await CreateCustomerRequest(formData);
       //   if (!createCustomer.error) {
       //     isLoading.onEndLoading();
@@ -46,6 +55,9 @@ const CreateCustomerComponent = () => {
     if (!formData.firstName) return false;
 
     if (!formData.identificationNumber || !formData.identificationType)
+      return false;
+
+    if (!formData.phone)
       return false;
 
     return true;
@@ -85,6 +97,7 @@ const CreateCustomerComponent = () => {
           value={formData.firstName}
           onChange={handleChange}
           maxLength={20}
+          disabled={isCreateLoading}
         />
       </div>
       <div className="mt-2">
@@ -95,16 +108,18 @@ const CreateCustomerComponent = () => {
           value={formData.lastName}
           onChange={handleChange}
           maxLength={20}
+          disabled={isCreateLoading}
         />
       </div>
       <div className="mt-2">
-        <label className="text-sm">Teléfono</label>
+        <label className="text-sm">Teléfono <span className="text-thirdcolor">*</span></label>
         <Input
           size="sm"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
           maxLength={11}
+          disabled={isCreateLoading}
         />
       </div>
       <div className="mt-2">
@@ -118,6 +133,7 @@ const CreateCustomerComponent = () => {
               name="identificationType"
               value={formData.identificationType}
               onChange={handleChange}
+              disabled={isCreateLoading}
             >
               <option value="">-</option>
               <option value="V">V</option>
@@ -133,11 +149,12 @@ const CreateCustomerComponent = () => {
             value={formData.identificationNumber}
             onChange={handleChange}
             maxLength={20}
+            disabled={isCreateLoading}
           />
         </div>
       </div>
       <div className="mt-3">
-        <Button variant="main" size="sm" className="w-full" onClick={onSubmit}>
+        <Button variant="main" size="sm" className="w-full" onClick={onSubmit} isLoading={isCreateLoading} loadingText="Creando Order">
           Enviar Datos
         </Button>
       </div>
