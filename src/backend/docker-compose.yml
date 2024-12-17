@@ -1,16 +1,102 @@
 version: '3.9'
 
 services:
-  # customer-svc:
-  #     image: EdoRguez/customer-svc
-  #     ports:
-  #       - "50052:50052"
-  #     environment:
-  #       - PORT=:50052
-  #       - DB_URL=postgres://postgres:postgres@customer-db:5432/customer_svc
-  #     depends_on:
-  #       - customer-db
-  #     restart: always
+  gateway:
+    container_name: gateway
+    image: EdoRguez/gateway
+    ports:
+      - "3001:3001"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - GATEWAY_URL=${GATEWAY_URL}
+      - CUSTOMER_SVC_URL=${CUSTOMER_SVC_URL}
+      - COMPANY_SVC_URL=${COMPANY_SVC_URL}
+      - PRODUCT_SVC_URL=${PRODUCT_SVC_URL}
+      - WHATSAPP_SVC_URL=${WHATSAPP_SVC_URL}
+      - AUTH_SVC_URL=${AUTH_SVC_URL}
+      - ORDER_SVC_URL=${ORDER_SVC_URL}
+    restart: always
+
+  customer-svc:
+      image: EdoRguez/customer-svc
+      ports:
+        - "50052:50052"
+      environment:
+        - ENVIRONMENT=${ENVIRONMENT}
+        - PORT=${PORT}
+        - DB_DRIVER=${DB_DRIVER}
+        - DB_SOURCE=${DB_SOURCE}
+      depends_on:
+        - customer-db
+      restart: always
+
+  company-svc:
+      image: EdoRguez/company-svc
+      ports:
+        - "50053:50053"
+      environment:
+        - ENVIRONMENT=${ENVIRONMENT}
+        - PORT=${PORT}
+        - DB_DRIVER=${DB_DRIVER}
+        - DB_SOURCE=${DB_SOURCE}
+      depends_on:
+        - company-db
+      restart: always
+
+  product-svc:
+      image: EdoRguez/product-svc
+      ports:
+        - "50054:50054"
+      environment:
+        - ENVIRONMENT=${ENVIRONMENT}
+        - PORT=${PORT}
+        - DB_NAME=${DB_NAME}
+        - DB_SOURCE=${DB_SOURCE}
+        - COMPANY_SVC_URL=${COMPANY_SVC_URL}
+      depends_on:
+        - product-db
+      restart: always
+
+  whatsapp-svc:
+      image: EdoRguez/whatsapp-svc
+      ports:
+        - "50055:50055"
+      environment:
+        - ENVIRONMENT=${ENVIRONMENT}
+        - PORT=${PORT}
+        - DB_DRIVER=${DB_DRIVER}
+        - DB_SOURCE=${DB_SOURCE}
+      depends_on:
+        - whatsapp-db
+      restart: always
+
+  auth-svc:
+      image: EdoRguez/auth-svc
+      ports:
+        - "50056:50056"
+      environment:
+        - ENVIRONMENT=${ENVIRONMENT}
+        - PORT=${PORT}
+        - DB_DRIVER=${DB_DRIVER}
+        - DB_SOURCE=${DB_SOURCE}
+        - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+        - COMPANY_SVC_URL=${COMPANY_SVC_URL}
+      depends_on:
+        - auth-db
+      restart: always
+
+  order-svc:
+      image: EdoRguez/order-svc
+      ports:
+        - "50057:50057"
+      environment:
+        - ENVIRONMENT=${ENVIRONMENT}
+        - PORT=${PORT}
+        - CUSTOMER_SVC_URL=${CUSTOMER_SVC_URL}
+        - WHATSAPP_SVC_URL=${WHATSAPP_SVC_URL}
+      depends_on:
+        - whatsapp-db
+      restart: always
 
   customer-db:
     container_name: customer-db
@@ -22,6 +108,7 @@ services:
       - POSTGRES_USER=${CUSTOMER_SVC_DB_USER}
       - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
     restart: always
+
   company-db:
     container_name: company-db
     image: postgres:16.2
@@ -32,6 +119,7 @@ services:
       - POSTGRES_USER=${COMPANY_SVC_DB_USER}
       - POSTGRES_PASSWORD=${COMPANY_SVC_DB_PASSWORD}
     restart: always
+
   product-db:
     container_name: product-db
     image: mongo:7.0.8
@@ -41,6 +129,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${PRODUCT_SVC_DB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${PRODUCT_SVC_DB_PASSWORD}
     restart: always
+
   whatsapp-db:
     container_name: whatsapp-db
     image: postgres:16.2
@@ -51,6 +140,7 @@ services:
       - POSTGRES_USER=${WHATSAPP_SVC_DB_USER}
       - POSTGRES_PASSWORD=${WHATSAPP_SVC_DB_PASSWORD}
     restart: always
+
   auth-db:
     container_name: auth-db
     image: postgres:16.2

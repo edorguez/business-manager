@@ -1,5 +1,5 @@
 # base image : specify the enviorment
-FROM golang:1.22-alpine AS build
+FROM golang:1.22.4-alpine AS build
 # working directory
 WORKDIR /app
 # copy go.mod and go.sum to working directory
