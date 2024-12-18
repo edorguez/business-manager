@@ -38,6 +38,9 @@ FROM alpine:3.21.0
 # Copy the compiled binary from the build stage
 COPY --from=build /workspace/auth-svc/out/dist /app/dist
 
+# Copy the .env file to the runtime container
+COPY auth-svc/.env /app/.env
+
 # Set working directory
 WORKDIR /app
 

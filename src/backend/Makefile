@@ -7,8 +7,8 @@ OUT_DIR_PRODUCT=./product-svc/pkg/pb
 OUT_DIR_GATEWAY=./gateway/pkg/pb
 
 # Install required tools
-PROTOC_GEN_GO=google.golang.org/protobuf/cmd/protoc-gen-go@latest
-PROTOC_GEN_GO_GRPC=google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+PROTOC_GEN_GO=google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.0
+PROTOC_GEN_GO_GRPC=google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
 
 tools:
 	@echo "Installing tools..."

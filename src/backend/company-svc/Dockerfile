@@ -17,11 +17,6 @@ FROM golang:1.22.4-alpine AS build
 # Set the workspace directory
 WORKDIR /workspace
 
-# Install protoc and plugins
-RUN apk add --no-cache protobuf
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-
 # Copy the dependency cache and service files
 COPY --from=deps /workspace /workspace
 COPY company-svc/ company-svc/
@@ -35,6 +30,9 @@ FROM alpine:3.21.0
 
 # Copy the compiled binary from the build stage
 COPY --from=build /workspace/company-svc/out/dist /app/dist
+
+# Copy the .env file to the runtime container
+COPY company-svc/.env /app/.env
 
 # Set working directory
 WORKDIR /app
