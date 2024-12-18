@@ -33,8 +33,22 @@ func main() {
 		return
 	}
 
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var gatewayUrl string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		gatewayUrl = conf.Production_Url + ":" + conf.Gateway_Port
+	} else {
+		fmt.Println("Running in development mode")
+		gatewayUrl = conf.Development_Url + ":" + conf.Gateway_Port
+	}
+
 	// run the server
-	err = startServer(conf.Gateway_Url, &conf)
+	err = startServer(gatewayUrl, &conf)
 	if err != nil {
 		log.Fatal("Cannot start server: ", err)
 	}

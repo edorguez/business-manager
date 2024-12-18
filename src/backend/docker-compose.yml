@@ -6,6 +6,8 @@ services:
     image: EdoRguez/gateway
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    environment:
+        - ENVIRONMENT=production
     restart: always
 
   customer-svc:
@@ -13,6 +15,8 @@ services:
       image: EdoRguez/customer-svc
       ports:
         - "${CUSTOMER_SVC_PORT}:${CUSTOMER_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
       depends_on:
         - customer-db
       restart: always
@@ -22,6 +26,8 @@ services:
       image: EdoRguez/company-svc
       ports:
         - "${COMPANY_SVC_PORT}:${COMPANY_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
       depends_on:
         - company-db
       restart: always
@@ -31,6 +37,8 @@ services:
       image: EdoRguez/product-svc
       ports:
         - "${PRODUCT_SVC_PORT}:${PRODUCT_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
       depends_on:
         - product-db
       restart: always
@@ -40,6 +48,8 @@ services:
   #     image: EdoRguez/whatsapp-svc
   #     ports:
   #       - "${WHATSAPP_SVC_PORT}:${WHATSAPP_SVC_PORT}"
+        # environment:
+        #       - ENVIRONMENT=production
   #     depends_on:
   #       - whatsapp-db
   #     restart: always
@@ -49,6 +59,8 @@ services:
       image: EdoRguez/auth-svc
       ports:
         - "${AUTH_SVC_PORT}:${AUTH_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
       depends_on:
         - auth-db
       restart: always
@@ -58,6 +70,8 @@ services:
       image: EdoRguez/order-svc
       ports:
         - "${ORDER_SVC_PORT}:${ORDER_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
       depends_on:
         - whatsapp-db
       restart: always

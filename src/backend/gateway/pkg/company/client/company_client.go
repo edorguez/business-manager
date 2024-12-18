@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
@@ -16,8 +17,23 @@ var companyServiceClient pb.CompanyServiceClient
 
 func InitCompanyServiceClient(c *config.Config) error {
 	fmt.Println("API Gateway :  InitCompanyServiceClient")
+
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var companySvcUrl string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		companySvcUrl = c.Production_Url + ":" + c.Company_Svc_Port
+	} else {
+		fmt.Println("Running in development mode")
+		companySvcUrl = c.Development_Url + ":" + c.Company_Svc_Port
+	}
+
 	// using WithInsecure() because no SSL running
-	cc, err := grpc.Dial(c.Company_Svc_Url, grpc.WithInsecure())
+	cc, err := grpc.Dial(companySvcUrl, grpc.WithInsecure())
 
 	if err != nil {
 		fmt.Println("Could not connect:", err)

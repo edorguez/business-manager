@@ -1,6 +1,8 @@
 package client
 
 import (
+	"os"
+
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
 	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/payment"
 
@@ -16,8 +18,23 @@ var paymentServiceClient pb.PaymentServiceClient
 
 func InitPaymentServiceClient(c *config.Config) error {
 	fmt.Println("API Gateway :  InitPaymentServiceClient")
+
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var companySvcUrl string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		companySvcUrl = c.Production_Url + ":" + c.Company_Svc_Port
+	} else {
+		fmt.Println("Running in development mode")
+		companySvcUrl = c.Development_Url + ":" + c.Company_Svc_Port
+	}
+
 	// using WithInsecure() because no SSL running
-	cc, err := grpc.Dial(c.Company_Svc_Url, grpc.WithInsecure())
+	cc, err := grpc.Dial(companySvcUrl, grpc.WithInsecure())
 
 	if err != nil {
 		fmt.Println("Could not connect:", err)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/order/contracts"
@@ -15,8 +16,23 @@ var orderServiceClient pb.OrderServiceClient
 
 func InitOrderServiceClient(c *config.Config) error {
 	fmt.Println("Order CLIENT :  InitOrderServiceClient")
+
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var orderSvcUrl string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		orderSvcUrl = c.Production_Url + ":" + c.Order_Svc_Port
+	} else {
+		fmt.Println("Running in development mode")
+		orderSvcUrl = c.Development_Url + ":" + c.Order_Svc_Port
+	}
+
 	// using WithInsecure() because no SSL running
-	cc, err := grpc.Dial(c.Order_Svc_Url, grpc.WithInsecure())
+	cc, err := grpc.Dial(orderSvcUrl, grpc.WithInsecure())
 
 	if err != nil {
 		fmt.Println("Could not connect:", err)

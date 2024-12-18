@@ -21,7 +21,7 @@ func main() {
 		log.Fatalln("Failed at config", err)
 	}
 
-	lis, err := net.Listen("tcp", c.Port)
+	lis, err := net.Listen("tcp", ":"+c.Port)
 	if err != nil {
 		log.Fatalln("Failed to listing:", err)
 	}

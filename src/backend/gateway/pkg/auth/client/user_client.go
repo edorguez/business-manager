@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/auth/contracts"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
@@ -15,8 +16,23 @@ var userServiceClient pb.UserServiceClient
 
 func InitUserServiceClient(c *config.Config) error {
 	fmt.Println("User CLIENT :  InitUserServiceClient")
+
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var authSvcUrl string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		authSvcUrl = c.Production_Url + ":" + c.Auth_Svc_Port
+	} else {
+		fmt.Println("Running in development mode")
+		authSvcUrl = c.Development_Url + ":" + c.Auth_Svc_Port
+	}
+
 	// using WithInsecure() because no SSL running
-	cc, err := grpc.Dial(c.Auth_Svc_Url, grpc.WithInsecure())
+	cc, err := grpc.Dial(authSvcUrl, grpc.WithInsecure())
 
 	if err != nil {
 		fmt.Println("Could not connect:", err)
