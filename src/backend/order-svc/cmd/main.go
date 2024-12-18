@@ -6,7 +6,7 @@ import (
 	"net"
 
 	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
-	"github.com/EdoRguez/business-manager/order-svc/pkg/pb"
+	pborder "github.com/EdoRguez/business-manager/order-svc/pkg/pb/order"
 	"github.com/EdoRguez/business-manager/order-svc/pkg/services"
 	"google.golang.org/grpc"
 )
@@ -30,7 +30,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterOrderServiceServer(grpcServer, &ps)
+	pborder.RegisterOrderServiceServer(grpcServer, &ps)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

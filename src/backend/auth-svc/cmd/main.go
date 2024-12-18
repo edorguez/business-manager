@@ -8,7 +8,9 @@ import (
 
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/config"
 	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
-	"github.com/EdoRguez/business-manager/auth-svc/pkg/pb"
+	pbauth "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/auth"
+	pbrole "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/role"
+	pbuser "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/user"
 	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/services"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/jwt_manager"
@@ -56,9 +58,9 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterAuthServiceServer(grpcServer, &as)
-	pb.RegisterUserServiceServer(grpcServer, &us)
-	pb.RegisterRoleServiceServer(grpcServer, &ro)
+	pbauth.RegisterAuthServiceServer(grpcServer, &as)
+	pbuser.RegisterUserServiceServer(grpcServer, &us)
+	pbrole.RegisterRoleServiceServer(grpcServer, &ro)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

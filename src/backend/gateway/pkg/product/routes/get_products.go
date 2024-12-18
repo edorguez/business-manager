@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
+	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/product"
 	"github.com/EdoRguez/business-manager/gateway/pkg/product/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/product/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/pb"
 	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 

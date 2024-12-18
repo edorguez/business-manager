@@ -10,7 +10,7 @@ import (
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/constants"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
-	product "github.com/EdoRguez/business-manager/product-svc/pkg/pb"
+	product "github.com/EdoRguez/business-manager/product-svc/pkg/pb/product"
 	repo "github.com/EdoRguez/business-manager/product-svc/pkg/repository"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

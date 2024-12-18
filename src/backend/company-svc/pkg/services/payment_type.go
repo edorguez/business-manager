@@ -7,17 +7,17 @@ import (
 	"net/http"
 
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
-	payment "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
+	pb "github.com/EdoRguez/business-manager/company-svc/pkg/pb/payment_type"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
 )
 
 type PaymentTypeService struct {
 	Repo *repo.PaymentTypeRepo
-	payment.UnimplementedPaymentTypeServiceServer
+	pb.UnimplementedPaymentTypeServiceServer
 }
 
-func (s *PaymentTypeService) GetPaymentType(ctx context.Context, req *payment.GetPaymentTypeRequest) (*payment.GetPaymentTypeResponse, error) {
+func (s *PaymentTypeService) GetPaymentType(ctx context.Context, req *pb.GetPaymentTypeRequest) (*pb.GetPaymentTypeResponse, error) {
 	fmt.Println("PaymentType Service :  GetPaymentType")
 	fmt.Println("PaymentType Service :  GetPaymentType - Req")
 	fmt.Println(req)
@@ -36,14 +36,14 @@ func (s *PaymentTypeService) GetPaymentType(ctx context.Context, req *payment.Ge
 			resErrorMessage = "Record not found"
 		}
 
-		return &payment.GetPaymentTypeResponse{
+		return &pb.GetPaymentTypeResponse{
 			Status: int64(resErrorStatus),
 			Error:  resErrorMessage,
 		}, nil
 	}
 
 	fmt.Println("PaymentType Service :  GetPaymentType - SUCCESS")
-	return &payment.GetPaymentTypeResponse{
+	return &pb.GetPaymentTypeResponse{
 		Id:        p.ID,
 		Name:      p.Name,
 		ImagePath: type_converter.NewString(p.ImagePath),
@@ -51,7 +51,7 @@ func (s *PaymentTypeService) GetPaymentType(ctx context.Context, req *payment.Ge
 	}, nil
 }
 
-func (s *PaymentTypeService) GetPaymentTypes(ctx context.Context, req *payment.GetPaymentTypesRequest) (*payment.GetPaymentTypesResponse, error) {
+func (s *PaymentTypeService) GetPaymentTypes(ctx context.Context, req *pb.GetPaymentTypesRequest) (*pb.GetPaymentTypesResponse, error) {
 	fmt.Println("PaymentType Service :  GetPaymentTypes")
 	fmt.Println("PaymentType Service :  GetPaymentTypes - Req")
 	fmt.Println(req)
@@ -66,15 +66,15 @@ func (s *PaymentTypeService) GetPaymentTypes(ctx context.Context, req *payment.G
 	if err != nil {
 		fmt.Println("PaymentType Service :  GetPaymentTypes - ERROR")
 		fmt.Println(err.Error())
-		return &payment.GetPaymentTypesResponse{
+		return &pb.GetPaymentTypesResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
-	paymentTypes := make([]*payment.GetPaymentTypeResponse, 0, len(p))
+	paymentTypes := make([]*pb.GetPaymentTypeResponse, 0, len(p))
 	for _, v := range p {
-		paymentTypes = append(paymentTypes, &payment.GetPaymentTypeResponse{
+		paymentTypes = append(paymentTypes, &pb.GetPaymentTypeResponse{
 			Id:        v.ID,
 			Name:      v.Name,
 			ImagePath: type_converter.NewString(v.ImagePath),
@@ -84,7 +84,7 @@ func (s *PaymentTypeService) GetPaymentTypes(ctx context.Context, req *payment.G
 
 	fmt.Println("PaymentType Service :  GetPaymentTypes - SUCCESS")
 	fmt.Println(paymentTypes)
-	return &payment.GetPaymentTypesResponse{
+	return &pb.GetPaymentTypesResponse{
 		PaymentTypes: paymentTypes,
 		Status:       http.StatusOK,
 	}, nil

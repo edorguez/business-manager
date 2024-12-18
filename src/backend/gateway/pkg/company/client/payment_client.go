@@ -2,7 +2,7 @@ package client
 
 import (
 	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/pb"
+	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/payment"
 
 	"context"
 	"fmt"

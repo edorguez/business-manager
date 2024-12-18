@@ -8,7 +8,7 @@ import (
 
 	"github.com/EdoRguez/business-manager/customer-svc/pkg/config"
 	db "github.com/EdoRguez/business-manager/customer-svc/pkg/db/sqlc"
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/pb"
+	pbcustomer "github.com/EdoRguez/business-manager/customer-svc/pkg/pb/customer"
 	repo "github.com/EdoRguez/business-manager/customer-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/customer-svc/pkg/services"
 	_ "github.com/lib/pq"
@@ -41,7 +41,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterCustomerServiceServer(grpcServer, &s)
+	pbcustomer.RegisterCustomerServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

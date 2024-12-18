@@ -7,7 +7,7 @@ import (
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	"github.com/EdoRguez/business-manager/gateway/pkg/order/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/order/pb"
+	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/order"
 	"google.golang.org/grpc"
 )
 

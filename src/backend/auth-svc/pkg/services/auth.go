@@ -10,7 +10,7 @@ import (
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/client"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/config"
 	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
-	auth "github.com/EdoRguez/business-manager/auth-svc/pkg/pb"
+	pb "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/auth"
 	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/jwt_manager"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/password_hash"
@@ -20,10 +20,10 @@ type AuthService struct {
 	Repo   *repo.UserRepo
 	Jwt    jwt_manager.JWTWrapper
 	Config *config.Config
-	auth.UnimplementedAuthServiceServer
+	pb.UnimplementedAuthServiceServer
 }
 
-func (s *AuthService) Register(ctx context.Context, req *auth.RegisterRequest) (*auth.RegisterResponse, error) {
+func (s *AuthService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	fmt.Println("Auth Service :  Register")
 	fmt.Println("Auth Service :  Register - Req")
 	fmt.Println("----------------")
@@ -32,7 +32,7 @@ func (s *AuthService) Register(ctx context.Context, req *auth.RegisterRequest) (
 	if err != nil && err != sql.ErrNoRows {
 		fmt.Println("Auth Service :  Register - ERROR")
 		fmt.Println(err.Error())
-		return &auth.RegisterResponse{
+		return &pb.RegisterResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
@@ -41,7 +41,7 @@ func (s *AuthService) Register(ctx context.Context, req *auth.RegisterRequest) (
 	if u.Email == req.Email {
 		fmt.Println("Auth Service :  Register - ERROR")
 		fmt.Println("User already exists")
-		return &auth.RegisterResponse{
+		return &pb.RegisterResponse{
 			Status: http.StatusInternalServerError,
 			Error:  "User already exists",
 		}, nil
@@ -58,19 +58,19 @@ func (s *AuthService) Register(ctx context.Context, req *auth.RegisterRequest) (
 	if err != nil {
 		fmt.Println("Auth Service :  Register - ERROR")
 		fmt.Println(err.Error())
-		return &auth.RegisterResponse{
+		return &pb.RegisterResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  Register - SUCCESS")
-	return &auth.RegisterResponse{
+	return &pb.RegisterResponse{
 		Status: http.StatusCreated,
 	}, nil
 }
 
-func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.LoginResponse, error) {
+func (s *AuthService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 	fmt.Println("Auth Service :  Login")
 	fmt.Println("Auth Service :  Login - Req")
 	fmt.Println("----------------")
@@ -88,7 +88,7 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 			resErrorMessage = "Email or password incorrect"
 		}
 
-		return &auth.LoginResponse{
+		return &pb.LoginResponse{
 			Status: int64(resErrorStatus),
 			Error:  resErrorMessage,
 		}, nil
@@ -97,14 +97,14 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 	match := password_hash.CheckPasswordHash(req.Password, u.PasswordHash)
 
 	if !match {
-		return &auth.LoginResponse{
+		return &pb.LoginResponse{
 			Status: http.StatusNotFound,
 			Error:  "Email or password incorrect",
 		}, nil
 	}
 
 	if err := client.InitCompanyServiceClient(s.Config); err != nil {
-		return &auth.LoginResponse{
+		return &pb.LoginResponse{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}, nil
@@ -114,7 +114,7 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 
 	if errCompany != nil {
 		fmt.Println("Auth Service :  Login - ERROR")
-		return &auth.LoginResponse{
+		return &pb.LoginResponse{
 			Status: http.StatusInternalServerError,
 			Error:  errCompany.Error(),
 		}, nil
@@ -122,7 +122,7 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 
 	if company.LastPaymentDate.AsTime().Before(time.Now()) {
 		fmt.Println("Auth Service :  Login - ERROR")
-		return &auth.LoginResponse{
+		return &pb.LoginResponse{
 			Status: http.StatusUnauthorized,
 			Error:  "Can't log in because of last payment, please contact support",
 		}, nil
@@ -132,20 +132,20 @@ func (s *AuthService) Login(ctx context.Context, req *auth.LoginRequest) (*auth.
 	if err != nil {
 		fmt.Println("Auth Service :  Login - ERROR")
 		fmt.Println(err.Error())
-		return &auth.LoginResponse{
+		return &pb.LoginResponse{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  Login - SUCCESS")
-	return &auth.LoginResponse{
+	return &pb.LoginResponse{
 		Status: http.StatusOK,
 		Token:  token,
 	}, nil
 }
 
-func (s *AuthService) Validate(ctx context.Context, req *auth.ValidateRequest) (*auth.ValidateResponse, error) {
+func (s *AuthService) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
 	fmt.Println("Auth Service :  Validate")
 	fmt.Println("Auth Service :  Validate - Req")
 	fmt.Println("----------------")
@@ -153,14 +153,14 @@ func (s *AuthService) Validate(ctx context.Context, req *auth.ValidateRequest) (
 	err := s.Jwt.ValidateToken(req.Token)
 
 	if err != nil {
-		return &auth.ValidateResponse{
+		return &pb.ValidateResponse{
 			Status: http.StatusBadRequest,
 			Error:  err.Error(),
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  Validate - SUCCESS")
-	return &auth.ValidateResponse{
+	return &pb.ValidateResponse{
 		Status: http.StatusOK,
 	}, nil
 }

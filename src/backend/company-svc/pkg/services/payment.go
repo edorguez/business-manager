@@ -8,7 +8,7 @@ import (
 
 	"github.com/EdoRguez/business-manager/company-svc/pkg/constants"
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
-	payment "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
+	"github.com/EdoRguez/business-manager/company-svc/pkg/pb/payment"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
 )

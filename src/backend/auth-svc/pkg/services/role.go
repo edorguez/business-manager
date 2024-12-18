@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"net/http"
 
-	auth "github.com/EdoRguez/business-manager/auth-svc/pkg/pb"
+	pb "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/role"
 	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/type_converter"
 )
 
 type RoleService struct {
 	Repo *repo.RoleRepo
-	auth.UnimplementedRoleServiceServer
+	pb.UnimplementedRoleServiceServer
 }
 
-func (s *RoleService) GetRole(ctx context.Context, req *auth.GetRoleRequest) (*auth.GetRoleResponse, error) {
+func (s *RoleService) GetRole(ctx context.Context, req *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
 	fmt.Println("Auth Service :  GetRole")
 	fmt.Println("Auth Service :  GetRole - Req")
 	fmt.Println(req)
@@ -35,14 +35,14 @@ func (s *RoleService) GetRole(ctx context.Context, req *auth.GetRoleRequest) (*a
 			resErrorMessage = "Record not found"
 		}
 
-		return &auth.GetRoleResponse{
+		return &pb.GetRoleResponse{
 			Status: int64(resErrorStatus),
 			Error:  resErrorMessage,
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  GetRole - SUCCESS")
-	return &auth.GetRoleResponse{
+	return &pb.GetRoleResponse{
 		Id:          c.ID,
 		Name:        c.Name,
 		Description: type_converter.NewString(c.Description),
@@ -50,7 +50,7 @@ func (s *RoleService) GetRole(ctx context.Context, req *auth.GetRoleRequest) (*a
 	}, nil
 }
 
-func (s *RoleService) GetRoles(ctx context.Context, req *auth.GetRolesRequest) (*auth.GetRolesResponse, error) {
+func (s *RoleService) GetRoles(ctx context.Context, req *pb.GetRolesRequest) (*pb.GetRolesResponse, error) {
 	fmt.Println("Auth Service :  GetRoles")
 	fmt.Println("Auth Service :  GetRoles - Req")
 	fmt.Println(req)
@@ -60,15 +60,15 @@ func (s *RoleService) GetRoles(ctx context.Context, req *auth.GetRolesRequest) (
 	if err != nil {
 		fmt.Println("Auth Service :  GetRoles - ERROR")
 		fmt.Println(err.Error())
-		return &auth.GetRolesResponse{
+		return &pb.GetRolesResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
-	roles := make([]*auth.GetRoleResponse, 0, len(c))
+	roles := make([]*pb.GetRoleResponse, 0, len(c))
 	for _, v := range c {
-		roles = append(roles, &auth.GetRoleResponse{
+		roles = append(roles, &pb.GetRoleResponse{
 			Id:          v.ID,
 			Name:        v.Name,
 			Description: type_converter.NewString(v.Description),
@@ -77,7 +77,7 @@ func (s *RoleService) GetRoles(ctx context.Context, req *auth.GetRolesRequest) (
 	}
 
 	fmt.Println("Auth Service :  GetRoles - SUCCESS")
-	return &auth.GetRolesResponse{
+	return &pb.GetRolesResponse{
 		Roles:  roles,
 		Status: http.StatusOK,
 	}, nil

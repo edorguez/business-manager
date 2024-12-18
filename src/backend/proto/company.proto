@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package pb;
+package company;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package= "github.com/EdoRguez/business-manager/proto";
+option go_package= "./company";
 
 service CompanyService{
   rpc CreateCompany(CreateCompanyRequest) returns (CreateCompanyResponse);

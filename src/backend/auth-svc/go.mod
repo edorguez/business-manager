@@ -2,7 +2,10 @@ module github.com/EdoRguez/business-manager/auth-svc
 
 go 1.22.4
 
+replace github.com/EdoRguez/business-manager/company-svc => ../company-svc
+
 require (
+	github.com/EdoRguez/business-manager/company-svc v0.0.0-00010101000000-000000000000
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/lib/pq v1.10.9
 	github.com/spf13/viper v1.19.0

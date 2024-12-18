@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	customer "github.com/EdoRguez/business-manager/customer-svc/pkg/pb"
+	customer "github.com/EdoRguez/business-manager/customer-svc/pkg/pb/customer"
 	"github.com/EdoRguez/business-manager/order-svc/pkg/client"
 	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
-	order "github.com/EdoRguez/business-manager/order-svc/pkg/pb"
+	order "github.com/EdoRguez/business-manager/order-svc/pkg/pb/order"
 )
 
 type OrderService struct {

@@ -8,7 +8,9 @@ import (
 
 	"github.com/EdoRguez/business-manager/company-svc/pkg/config"
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/pb"
+	pbcompany "github.com/EdoRguez/business-manager/company-svc/pkg/pb/company"
+	pbpayment "github.com/EdoRguez/business-manager/company-svc/pkg/pb/payment"
+	pbpaymenttype "github.com/EdoRguez/business-manager/company-svc/pkg/pb/payment_type"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/company-svc/pkg/services"
 	_ "github.com/lib/pq"
@@ -50,9 +52,9 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterCompanyServiceServer(grpcServer, &cs)
-	pb.RegisterPaymentServiceServer(grpcServer, &ps)
-	pb.RegisterPaymentTypeServiceServer(grpcServer, &pts)
+	pbcompany.RegisterCompanyServiceServer(grpcServer, &cs)
+	pbpayment.RegisterPaymentServiceServer(grpcServer, &ps)
+	pbpaymenttype.RegisterPaymentTypeServiceServer(grpcServer, &pts)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

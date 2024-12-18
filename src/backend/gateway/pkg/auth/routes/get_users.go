@@ -7,8 +7,8 @@ import (
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/auth/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/auth/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/auth/pb"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
+	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/user"
 	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
 )
 

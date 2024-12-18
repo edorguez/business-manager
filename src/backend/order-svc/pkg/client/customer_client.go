@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/pb"
+	pb "github.com/EdoRguez/business-manager/customer-svc/pkg/pb/customer"
 	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
 	"google.golang.org/grpc"
 )

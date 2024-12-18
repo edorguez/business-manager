@@ -8,7 +8,7 @@ import (
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/db"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/pb"
+	pbproduct "github.com/EdoRguez/business-manager/product-svc/pkg/pb/product"
 	repo "github.com/EdoRguez/business-manager/product-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/services"
 	"google.golang.org/grpc"
@@ -40,7 +40,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterProductServiceServer(grpcServer, &ps)
+	pbproduct.RegisterProductServiceServer(grpcServer, &ps)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

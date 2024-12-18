@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/config"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/pb"
+	pb "github.com/EdoRguez/business-manager/company-svc/pkg/pb/company"
 	"google.golang.org/grpc"
 )
 

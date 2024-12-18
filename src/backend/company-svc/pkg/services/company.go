@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
-	company "github.com/EdoRguez/business-manager/company-svc/pkg/pb"
+	"github.com/EdoRguez/business-manager/company-svc/pkg/pb/company"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
 	"google.golang.org/protobuf/types/known/timestamppb"

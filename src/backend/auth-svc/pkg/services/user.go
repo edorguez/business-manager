@@ -8,17 +8,17 @@ import (
 	"strings"
 
 	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
-	auth "github.com/EdoRguez/business-manager/auth-svc/pkg/pb"
+	pb "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/user"
 	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/password_hash"
 )
 
 type UserService struct {
 	Repo *repo.UserRepo
-	auth.UnimplementedUserServiceServer
+	pb.UnimplementedUserServiceServer
 }
 
-func (s *UserService) CreateUser(ctx context.Context, req *auth.CreateUserRequest) (*auth.CreateUserResponse, error) {
+func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	fmt.Println("Auth Service :  CreateUser")
 	fmt.Println("Auth Service :  CreateUser - Req")
 	fmt.Println(req)
@@ -28,7 +28,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *auth.CreateUserReques
 	if err != nil && err != sql.ErrNoRows {
 		fmt.Println("Auth Service :  CreateUser - ERROR")
 		fmt.Println(err.Error())
-		return &auth.CreateUserResponse{
+		return &pb.CreateUserResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
@@ -37,7 +37,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *auth.CreateUserReques
 	if u.Email == req.Email {
 		fmt.Println("Auth Service :  CreateUser - ERROR")
 		fmt.Println("User already exists")
-		return &auth.CreateUserResponse{
+		return &pb.CreateUserResponse{
 			Status: http.StatusInternalServerError,
 			Error:  "User already exists",
 		}, nil
@@ -54,20 +54,20 @@ func (s *UserService) CreateUser(ctx context.Context, req *auth.CreateUserReques
 	if err != nil {
 		fmt.Println("Auth Service :  CreateUser - ERROR")
 		fmt.Println(err.Error())
-		return &auth.CreateUserResponse{
+		return &pb.CreateUserResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  CreateUser - SUCCESS")
-	return &auth.CreateUserResponse{
+	return &pb.CreateUserResponse{
 		Status: http.StatusCreated,
 		Id:     c.ID,
 	}, nil
 }
 
-func (s *UserService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*auth.GetUserResponse, error) {
+func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	fmt.Println("Auth Service :  GetUser")
 	fmt.Println("Auth Service :  GetUser - Req")
 	fmt.Println(req)
@@ -86,19 +86,19 @@ func (s *UserService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*a
 			resErrorMessage = "Record not found"
 		}
 
-		return &auth.GetUserResponse{
+		return &pb.GetUserResponse{
 			Status: int64(resErrorStatus),
 			Error:  resErrorMessage,
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  GetUser - SUCCESS")
-	return &auth.GetUserResponse{
+	return &pb.GetUserResponse{
 		Id:        c.ID,
 		CompanyId: c.CompanyID,
 		RoleId:    c.RoleID,
 		Email:     c.Email,
-		Role: &auth.Role{
+		Role: &pb.Role{
 			Id:   c.AuthRole.ID,
 			Name: c.AuthRole.Name,
 		},
@@ -106,7 +106,7 @@ func (s *UserService) GetUser(ctx context.Context, req *auth.GetUserRequest) (*a
 	}, nil
 }
 
-func (s *UserService) GetUsers(ctx context.Context, req *auth.GetUsersRequest) (*auth.GetUsersResponse, error) {
+func (s *UserService) GetUsers(ctx context.Context, req *pb.GetUsersRequest) (*pb.GetUsersResponse, error) {
 	fmt.Println("Auth Service :  GetUsers")
 	fmt.Println("Auth Service :  GetUsers - Req")
 	fmt.Println(req)
@@ -122,20 +122,20 @@ func (s *UserService) GetUsers(ctx context.Context, req *auth.GetUsersRequest) (
 	if err != nil {
 		fmt.Println("Auth Service :  GetUsers - ERROR")
 		fmt.Println(err.Error())
-		return &auth.GetUsersResponse{
+		return &pb.GetUsersResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
-	users := make([]*auth.GetUserResponse, 0, len(c))
+	users := make([]*pb.GetUserResponse, 0, len(c))
 	for _, v := range c {
-		users = append(users, &auth.GetUserResponse{
+		users = append(users, &pb.GetUserResponse{
 			Id:        v.ID,
 			CompanyId: v.CompanyID,
 			RoleId:    v.RoleID,
 			Email:     v.Email,
-			Role: &auth.Role{
+			Role: &pb.Role{
 				Id:   v.AuthRole.ID,
 				Name: v.AuthRole.Name,
 			},
@@ -144,13 +144,13 @@ func (s *UserService) GetUsers(ctx context.Context, req *auth.GetUsersRequest) (
 	}
 
 	fmt.Println("Auth Service :  GetUsers - SUCCESS")
-	return &auth.GetUsersResponse{
+	return &pb.GetUsersResponse{
 		Users:  users,
 		Status: http.StatusOK,
 	}, nil
 }
 
-func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserRequest) (*auth.UpdateUserResponse, error) {
+func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	fmt.Println("Auth Service :  UpdateUser")
 	fmt.Println("Auth Service :  UpdateUser - Req")
 	fmt.Println(req)
@@ -160,7 +160,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserReques
 	if err != nil && err != sql.ErrNoRows {
 		fmt.Println("Auth Service :  Updateuser - ERROR")
 		fmt.Println(err.Error())
-		return &auth.UpdateUserResponse{
+		return &pb.UpdateUserResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
@@ -169,7 +169,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserReques
 	if u.Email == req.Email && u.ID != req.Id {
 		fmt.Println("Auth Service :  UpdateUser - ERROR")
 		fmt.Println("User already exists")
-		return &auth.UpdateUserResponse{
+		return &pb.UpdateUserResponse{
 			Status: http.StatusInternalServerError,
 			Error:  "User already exists",
 		}, nil
@@ -179,7 +179,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserReques
 	if errOldUser != nil {
 		fmt.Println("Auth Service :  Updateuser - ERROR")
 		fmt.Println(err.Error())
-		return &auth.UpdateUserResponse{
+		return &pb.UpdateUserResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
@@ -211,19 +211,19 @@ func (s *UserService) UpdateUser(ctx context.Context, req *auth.UpdateUserReques
 			resErrorMessage = "Record not found"
 		}
 
-		return &auth.UpdateUserResponse{
+		return &pb.UpdateUserResponse{
 			Status: int64(resErrorStatus),
 			Error:  resErrorMessage,
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  UpdateUser - SUCCESS")
-	return &auth.UpdateUserResponse{
+	return &pb.UpdateUserResponse{
 		Status: http.StatusNoContent,
 	}, nil
 }
 
-func (s *UserService) DeleteUser(ctx context.Context, req *auth.DeleteUserRequest) (*auth.DeleteUserResponse, error) {
+func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	fmt.Println("Auth Service :  DeleteUser")
 	fmt.Println("Auth Service :  DeleteUser - Req")
 	fmt.Println(req)
@@ -233,19 +233,19 @@ func (s *UserService) DeleteUser(ctx context.Context, req *auth.DeleteUserReques
 	if err != nil {
 		fmt.Println("Auth Service :  DeleteUser - ERROR")
 		fmt.Println(err.Error())
-		return &auth.DeleteUserResponse{
+		return &pb.DeleteUserResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  DeleteUser - SUCCESS")
-	return &auth.DeleteUserResponse{
+	return &pb.DeleteUserResponse{
 		Status: http.StatusNoContent,
 	}, nil
 }
 
-func (s *UserService) UpdateEmail(ctx context.Context, req *auth.UpdateEmailRequest) (*auth.UpdateEmailResponse, error) {
+func (s *UserService) UpdateEmail(ctx context.Context, req *pb.UpdateEmailRequest) (*pb.UpdateEmailResponse, error) {
 	fmt.Println("Auth Service :  UpdateEmail")
 	fmt.Println("Auth Service :  UpdateEmail - Req")
 	fmt.Println(req)
@@ -255,7 +255,7 @@ func (s *UserService) UpdateEmail(ctx context.Context, req *auth.UpdateEmailRequ
 	if err != nil && err != sql.ErrNoRows {
 		fmt.Println("Auth Service :  UpdateEmail - ERROR")
 		fmt.Println(err.Error())
-		return &auth.UpdateEmailResponse{
+		return &pb.UpdateEmailResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
@@ -264,7 +264,7 @@ func (s *UserService) UpdateEmail(ctx context.Context, req *auth.UpdateEmailRequ
 	if strings.ToLower(u.Email) == strings.ToLower(req.Email) {
 		fmt.Println("Auth Service :  UpdateEmail - ERROR")
 		fmt.Println("Email already exists")
-		return &auth.UpdateEmailResponse{
+		return &pb.UpdateEmailResponse{
 			Status: http.StatusInternalServerError,
 			Error:  "Email already exists",
 		}, nil
@@ -288,19 +288,19 @@ func (s *UserService) UpdateEmail(ctx context.Context, req *auth.UpdateEmailRequ
 			resErrorMessage = "Record not found"
 		}
 
-		return &auth.UpdateEmailResponse{
+		return &pb.UpdateEmailResponse{
 			Status: int64(resErrorStatus),
 			Error:  resErrorMessage,
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  UpdateEmail - SUCCESS")
-	return &auth.UpdateEmailResponse{
+	return &pb.UpdateEmailResponse{
 		Status: http.StatusNoContent,
 	}, nil
 }
 
-func (s *UserService) UpdatePassword(ctx context.Context, req *auth.UpdatePasswordRequest) (*auth.UpdatePasswordResponse, error) {
+func (s *UserService) UpdatePassword(ctx context.Context, req *pb.UpdatePasswordRequest) (*pb.UpdatePasswordResponse, error) {
 	fmt.Println("Auth Service :  UpdatePassword")
 	fmt.Println("Auth Service :  UpdatePassword - Req")
 	fmt.Println(req)
@@ -324,14 +324,14 @@ func (s *UserService) UpdatePassword(ctx context.Context, req *auth.UpdatePasswo
 			resErrorMessage = "Record not found"
 		}
 
-		return &auth.UpdatePasswordResponse{
+		return &pb.UpdatePasswordResponse{
 			Status: int64(resErrorStatus),
 			Error:  resErrorMessage,
 		}, nil
 	}
 
 	fmt.Println("Auth Service :  UpdatePassword - SUCCESS")
-	return &auth.UpdatePasswordResponse{
+	return &pb.UpdatePasswordResponse{
 		Status: http.StatusNoContent,
 	}, nil
 }

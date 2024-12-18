@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/company-svc/pkg/pb"
+	pb "github.com/EdoRguez/business-manager/company-svc/pkg/pb/company"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
 	"google.golang.org/grpc"
 )
