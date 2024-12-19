@@ -18,29 +18,30 @@ import {
   StepTitle,
   useSteps,
 } from "@chakra-ui/react";
-import CreateCustomerComponent from "../customers/CreateCustomer";
+import CreateCustomerComponent from "../orders/CreateOrderCustomer";
 import SuccessCheckout from "../checkout/SuccessCheckout";
 import { useState } from "react";
+import { CreateOrderCustomer } from "@/app/types/order";
+import useProductsCart from "@/app/hooks/useProductsCart";
+import useCompanyInfo from "@/app/hooks/useCompanyInfo";
 
 const CheckoutModal = () => {
   const [allowCloseModal, setAllowCloseModal] = useState<boolean>(true);
   const checkoutModal = useCheckoutModal();
+  const cart = useProductsCart();
+  const companyInfo = useCompanyInfo();
 
   const { activeStep } = useSteps({
     index: 0,
     count: 2,
   });
 
-  const handleStartCreateCustomer = () => {
+  const handleStartCreateOrder = (customer: CreateOrderCustomer) => {
     setAllowCloseModal(false);
     console.log("hola");
-  };
-
-  const handleEndCreateCustomer = () => {
-    setAllowCloseModal(true);
-    
-    console.log("chao");
-
+    console.log(customer);
+    console.log(cart.items);
+    console.log(companyInfo.company);
   };
 
   return (
@@ -90,8 +91,7 @@ const CheckoutModal = () => {
             {activeStep == 0 && (
               <div className="mt-7">
                 <CreateCustomerComponent
-                  onStartCreateCustomer={handleStartCreateCustomer}
-                  onEndCreateCustomer={handleEndCreateCustomer}
+                  onStartCreateOrderCustomer={handleStartCreateOrder}
                 />
               </div>
             )}

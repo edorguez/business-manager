@@ -1,28 +1,22 @@
 "use client";
 
 import { Button, Input, Select, useToast } from "@chakra-ui/react";
-import SimpleCard from "../cards/SimpleCard";
-import { CreateCustomer } from "@/app/types/customer";
 import { useState } from "react";
-import useLoading from "@/app/hooks/useLoading";
+import { CreateOrderCustomer } from "@/app/types/order";
 
 interface CreateCustomerProps {
-  onStartCreateCustomer: () => void
-  onEndCreateCustomer: () => void
+  onStartCreateOrderCustomer: (customer: CreateOrderCustomer) => void
 }
 
-const CreateCustomerComponent: React.FC<CreateCustomerProps> = ({
-  onStartCreateCustomer,
-  onEndCreateCustomer,
+const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
+  onStartCreateOrderCustomer,
 }) => {
   const [isCreateLoading, setIsCreateLoading] = useState<boolean>(false);
   const toast = useToast();
 
-  const [formData, setFormData] = useState<CreateCustomer>({
-    companyId: 0,
+  const [formData, setFormData] = useState<CreateOrderCustomer>({
     firstName: "",
     lastName: "",
-    email: "",
     identificationNumber: "",
     identificationType: "",
     phone: "",
@@ -36,16 +30,7 @@ const CreateCustomerComponent: React.FC<CreateCustomerProps> = ({
   const onSubmit = async () => {
     if (isFormValid()) {
       setIsCreateLoading(true);
-      onStartCreateCustomer();
-      
-      //   let createCustomer: any = await CreateCustomerRequest(formData);
-      //   if (!createCustomer.error) {
-      //     isLoading.onEndLoading();
-      //     showSuccessCreationMessage('Cliente creado exitosamente');
-      //   } else {
-      //     showErrorMessage(createCustomer.error);
-      //     isLoading.onEndLoading();
-      //   }
+      onStartCreateOrderCustomer(formData);
     } else {
       showErrorMessage("Algunos campos son requeridos o inválidos");
     }
@@ -61,17 +46,6 @@ const CreateCustomerComponent: React.FC<CreateCustomerProps> = ({
       return false;
 
     return true;
-  };
-
-  const showSuccessCreationMessage = (msg: string) => {
-    toast({
-      title: "Cliente",
-      description: msg,
-      variant: "customsuccess",
-      position: "top-right",
-      duration: 3000,
-      isClosable: true,
-    });
   };
 
   const showErrorMessage = (msg: string) => {
@@ -162,4 +136,4 @@ const CreateCustomerComponent: React.FC<CreateCustomerProps> = ({
   );
 };
 
-export default CreateCustomerComponent;
+export default CreateOrderCustomerComponent;

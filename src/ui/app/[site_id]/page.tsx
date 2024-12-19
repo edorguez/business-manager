@@ -13,9 +13,11 @@ import useGeneralLoading from "../hooks/useGeneralLoading";
 import { GetProductsRequest } from "../services/products";
 import ProductsCartDrawer from "../components/drawers/ProductsCartDrawer";
 import useProductsCart from "@/app/hooks/useProductsCart";
+import useCompanyInfo from "../hooks/useCompanyInfo";
 
 const SitePage = () => {
   const cart = useProductsCart();
+  const companyInfo = useCompanyInfo();
   const router = useRouter();
   const params = useParams();
   const isLoading = useGeneralLoading();
@@ -30,6 +32,7 @@ const SitePage = () => {
       router.push('/404')
      } else {
       setCompany(getCompany);
+      companyInfo.setCompany(getCompany);
       getProductsByCompanyId(getCompany);
       
       isLoading.onEndLoading();

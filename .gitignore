@@ -11,6 +11,7 @@
 # vscode
 .vscode
 /src/ui/.vscode
+/src/backend/.vscode
 
 # testing
 /coverage
