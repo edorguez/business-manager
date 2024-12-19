@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
 	"github.com/EdoRguez/business-manager/product-svc/pkg/db"
@@ -25,7 +26,21 @@ func main() {
 		log.Fatalln("Failed to listing:", err)
 	}
 
-	mongoClient, err := db.ConnectMongoDb(c.DBSource)
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var dbSource string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		dbSource = c.DBSourceProduction
+	} else {
+		fmt.Println("Running in development mode")
+		dbSource = c.DBSourceDevelopment
+	}
+
+	mongoClient, err := db.ConnectMongoDb(dbSource)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/EdoRguez/business-manager/auth-svc/pkg/config"
 	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
@@ -29,7 +30,21 @@ func main() {
 		log.Fatalln("Failed to listing:", err)
 	}
 
-	conn, err := sql.Open(c.DBDriver, c.DBSource)
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var dbSource string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		dbSource = c.DBSourceProduction
+	} else {
+		fmt.Println("Running in development mode")
+		dbSource = c.DBSourceDevelopment
+	}
+
+	conn, err := sql.Open(c.DBDriver, dbSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}

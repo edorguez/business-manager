@@ -25,7 +25,7 @@ func InitOrderServiceClient(c *config.Config) error {
 	var orderSvcUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		orderSvcUrl = c.Production_Url + ":" + c.Order_Svc_Port
+		orderSvcUrl = c.Order_Svc_Url + ":" + c.Order_Svc_Port
 	} else {
 		fmt.Println("Running in development mode")
 		orderSvcUrl = c.Development_Url + ":" + c.Order_Svc_Port
