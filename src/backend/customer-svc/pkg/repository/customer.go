@@ -51,6 +51,23 @@ func (clientRepo *CustomerRepo) GetCustomer(ctx context.Context, id int64) (db.C
 	return result, err
 }
 
+func (clientRepo *CustomerRepo) GetCustomerByIdentification(ctx context.Context, arg db.GetCustomerByIdentificationParams) (db.CustomerCustomer, error) {
+	var result db.CustomerCustomer
+
+	err := clientRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.GetCustomerByIdentification(ctx, arg)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
 func (clientRepo *CustomerRepo) GetCustomers(ctx context.Context, arg db.GetCustomersParams) ([]db.CustomerCustomer, error) {
 	var result []db.CustomerCustomer
 

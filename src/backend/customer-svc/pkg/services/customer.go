@@ -24,6 +24,29 @@ func (s *CustomerService) CreateCustomer(ctx context.Context, req *customer.Crea
 	fmt.Println(req)
 	fmt.Println("----------------")
 
+	existCustomer, errExist := s.Repo.GetCustomerByIdentification(ctx, db.GetCustomerByIdentificationParams{
+		IdentificationNumber: req.IdentificationNumber,
+		IdentificationType:   req.IdentificationType,
+	})
+
+	if errExist != nil && errExist != sql.ErrNoRows {
+		fmt.Println("Customer Service :  CreateCustomer - ERROR")
+		fmt.Println(errExist.Error())
+		return &customer.CreateCustomerResponse{
+			Status: http.StatusConflict,
+			Error:  errExist.Error(),
+		}, nil
+	}
+
+	if existCustomer.ID != 0 {
+		fmt.Println("Customer Service :  CreateCustomer - ERROR")
+		fmt.Println("Customer already exists")
+		return &customer.CreateCustomerResponse{
+			Status: http.StatusConflict,
+			Error:  "Customer already exists",
+		}, nil
+	}
+
 	createCustomerParams := db.CreateCustomerParams{
 		CompanyID:            req.CompanyId,
 		FirstName:            req.FirstName,

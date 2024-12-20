@@ -13,7 +13,7 @@ export type CreateOrderCustomer = {
 };
 
 export type CreateOrderProduct = {
-  productId: number;
+  productId: string;
   quantity: number;
   price: number;
 };

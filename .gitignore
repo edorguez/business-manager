@@ -59,9 +59,9 @@ yarn-error.log*
 /src/backend/order-svc/*.env
 /src/backend/order-svc/!example.env
 
-
-
-
+# Workspaces
+src/backend/business-manager-backend.code-workspace
+src/ui/business-manager-ui.code-workspace
 
 # local env files
 .env*.local

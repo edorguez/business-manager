@@ -12,7 +12,7 @@ import (
 )
 
 const createCustomer = `-- name: CreateCustomer :one
-INSERT INTO 
+INSERT INTO
   customer.customer (
     company_id,
     first_name,
@@ -21,10 +21,10 @@ INSERT INTO
     phone,
     identification_number,
     identification_type
-  ) 
+  )
 VALUES (
   $1, $2, $3, $4, $5, $6, $7
-) 
+)
 RETURNING id, company_id, first_name, last_name, email, phone, identification_number, identification_type, created_at, modified_at
 `
 
@@ -65,9 +65,9 @@ func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) 
 }
 
 const deleteCustomer = `-- name: DeleteCustomer :exec
-DELETE FROM 
+DELETE FROM
   customer.customer
-WHERE 
+WHERE
   id = $1
 `
 
@@ -77,7 +77,7 @@ func (q *Queries) DeleteCustomer(ctx context.Context, id int64) error {
 }
 
 const getCustomer = `-- name: GetCustomer :one
-SELECT 
+SELECT
   id,
   company_id,
   first_name,
@@ -88,10 +88,10 @@ SELECT
   identification_type,
   created_at,
   modified_at
-FROM 
+FROM
   customer.customer
-WHERE 
-  id = $1 
+WHERE
+  id = $1
 LIMIT 1
 `
 
@@ -113,8 +113,8 @@ func (q *Queries) GetCustomer(ctx context.Context, id int64) (CustomerCustomer, 
 	return i, err
 }
 
-const getCustomers = `-- name: GetCustomers :many
-SELECT 
+const getCustomerByIdentification = `-- name: GetCustomerByIdentification :one
+SELECT
   id,
   company_id,
   first_name,
@@ -125,18 +125,60 @@ SELECT
   identification_type,
   created_at,
   modified_at
-FROM 
+FROM
+  customer.customer
+WHERE
+  identification_number = $1 AND identification_type = $2
+LIMIT 1
+`
+
+type GetCustomerByIdentificationParams struct {
+	IdentificationNumber string `json:"identification_number"`
+	IdentificationType   string `json:"identification_type"`
+}
+
+func (q *Queries) GetCustomerByIdentification(ctx context.Context, arg GetCustomerByIdentificationParams) (CustomerCustomer, error) {
+	row := q.db.QueryRowContext(ctx, getCustomerByIdentification, arg.IdentificationNumber, arg.IdentificationType)
+	var i CustomerCustomer
+	err := row.Scan(
+		&i.ID,
+		&i.CompanyID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.Phone,
+		&i.IdentificationNumber,
+		&i.IdentificationType,
+		&i.CreatedAt,
+		&i.ModifiedAt,
+	)
+	return i, err
+}
+
+const getCustomers = `-- name: GetCustomers :many
+SELECT
+  id,
+  company_id,
+  first_name,
+  last_name,
+  email,
+  phone,
+  identification_number,
+  identification_type,
+  created_at,
+  modified_at
+FROM
   customer.customer
 WHERE
   ($3 = 0 OR company_id = $3) AND
   ($4::text = '' OR first_name LIKE CONCAT('%', $4::text, '%')) AND
   ($5::text = '' OR last_name LIKE CONCAT('%', $5::text, '%')) AND
   ($6::text = '' OR identification_number LIKE CONCAT('%', $6::text, '%'))
-ORDER BY 
+ORDER BY
   id
-LIMIT 
+LIMIT
   $1
-OFFSET 
+OFFSET
   $2
 `
 
@@ -191,9 +233,9 @@ func (q *Queries) GetCustomers(ctx context.Context, arg GetCustomersParams) ([]C
 }
 
 const getCustomersByMonths = `-- name: GetCustomersByMonths :many
-SELECT 
+SELECT
     created_at
-FROM 
+FROM
     customer.customer
 WHERE
   ($1 = 0 OR company_id = $1) AND
@@ -231,9 +273,9 @@ func (q *Queries) GetCustomersByMonths(ctx context.Context, arg GetCustomersByMo
 }
 
 const updateCustomer = `-- name: UpdateCustomer :one
-UPDATE 
+UPDATE
   customer.customer
-SET 
+SET
   first_name = $2,
   last_name = $3,
   email = $4,
@@ -241,7 +283,7 @@ SET
   identification_number = $6,
   identification_type = $7,
   modified_at = NOW()
-WHERE 
+WHERE
   id = $1
 RETURNING id, company_id, first_name, last_name, email, phone, identification_number, identification_type, created_at, modified_at
 `

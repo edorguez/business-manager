@@ -20,10 +20,15 @@ import {
 } from "@chakra-ui/react";
 import CreateCustomerComponent from "../orders/CreateOrderCustomer";
 import SuccessCheckout from "../checkout/SuccessCheckout";
-import { useState } from "react";
-import { CreateOrderCustomer } from "@/app/types/order";
-import useProductsCart from "@/app/hooks/useProductsCart";
+import { useCallback, useState } from "react";
+import {
+  CreateOrder,
+  CreateOrderCustomer,
+  CreateOrderProduct,
+} from "@/app/types/order";
+import useProductsCart, { CartItem } from "@/app/hooks/useProductsCart";
 import useCompanyInfo from "@/app/hooks/useCompanyInfo";
+import { CreateOrderRequest } from "@/app/services/orders";
 
 const CheckoutModal = () => {
   const [allowCloseModal, setAllowCloseModal] = useState<boolean>(true);
@@ -36,12 +41,37 @@ const CheckoutModal = () => {
     count: 2,
   });
 
-  const handleStartCreateOrder = (customer: CreateOrderCustomer) => {
+  const createOrder = useCallback(async (request: CreateOrder) => {
+    const res = await CreateOrderRequest(request);
+    console.log("res");
+    console.log(res);
+  }, []);
+
+  const handleStartCreateOrder = async (customer: CreateOrderCustomer) => {
     setAllowCloseModal(false);
     console.log("hola");
     console.log(customer);
     console.log(cart.items);
     console.log(companyInfo.company);
+
+    const request: CreateOrder = {
+      companyId: companyInfo.company?.id ?? 0,
+      customer: customer,
+      products: cart.items.reduce(
+        (res: CreateOrderProduct[], item: CartItem) => {
+          res.push({
+            productId: item.id,
+            quantity: item.quantity,
+            price: item.price,
+          });
+
+          return res;
+        },
+        []
+      ),
+    };
+
+    await createOrder(request);
   };
 
   return (

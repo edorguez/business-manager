@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { CreateOrder } from "../types/order";
 
 const baseUrl: string = "http://localhost:3001/api/orders";

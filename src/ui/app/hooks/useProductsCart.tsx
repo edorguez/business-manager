@@ -10,7 +10,7 @@ interface ProductsCartStore {
   onRemoveFromCart: (productId: string) => void;
 }
 
-interface CartItem extends Product {
+export interface CartItem extends Product {
   quantity: number;
 }
 
