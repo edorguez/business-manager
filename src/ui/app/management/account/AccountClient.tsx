@@ -42,6 +42,7 @@ import { useRouter } from "next/navigation";
 import deleteUserSession from "@/app/actions/deleteUserSession";
 import isUserAdmin from "@/app/actions/isUserAdmin";
 import { PASSWORD } from "@/app/constants";
+import { validLettersAndNumbers } from "@/app/utils/InputUtils";
 
 const AccountClient = () => {
   const { push } = useRouter();
@@ -138,6 +139,7 @@ const AccountClient = () => {
 
   const isCompanyFormValid = (): boolean => {
     if (!companyFormData.name) return false;
+    if (!validLettersAndNumbers(companyFormData.name, true)) return false;
 
     return true;
   };
