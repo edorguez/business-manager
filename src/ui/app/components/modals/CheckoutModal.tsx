@@ -17,6 +17,7 @@ import {
   StepStatus,
   StepTitle,
   useSteps,
+  useToast,
 } from "@chakra-ui/react";
 import CreateCustomerComponent from "../orders/CreateOrderCustomer";
 import SuccessCheckout from "../checkout/SuccessCheckout";
@@ -35,24 +36,26 @@ const CheckoutModal = () => {
   const checkoutModal = useCheckoutModal();
   const cart = useProductsCart();
   const companyInfo = useCompanyInfo();
+  const toast = useToast();
 
-  const { activeStep } = useSteps({
-    index: 0,
+  const { activeStep, setActiveStep } = useSteps({
+    index: 1,
     count: 2,
   });
 
+
+
   const createOrder = useCallback(async (request: CreateOrder) => {
     const res = await CreateOrderRequest(request);
-    console.log("res");
-    console.log(res);
+    if (!res?.error) {
+        setActiveStep(1);
+      } else {
+        showErrorMessage(res.error);
+      }
   }, []);
 
   const handleStartCreateOrder = async (customer: CreateOrderCustomer) => {
     setAllowCloseModal(false);
-    console.log("hola");
-    console.log(customer);
-    console.log(cart.items);
-    console.log(companyInfo.company);
 
     const request: CreateOrder = {
       companyId: companyInfo.company?.id ?? 0,
@@ -72,6 +75,17 @@ const CheckoutModal = () => {
     };
 
     await createOrder(request);
+  };
+
+  const showErrorMessage = (msg: string) => {
+    toast({
+      title: "Error",
+      description: msg,
+      variant: "customerror",
+      position: "top-right",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   return (
@@ -118,14 +132,14 @@ const CheckoutModal = () => {
                 <StepSeparator />
               </Step>
             </Stepper>
-            {activeStep == 0 && (
+            {activeStep === 0 && (
               <div className="mt-7">
                 <CreateCustomerComponent
                   onStartCreateOrderCustomer={handleStartCreateOrder}
                 />
               </div>
             )}
-            {activeStep == 1 && (
+            {activeStep === 1 && (
               <div className="mt-7">
                 <SuccessCheckout />
               </div>

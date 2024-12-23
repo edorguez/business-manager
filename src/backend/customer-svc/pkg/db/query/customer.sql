@@ -71,6 +71,7 @@ WHERE
   (@identification_number::text = '' OR identification_number LIKE CONCAT('%', @identification_number::text, '%'))
 ORDER BY
   id
+DESC
 LIMIT
   $1
 OFFSET

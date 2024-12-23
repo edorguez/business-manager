@@ -65,7 +65,7 @@ const SitePage = () => {
         {/* Header */}
         <header className="bg-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-green-500">
+            <h1 className="text-2xl font-bold text-maincolor">
               { company?.name }
             </h1>
             <div className="flex items-center space-x-4">

@@ -176,6 +176,7 @@ WHERE
   ($6::text = '' OR identification_number LIKE CONCAT('%', $6::text, '%'))
 ORDER BY
   id
+DESC
 LIMIT
   $1
 OFFSET
