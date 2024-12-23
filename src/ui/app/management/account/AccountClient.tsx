@@ -35,14 +35,13 @@ import {
   EditPasswordRequest,
   GetUserRequest,
 } from "@/app/services/users";
-import { isValidEmail } from "@/app/utils/Utils";
 import useWarningModal from "@/app/hooks/useWarningModal";
 import WarningModal from "@/app/components/modals/WarningModal";
 import { useRouter } from "next/navigation";
 import deleteUserSession from "@/app/actions/deleteUserSession";
 import isUserAdmin from "@/app/actions/isUserAdmin";
 import { PASSWORD } from "@/app/constants";
-import { validLettersAndNumbers } from "@/app/utils/InputUtils";
+import { validEmail, validLettersAndNumbers, validWithNoSpaces } from "@/app/utils/InputUtils";
 
 const AccountClient = () => {
   const { push } = useRouter();
@@ -68,16 +67,21 @@ const AccountClient = () => {
 
   const handleCompanyFormChange = (event: any) => {
     const { name, value } = event.target;
+
+    if(value && !validLettersAndNumbers(value, true)) return;
+
     setCompanyFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleEmailFormChange = (event: any) => {
     const { name, value } = event.target;
+    if(value && !validWithNoSpaces(value)) return;
     setEmailFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordFormChange = (event: any) => {
     const { name, value } = event.target;
+    if(value && !validLettersAndNumbers(value)) return;
     setPasswordFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -146,7 +150,7 @@ const AccountClient = () => {
 
   const isEmailFormValid = (): boolean => {
     if (!emailFormData.email) return false;
-    if (!isValidEmail(emailFormData.email)) return false;
+    if (!validEmail(emailFormData.email)) return false;
 
     return true;
   };
@@ -157,6 +161,8 @@ const AccountClient = () => {
     if (passwordFormData.password !== passwordFormData.passwordRepeat)
       return false;
     if (passwordFormData.password.length < PASSWORD.MIN_PASSWORD_LEGTH)
+      return false;
+    if (!validLettersAndNumbers(passwordFormData.password))
       return false;
 
     return true;

@@ -30,3 +30,9 @@ export const validIdentification = (identification: string): boolean => {
   const regex = /^[0-9]{5,9}$/;
   return regex.test(identification);
 };
+
+export const validWithNoSpaces = (input: string): boolean => {
+  if (!input) return false;
+  const regex = /\s/;
+  return !regex.test(input);
+};
