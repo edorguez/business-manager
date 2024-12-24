@@ -7,6 +7,15 @@ export const validLettersAndNumbers = (
   return regex.test(input);
 };
 
+export const validLetters = (
+  input: string,
+  allowSpaces: boolean = false
+): boolean => {
+  if (!input) return false;
+  const regex = allowSpaces ? /^[a-zA-ZÀ-ÖØ-öø-ÿ\s]*$/ : /^[a-zA-ZÀ-ÖØ-öø-ÿ]*$/;
+  return regex.test(input);
+};
+
 export const validNumbers = (input: string): boolean => {
   if (!input) return false;
   const regex = /^[0-9]*$/;

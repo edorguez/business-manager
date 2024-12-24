@@ -8,6 +8,7 @@ import { Login } from '../types/auth';
 import { login } from '../services/auth';
 import { useRouter } from 'next/navigation';
 import useLoading from '../hooks/useLoading';
+import { validLettersAndNumbers, validWithNoSpaces } from '../utils/InputUtils';
 
 const LoginClient = () => {
   const isLoading = useLoading();
@@ -15,8 +16,15 @@ const LoginClient = () => {
   const { push } = useRouter();
   const [formData, setFormData] = useState<Login>({ email: '', password: '' });
 
-  const handleChange = (event: any) => {
+  const handleEmailChange = (event: any) => {
     const { name, value } = event.target;
+    if(value && !validWithNoSpaces(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  }
+
+  const handlePasswordChange = (event: any) => {
+    const { name, value } = event.target;
+    if(value && !validLettersAndNumbers(value)) return;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
@@ -60,11 +68,11 @@ const LoginClient = () => {
                 <div className='px-1 py-8'>
                   <div className='mt-2'>
                     <label className='text-sm'>Correo</label>
-                    <Input size="sm" type='email' name='email' value={formData.email} onChange={handleChange} onKeyDown={handleKeyDown} />
+                    <Input size="sm" type='email' name='email' maxLength={100} value={formData.email} onChange={handleEmailChange} onKeyDown={handleKeyDown} />
                   </div>
                   <div className='mt-2'>
                     <label className='text-sm'>Contraseña</label>
-                    <Input size="sm" type='password' name='password' maxLength={20} value={formData.password} onChange={handleChange} onKeyDown={handleKeyDown} />
+                    <Input size="sm" type='password' name='password' maxLength={20} value={formData.password} onChange={handlePasswordChange} onKeyDown={handleKeyDown} />
                   </div>
                   <div className="mt-3">
                     <Button variant="main" className='w-full' onClick={onLogin}>

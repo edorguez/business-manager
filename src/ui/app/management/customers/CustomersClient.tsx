@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import useLoading from '@/app/hooks/useLoading';
 import useWarningModal from '@/app/hooks/useWarningModal';
 import WarningModal from '@/app/components/modals/WarningModal';
+import { validIdentification, validLetters, validNumbers } from '@/app/utils/InputUtils';
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -88,8 +89,15 @@ const CustomersClient = () => {
     setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
   }
 
-  const handleChange = (event: any) => {
+  const handleNameChange = (event: any) => {
     const { name, value } = event.target;
+    if(value && !validLetters(value, true)) return;
+    setSearchCustomer((prevData) => ({ ...prevData, [name]: value }));
+  }
+
+  const handleIdentificationNumberChange = (event: any) => {
+    const { name, value } = event.target;
+    if(value && !validNumbers(value)) return;
     setSearchCustomer((prevData) => ({ ...prevData, [name]: value }));
   }
 
@@ -139,15 +147,15 @@ const CustomersClient = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           <div>
             <label className="text-sm">Nombre</label>
-            <Input size="sm" name="name" onChange={handleChange} />
+            <Input size="sm" name="name" onChange={handleNameChange} value={searchCustomer.name} maxLength={20} />
           </div>
           <div>
             <label className="text-sm">Apellido</label>
-            <Input size="sm" name="lastName" onChange={handleChange} />
+            <Input size="sm" name="lastName" onChange={handleNameChange} value={searchCustomer.lastName} maxLength={20} />
           </div>
           <div>
             <label className="text-sm">Cédula</label>
-            <Input size="sm" name="identificationNumber" onChange={handleChange} />
+            <Input size="sm" name="identificationNumber" onChange={handleIdentificationNumberChange} value={searchCustomer.identificationNumber} maxLength={9} />
           </div>
           <div className="flex flex-col">
             <span className="opacity-0">.</span>
