@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  EditProductRequest,
-  GetProductRequest,
-} from "@/app/services/products";
+import { EditProductRequest, GetProductRequest } from "@/app/services/products";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import ImagesUpload from "@/app/components/uploads/ImagesUpload";
@@ -21,6 +18,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { validLettersAndNumbers, validNumbers } from "@/app/utils/InputUtils";
 
 const ProductClient = () => {
   const router = useRouter();
@@ -47,8 +45,8 @@ const ProductClient = () => {
     description: "",
     images: [],
     sku: "",
-    quantity: 0,
-    price: 0,
+    quantity: undefined,
+    price: undefined,
     productStatus: 1,
   });
 
@@ -78,8 +76,22 @@ const ProductClient = () => {
     getProduct();
   }, [getProduct]);
 
-  const handleChange = (event: any) => {
+  const handleNameChange = (event: any) => {
     const { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value, true)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleSKUChange = (event: any) => {
+    let { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value)) return;
+    if (value) value = value.toUpperCase();
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleNumberChange = (event: any) => {
+    let { name, value } = event.target;
+    if (value && !validNumbers(value)) return;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
@@ -104,11 +116,21 @@ const ProductClient = () => {
   };
 
   const isFormValid = (): boolean => {
-    if (!formData.name) return false;
+    if (!validLettersAndNumbers(formData.name, true)) return false;
 
-    if (!formData.quantity) return false;
+    if (
+      formData.description &&
+      !validLettersAndNumbers(formData.description, true)
+    )
+      return false;
 
-    if (!formData.price) return false;
+    if (formData.sku && !validLettersAndNumbers(formData.sku)) return false;
+
+    if (!formData.quantity || !validLettersAndNumbers(formData.sku))
+      return false;
+
+    if (!formData.price || !validLettersAndNumbers(formData.price?.toString()))
+      return false;
 
     return true;
   };
@@ -164,7 +186,7 @@ const ProductClient = () => {
               size="sm"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={50}
               disabled={!isEdit}
             />
@@ -175,7 +197,7 @@ const ProductClient = () => {
               size="sm"
               name="description"
               value={formData.description}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={50}
               disabled={!isEdit}
             />
@@ -186,7 +208,7 @@ const ProductClient = () => {
               size="sm"
               name="sku"
               value={formData.sku}
-              onChange={handleChange}
+              onChange={handleSKUChange}
               maxLength={12}
               disabled={!isEdit}
             />
@@ -198,8 +220,9 @@ const ProductClient = () => {
             <NumberInput size="sm" value={formData.quantity}>
               <NumberInputField
                 name="quantity"
-                onChange={handleChange}
+                onChange={handleNumberChange}
                 disabled={!isEdit}
+                maxLength={15}
               />
             </NumberInput>
           </div>
@@ -210,8 +233,9 @@ const ProductClient = () => {
             <NumberInput size="sm" precision={2} value={formData.price}>
               <NumberInputField
                 name="price"
-                onChange={handleChange}
+                onChange={handleNumberChange}
                 disabled={!isEdit}
+                maxLength={15}
               />
             </NumberInput>
           </div>

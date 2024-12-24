@@ -25,6 +25,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { validLettersAndNumbers } from "@/app/utils/InputUtils";
 
 const ProductsClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -116,8 +117,16 @@ const ProductsClient = () => {
     );
   };
 
-  const handleChange = (event: any) => {
+  const handleProductChange = (event: any) => {
     const { name, value } = event.target;
+    if(value && !validLettersAndNumbers(value, true)) return;
+    setSearchProduct((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSKUChange = (event: any) => {
+    let { name, value } = event.target;
+    if(value && !validLettersAndNumbers(value)) return;
+    if(value) value = value.toUpperCase();
     setSearchProduct((prevData) => ({ ...prevData, [name]: value }));
   };
 
@@ -181,11 +190,11 @@ const ProductsClient = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           <div>
             <label className="text-sm">Producto</label>
-            <Input size="sm" name="name" onChange={handleChange} />
+            <Input size="sm" name="name" onChange={handleProductChange} value={searchProduct.name} maxLength={50}/>
           </div>
           <div>
             <label className="text-sm">SKU</label>
-            <Input size="sm" name="sku" onChange={handleChange} />
+            <Input size="sm" name="sku" onChange={handleSKUChange} value={searchProduct.sku} maxLength={12} />
           </div>
           <div className="flex flex-col">
             <span className="opacity-0">.</span>

@@ -14,6 +14,14 @@ import {
   GetCustomerRequest,
 } from "@/app/services/customers";
 import useLoading from "@/app/hooks/useLoading";
+import {
+  validEmail,
+  validIdentification,
+  validLetters,
+  validNumbers,
+  validPhone,
+  validWithNoSpaces,
+} from "@/app/utils/InputUtils";
 
 const CustomerClient = () => {
   const router = useRouter();
@@ -62,8 +70,8 @@ const CustomerClient = () => {
   }, [params.customerId]);
 
   useEffect(() => {
-    let paramIsEdit = searchParams.get('isEdit');
-    if(paramIsEdit) {
+    let paramIsEdit = searchParams.get("isEdit");
+    if (paramIsEdit) {
       setIsEdit(true);
     }
     getCustomer();
@@ -74,10 +82,31 @@ const CustomerClient = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
+  const handleNameChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validLetters(value, true)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleEmailChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validWithNoSpaces(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleNumberChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validNumbers(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
   const onSubmit = async () => {
     if (isFormValid()) {
       isLoading.onStartLoading();
-      let editCustomer: any = await EditCustomerRequest({id: +params.customerId, ...formData});
+      let editCustomer: any = await EditCustomerRequest({
+        id: +params.customerId,
+        ...formData,
+      });
       if (editCustomer?.error) {
         showErrorMessage(editCustomer.error);
         isLoading.onEndLoading();
@@ -92,10 +121,17 @@ const CustomerClient = () => {
   };
 
   const isFormValid = (): boolean => {
-    if (!formData.firstName) return false;
+    if (!formData.firstName || !validLetters(formData.firstName, true))
+      return false;
 
     if (!formData.identificationNumber || !formData.identificationType)
       return false;
+
+    if (!validIdentification(formData.identificationNumber)) return false;
+
+    if (formData.email && !validEmail(formData.email)) return false;
+
+    if (formData.phone && !validPhone(formData.phone)) return false;
 
     return true;
   };
@@ -135,7 +171,9 @@ const CustomerClient = () => {
               </div>
             </Link>
           </div>
-          <h1 className="ml-2 font-bold">{`${isEdit ? 'Editar' : ''} Cliente`}</h1>
+          <h1 className="ml-2 font-bold">{`${
+            isEdit ? "Editar" : ""
+          } Cliente`}</h1>
         </div>
       </SimpleCard>
 
@@ -149,7 +187,7 @@ const CustomerClient = () => {
               size="sm"
               name="firstName"
               value={formData.firstName}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={20}
               disabled={!isEdit}
             />
@@ -160,7 +198,7 @@ const CustomerClient = () => {
               size="sm"
               name="lastName"
               value={formData.lastName}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={20}
               disabled={!isEdit}
             />
@@ -171,7 +209,7 @@ const CustomerClient = () => {
               size="sm"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleEmailChange}
               maxLength={100}
               disabled={!isEdit}
             />
@@ -182,7 +220,7 @@ const CustomerClient = () => {
               size="sm"
               name="phone"
               value={formData.phone}
-              onChange={handleChange}
+              onChange={handleNumberChange}
               maxLength={11}
               disabled={!isEdit}
             />
@@ -212,8 +250,8 @@ const CustomerClient = () => {
                 size="sm"
                 name="identificationNumber"
                 value={formData.identificationNumber}
-                onChange={handleChange}
-                maxLength={20}
+                onChange={handleNumberChange}
+                maxLength={9}
                 disabled={!isEdit}
               />
             </div>

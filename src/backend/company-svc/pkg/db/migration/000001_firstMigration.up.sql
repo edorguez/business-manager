@@ -17,7 +17,7 @@ CREATE TABLE "company"."payment" (
   "bank" varchar(50),
   "account_number" varchar(20),
   "account_type" varchar(20),
-  "identification_number" varchar(20),
+  "identification_number" varchar(9),
   "identification_type" varchar(1),
   "phone" varchar(11),
   "email" varchar(100),

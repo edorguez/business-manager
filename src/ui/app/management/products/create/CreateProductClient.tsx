@@ -20,6 +20,7 @@ import { CreateProduct } from "@/app/types/product";
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { CreateProductRequest } from "@/app/services/products";
+import { validLettersAndNumbers, validNumbers } from "@/app/utils/InputUtils";
 
 const CreateProductClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -42,9 +43,9 @@ const CreateProductClient = () => {
     description: "",
     images: [],
     sku: "",
-    quantity: 0,
-    price: 0,
-    productStatus: 1
+    quantity: undefined,
+    price: undefined,
+    productStatus: 1,
   });
 
   useEffect(() => {
@@ -54,8 +55,22 @@ const CreateProductClient = () => {
     }
   }, []);
 
-  const handleChange = (event: any) => {
+  const handleNameChange = (event: any) => {
     const { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value, true)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleSKUChange = (event: any) => {
+    let { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value)) return;
+    if (value) value = value.toUpperCase();
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleNumberChange = (event: any) => {
+    let { name, value } = event.target;
+    if (value && !validNumbers(value)) return;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
@@ -79,9 +94,21 @@ const CreateProductClient = () => {
   const isFormValid = (): boolean => {
     if (!formData.name) return false;
 
-    if (!formData.quantity) return false;
+    if (!validLettersAndNumbers(formData.name, true)) return false;
 
-    if (!formData.price) return false;
+    if (
+      formData.description &&
+      !validLettersAndNumbers(formData.description, true)
+    )
+      return false;
+
+    if (formData.sku && !validLettersAndNumbers(formData.sku)) return false;
+
+    if (!formData.quantity || !validLettersAndNumbers(formData.sku))
+      return false;
+
+    if (!formData.price || !validLettersAndNumbers(formData.price?.toString()))
+      return false;
 
     return true;
   };
@@ -135,19 +162,17 @@ const CreateProductClient = () => {
               size="sm"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={50}
             />
           </div>
           <div className="mt-2">
-            <label className="text-sm">
-              Descripción
-            </label>
+            <label className="text-sm">Descripción</label>
             <Input
               size="sm"
               name="description"
               value={formData.description}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={50}
             />
           </div>
@@ -157,7 +182,7 @@ const CreateProductClient = () => {
               size="sm"
               name="sku"
               value={formData.sku}
-              onChange={handleChange}
+              onChange={handleSKUChange}
               maxLength={12}
             />
           </div>
@@ -166,7 +191,7 @@ const CreateProductClient = () => {
               Cantidad <span className="text-thirdcolor">*</span>
             </label>
             <NumberInput size="sm" value={formData.quantity}>
-              <NumberInputField name="quantity" onChange={handleChange} />
+              <NumberInputField name="quantity" onChange={handleNumberChange} maxLength={15} />
             </NumberInput>
           </div>
           <div className="mt-2">
@@ -174,7 +199,7 @@ const CreateProductClient = () => {
               Precio <span className="text-thirdcolor">*</span>
             </label>
             <NumberInput size="sm" precision={2} value={formData.price}>
-              <NumberInputField name="price" onChange={handleChange} />
+              <NumberInputField name="price" onChange={handleNumberChange} maxLength={15} />
             </NumberInput>
           </div>
         </SimpleCard>

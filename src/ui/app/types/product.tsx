@@ -15,8 +15,8 @@ export type CreateProduct = {
   description: string;
   images: string[];
   sku: string;
-  quantity: number;
-  price: number;
+  quantity: number | undefined;
+  price: number | undefined;
   productStatus: number;
 }
 
@@ -27,8 +27,8 @@ export type EditProduct = {
   description: string;
   images: string[];
   sku: string;
-  quantity: number;
-  price: number;
+  quantity: number | undefined;
+  price: number | undefined;
   productStatus: number;
 }
 

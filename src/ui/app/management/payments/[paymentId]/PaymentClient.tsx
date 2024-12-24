@@ -15,6 +15,15 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import {
+  validEmail,
+  validIdentification,
+  validLetters,
+  validLettersAndNumbers,
+  validNumbers,
+  validPhone,
+  validWithNoSpaces,
+} from "@/app/utils/InputUtils";
 
 const PaymentClient = () => {
   const router = useRouter();
@@ -89,6 +98,30 @@ const PaymentClient = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
+  const handleNameChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value, true)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleAccountTypeChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validLetters(value, true)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleEmailChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validWithNoSpaces(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleNumberChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validNumbers(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
   const handlePaymentTypeSelected = (val: number) => {
     setFormData((prevFormData) => ({ ...prevFormData, paymentTypeId: val }));
   };
@@ -114,9 +147,28 @@ const PaymentClient = () => {
   };
 
   const isFormValid = (): boolean => {
-    if (!formData.name) return false;
+    if (!formData.name || !validLettersAndNumbers(formData.name, true))
+      return false;
+
+    if (formData.bank && !validLetters(formData.bank, true)) return false;
+
+    if (formData.accountNumber && !validNumbers(formData.accountNumber))
+      return false;
+
+    if (formData.accountType && !validLetters(formData.accountType, true))
+      return false;
 
     if (!formData.paymentTypeId) return false;
+
+    if (
+      formData.identificationNumber &&
+      !validIdentification(formData.identificationNumber)
+    )
+      return false;
+
+    if (formData.phone && !validPhone(formData.phone)) return false;
+
+    if (formData.email && !validEmail(formData.email)) return false;
 
     return true;
   };
@@ -200,7 +252,7 @@ const PaymentClient = () => {
               size="sm"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={50}
               disabled={!isEdit}
             />
@@ -211,7 +263,7 @@ const PaymentClient = () => {
               size="sm"
               name="bank"
               value={formData.bank}
-              onChange={handleChange}
+              onChange={handleNameChange}
               maxLength={50}
               disabled={!isEdit}
             />
@@ -222,7 +274,7 @@ const PaymentClient = () => {
               size="sm"
               name="accountNumber"
               value={formData.accountNumber}
-              onChange={handleChange}
+              onChange={handleNumberChange}
               maxLength={20}
               disabled={!isEdit}
             />
@@ -233,7 +285,7 @@ const PaymentClient = () => {
               size="sm"
               name="accountType"
               value={formData.accountType}
-              onChange={handleChange}
+              onChange={handleAccountTypeChange}
               maxLength={20}
               disabled={!isEdit}
             />
@@ -261,8 +313,8 @@ const PaymentClient = () => {
                 size="sm"
                 name="identificationNumber"
                 value={formData.identificationNumber}
-                onChange={handleChange}
-                maxLength={20}
+                onChange={handleNumberChange}
+                maxLength={9}
                 disabled={!isEdit}
               />
             </div>
@@ -273,7 +325,7 @@ const PaymentClient = () => {
               size="sm"
               name="phone"
               value={formData.phone}
-              onChange={handleChange}
+              onChange={handleNumberChange}
               maxLength={11}
               disabled={!isEdit}
             />
@@ -284,7 +336,7 @@ const PaymentClient = () => {
               size="sm"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleEmailChange}
               maxLength={100}
               disabled={!isEdit}
             />

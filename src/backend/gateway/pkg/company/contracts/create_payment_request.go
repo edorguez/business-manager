@@ -8,7 +8,7 @@ type CreatePaymentRequest struct {
 	Bank                 *string `json:"bank" validate:"omitempty,max=50"`
 	AccountNumber        *string `json:"accountNumber" validate:"omitempty,max=20"`
 	AccountType          *string `json:"accountType" validate:"omitempty,max=20"`
-	IdentificationNumber *string `json:"identificationNumber" validate:"omitempty,max=20"`
+	IdentificationNumber *string `json:"identificationNumber" validate:"omitempty,max=9"`
 	IdentificationType   *string `json:"identificationType" validate:"omitempty,max=1"`
 	Phone                *string `json:"phone" validate:"omitempty,max=11"`
 	Email                *string `json:"email" validate:"omitempty,max=100"`
