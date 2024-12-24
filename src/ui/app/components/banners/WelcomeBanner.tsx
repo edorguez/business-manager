@@ -11,12 +11,12 @@ const WelcomeBanner = () => {
             <path id="welcome-e" d="M40 0l40 80-40-12.5L0 80z" />
             <path id="welcome-g" d="M40 0l40 80-40-12.5L0 80z" />
             <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="welcome-b">
-              <stop stopColor="#A5B4FC" offset="0%" />
-              <stop stopColor="#818CF8" offset="100%" />
+              <stop stopColor="#CB2D6F" offset="0%" />
+              <stop stopColor="#14A098" offset="100%" />
             </linearGradient>
             <linearGradient x1="50%" y1="24.537%" x2="50%" y2="100%" id="welcome-c">
-              <stop stopColor="#4338CA" offset="0%" />
-              <stop stopColor="#6366F1" stopOpacity="0" offset="100%" />
+              <stop stopColor="#CB2D6F" offset="0%" />
+              <stop stopColor="#14A098" stopOpacity="0" offset="100%" />
             </linearGradient>
           </defs>
           <g fill="none" fillRule="evenodd">
