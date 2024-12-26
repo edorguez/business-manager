@@ -14,9 +14,13 @@ import { Role } from "@/app/types/role";
 import { EditUser } from "@/app/types/user";
 import { GetRolesRequest } from "@/app/services/roles";
 import { PASSWORD, USER_ROLE_ID } from "@/app/constants";
-import { isValidEmail } from "@/app/utils/Utils";
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import {
+  validEmail,
+  validLettersAndNumbers,
+  validWithNoSpaces,
+} from "@/app/utils/InputUtils";
 
 const UserClient = () => {
   const isLoading = useLoading();
@@ -57,7 +61,7 @@ const UserClient = () => {
     let user: any = await GetUserRequest({ id: +params.userId });
     if (user) {
       const currentUser: CurrentUser | null = getCurrentUser();
-      if(currentUser && user.id === currentUser.id) {
+      if (currentUser && user.id === currentUser.id) {
         push("/management/users");
       }
 
@@ -85,10 +89,16 @@ const UserClient = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const handleSpaceKeyDown = (event: any) => {
-    if (event.key === " ") {
-      event.preventDefault();
-    }
+  const handleEmailChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validWithNoSpaces(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handlePasswordChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
   const onSubmit = async () => {
@@ -111,8 +121,14 @@ const UserClient = () => {
   const isFormValid = (): boolean => {
     if (!formData.roleId) return false;
     if (!formData.email) return false;
-    if (!isValidEmail(formData.email)) return false;
-    if (formData.password && formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH) return false;
+    if (!validEmail(formData.email)) return false;
+    if (
+      formData.password &&
+      formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH
+    )
+      return false;
+    if (formData.password && !validLettersAndNumbers(formData.password))
+      return false;
 
     return true;
   };
@@ -152,7 +168,9 @@ const UserClient = () => {
               </div>
             </Link>
           </div>
-          <h1 className="ml-2 font-bold">{`${isEdit ? 'Editar' : ''} Usuario`}</h1>
+          <h1 className="ml-2 font-bold">{`${
+            isEdit ? "Editar" : ""
+          } Usuario`}</h1>
         </div>
       </SimpleCard>
 
@@ -166,23 +184,20 @@ const UserClient = () => {
               size="sm"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleEmailChange}
               maxLength={100}
               disabled={!isEdit}
             />
           </div>
           {isEdit && (
             <div className="mt-2">
-              <label className="text-sm">
-                Contraseña
-              </label>
+              <label className="text-sm">Contraseña</label>
               <Input
                 size="sm"
                 name="password"
-                value={formData.password ?? ''}
-                onChange={handleChange}
+                value={formData.password ?? ""}
+                onChange={handlePasswordChange}
                 maxLength={20}
-                onKeyDown={handleSpaceKeyDown}
               />
             </div>
           )}

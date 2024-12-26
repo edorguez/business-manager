@@ -11,11 +11,15 @@ import { BreadcrumItem } from "@/app/types";
 import { CurrentUser } from "@/app/types/auth";
 import { Role } from "@/app/types/role";
 import { CreateUser } from "@/app/types/user";
-import { isValidEmail } from "@/app/utils/Utils";
 import { Button, Input, Link, Select, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import {
+  validEmail,
+  validLettersAndNumbers,
+  validWithNoSpaces,
+} from "@/app/utils/InputUtils";
 
 const CreateUserClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -61,10 +65,16 @@ const CreateUserClient = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const handleSpaceKeyDown = (event: any) => {
-    if (event.key === " ") {
-      event.preventDefault();
-    }
+  const handleEmailChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validWithNoSpaces(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handlePasswordChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
   const onSubmit = async () => {
@@ -88,9 +98,10 @@ const CreateUserClient = () => {
     if (!formData.companyId) return false;
     if (!formData.roleId) return false;
     if (!formData.email) return false;
-    if (!isValidEmail(formData.email)) return false;
+    if (!validEmail(formData.email)) return false;
     if (!formData.password) return false;
     if (formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH) return false;
+    if (!validLettersAndNumbers(formData.password)) return false;
 
     return true;
   };
@@ -144,7 +155,7 @@ const CreateUserClient = () => {
               size="sm"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleEmailChange}
               maxLength={100}
             />
           </div>
@@ -156,9 +167,8 @@ const CreateUserClient = () => {
               size="sm"
               name="password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={handlePasswordChange}
               maxLength={20}
-              onKeyDown={handleSpaceKeyDown}
             />
           </div>
           <div className="mt-2">

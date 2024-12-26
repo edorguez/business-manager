@@ -3,9 +3,15 @@
 import { Button, Input, Select, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { CreateOrderCustomer } from "@/app/types/order";
+import {
+  validIdentification,
+  validLetters,
+  validNumbers,
+  validPhone,
+} from "@/app/utils/InputUtils";
 
 interface CreateCustomerProps {
-  onStartCreateOrderCustomer: (customer: CreateOrderCustomer) => void
+  onStartCreateOrderCustomer: (customer: CreateOrderCustomer) => void;
 }
 
 const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
@@ -27,6 +33,18 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
+  const handleNameChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validLetters(value, true)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleNumberChange = (event: any) => {
+    const { name, value } = event.target;
+    if (value && !validNumbers(value)) return;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
   const onSubmit = async () => {
     if (isFormValid()) {
       setIsCreateLoading(true);
@@ -42,8 +60,9 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
     if (!formData.identificationNumber || !formData.identificationType)
       return false;
 
-    if (!formData.phone)
-      return false;
+    if (!validIdentification(formData.identificationNumber)) return false;
+
+    if (!formData.phone || !validPhone(formData.phone)) return false;
 
     return true;
   };
@@ -69,7 +88,7 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
           size="sm"
           name="firstName"
           value={formData.firstName}
-          onChange={handleChange}
+          onChange={handleNameChange}
           maxLength={20}
           disabled={isCreateLoading}
         />
@@ -80,18 +99,20 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
           size="sm"
           name="lastName"
           value={formData.lastName}
-          onChange={handleChange}
+          onChange={handleNameChange}
           maxLength={20}
           disabled={isCreateLoading}
         />
       </div>
       <div className="mt-2">
-        <label className="text-sm">Teléfono <span className="text-thirdcolor">*</span></label>
+        <label className="text-sm">
+          Teléfono <span className="text-thirdcolor">*</span>
+        </label>
         <Input
           size="sm"
           name="phone"
           value={formData.phone}
-          onChange={handleChange}
+          onChange={handleNumberChange}
           maxLength={11}
           disabled={isCreateLoading}
         />
@@ -121,14 +142,21 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
             size="sm"
             name="identificationNumber"
             value={formData.identificationNumber}
-            onChange={handleChange}
-            maxLength={20}
+            onChange={handleNumberChange}
+            maxLength={9}
             disabled={isCreateLoading}
           />
         </div>
       </div>
       <div className="mt-3">
-        <Button variant="main" size="sm" className="w-full" onClick={onSubmit} isLoading={isCreateLoading} loadingText="Creando Order">
+        <Button
+          variant="main"
+          size="sm"
+          className="w-full"
+          onClick={onSubmit}
+          isLoading={isCreateLoading}
+          loadingText="Creando Order"
+        >
           Enviar Datos
         </Button>
       </div>

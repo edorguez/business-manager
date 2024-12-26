@@ -24,7 +24,7 @@ export const validNumbers = (input: string): boolean => {
 
 export const validEmail = (email: string): boolean => {
   if (!email) return false;
-  const regex = /^\S+@\S+\.\S+$/;
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 };
 

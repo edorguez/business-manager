@@ -39,7 +39,7 @@ const CheckoutModal = () => {
   const toast = useToast();
 
   const { activeStep, setActiveStep } = useSteps({
-    index: 1,
+    index: 0,
     count: 2,
   });
 
