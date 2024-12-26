@@ -20,7 +20,12 @@ import { CreateProduct } from "@/app/types/product";
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { CreateProductRequest } from "@/app/services/products";
-import { validLettersAndNumbers, validNumbers } from "@/app/utils/InputUtils";
+import {
+  validLettersAndNumbers,
+  validNumbers,
+  validPrice,
+} from "@/app/utils/InputUtils";
+import { formatPriceStringToNumberBackend } from "@/app/utils/Utils";
 
 const CreateProductClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -37,6 +42,7 @@ const CreateProductClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
+  const [inputPrice, setInputPrice] = useState<string>("");
   const [formData, setFormData] = useState<CreateProduct>({
     companyId: 0,
     name: "",
@@ -74,6 +80,16 @@ const CreateProductClient = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
+  const handlePriceChange = (event: any) => {
+    let { name, value } = event.target;
+    if (value && !validPrice(value)) return;
+    setInputPrice(value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: formatPriceStringToNumberBackend(value),
+    }));
+  };
+
   const onSubmit = async () => {
     if (isFormValid()) {
       isLoading.onStartLoading();
@@ -104,7 +120,9 @@ const CreateProductClient = () => {
 
     if (formData.sku && !validLettersAndNumbers(formData.sku)) return false;
 
-    if (!formData.quantity || !validLettersAndNumbers(formData.sku))
+    if ((formData.quantity ?? undefined) === undefined) return false;
+
+    if (formData.quantity && !validNumbers(formData.quantity.toString()))
       return false;
 
     if (!formData.price || !validLettersAndNumbers(formData.price?.toString()))
@@ -191,16 +209,24 @@ const CreateProductClient = () => {
               Cantidad <span className="text-thirdcolor">*</span>
             </label>
             <NumberInput size="sm" value={formData.quantity}>
-              <NumberInputField name="quantity" onChange={handleNumberChange} maxLength={15} />
+              <NumberInputField
+                name="quantity"
+                onChange={handleNumberChange}
+                maxLength={15}
+              />
             </NumberInput>
           </div>
           <div className="mt-2">
             <label className="text-sm">
               Precio <span className="text-thirdcolor">*</span>
             </label>
-            <NumberInput size="sm" precision={2} value={formData.price}>
-              <NumberInputField name="price" onChange={handleNumberChange} maxLength={15} />
-            </NumberInput>
+            <Input
+              size="sm"
+              name="price"
+              value={inputPrice}
+              onChange={handlePriceChange}
+              maxLength={15}
+            />
           </div>
         </SimpleCard>
       </div>

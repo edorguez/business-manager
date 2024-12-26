@@ -60,3 +60,25 @@ export const validateUserInRoles = (
 export const numberMoveDecimal = (num: number, places: number): number => {
   return num / Math.pow(10, places);
 };
+
+export const formatPriceStringToNumberBackend = (price: string): number => {
+  if (price.indexOf(".") !== -1) {
+    let parts = price.split(".");
+
+    // Handle cases where there is no integer part
+    let integerPart = parts[0].length > 0 ? parts[0] : "0";
+    let decimalPart = parts[1] ? parts[1] : "0";
+
+    // Ensure decimal part has exactly two digits
+    if (decimalPart.length === 1) {
+      decimalPart += "0";
+    } else if (decimalPart.length > 2) {
+      decimalPart = decimalPart.substring(0, 2);
+    }
+
+    return parseInt(integerPart + decimalPart);
+  }
+
+  // Handle cases where there is no comma
+  return parseInt(price) * 100;
+};

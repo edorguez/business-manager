@@ -22,6 +22,12 @@ export const validNumbers = (input: string): boolean => {
   return regex.test(input);
 };
 
+export const validPrice = (input: string): boolean => {
+  if (!input) return false;
+  const regex = /^\d*(\.(\d{1,2})?)?$/;
+  return regex.test(input);
+};
+
 export const validEmail = (email: string): boolean => {
   if (!email) return false;
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

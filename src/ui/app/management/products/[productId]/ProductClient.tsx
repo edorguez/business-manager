@@ -18,7 +18,12 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { validLettersAndNumbers, validNumbers } from "@/app/utils/InputUtils";
+import {
+  validLettersAndNumbers,
+  validNumbers,
+  validPrice,
+} from "@/app/utils/InputUtils";
+import { formatPriceStringToNumberBackend } from "@/app/utils/Utils";
 
 const ProductClient = () => {
   const router = useRouter();
@@ -38,7 +43,8 @@ const ProductClient = () => {
   ];
 
   const toast = useToast();
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [inputPrice, setInputPrice] = useState<string>("");
   const [formData, setFormData] = useState<CreateProduct>({
     companyId: 0,
     name: "",
@@ -95,6 +101,16 @@ const ProductClient = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
+  const handlePriceChange = (event: any) => {
+    let { name, value } = event.target;
+    if (value && !validPrice(value)) return;
+    setInputPrice(value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: formatPriceStringToNumberBackend(value),
+    }));
+  };
+
   const onSubmit = async () => {
     if (isFormValid()) {
       isLoading.onStartLoading();
@@ -126,7 +142,9 @@ const ProductClient = () => {
 
     if (formData.sku && !validLettersAndNumbers(formData.sku)) return false;
 
-    if (!formData.quantity || !validLettersAndNumbers(formData.sku))
+    if ((formData.quantity ?? undefined) === undefined) return false;
+
+    if (formData.quantity && !validNumbers(formData.quantity.toString()))
       return false;
 
     if (!formData.price || !validLettersAndNumbers(formData.price?.toString()))
@@ -230,14 +248,14 @@ const ProductClient = () => {
             <label className="text-sm">
               Precio <span className="text-thirdcolor">*</span>
             </label>
-            <NumberInput size="sm" precision={2} value={formData.price}>
-              <NumberInputField
-                name="price"
-                onChange={handleNumberChange}
-                disabled={!isEdit}
-                maxLength={15}
-              />
-            </NumberInput>
+            <Input
+              size="sm"
+              name="price"
+              value={inputPrice}
+              onChange={handlePriceChange}
+              maxLength={15}
+              disabled={!isEdit}
+            />
           </div>
         </SimpleCard>
       </div>

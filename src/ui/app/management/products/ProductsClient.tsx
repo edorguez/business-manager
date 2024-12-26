@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { validLettersAndNumbers } from "@/app/utils/InputUtils";
+import { numberMoveDecimal } from "@/app/utils/Utils";
 
 const ProductsClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -92,6 +93,7 @@ const ProductsClient = () => {
         data = data.map((x) => {
           return {
             ...x,
+            price: numberMoveDecimal(x.price, 2),
             isActive: x.productStatus === 1 ? true : false,
           };
         });
