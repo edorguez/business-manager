@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/product"
@@ -17,14 +18,24 @@ func GetProducts(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	companyId := query_params.GetId("companyId", r)
 	name := r.URL.Query().Get("name")
 	sku := r.URL.Query().Get("sku")
+	productStatusStr := r.URL.Query().Get("productStatus")
+	var productStatus *uint32
+	if productStatusStr != "" {
+		status, err := strconv.ParseUint(productStatusStr, 10, 32)
+		if err == nil {
+			status32 := uint32(status)
+			productStatus = &status32
+		}
+	}
 	limit, offset := query_params.GetFilter(r)
 
 	params := &pb.GetProductsRequest{
-		CompanyId: companyId,
-		Name:      &name,
-		Sku:       &sku,
-		Limit:     limit,
-		Offset:    offset,
+		CompanyId:     companyId,
+		Name:          &name,
+		Sku:           &sku,
+		ProductStatus: productStatus,
+		Limit:         limit,
+		Offset:        offset,
 	}
 
 	if err := client.InitProductServiceClient(c); err != nil {

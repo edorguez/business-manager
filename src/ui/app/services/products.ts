@@ -17,8 +17,8 @@ export async function CreateProductRequest(request: CreateProduct) {
     const token = Cookies.get("token");
     headers.append("Authorization", <string>token);
 
-    request.price = +request.price;
-    request.quantity = +request.quantity;
+    if (request.price) request.price = +request.price;
+    if (request.quantity) request.quantity = +request.quantity;
 
     const res = await fetch(baseUrl, {
       method: "POST",
@@ -40,8 +40,8 @@ export async function EditProductRequest(request: EditProduct) {
     const token = Cookies.get("token");
     headers.append("Authorization", <string>token);
 
-    request.price = +request.price;
-    request.quantity = +request.quantity;
+    if (request.price) request.price = +request.price;
+    if (request.quantity) request.quantity = +request.quantity;
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: "PUT",
@@ -94,15 +94,20 @@ export async function GetProductsRequest(request: GetProducts) {
     const token = Cookies.get("token");
     headers.append("Authorization", <string>token);
 
+    let params: any = {
+      companyId: request.companyId.toString(),
+      name: request.name.trim(),
+      sku: request.sku.trim(),
+      limit: request.limit.toString(),
+      offset: request.offset.toString(),
+    };
+
+    if (request.productStatus) {
+      params.productStatus = request.productStatus.toString();
+    }
+
     const res = await fetch(
-      `${baseUrl}?` +
-        new URLSearchParams({
-          companyId: request.companyId.toString(),
-          name: request.name.trim(),
-          sku: request.sku.trim(),
-          limit: request.limit.toString(),
-          offset: request.offset.toString(),
-        }).toString(),
+      `${baseUrl}?` + new URLSearchParams(params).toString(),
       {
         method: "GET",
         headers: headers,

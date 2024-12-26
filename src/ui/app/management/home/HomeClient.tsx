@@ -6,16 +6,25 @@ import { GetCustomersByMonthsRequest } from "@/app/services/customers";
 import { GetPaymentsTypesRequest } from "@/app/services/payment";
 import { GetLatestProductsRequest } from "@/app/services/products";
 import WelcomeBanner from "@/app/components/banners/WelcomeBanner";
-import DoughnutChartCard, { DoughnutChartCardProps } from "@/app/components/cards/DoughnutChartCard";
+import DoughnutChartCard, {
+  DoughnutChartCardProps,
+} from "@/app/components/cards/DoughnutChartCard";
 import ListCard from "@/app/components/cards/ListCard";
 import SimpleLineChartCard from "@/app/components/cards/SimpleLineChartCard";
-import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
+import {
+  ColumnType,
+  SimpleTableColumn,
+} from "@/app/components/tables/SimpleTable.types";
 import useLoading from "@/app/hooks/useLoading";
 import { CurrentUser } from "@/app/types/auth";
 import { CustomerByMonth, CustomerMonths } from "@/app/types/customer";
 import { PaymentTypeChart } from "@/app/types/payment";
 import { Product } from "@/app/types/product";
-import { convertToTimezone, formatTitleValue } from "@/app/utils/Utils";
+import {
+  convertToTimezone,
+  formatTitleValue,
+  numberMoveDecimal,
+} from "@/app/utils/Utils";
 import { useCallback, useEffect, useState } from "react";
 
 const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
@@ -87,17 +96,19 @@ const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
   return result;
 };
 
-const formatPaymentsTypes = (payments: PaymentTypeChart[]): DoughnutChartCardProps => {
+const formatPaymentsTypes = (
+  payments: PaymentTypeChart[]
+): DoughnutChartCardProps => {
   let result: DoughnutChartCardProps = {
-    title: 'Métodos de Pago Populares',
+    title: "Métodos de Pago Populares",
     labels: [],
-    data: []
-  }
+    data: [],
+  };
 
-  for(let key in payments) {
+  for (let key in payments) {
     let paymentTypeName: string = payments[key].paymentType.name;
 
-    if(!result.labels.includes(paymentTypeName)) {
+    if (!result.labels.includes(paymentTypeName)) {
       result.labels.push(payments[key].paymentType.name);
       result.data.push(1);
     } else {
@@ -107,7 +118,7 @@ const formatPaymentsTypes = (payments: PaymentTypeChart[]): DoughnutChartCardPro
   }
 
   return result;
-}
+};
 
 const HomeClient = () => {
   const isLoading = useLoading();
@@ -119,22 +130,22 @@ const HomeClient = () => {
     {
       key: "images",
       name: "",
-      type: ColumnType.ArrayImageFirst
+      type: ColumnType.ArrayImageFirst,
     },
     {
       key: "name",
       name: "Producto",
-      type: ColumnType.String
+      type: ColumnType.String,
     },
     {
       key: "quantity",
       name: "Cantidad",
-      type: ColumnType.Number
+      type: ColumnType.Number,
     },
     {
       key: "price",
       name: "precio",
-      type: ColumnType.Money
+      type: ColumnType.Money,
     },
   ];
 
@@ -161,11 +172,17 @@ const HomeClient = () => {
         companyId: currentUser.companyId,
         limit: 5,
       });
+      data = data.map((x) => {
+        return {
+          ...x,
+          price: numberMoveDecimal(x.price, 2),
+        };
+      });
       setProducts(data);
     }
     isLoading.onEndLoading();
   }, []);
-  
+
   const getPaymentsTypes = useCallback(async () => {
     isLoading.onStartLoading();
     const currentUser: CurrentUser | null = getCurrentUser();
@@ -182,7 +199,7 @@ const HomeClient = () => {
   useEffect(() => {
     getCustomersByMonths();
     getLatestProducts();
-    getPaymentsTypes()
+    getPaymentsTypes();
   }, [getCustomersByMonths, getLatestProducts, getPaymentsTypes]);
 
   return (
@@ -220,12 +237,18 @@ const HomeClient = () => {
       </div> */}
 
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {
-          paymentsTypes && (
-          <DoughnutChartCard title={paymentsTypes.title} labels={paymentsTypes.labels} data={paymentsTypes.data} />
-          )
-        }
-        <ListCard title="Últimos Productos" columns={productCols} data={products} />
+        {paymentsTypes && (
+          <DoughnutChartCard
+            title={paymentsTypes.title}
+            labels={paymentsTypes.labels}
+            data={paymentsTypes.data}
+          />
+        )}
+        <ListCard
+          title="Últimos Productos"
+          columns={productCols}
+          data={products}
+        />
       </div>
     </>
   );

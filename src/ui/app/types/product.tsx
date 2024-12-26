@@ -40,6 +40,7 @@ export type GetProducts = {
   companyId: number;
   name: string;
   sku: string;
+  productStatus: number | undefined;
   limit: number;
   offset: number;
 }

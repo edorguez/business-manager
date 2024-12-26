@@ -53,8 +53,9 @@ message GetProductsRequest{
   int64 companyId = 1;
   optional string Name = 2;
   optional string Sku = 3;
-  int32 limit = 4;
-  int32 offset = 5;
+  optional uint32 productStatus = 4;
+  int32 limit = 5;
+  int32 offset = 6;
 }
 
 message GetProductsResponse{

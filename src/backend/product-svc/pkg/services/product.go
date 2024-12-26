@@ -149,11 +149,12 @@ func (s *ProductService) GetProducts(ctx context.Context, req *product.GetProduc
 	fmt.Println("----------------")
 
 	params := repo.GetProductsParams{
-		CompanyId: req.CompanyId,
-		Name:      req.Name,
-		Sku:       req.Sku,
-		Limit:     req.Limit,
-		Offset:    req.Offset,
+		CompanyId:     req.CompanyId,
+		Name:          req.Name,
+		Sku:           req.Sku,
+		ProductStatus: req.ProductStatus,
+		Limit:         req.Limit,
+		Offset:        req.Offset,
 	}
 
 	p, err := s.Repo.GetProducts(ctx, params)

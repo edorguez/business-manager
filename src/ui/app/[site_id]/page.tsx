@@ -44,6 +44,7 @@ const SitePage = () => {
       companyId: comp.id,
       name: '',
       sku: '',
+      productStatus: 1,
       limit: 10,
       offset: 0
     });

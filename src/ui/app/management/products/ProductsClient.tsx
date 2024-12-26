@@ -87,6 +87,7 @@ const ProductsClient = () => {
           companyId: currentUser.companyId,
           name: searchParams.name ?? "",
           sku: searchParams.sku ?? "",
+          productStatus: undefined,
           limit: 10,
           offset: offset,
         });

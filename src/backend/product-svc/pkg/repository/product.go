@@ -54,11 +54,12 @@ func (productRepo *ProductRepo) GetProduct(ctx context.Context, id primitive.Obj
 }
 
 type GetProductsParams struct {
-	CompanyId int64
-	Name      *string
-	Sku       *string
-	Limit     int32
-	Offset    int32
+	CompanyId     int64
+	Name          *string
+	Sku           *string
+	ProductStatus *uint32
+	Limit         int32
+	Offset        int32
 }
 
 func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProductsParams) ([]models.GetProduct, error) {
@@ -87,6 +88,10 @@ func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProducts
 				Options: "i",
 			}
 		}
+	}
+
+	if arg.ProductStatus != nil {
+		query["productStatus"] = arg.ProductStatus
 	}
 
 	cursor, err := collection.Find(ctx, query, options)

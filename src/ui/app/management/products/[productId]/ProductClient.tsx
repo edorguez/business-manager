@@ -23,7 +23,7 @@ import {
   validNumbers,
   validPrice,
 } from "@/app/utils/InputUtils";
-import { formatPriceStringToNumberBackend } from "@/app/utils/Utils";
+import { formatPriceNumberBackendToString, formatPriceStringToNumberBackend } from "@/app/utils/Utils";
 
 const ProductClient = () => {
   const router = useRouter();
@@ -71,6 +71,7 @@ const ProductClient = () => {
         price: product.price,
         productStatus: product.status,
       });
+      setInputPrice(formatPriceNumberBackendToString(product.price));
     }
   }, [params.productId]);
 

@@ -82,3 +82,14 @@ export const formatPriceStringToNumberBackend = (price: string): number => {
   // Handle cases where there is no comma
   return parseInt(price) * 100;
 };
+
+export const formatPriceNumberBackendToString = (price: number): string => {
+  let priceString = price.toString();
+  if (priceString.length === 1) {
+    return `0.0${priceString}`;
+  } else if (priceString.length === 2) {
+    return `0.${priceString}`;
+  } else {
+    return `${priceString.slice(0, -2)}.${priceString.slice(-2)}`;
+  }
+};
