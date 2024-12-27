@@ -18,7 +18,7 @@ func Register(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	body := r.Context().Value(contracts.CreateUserRequest{}).(contracts.CreateUserRequest)
 
 	fmt.Println("API Gateway :  Register - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	if err := client.InitAuthServiceClient(c); err != nil {

@@ -47,7 +47,7 @@ func CreateUser(body contracts.CreateUserRequest, c context.Context) (*pb.Create
 	fmt.Println("User CLIENT :  CreateUser")
 
 	fmt.Println("User CLIENT :  CreateUser - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	createUserParams := &pb.CreateUserRequest{
@@ -162,7 +162,7 @@ func UpdateUser(id int64, body contracts.UpdateUserRequest, c context.Context) (
 	fmt.Println("User CLIENT :  UpdateUser")
 
 	fmt.Println("User CLIENT :  UpdateUser - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	updateUserParams := &pb.UpdateUserRequest{
@@ -219,7 +219,7 @@ func UpdateEmail(id int64, body contracts.UpdateEmailRequest, c context.Context)
 	fmt.Println("User CLIENT :  UpdateEmail")
 
 	fmt.Println("User CLIENT :  UpdateEmail - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	updateUserParams := &pb.UpdateEmailRequest{
@@ -249,7 +249,7 @@ func UpdatePassword(id int64, body contracts.UpdatePasswordRequest, c context.Co
 	fmt.Println("User CLIENT :  UpdatePassword")
 
 	fmt.Println("User CLIENT :  UpdatePassword - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	updateUserParams := &pb.UpdatePasswordRequest{

@@ -47,7 +47,7 @@ func Register(body contracts.CreateUserRequest, c context.Context) (*pb.Register
 	fmt.Println("Auth CLIENT :  Register")
 
 	fmt.Println("Auth CLIENT :  Register - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	registerParams := &pb.RegisterRequest{
@@ -79,7 +79,7 @@ func Login(body contracts.LoginRequest, c context.Context) (*pb.LoginResponse, *
 	fmt.Println("Auth CLIENT :  Login")
 
 	fmt.Println("Auth CLIENT :  Login - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	loginParams := &pb.LoginRequest{
@@ -109,7 +109,7 @@ func Validate(body contracts.ValidateRequest, c context.Context) (*pb.ValidateRe
 	fmt.Println("Auth CLIENT :  Login")
 
 	fmt.Println("Auth CLIENT :  Login - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	validateParams := &pb.ValidateRequest{

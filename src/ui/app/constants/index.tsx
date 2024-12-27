@@ -98,30 +98,30 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
       USER_ROLE_ID.REGULAR,
     ],
   },
-  {
-    title: "WhatsApp",
-    path: "/management/whatsapp",
-    icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
-    roleIds: [
-      USER_ROLE_ID.SUPER_ADMIN,
-      USER_ROLE_ID.ADMIN,
-      USER_ROLE_ID.REGULAR,
-    ],
-  },
+  // {
+  //   title: "WhatsApp",
+  //   path: "/management/whatsapp",
+  //   icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
+  //   roleIds: [
+  //     USER_ROLE_ID.SUPER_ADMIN,
+  //     USER_ROLE_ID.ADMIN,
+  //     USER_ROLE_ID.REGULAR,
+  //   ],
+  // },
   {
     title: "Usuarios",
     path: "/management/users",
     icon: <Icon icon="fluent:people-team-20-filled" />,
     roleIds: [USER_ROLE_ID.SUPER_ADMIN, USER_ROLE_ID.ADMIN],
   },
-  {
-    title: "Help",
-    path: "/help",
-    icon: <Icon icon="lucide:help-circle" width="20" height="20" />,
-    roleIds: [
-      USER_ROLE_ID.SUPER_ADMIN,
-      USER_ROLE_ID.ADMIN,
-      USER_ROLE_ID.REGULAR,
-    ],
-  },
+  // {
+  //   title: "Help",
+  //   path: "/help",
+  //   icon: <Icon icon="lucide:help-circle" width="20" height="20" />,
+  //   roleIds: [
+  //     USER_ROLE_ID.SUPER_ADMIN,
+  //     USER_ROLE_ID.ADMIN,
+  //     USER_ROLE_ID.REGULAR,
+  //   ],
+  // },
 ];

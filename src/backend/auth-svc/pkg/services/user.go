@@ -21,7 +21,7 @@ type UserService struct {
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	fmt.Println("Auth Service :  CreateUser")
 	fmt.Println("Auth Service :  CreateUser - Req")
-	fmt.Println(req)
+	// fmt.Println(req)
 	fmt.Println("----------------")
 
 	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
@@ -153,7 +153,7 @@ func (s *UserService) GetUsers(ctx context.Context, req *pb.GetUsersRequest) (*p
 func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	fmt.Println("Auth Service :  UpdateUser")
 	fmt.Println("Auth Service :  UpdateUser - Req")
-	fmt.Println(req)
+	// fmt.Println(req)
 	fmt.Println("----------------")
 
 	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
@@ -248,7 +248,7 @@ func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest)
 func (s *UserService) UpdateEmail(ctx context.Context, req *pb.UpdateEmailRequest) (*pb.UpdateEmailResponse, error) {
 	fmt.Println("Auth Service :  UpdateEmail")
 	fmt.Println("Auth Service :  UpdateEmail - Req")
-	fmt.Println(req)
+	// fmt.Println(req)
 	fmt.Println("----------------")
 
 	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
@@ -303,7 +303,7 @@ func (s *UserService) UpdateEmail(ctx context.Context, req *pb.UpdateEmailReques
 func (s *UserService) UpdatePassword(ctx context.Context, req *pb.UpdatePasswordRequest) (*pb.UpdatePasswordResponse, error) {
 	fmt.Println("Auth Service :  UpdatePassword")
 	fmt.Println("Auth Service :  UpdatePassword - Req")
-	fmt.Println(req)
+	// fmt.Println(req)
 	fmt.Println("----------------")
 
 	params := db.UpdatePasswordParams{

@@ -18,7 +18,7 @@ func Login(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	body := r.Context().Value(contracts.LoginRequest{}).(contracts.LoginRequest)
 
 	fmt.Println("API Gateway :  Login - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	if err := client.InitAuthServiceClient(c); err != nil {

@@ -29,7 +29,7 @@ func UpdateEmail(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	fmt.Println("API Gateway :  UpdateEmail - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	if err := client.InitUserServiceClient(c); err != nil {

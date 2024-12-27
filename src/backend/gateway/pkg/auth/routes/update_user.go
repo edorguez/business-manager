@@ -29,7 +29,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	fmt.Println("API Gateway :  UpdateUser - Body")
-	fmt.Println(body)
+	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	if err := client.InitUserServiceClient(c); err != nil {
