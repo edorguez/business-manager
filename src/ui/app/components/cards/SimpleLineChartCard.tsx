@@ -25,16 +25,14 @@ const SimpleLineChartCard: React.FC<SimpleLineChartCardProps> = ({
       {
         data: data,
         fill: true,
-        backgroundColor: `rgba(${hexToRGB(
-          tailwindConfig().theme.colors.blue[500]
-        )}, 0.08)`,
-        borderColor: tailwindConfig().theme.colors.indigo[500],
+        backgroundColor: 'rgba(203, 45, 111, 0.08)',
+        borderColor: 'rgba(20, 160, 102, 1)',
         borderWidth: 2,
         tension: 0,
         pointRadius: 0,
         pointHoverRadius: 3,
-        pointBackgroundColor: tailwindConfig().theme.colors.indigo[500],
-        pointHoverBackgroundColor: tailwindConfig().theme.colors.indigo[500],
+        pointBackgroundColor: 'rgba(203, 45, 111, 1)',
+        pointHoverBackgroundColor: 'rgba(203, 45, 111, 1)',
         pointBorderWidth: 0,
         pointHoverBorderWidth: 0,
         clip: 20,
