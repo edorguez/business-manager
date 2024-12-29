@@ -109,6 +109,7 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *co
 	return &contracts.GetCompanyResponse{
 		Id:              res.Id,
 		Name:            res.Name,
+		NameFormatUrl:   res.NameFormatUrl,
 		ImageUrl:        res.ImageUrl,
 		PlanId:          res.PlanId,
 		LastPaymentDate: res.LastPaymentDate.AsTime(),
@@ -149,6 +150,7 @@ func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNa
 	return &contracts.GetCompanyByNameResponse{
 		Id:              res.Id,
 		Name:            res.Name,
+		NameFormatUrl:   res.NameFormatUrl,
 		ImageUrl:        res.ImageUrl,
 		PlanId:          res.PlanId,
 		LastPaymentDate: res.LastPaymentDate.AsTime(),
@@ -185,6 +187,7 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 		cr = append(cr, &contracts.GetCompanyResponse{
 			Id:              v.Id,
 			Name:            v.Name,
+			NameFormatUrl:   v.NameFormatUrl,
 			ImageUrl:        v.ImageUrl,
 			PlanId:          v.PlanId,
 			LastPaymentDate: v.LastPaymentDate.AsTime(),
@@ -203,9 +206,10 @@ func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, c context.Cont
 	fmt.Println("-----------------")
 
 	updateCompanyParams := &pb.UpdateCompanyRequest{
-		Id:       int64(id),
-		Name:     body.Name,
-		ImageUrl: body.ImageUrl,
+		Id:            int64(id),
+		Name:          body.Name,
+		NameFormatUrl: body.NameFormatUrl,
+		ImageUrl:      body.ImageUrl,
 	}
 
 	res, err := companyServiceClient.UpdateCompany(c, updateCompanyParams)

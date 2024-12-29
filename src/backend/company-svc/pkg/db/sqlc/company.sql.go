@@ -21,7 +21,7 @@ INSERT INTO
 VALUES (
   $1, $2, $3
 ) 
-RETURNING id, name, image_url, plan_id, last_payment_date, created_at, modified_at
+RETURNING id, name, name_format_url, image_url, plan_id, last_payment_date, created_at, modified_at
 `
 
 type CreateCompanyParams struct {
@@ -36,6 +36,7 @@ func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) (C
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.NameFormatUrl,
 		&i.ImageUrl,
 		&i.PlanID,
 		&i.LastPaymentDate,
@@ -61,6 +62,7 @@ const getCompanies = `-- name: GetCompanies :many
 SELECT 
   id,
   name,
+  name_format_url,
   image_url,
   plan_id,
   last_payment_date,
@@ -93,6 +95,7 @@ func (q *Queries) GetCompanies(ctx context.Context, arg GetCompaniesParams) ([]C
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
+			&i.NameFormatUrl,
 			&i.ImageUrl,
 			&i.PlanID,
 			&i.LastPaymentDate,
@@ -116,6 +119,7 @@ const getCompany = `-- name: GetCompany :one
 SELECT 
   id,
   name,
+  name_format_url,
   image_url,
   plan_id,
   last_payment_date,
@@ -134,6 +138,7 @@ func (q *Queries) GetCompany(ctx context.Context, id int64) (CompanyCompany, err
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.NameFormatUrl,
 		&i.ImageUrl,
 		&i.PlanID,
 		&i.LastPaymentDate,
@@ -147,6 +152,7 @@ const getCompanyByName = `-- name: GetCompanyByName :one
 SELECT 
   id,
   name,
+  name_format_url,
   image_url,
   plan_id,
   last_payment_date,
@@ -165,6 +171,7 @@ func (q *Queries) GetCompanyByName(ctx context.Context, lower string) (CompanyCo
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.NameFormatUrl,
 		&i.ImageUrl,
 		&i.PlanID,
 		&i.LastPaymentDate,
@@ -179,25 +186,33 @@ UPDATE
   company.company
 SET 
   name = $2,
-  image_url = $3,
+  name_format_url = $3,
+  image_url = $4,
   modified_at = NOW()
 WHERE 
   id = $1
-RETURNING id, name, image_url, plan_id, last_payment_date, created_at, modified_at
+RETURNING id, name, name_format_url, image_url, plan_id, last_payment_date, created_at, modified_at
 `
 
 type UpdateCompanyParams struct {
-	ID       int64          `json:"id"`
-	Name     string         `json:"name"`
-	ImageUrl sql.NullString `json:"image_url"`
+	ID            int64          `json:"id"`
+	Name          string         `json:"name"`
+	NameFormatUrl string         `json:"name_format_url"`
+	ImageUrl      sql.NullString `json:"image_url"`
 }
 
 func (q *Queries) UpdateCompany(ctx context.Context, arg UpdateCompanyParams) (CompanyCompany, error) {
-	row := q.db.QueryRowContext(ctx, updateCompany, arg.ID, arg.Name, arg.ImageUrl)
+	row := q.db.QueryRowContext(ctx, updateCompany,
+		arg.ID,
+		arg.Name,
+		arg.NameFormatUrl,
+		arg.ImageUrl,
+	)
 	var i CompanyCompany
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.NameFormatUrl,
 		&i.ImageUrl,
 		&i.PlanID,
 		&i.LastPaymentDate,

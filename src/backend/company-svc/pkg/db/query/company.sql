@@ -14,6 +14,7 @@ RETURNING *;
 SELECT 
   id,
   name,
+  name_format_url,
   image_url,
   plan_id,
   last_payment_date,
@@ -29,6 +30,7 @@ LIMIT 1;
 SELECT 
   id,
   name,
+  name_format_url,
   image_url,
   plan_id,
   last_payment_date,
@@ -44,6 +46,7 @@ LIMIT 1;
 SELECT 
   id,
   name,
+  name_format_url,
   image_url,
   plan_id,
   last_payment_date,
@@ -63,7 +66,8 @@ UPDATE
   company.company
 SET 
   name = $2,
-  image_url = $3,
+  name_format_url = $3,
+  image_url = $4,
   modified_at = NOW()
 WHERE 
   id = $1

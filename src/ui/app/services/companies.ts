@@ -1,18 +1,16 @@
-import { EditCompany, GetCompany } from '@/app/types/company';
-import Cookies from 'js-cookie';
+import { EditCompany, GetCompany } from "@/app/types/company";
+import Cookies from "js-cookie";
 
-const baseUrl: string = 'http://localhost:3001/api/companies';
+const baseUrl: string = "http://localhost:3001/api/companies";
 
-export async function GetCompanyRequest(
-  request: GetCompany
-) {
+export async function GetCompanyRequest(request: GetCompany) {
   try {
     const headers = new Headers();
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
-      method: 'GET',
+      method: "GET",
       headers: headers,
     });
 
@@ -20,20 +18,18 @@ export async function GetCompanyRequest(
 
     return response;
   } catch (error: any) {
-    console.log(error.toString())
+    console.log(error.toString());
   }
 }
 
-export async function GetCompanyByNameRequest(
-  name: string
-) {
+export async function GetCompanyByNameRequest(name: string) {
   try {
     const headers = new Headers();
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/name/${name}`, {
-      method: 'GET',
+      method: "GET",
       headers: headers,
     });
 
@@ -41,26 +37,30 @@ export async function GetCompanyByNameRequest(
 
     return response;
   } catch (error: any) {
-    console.log(error.toString())
+    console.log(error.toString());
   }
 }
 
-export async function EditCompanyRequest(
-  request: EditCompany
-) {
+export async function EditCompanyRequest(request: EditCompany) {
   try {
     const headers = new Headers();
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     headers.append("Authorization", <string>token);
 
     request.name = request.name.trim();
 
     const res = await fetch(`${baseUrl}/${request.id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: headers,
       body: JSON.stringify(request),
     });
+
+    if(res.status === 204) {
+      return;
+    }
+
+    return await res.json();
   } catch (error: any) {
-    console.log(error.toString())
+    console.log(error.toString());
   }
 }

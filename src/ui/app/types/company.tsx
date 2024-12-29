@@ -1,6 +1,7 @@
 export type Company = {
   id: number;
   name: string;
+  nameFormatUrl: string;
   imageUrl: string;
   lastPaymentDate: Date;
 }
@@ -12,5 +13,6 @@ export type GetCompany = {
 export type EditCompany = {
   id: number;
   name: string;
+  nameFormatUrl: string;
   imageUrl: string;
 }

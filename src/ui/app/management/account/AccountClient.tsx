@@ -42,6 +42,7 @@ import deleteUserSession from "@/app/actions/deleteUserSession";
 import isUserAdmin from "@/app/actions/isUserAdmin";
 import { PASSWORD } from "@/app/constants";
 import { validEmail, validLettersAndNumbers, validWithNoSpaces } from "@/app/utils/InputUtils";
+import { formatCompanyNameToUrlName } from "@/app/utils/Utils";
 
 const AccountClient = () => {
   const { push } = useRouter();
@@ -53,6 +54,7 @@ const AccountClient = () => {
   const [companyFormData, setCompanyFormData] = useState<EditCompany>({
     id: 0,
     name: "",
+    nameFormatUrl: "",
     imageUrl: "",
   });
   const [emailFormData, setEmailFormData] = useState<EditEmail>({
@@ -70,7 +72,8 @@ const AccountClient = () => {
 
     if(value && !validLettersAndNumbers(value, true)) return;
 
-    setCompanyFormData((prev) => ({ ...prev, [name]: value }));
+    let formatUrl = formatCompanyNameToUrlName(value);
+    setCompanyFormData((prev) => ({ ...prev, [name]: value, ['nameFormatUrl']: formatUrl }));
   };
 
   const handleEmailFormChange = (event: any) => {
@@ -96,6 +99,7 @@ const AccountClient = () => {
         setCompanyFormData({
           id: company.id ?? 0,
           name: company.name ?? "",
+          nameFormatUrl: company.nameFormatUrl ?? "",
           imageUrl: company.imageUrl ?? "",
         });
       }
@@ -143,6 +147,7 @@ const AccountClient = () => {
 
   const isCompanyFormValid = (): boolean => {
     if (!companyFormData.name) return false;
+    if (!companyFormData.nameFormatUrl) return false;
     if (!validLettersAndNumbers(companyFormData.name, true)) return false;
 
     return true;
@@ -264,6 +269,7 @@ const AccountClient = () => {
               <Heading size="lg" className="break-all">
                 {companyFormData.name}
               </Heading>
+              <span className="text-gray-500"><a href={`https://www.${companyFormData.nameFormatUrl}.com`} target="_blank">www.{companyFormData.nameFormatUrl}.com</a></span>
             </Box>
           </Flex>
           <Tabs isFitted variant="enclosed" className="mt-8">

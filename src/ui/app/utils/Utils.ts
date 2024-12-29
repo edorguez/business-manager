@@ -93,3 +93,10 @@ export const formatPriceNumberBackendToString = (price: number): string => {
     return `${priceString.slice(0, -2)}.${priceString.slice(-2)}`;
   }
 };
+
+export const formatCompanyNameToUrlName = (name: string): string => {
+  return name
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^a-zA-Z0-9-]/g, "");
+}

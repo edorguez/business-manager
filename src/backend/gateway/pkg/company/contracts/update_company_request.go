@@ -3,8 +3,9 @@ package contracts
 import "github.com/go-playground/validator/v10"
 
 type UpdateCompanyRequest struct {
-	Name     string  `json:"name" validate:"required,max=50"`
-	ImageUrl *string `json:"imageUrl"  validate:"omitempty,required"`
+	Name          string  `json:"name" validate:"required,max=50"`
+	NameFormatUrl string  `json:"nameFormatUrl" validate:"required"`
+	ImageUrl      *string `json:"imageUrl"  validate:"omitempty,required"`
 }
 
 func (c *UpdateCompanyRequest) Validate() error {

@@ -26,7 +26,7 @@ const SimpleLineChartCard: React.FC<SimpleLineChartCardProps> = ({
         data: data,
         fill: true,
         backgroundColor: 'rgba(203, 45, 111, 0.08)',
-        borderColor: 'rgba(20, 160, 102, 1)',
+        borderColor: 'rgb(20, 160, 155)',
         borderWidth: 2,
         tension: 0,
         pointRadius: 0,

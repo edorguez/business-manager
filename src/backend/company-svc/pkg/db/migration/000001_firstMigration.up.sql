@@ -3,6 +3,7 @@ CREATE SCHEMA "company";
 CREATE TABLE "company"."company" (
   "id" bigserial PRIMARY KEY,
   "name" varchar(50) NOT NULL,
+  "name_format_url" varchar NOT NULL,
   "image_url" varchar,
   "plan_id" bigint NOT NULL,
   "last_payment_date" timestamptz NOT NULL DEFAULT (NOW()),

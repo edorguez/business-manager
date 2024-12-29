@@ -76,6 +76,7 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 	return &company.GetCompanyResponse{
 		Id:              c.ID,
 		Name:            c.Name,
+		NameFormatUrl:   c.NameFormatUrl,
 		ImageUrl:        type_converter.NewString(c.ImageUrl),
 		PlanId:          c.PlanID,
 		LastPaymentDate: timestamppb.New(c.LastPaymentDate),
@@ -112,6 +113,7 @@ func (s *CompanyService) GetCompanyByName(ctx context.Context, req *company.GetC
 	return &company.GetCompanyByNameResponse{
 		Id:              c.ID,
 		Name:            c.Name,
+		NameFormatUrl:   c.NameFormatUrl,
 		ImageUrl:        type_converter.NewString(c.ImageUrl),
 		PlanId:          c.PlanID,
 		LastPaymentDate: timestamppb.New(c.LastPaymentDate),
@@ -145,6 +147,7 @@ func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompa
 		companies = append(companies, &company.GetCompanyResponse{
 			Id:              v.ID,
 			Name:            v.Name,
+			NameFormatUrl:   v.NameFormatUrl,
 			ImageUrl:        type_converter.NewString(v.ImageUrl),
 			PlanId:          v.PlanID,
 			LastPaymentDate: timestamppb.New(v.LastPaymentDate),
@@ -166,9 +169,10 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, req *company.UpdateC
 	fmt.Println("----------------")
 
 	params := db.UpdateCompanyParams{
-		ID:       req.Id,
-		Name:     req.Name,
-		ImageUrl: type_converter.NewSqlNullString(req.ImageUrl),
+		ID:            req.Id,
+		Name:          req.Name,
+		NameFormatUrl: req.NameFormatUrl,
+		ImageUrl:      type_converter.NewSqlNullString(req.ImageUrl),
 	}
 
 	_, err := s.Repo.UpdateCompany(ctx, params)

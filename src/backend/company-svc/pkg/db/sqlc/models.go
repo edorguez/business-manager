@@ -12,6 +12,7 @@ import (
 type CompanyCompany struct {
 	ID              int64          `json:"id"`
 	Name            string         `json:"name"`
+	NameFormatUrl   string         `json:"name_format_url"`
 	ImageUrl        sql.NullString `json:"image_url"`
 	PlanID          int64          `json:"plan_id"`
 	LastPaymentDate time.Time      `json:"last_payment_date"`
