@@ -16,6 +16,8 @@ type Config struct {
 	Auth_Svc_Port     string `mapstructure:"AUTH_SVC_PORT"`
 	Order_Svc_Url     string `mapstructure:"ORDER_SVC_URL"`
 	Order_Svc_Port    string `mapstructure:"ORDER_SVC_PORT"`
+	File_Svc_Url      string `mapstructure:"FILE_SVC_URL"`
+	File_Svc_Port     string `mapstructure:"FILE_SVC_PORT"`
 }
 
 func LoadConfig() (config Config, err error) {
