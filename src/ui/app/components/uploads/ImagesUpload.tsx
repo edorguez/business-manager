@@ -161,7 +161,7 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
           </div>
           <div className="w-100 flex justify-center mt-2">
             <small className="text-center text-slate-500">
-              Máximo {maxImagesNumber} imágenes (PNG, JPG, JPEG) y{" "}
+              Máximo {maxImagesNumber} {`${maxImagesNumber == 1 ? 'imagen' : 'imágenes'}`} (PNG, JPG, JPEG) y{" "}
               {Math.round(maxImageSizeMb)}mb de tamaño
             </small>
           </div>
