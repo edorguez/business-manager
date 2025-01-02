@@ -72,8 +72,15 @@ services:
         - "${ORDER_SVC_PORT}:${ORDER_SVC_PORT}"
       environment:
         - ENVIRONMENT=production
-      depends_on:
-        - whatsapp-db
+      restart: always
+
+  file-svc:
+      container_name: file-svc
+      image: EdoRguez/file-svc
+      ports:
+        - "${FILE_SVC_PORT}:${FILE_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
       restart: always
 
   customer-db:

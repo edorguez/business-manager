@@ -8,6 +8,7 @@ WORKDIR /workspace
 COPY product-svc.go.work go.work
 COPY product-svc/go.mod product-svc/go.mod
 COPY company-svc/go.mod company-svc/go.mod
+COPY file-svc/go.mod file-svc/go.mod
 
 # Download dependencies for product-svc
 WORKDIR /workspace/product-svc
@@ -27,6 +28,7 @@ WORKDIR /workspace
 COPY --from=deps /workspace /workspace
 COPY product-svc/ product-svc/
 COPY company-svc/ company-svc/
+COPY file-svc/ file-svc/
 
 # Build the binary for product-svc
 WORKDIR /workspace/product-svc

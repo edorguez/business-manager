@@ -7,6 +7,7 @@ import (
 
 	"github.com/EdoRguez/business-manager/file-svc/pkg/config"
 	file "github.com/EdoRguez/business-manager/file-svc/pkg/pb/file"
+	s3 "github.com/EdoRguez/business-manager/file-svc/pkg/s3"
 )
 
 type FileService struct {
@@ -14,43 +15,33 @@ type FileService struct {
 	file.UnimplementedFileServiceServer
 }
 
-func (s *FileService) UploadFile(ctx context.Context, req *file.UploadFileRequest) (*file.UploadFileResponse, error) {
+func (s *FileService) UploadFile(ctx context.Context, req *file.UploadFilesRequest) (*file.UploadFilesResponse, error) {
 	fmt.Println("File Service :  UploadFile")
 	fmt.Println("File Service :  UplaodFile - Req")
 	fmt.Println(req)
 	fmt.Println("----------------")
 
-	errChan := make(chan error)
-	// go func() {
-	// 	defer close(errChan)
-	// 	_, err := client.CreateCustomer(&customer.CreateCustomerRequest{
-	// 		CompanyId:            req.CompanyId,
-	// 		FirstName:            req.Customer.FirstName,
-	// 		LastName:             req.Customer.LastName,
-	// 		Phone:                &req.Customer.Phone,
-	// 		IdentificationNumber: req.Customer.IdentificationNumber,
-	// 		IdentificationType:   req.Customer.IdentificationType,
-	// 	}, ctx)
+	s3Files := make([]s3.S3File, len(req.Files))
+	for i, f := range req.Files {
+		s3Files[i] = s3.S3File{
+			FileName: f.FileName,
+			FileData: f.FileData,
+		}
+	}
 
-	// 	if err != nil {
-	// 		fmt.Println("File Service :  UploadFile - ERROR")
-	// 		fmt.Println(err.Error())
-	// 		errChan <- err
-	// 		return
-	// 	}
-
-	// 	errChan <- nil
-	// }()
-
-	if errS3 := <-errChan; errS3 != nil {
-		return &file.UploadFileResponse{
-			Status: http.StatusInternalServerError,
-			Error:  errS3.Error(),
+	filesUrls, err := s3.UploadFiles(s.Config, req.BucketName, req.FolderName, s3Files)
+	if err != nil {
+		fmt.Println("File Service :  UploadFile - ERROR")
+		fmt.Println(err.Error())
+		return &file.UploadFilesResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
 		}, nil
 	}
 
 	fmt.Println("File Service :  UploadFile - SUCCESS")
-	return &file.UploadFileResponse{
-		Status: http.StatusCreated,
+	return &file.UploadFilesResponse{
+		FileUrls: filesUrls,
+		Status:   http.StatusOK,
 	}, nil
 }

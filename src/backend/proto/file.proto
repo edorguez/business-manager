@@ -5,10 +5,10 @@ package file;
 option go_package= "./file";
 
 service FileService{
-  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse);
+  rpc UploadFiles(UploadFilesRequest) returns (UploadFilesResponse);
 }
 
-message UploadFileRequest{
+message UploadFilesRequest{
   string bucketName = 1;
   string folderName = 2;
   repeated FileData files = 3;
@@ -16,11 +16,11 @@ message UploadFileRequest{
 
 message FileData {
     string fileName = 1;
-    bytes file = 2;
+    bytes fileData = 2;
 }
 
-message UploadFileResponse{
-  repeated string filePaths = 1;
+message UploadFilesResponse{
+  repeated string fileUrls = 1;
   int64 status = 2;
   string error = 3;
 }
