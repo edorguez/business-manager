@@ -24,13 +24,13 @@ func main() {
 
 	fmt.Println("Client Service ON: ", c.Port)
 
-	ps := services.FileService{
+	s := services.FileService{
 		Config: &c,
 	}
 
 	grpcServer := grpc.NewServer()
 
-	pbfile.RegisterFileServiceServer(grpcServer, &ps)
+	pbfile.RegisterFileServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

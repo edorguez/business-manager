@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  Button,
-} from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { Company } from "../types/company";
 import { Product } from "../types/product";
@@ -23,30 +21,32 @@ const SitePage = () => {
   const isLoading = useGeneralLoading();
   const [company, setCompany] = useState<Company | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  
+
   const getCompany = useCallback(async () => {
-    let getCompany: Company = await GetCompanyByNameRequest(params.site_id.toString());
-     if(!getCompany?.id || getCompany?.lastPaymentDate < new Date()) {
-      console.log('EPA FUERA');
+    let getCompany: Company = await GetCompanyByNameRequest(
+      params.site_id.toString()
+    );
+    if (!getCompany?.id || getCompany?.lastPaymentDate < new Date()) {
+      console.log("EPA FUERA");
       // I need to create my not found route
-      router.push('/404')
-     } else {
+      router.push("/404");
+    } else {
       setCompany(getCompany);
       companyInfo.setCompany(getCompany);
       getProductsByCompanyId(getCompany);
-      
+
       isLoading.onEndLoading();
-     }
+    }
   }, [params.site_id, router]);
 
   const getProductsByCompanyId = useCallback(async (comp: Company) => {
     let getProducts: Product[] = await GetProductsRequest({
       companyId: comp.id,
-      name: '',
-      sku: '',
+      name: "",
+      sku: "",
       productStatus: 1,
       limit: 10,
-      offset: 0
+      offset: 0,
     });
 
     setProducts(getProducts);
@@ -54,7 +54,7 @@ const SitePage = () => {
 
   useEffect(() => {
     getCompany();
-  }, [getCompany])
+  }, [getCompany]);
 
   const getTotalItems = (): number => {
     return cart.items.reduce((total, item) => total + item.quantity, 0);
@@ -67,7 +67,7 @@ const SitePage = () => {
         <header className="bg-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-maincolor">
-              { company?.name }
+              {company?.name}
             </h1>
             <div className="flex items-center space-x-4">
               <Button variant="main" onClick={cart.onOpen}>
@@ -82,7 +82,13 @@ const SitePage = () => {
           {/* <h2 className="text-2xl font-semibold mb-6">Our Menu</h2> */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} onAddToCard={() => { cart.onAddToCart(product) }} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCard={() => {
+                  cart.onAddToCart(product);
+                }}
+              />
             ))}
           </div>
         </main>
@@ -92,6 +98,6 @@ const SitePage = () => {
       </div>
     </div>
   );
-}
+};
 
 export default SitePage;

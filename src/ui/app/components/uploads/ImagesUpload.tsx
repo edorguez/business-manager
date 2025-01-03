@@ -10,12 +10,14 @@ interface ImagesUploadProps {
   showAddImage: boolean;
   maxImagesNumber?: number;
   maxImageSizeMb?: number;
+  onUploadFiles: (files: File[]) => void;
 }
 
 const ImagesUpload: React.FC<ImagesUploadProps> = ({
   showAddImage,
   maxImagesNumber = 5,
   maxImageSizeMb = 2.2, // Some files of 2mb are rounded to 2.2
+  onUploadFiles
 }) => {
   const toast = useToast();
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -35,6 +37,8 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
       if (filesToLoad.length > 0) {
         // Set the uploaded files
         setUploadedFiles((prevFiles) => [...prevFiles, ...filesToLoad]);
+        // Call the callback function to upload the files
+        onUploadFiles(filesToLoad);
         // Read and set preview URLs for each file
         filesToLoad.forEach((file: any) => {
           const reader = new FileReader();

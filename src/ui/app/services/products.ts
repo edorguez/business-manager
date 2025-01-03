@@ -20,10 +20,24 @@ export async function CreateProductRequest(request: CreateProduct) {
     if (request.price) request.price = +request.price;
     if (request.quantity) request.quantity = +request.quantity;
 
+    const formData = new FormData();
+
+    // Add JSON data as a string
+    formData.append("json", JSON.stringify(request));
+
+    // Add images to the FormData
+    request.images.forEach((image, index) => {
+      formData.append(`files`, image);
+    });
+
+    console.log('check')
+    console.log(request.images)
+    console.log(formData);
+
     const res = await fetch(baseUrl, {
       method: "POST",
       headers: headers,
-      body: JSON.stringify(request),
+      body: formData,
     });
 
     let response = await res.json();

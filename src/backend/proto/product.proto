@@ -21,7 +21,7 @@ message CreateProductRequest{
   optional string sku = 4;
   uint64 quantity = 5;
   uint64 price = 6;
-  repeated string images = 7;
+  repeated bytes images = 7;
   uint32 productStatus = 8;
 }
 

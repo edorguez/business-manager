@@ -14,7 +14,7 @@ import (
 var fileServiceClient pb.FileServiceClient
 
 func InitFileServiceClient(c *config.Config) error {
-	fmt.Println("Company Client :  InitCompanyServiceClient")
+	fmt.Println("File Client :  InitFileServiceClient")
 
 	appEnv := os.Getenv("ENVIRONMENT")
 	if appEnv == "" {
@@ -54,6 +54,13 @@ func UploadFiles(bucketName string, folderName string, files []FileData, c conte
 		BucketName: bucketName,
 		FolderName: folderName,
 		Files:      make([]*pb.FileData, len(files)),
+	}
+
+	for i, file := range files {
+		params.Files[i] = &pb.FileData{
+			FileName: file.FileName,
+			FileData: file.FileData,
+		}
 	}
 
 	res, err := fileServiceClient.UploadFiles(c, params)

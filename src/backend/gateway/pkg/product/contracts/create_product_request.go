@@ -9,7 +9,7 @@ type CreateProductRequest struct {
 	Sku           *string  `json:"sku" validate:"omitempty,max=12"`
 	Quantity      uint64   `json:"quantity" validate:"required"`
 	Price         uint64   `json:"price" validate:"required"`
-	Images        []string `json:"images" validate:"required,max=5,dive"`
+	Images        [][]byte `json:"images"`
 	ProductStatus uint32   `json:"productStatus" validate:"required"`
 }
 

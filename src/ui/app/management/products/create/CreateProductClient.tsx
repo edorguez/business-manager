@@ -153,6 +153,13 @@ const CreateProductClient = () => {
     });
   };
 
+  const handleUploadFiles = (files: File[]) => {
+    console.log('handle')
+    console.log(files);
+    setFormData((prevFormData) => ({ ...prevFormData, ['images']: files }));
+    console.log(formData);
+  }
+
   return (
     <div>
       <SimpleCard>
@@ -236,7 +243,7 @@ const CreateProductClient = () => {
           <div className="p-1">
             <label className="text-sm">Imágenes</label>
             <div className="border rounded py-5 px-3">
-              <ImagesUpload showAddImage={true} />
+              <ImagesUpload showAddImage={true} onUploadFiles={handleUploadFiles}/>
             </div>
           </div>
         </SimpleCard>

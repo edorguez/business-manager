@@ -1,14 +1,17 @@
 package routes
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	companyClient "github.com/EdoRguez/business-manager/gateway/pkg/company/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/config"
 	productClient "github.com/EdoRguez/business-manager/gateway/pkg/product/client"
 	"github.com/EdoRguez/business-manager/gateway/pkg/product/contracts"
+	"github.com/EdoRguez/business-manager/gateway/pkg/util/file_validator"
 )
 
 func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
@@ -17,6 +20,49 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 
 	// We got our body through context, since we saved it in a middleware
 	body := r.Context().Value("keyProductCreate").(contracts.CreateProductRequest)
+
+	// Get the files
+	files := r.MultipartForm.File["files"]
+	for _, fileHeader := range files {
+		// Open the file
+		file, err := fileHeader.Open()
+		if err != nil {
+			http.Error(w, "Failed to open file", http.StatusInternalServerError)
+			return
+		}
+		defer file.Close()
+
+		// Read a small portion of the file to determine the content type
+		buffer := make([]byte, 512)
+		_, err = file.Read(buffer)
+		if err != nil && err != io.EOF {
+			http.Error(w, "Failed to read file", http.StatusInternalServerError)
+			return
+		}
+
+		// Reset the file pointer
+		file.Seek(0, io.SeekStart)
+
+		// Detect the content type
+		contentType := http.DetectContentType(buffer)
+		if !file_validator.IsValidImage(contentType) {
+			json.NewEncoder(w).Encode(&contracts.Error{
+				Status: http.StatusInternalServerError,
+				Error:  "Invalid file type uploaded",
+			})
+			return
+		}
+
+		// Read the entire file
+		fileData := bytes.NewBuffer(nil)
+		_, err = io.Copy(fileData, file)
+		if err != nil {
+			http.Error(w, "Failed to read file data", http.StatusInternalServerError)
+			return
+		}
+
+		body.Images = append(body.Images, fileData.Bytes())
+	}
 
 	fmt.Println("API Gateway :  CreateProduct - Body")
 	fmt.Println(body)

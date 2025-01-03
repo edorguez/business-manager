@@ -15,9 +15,9 @@ type FileService struct {
 	file.UnimplementedFileServiceServer
 }
 
-func (s *FileService) UploadFile(ctx context.Context, req *file.UploadFilesRequest) (*file.UploadFilesResponse, error) {
-	fmt.Println("File Service :  UploadFile")
-	fmt.Println("File Service :  UplaodFile - Req")
+func (s *FileService) UploadFiles(ctx context.Context, req *file.UploadFilesRequest) (*file.UploadFilesResponse, error) {
+	fmt.Println("File Service :  UploadFiles")
+	fmt.Println("File Service :  UplaodFiles - Req")
 	fmt.Println(req)
 	fmt.Println("----------------")
 
@@ -31,7 +31,7 @@ func (s *FileService) UploadFile(ctx context.Context, req *file.UploadFilesReque
 
 	filesUrls, err := s3.UploadFiles(s.Config, req.BucketName, req.FolderName, s3Files)
 	if err != nil {
-		fmt.Println("File Service :  UploadFile - ERROR")
+		fmt.Println("File Service :  UploadFiles - ERROR")
 		fmt.Println(err.Error())
 		return &file.UploadFilesResponse{
 			Status: http.StatusConflict,
@@ -39,7 +39,7 @@ func (s *FileService) UploadFile(ctx context.Context, req *file.UploadFilesReque
 		}, nil
 	}
 
-	fmt.Println("File Service :  UploadFile - SUCCESS")
+	fmt.Println("File Service :  UploadFiles - SUCCESS")
 	return &file.UploadFilesResponse{
 		FileUrls: filesUrls,
 		Status:   http.StatusOK,

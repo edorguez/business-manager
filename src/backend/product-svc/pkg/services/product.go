@@ -12,6 +12,7 @@ import (
 	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
 	product "github.com/EdoRguez/business-manager/product-svc/pkg/pb/product"
 	repo "github.com/EdoRguez/business-manager/product-svc/pkg/repository"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -28,6 +29,13 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 	fmt.Println("----------------")
 
 	if err := client.InitCompanyServiceClient(s.Config); err != nil {
+		return &product.CreateProductResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if err := client.InitFileServiceClient(s.Config); err != nil {
 		return &product.CreateProductResponse{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
@@ -69,6 +77,25 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 		}
 	}
 
+	var fileData []client.FileData
+
+	for _, v := range req.Images {
+		fileData = append(fileData, client.FileData{
+			FileName: fmt.Sprintf("company-%d-product-%s", req.CompanyId, uuid.New()),
+			FileData: v,
+		})
+	}
+
+	uploadFiles, err := client.UploadFiles("business-manager-bucket-s3", "images", fileData, ctx)
+	if err != nil {
+		fmt.Println("Product Service :  CreateProduct - ERROR")
+		fmt.Println(err.Error())
+		return &product.CreateProductResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
 	createProductParams := models.Product{
 		CompanyId:     req.CompanyId,
 		Name:          req.Name,
@@ -76,7 +103,7 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 		Sku:           req.Sku,
 		Quantity:      req.Quantity,
 		Price:         req.Price,
-		Images:        req.Images,
+		Images:        uploadFiles.FileUrls,
 		ProductStatus: req.ProductStatus,
 		CreatedAt:     time.Now(),
 		ModifiedAt:    time.Now(),
