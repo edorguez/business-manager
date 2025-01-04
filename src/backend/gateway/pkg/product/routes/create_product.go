@@ -21,6 +21,8 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	// We got our body through context, since we saved it in a middleware
 	body := r.Context().Value("keyProductCreate").(contracts.CreateProductRequest)
 
+	var images [][]byte
+
 	// Get the files
 	files := r.MultipartForm.File["files"]
 	for _, fileHeader := range files {
@@ -61,7 +63,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 			return
 		}
 
-		body.Images = append(body.Images, fileData.Bytes())
+		images = append(images, fileData.Bytes())
 	}
 
 	fmt.Println("API Gateway :  CreateProduct - Body")
@@ -92,7 +94,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		return
 	}
 
-	res, err := productClient.CreateProduct(body, r.Context())
+	res, err := productClient.CreateProduct(body, images, r.Context())
 	if err != nil {
 		fmt.Println("API Gateway :  CreateProduct - ERROR")
 		json.NewEncoder(w).Encode(err)

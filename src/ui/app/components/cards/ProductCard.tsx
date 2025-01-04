@@ -19,7 +19,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
         key={product.id}
         className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
         >
-        <Image src={'/images/products/no_product.png'} alt={product.name} width={38} height={38} className="w-full h-48 object-cover" />
+        <div className="relative w-full h-60">
+            <Image
+                src={ product.images ? product.images[0] : '/images/products/no_product.png'} 
+                alt={product.name}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-t-lg"
+            />
+        </div>
         <div className="p-4">
             <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
             <p className="text-gray-600 mb-2">{product.description}</p>

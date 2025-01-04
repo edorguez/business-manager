@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 const baseUrl: string = "http://localhost:3001/api/products";
 
-export async function CreateProductRequest(request: CreateProduct) {
+export async function CreateProductRequest(request: CreateProduct, images: File[]) {
   try {
     const headers = new Headers();
     const token = Cookies.get("token");
@@ -26,13 +26,9 @@ export async function CreateProductRequest(request: CreateProduct) {
     formData.append("json", JSON.stringify(request));
 
     // Add images to the FormData
-    request.images.forEach((image, index) => {
+    images.forEach((image, index) => {
       formData.append(`files`, image);
     });
-
-    console.log('check')
-    console.log(request.images)
-    console.log(formData);
 
     const res = await fetch(baseUrl, {
       method: "POST",

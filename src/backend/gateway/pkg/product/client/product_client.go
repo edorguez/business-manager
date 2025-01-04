@@ -43,7 +43,7 @@ func InitProductServiceClient(c *config.Config) error {
 	return nil
 }
 
-func CreateProduct(body contracts.CreateProductRequest, c context.Context) (*pb.CreateProductResponse, *contracts.Error) {
+func CreateProduct(body contracts.CreateProductRequest, images [][]byte, c context.Context) (*pb.CreateProductResponse, *contracts.Error) {
 	fmt.Println("Product CLIENT :  CreateProduct")
 
 	fmt.Println("Product CLIENT :  CreateProduct - Body")
@@ -57,7 +57,7 @@ func CreateProduct(body contracts.CreateProductRequest, c context.Context) (*pb.
 		Sku:           body.Sku,
 		Quantity:      body.Quantity,
 		Price:         body.Price,
-		Images:        body.Images,
+		Images:        images,
 		ProductStatus: body.ProductStatus,
 	}
 

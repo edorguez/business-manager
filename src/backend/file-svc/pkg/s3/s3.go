@@ -30,8 +30,8 @@ func UploadFiles(c *config.Config, bucketName string, folderName string, files [
 
 	svc := s3.New(sess)
 	var wg sync.WaitGroup
+	var errUpload error
 	urls := make([]string, len(files))
-	errs := make([]error, len(files))
 
 	for i, file := range files {
 		wg.Add(1)
@@ -41,10 +41,10 @@ func UploadFiles(c *config.Config, bucketName string, folderName string, files [
 				Bucket: aws.String(bucketName),
 				Key:    aws.String(folderName + "/" + file.FileName),
 				Body:   bytes.NewReader(file.FileData),
-				ACL:    aws.String("public-read"),
+				// ACL:    aws.String("public-read"),
 			})
 			if err != nil {
-				errs[i] = fmt.Errorf("failed to upload file %s: %w", file.FileName, err)
+				errUpload = fmt.Errorf("failed to upload file %s: %w", file.FileName, err)
 				return
 			}
 			// https://business-manager-bucket-s3.s3.us-east-1.amazonaws.com/images/myImage.png
@@ -54,11 +54,5 @@ func UploadFiles(c *config.Config, bucketName string, folderName string, files [
 
 	wg.Wait()
 
-	for _, err := range errs {
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return urls, nil
+	return urls, errUpload
 }

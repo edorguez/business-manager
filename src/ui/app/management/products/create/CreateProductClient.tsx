@@ -43,11 +43,11 @@ const CreateProductClient = () => {
   const toast = useToast();
   const { push } = useRouter();
   const [inputPrice, setInputPrice] = useState<string>("");
+  const [images, setImages] = useState<File[]>([]);
   const [formData, setFormData] = useState<CreateProduct>({
     companyId: 0,
     name: "",
     description: "",
-    images: [],
     sku: "",
     quantity: undefined,
     price: undefined,
@@ -93,7 +93,7 @@ const CreateProductClient = () => {
   const onSubmit = async () => {
     if (isFormValid()) {
       isLoading.onStartLoading();
-      let createProduct: any = await CreateProductRequest(formData);
+      let createProduct: any = await CreateProductRequest(formData, images);
       if (!createProduct.error) {
         isLoading.onEndLoading();
         showSuccessCreationMessage("Producto creado exitosamente");
@@ -154,10 +154,7 @@ const CreateProductClient = () => {
   };
 
   const handleUploadFiles = (files: File[]) => {
-    console.log('handle')
-    console.log(files);
-    setFormData((prevFormData) => ({ ...prevFormData, ['images']: files }));
-    console.log(formData);
+    setImages(files);
   }
 
   return (

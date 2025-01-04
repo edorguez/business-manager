@@ -33,10 +33,7 @@ func (s *FileService) UploadFiles(ctx context.Context, req *file.UploadFilesRequ
 	if err != nil {
 		fmt.Println("File Service :  UploadFiles - ERROR")
 		fmt.Println(err.Error())
-		return &file.UploadFilesResponse{
-			Status: http.StatusConflict,
-			Error:  err.Error(),
-		}, nil
+		return nil, err
 	}
 
 	fmt.Println("File Service :  UploadFiles - SUCCESS")

@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https', //DELETE THIS OBJECT
-        hostname: 'marketplace.canva.com', // DELETE THIS OBJECT
+        protocol: 'https',
+        hostname: 'business-manager-bucket-s3.s3.us-east-1.amazonaws.com',
       }
     ],
   },

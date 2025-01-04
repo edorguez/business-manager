@@ -13,7 +13,6 @@ export type CreateProduct = {
   companyId: number;
   name: string;
   description: string;
-  images: File[];
   sku: string;
   quantity: number | undefined;
   price: number | undefined;
