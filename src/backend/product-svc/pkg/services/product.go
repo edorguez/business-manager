@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/EdoRguez/business-manager/product-svc/pkg/client"
@@ -336,6 +337,13 @@ func (s *ProductService) DeleteProduct(ctx context.Context, req *product.DeleteP
 	fmt.Println(req)
 	fmt.Println("----------------")
 
+	if err := client.InitFileServiceClient(s.Config); err != nil {
+		return &product.DeleteProductResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
 	objID, err := primitive.ObjectIDFromHex(req.Id)
 	if err != nil {
 		return &product.DeleteProductResponse{
@@ -344,12 +352,41 @@ func (s *ProductService) DeleteProduct(ctx context.Context, req *product.DeleteP
 		}, nil
 	}
 
+	p, err := s.Repo.GetProduct(ctx, objID)
+	if err != nil {
+		fmt.Println("Product Service :  DeleteProduct - ERROR")
+		fmt.Println(err.Error())
+		return &product.DeleteProductResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	imagesNames := make([]string, 0, len(p.Images))
+	for i := 0; i < len(p.Images); i++ {
+		lastIndex := strings.LastIndex(p.Images[i], "/")
+		imagesNames = append(imagesNames, p.Images[i][lastIndex+1:])
+	}
+
 	err = s.Repo.DeleteProduct(ctx, objID)
 	if err != nil {
 		fmt.Println("Product Service :  DeleteProduct - ERROR")
 		fmt.Println(err.Error())
 		return &product.DeleteProductResponse{
 			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	fmt.Println("Product Service :  DeleteProduct - Images To Delete")
+	fmt.Println(imagesNames)
+
+	_, err = client.DeleteFiles("business-manager-bucket-s3", "images", imagesNames, ctx)
+	if err != nil {
+		fmt.Println("Product Service :  DeleteProduct - ERROR")
+		fmt.Println(err.Error())
+		return &product.DeleteProductResponse{
+			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}

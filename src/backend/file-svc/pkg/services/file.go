@@ -17,7 +17,7 @@ type FileService struct {
 
 func (s *FileService) UploadFiles(ctx context.Context, req *file.UploadFilesRequest) (*file.UploadFilesResponse, error) {
 	fmt.Println("File Service :  UploadFiles")
-	fmt.Println("File Service :  UplaodFiles - Req")
+	fmt.Println("File Service :  UploadFiles - Req")
 	fmt.Println(req)
 	fmt.Println("----------------")
 
@@ -40,5 +40,24 @@ func (s *FileService) UploadFiles(ctx context.Context, req *file.UploadFilesRequ
 	return &file.UploadFilesResponse{
 		FileUrls: filesUrls,
 		Status:   http.StatusOK,
+	}, nil
+}
+
+func (s *FileService) DeleteFiles(ctx context.Context, req *file.DeleteFilesRequest) (*file.DeleteFilesResponse, error) {
+	fmt.Println("File Service :  DeleteFiles")
+	fmt.Println("File Service :  DeleteFiles - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	err := s3.DeleteFiles(s.Config, req.BucketName, req.FolderName, req.FileNames)
+	if err != nil {
+		fmt.Println("File Service :  DeleteFiles - ERROR")
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	fmt.Println("File Service :  DeleteFiles - SUCCESS")
+	return &file.DeleteFilesResponse{
+		Status: http.StatusOK,
 	}, nil
 }

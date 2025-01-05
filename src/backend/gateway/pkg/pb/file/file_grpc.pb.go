@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	FileService_UploadFiles_FullMethodName = "/file.FileService/UploadFiles"
+	FileService_DeleteFiles_FullMethodName = "/file.FileService/DeleteFiles"
 )
 
 // FileServiceClient is the client API for FileService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileServiceClient interface {
 	UploadFiles(ctx context.Context, in *UploadFilesRequest, opts ...grpc.CallOption) (*UploadFilesResponse, error)
+	DeleteFiles(ctx context.Context, in *DeleteFilesRequest, opts ...grpc.CallOption) (*DeleteFilesResponse, error)
 }
 
 type fileServiceClient struct {
@@ -47,11 +49,22 @@ func (c *fileServiceClient) UploadFiles(ctx context.Context, in *UploadFilesRequ
 	return out, nil
 }
 
+func (c *fileServiceClient) DeleteFiles(ctx context.Context, in *DeleteFilesRequest, opts ...grpc.CallOption) (*DeleteFilesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteFilesResponse)
+	err := c.cc.Invoke(ctx, FileService_DeleteFiles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileServiceServer is the server API for FileService service.
 // All implementations must embed UnimplementedFileServiceServer
 // for forward compatibility.
 type FileServiceServer interface {
 	UploadFiles(context.Context, *UploadFilesRequest) (*UploadFilesResponse, error)
+	DeleteFiles(context.Context, *DeleteFilesRequest) (*DeleteFilesResponse, error)
 	mustEmbedUnimplementedFileServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedFileServiceServer struct{}
 
 func (UnimplementedFileServiceServer) UploadFiles(context.Context, *UploadFilesRequest) (*UploadFilesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadFiles not implemented")
+}
+func (UnimplementedFileServiceServer) DeleteFiles(context.Context, *DeleteFilesRequest) (*DeleteFilesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFiles not implemented")
 }
 func (UnimplementedFileServiceServer) mustEmbedUnimplementedFileServiceServer() {}
 func (UnimplementedFileServiceServer) testEmbeddedByValue()                     {}
@@ -104,6 +120,24 @@ func _FileService_UploadFiles_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileService_DeleteFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFilesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServiceServer).DeleteFiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileService_DeleteFiles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServiceServer).DeleteFiles(ctx, req.(*DeleteFilesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FileService_ServiceDesc is the grpc.ServiceDesc for FileService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var FileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadFiles",
 			Handler:    _FileService_UploadFiles_Handler,
+		},
+		{
+			MethodName: "DeleteFiles",
+			Handler:    _FileService_DeleteFiles_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

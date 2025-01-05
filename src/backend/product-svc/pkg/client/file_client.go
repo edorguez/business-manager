@@ -83,3 +83,32 @@ func UploadFiles(bucketName string, folderName string, files []FileData, c conte
 		Status:   http.StatusOK,
 	}, nil
 }
+
+func DeleteFiles(bucketName string, folderName string, fileNames []string, c context.Context) (*pb.DeleteFilesResponse, error) {
+	fmt.Println("File CLIENT :  DeleteFiles")
+
+	params := &pb.DeleteFilesRequest{
+		BucketName: bucketName,
+		FolderName: folderName,
+		FileNames:  fileNames,
+	}
+
+	res, err := fileServiceClient.DeleteFiles(c, params)
+
+	if err != nil {
+		fmt.Println("File CLIENT :  DeleteFiles - ERROR")
+		fmt.Println(err.Error())
+
+		return nil, err
+	}
+
+	fmt.Println("File CLIENT :  DeleteFiles - SUCCESS")
+
+	if res.Status != http.StatusOK {
+		return nil, err
+	}
+
+	return &pb.DeleteFilesResponse{
+		Status: http.StatusOK,
+	}, nil
+}

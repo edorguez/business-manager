@@ -6,6 +6,7 @@ option go_package= "./file";
 
 service FileService{
   rpc UploadFiles(UploadFilesRequest) returns (UploadFilesResponse);
+  rpc DeleteFiles(DeleteFilesRequest) returns (DeleteFilesResponse);
 }
 
 message UploadFilesRequest{
@@ -23,4 +24,15 @@ message UploadFilesResponse{
   repeated string fileUrls = 1;
   int64 status = 2;
   string error = 3;
+}
+
+message DeleteFilesRequest{
+  string bucketName = 1;
+  string folderName = 2;
+  repeated string fileNames = 3;
+}
+
+message DeleteFilesResponse{
+  int64 status = 1;
+  string error = 2;
 }

@@ -56,3 +56,36 @@ func UploadFiles(c *config.Config, bucketName string, folderName string, files [
 
 	return urls, errUpload
 }
+
+func DeleteFiles(c *config.Config, bucketName string, folderName string, files []string) error {
+	sess, err := session.NewSession(&aws.Config{
+		Region:      aws.String(region),
+		Credentials: credentials.NewStaticCredentials(c.Aws_Access_Key_Id, c.Aws_Secret_Access_Key_Id, ""),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create S3 session: %w", err)
+	}
+
+	svc := s3.New(sess)
+	var wg sync.WaitGroup
+	var errDelete error
+
+	for _, file := range files {
+		wg.Add(1)
+		go func(file string) {
+			defer wg.Done()
+			_, err := svc.DeleteObject(&s3.DeleteObjectInput{
+				Bucket: aws.String(bucketName),
+				Key:    aws.String(folderName + "/" + file),
+			})
+			if err != nil {
+				errDelete = fmt.Errorf("failed to delete file %s: %w", file, err)
+				return
+			}
+		}(file)
+	}
+
+	wg.Wait()
+
+	return errDelete
+}
