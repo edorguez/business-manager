@@ -2,21 +2,23 @@
 
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import SimpleToast from "../toasts/SimpleToast";
 
 interface ImagesUploadProps {
-  showAddImage: boolean;
+  isViewOnlyImage: boolean;
   maxImagesNumber?: number;
   maxImageSizeMb?: number;
+  defaultImages?: File[];
   onUploadFiles: (files: File[]) => void;
 }
 
 const ImagesUpload: React.FC<ImagesUploadProps> = ({
-  showAddImage,
+  isViewOnlyImage,
   maxImagesNumber = 5,
   maxImageSizeMb = 2.2, // Some files of 2mb are rounded to 2.2
+  defaultImages = [],
   onUploadFiles
 }) => {
   const toast = useToast();
@@ -36,8 +38,12 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
 
       if (filesToLoad.length > 0) {
         // Set the uploaded files
+        console.log("UOPADLODED ")
+        console.log(uploadedFiles);
         setUploadedFiles((prevFiles) => [...prevFiles, ...filesToLoad]);
         // Call the callback function to upload the files
+        console.log('again')
+        console.log(uploadedFiles);
         onUploadFiles(filesToLoad);
         // Read and set preview URLs for each file
         filesToLoad.forEach((file: any) => {
@@ -125,9 +131,31 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
     setImagePreviewUrls(updatedPreviewUrls);
   };
 
+  useEffect(() => {
+  console.log('uploadedFiles updated:', uploadedFiles);
+}, [uploadedFiles]);
+
+  useEffect(() => {
+    if (defaultImages.length > 0) {
+      setUploadedFiles(defaultImages);
+      onUploadFiles(defaultImages);
+      defaultImages.forEach((file: any) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          // Once the file is read, create a Blob URL for the image preview
+          if (reader.result) {
+            const blobUrl = URL.createObjectURL(file);
+            setImagePreviewUrls((prevUrls) => [...prevUrls, blobUrl]);
+          }
+        };
+      });
+    }
+  }, [defaultImages]);
+
   return (
     <>
-      {showAddImage && (
+      {!isViewOnlyImage && (
         <div>
           <div className="flex justify-center">
             <label
@@ -178,12 +206,17 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 place-items-center">
           {uploadedFiles.map((file, index) => (
             <div key={index} className="relative w-[100px]">
-              <button
-                onClick={() => handleRemoveImage(index)}
-                className="absolute top-[-10px] right-[-10px] rounded-full bg-thirdcolor hover:bg-rose-600 text-white text-lg p-1 transition duration-100"
-              >
-                <Icon icon="material-symbols:close" />
-              </button>
+              {
+                !isViewOnlyImage && (
+                  <button
+                    onClick={() => handleRemoveImage(index)}
+                    className="absolute top-[-10px] right-[-10px] rounded-full bg-thirdcolor hover:bg-rose-600 text-white text-lg p-1 transition duration-100"
+                  >
+                    <Icon icon="material-symbols:close" />
+                  </button>
+                )
+              }
+
               {imagePreviewUrls[index] && (
                 <Image
                   src={imagePreviewUrls[index]}

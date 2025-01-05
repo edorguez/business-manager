@@ -266,13 +266,11 @@ func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateP
 	fmt.Println(req)
 	fmt.Println("----------------")
 
-	params := models.Product{
-		Name:        req.Name,
-		Description: req.Description,
-		Sku:         req.Sku,
-		Quantity:    req.Quantity,
-		Price:       req.Price,
-		Images:      req.Images,
+	if err := client.InitFileServiceClient(s.Config); err != nil {
+		return &product.UpdateProductResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
 	}
 
 	objID, err := primitive.ObjectIDFromHex(req.Id)
@@ -281,6 +279,64 @@ func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateP
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}, nil
+	}
+
+	p, err := s.Repo.GetProduct(ctx, objID)
+	if err != nil {
+		fmt.Println("Product Service :  UpdateProduct - ERROR")
+		fmt.Println(err.Error())
+
+		return &product.UpdateProductResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	imagesNames := make([]string, 0, len(p.Images))
+	for i := 0; i < len(p.Images); i++ {
+		lastIndex := strings.LastIndex(p.Images[i], "/")
+		imagesNames = append(imagesNames, p.Images[i][lastIndex+1:])
+	}
+
+	fmt.Println("Product Service :  UpdateProduct - Images To Delete")
+	fmt.Println(imagesNames)
+
+	_, err = client.DeleteFiles("business-manager-bucket-s3", "images", imagesNames, ctx)
+	if err != nil {
+		fmt.Println("Product Service :  DeleteProduct - ERROR")
+		fmt.Println(err.Error())
+		return &product.UpdateProductResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	var fileData []client.FileData
+
+	for _, v := range req.Images {
+		fileData = append(fileData, client.FileData{
+			FileName: fmt.Sprintf("company-%d-product-%s", req.CompanyId, uuid.New()),
+			FileData: v,
+		})
+	}
+
+	uploadFiles, err := client.UploadFiles("business-manager-bucket-s3", "images", fileData, ctx)
+	if err != nil {
+		fmt.Println("Product Service :  UpdateProduct - ERROR")
+		fmt.Println(err.Error())
+		return &product.UpdateProductResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	params := models.Product{
+		Name:        req.Name,
+		Description: req.Description,
+		Sku:         req.Sku,
+		Quantity:    req.Quantity,
+		Price:       req.Price,
+		Images:      uploadFiles.FileUrls,
 	}
 
 	err = s.Repo.UpdateProduct(ctx, objID, params)

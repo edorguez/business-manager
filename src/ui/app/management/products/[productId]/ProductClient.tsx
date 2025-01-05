@@ -6,7 +6,7 @@ import SimpleCard from "@/app/components/cards/SimpleCard";
 import ImagesUpload from "@/app/components/uploads/ImagesUpload";
 import useLoading from "@/app/hooks/useLoading";
 import { BreadcrumItem } from "@/app/types";
-import { CreateProduct } from "@/app/types/product";
+import { CreateProduct, EditProduct } from "@/app/types/product";
 import {
   Button,
   Input,
@@ -45,11 +45,13 @@ const ProductClient = () => {
   const toast = useToast();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [inputPrice, setInputPrice] = useState<string>("");
-  const [formData, setFormData] = useState<CreateProduct>({
+  const [imagesToSave, setImagesToSave] = useState<File[]>([]);
+  const [imagesLoaded, setImagesLoaded] = useState<File[]>([]);
+  const [formData, setFormData] = useState<EditProduct>({
+    id: "",
     companyId: 0,
     name: "",
     description: "",
-    images: [],
     sku: "",
     quantity: undefined,
     price: undefined,
@@ -62,16 +64,31 @@ const ProductClient = () => {
     });
     if (product) {
       setFormData({
+        id: product.id,
         companyId: product.companyId,
         name: product.name ?? "",
         description: product.description ?? "",
-        images: product.images ?? [],
         sku: product.sku ?? "",
         quantity: product.quantity,
         price: product.price,
         productStatus: product.status,
       });
       setInputPrice(formatPriceNumberBackendToString(product.price));
+
+      if(product.images) {
+        // Convert image URLs to File[] type
+        const imageFiles = await Promise.all(
+          product.images.map(async (imageUrl: string) => {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const fileName = imageUrl.split('/').pop() || 'image.jpg';
+            const fileExtension = fileName.split('.').pop();
+            const fileBaseName = fileName.split('.').slice(0, -1).join('.');
+            return new File([blob], `${fileBaseName}.${fileExtension}`, { type: blob.type });
+          })
+        );
+        setImagesLoaded(imageFiles);
+      }
     }
   }, [params.productId]);
 
@@ -115,10 +132,7 @@ const ProductClient = () => {
   const onSubmit = async () => {
     if (isFormValid()) {
       isLoading.onStartLoading();
-      let editProduct: any = await EditProductRequest({
-        id: String(params.productId),
-        ...formData,
-      });
+      let editProduct: any = await EditProductRequest(formData, imagesToSave);
       if (editProduct?.error) {
         showErrorMessage(editProduct.error);
         isLoading.onEndLoading();
@@ -175,6 +189,12 @@ const ProductClient = () => {
       isClosable: true,
     });
   };
+
+  const handleUploadFiles = (files: File[]) => {
+    console.log('Base Updated')
+    console.log(files)
+    setImagesToSave(files);
+  }
 
   return (
     <div>
@@ -266,7 +286,7 @@ const ProductClient = () => {
           <div className="p-1">
             <label className="text-sm">Imágenes</label>
             <div className="border rounded py-5 px-3">
-              <ImagesUpload showAddImage={isEdit} />
+              <ImagesUpload isViewOnlyImage={!isEdit} onUploadFiles={handleUploadFiles} defaultImages={imagesLoaded} />
             </div>
           </div>
         </SimpleCard>

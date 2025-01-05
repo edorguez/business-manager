@@ -230,7 +230,7 @@ func GetLatestProducts(params *pb.GetLatestProductsRequest, c context.Context) (
 	return pr, nil
 }
 
-func UpdateProduct(id string, body contracts.UpdateProductRequest, c context.Context) (*pb.UpdateProductResponse, *contracts.Error) {
+func UpdateProduct(id string, body contracts.UpdateProductRequest, images [][]byte, c context.Context) (*pb.UpdateProductResponse, *contracts.Error) {
 	fmt.Println("Product CLIENT :  UpdateProduct")
 
 	fmt.Println("Product CLIENT :  UpdateProduct - Body")
@@ -239,12 +239,13 @@ func UpdateProduct(id string, body contracts.UpdateProductRequest, c context.Con
 
 	updateProductParams := &pb.UpdateProductRequest{
 		Id:          id,
+		CompanyId:   body.CompanyId,
 		Name:        body.Name,
 		Description: body.Description,
 		Sku:         body.Sku,
 		Quantity:    body.Quantity,
 		Price:       body.Price,
-		Images:      body.Images,
+		Images:      images,
 	}
 
 	res, err := productServiceClient.UpdateProduct(c, updateProductParams)

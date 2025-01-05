@@ -240,7 +240,7 @@ const CreateProductClient = () => {
           <div className="p-1">
             <label className="text-sm">Imágenes</label>
             <div className="border rounded py-5 px-3">
-              <ImagesUpload showAddImage={true} onUploadFiles={handleUploadFiles}/>
+              <ImagesUpload isViewOnlyImage={false} onUploadFiles={handleUploadFiles}/>
             </div>
           </div>
         </SimpleCard>

@@ -44,7 +44,7 @@ export async function CreateProductRequest(request: CreateProduct, images: File[
   }
 }
 
-export async function EditProductRequest(request: EditProduct) {
+export async function EditProductRequest(request: EditProduct, images: File[]) {
   try {
     const headers = new Headers();
     const token = Cookies.get("token");
@@ -53,10 +53,23 @@ export async function EditProductRequest(request: EditProduct) {
     if (request.price) request.price = +request.price;
     if (request.quantity) request.quantity = +request.quantity;
 
+    const formData = new FormData();
+
+    // Add JSON data as a string
+    formData.append("json", JSON.stringify(request));
+
+    // Add images to the FormData
+    images.forEach((image, index) => {
+      formData.append(`files`, image);
+    });
+
+    console.log('images')
+    console.log(images)
+
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: "PUT",
       headers: headers,
-      body: JSON.stringify(request),
+      body: formData,
     });
   } catch (error: any) {
     console.log(error.toString());

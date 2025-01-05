@@ -24,7 +24,6 @@ export type EditProduct = {
   companyId: number;
   name: string;
   description: string;
-  images: string[];
   sku: string;
   quantity: number | undefined;
   price: number | undefined;

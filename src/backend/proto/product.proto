@@ -77,12 +77,13 @@ message GetLatestProductsResponse{
 
 message UpdateProductRequest{
   string id = 1;
-  string name = 2;
-  optional string description = 3;
-  optional string sku = 4;
-  uint64 quantity = 5;
-  uint64 price = 6;
-  repeated string images = 7;
+  int64 companyId = 2;
+  string name = 3;
+  optional string description = 4;
+  optional string sku = 5;
+  uint64 quantity = 6;
+  uint64 price = 7;
+  repeated bytes images = 8;
 }
 
 message UpdateProductResponse{
