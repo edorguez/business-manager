@@ -14,5 +14,4 @@ export type EditCompany = {
   id: number;
   name: string;
   nameFormatUrl: string;
-  imageUrl: string;
 }

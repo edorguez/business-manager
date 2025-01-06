@@ -29,7 +29,7 @@ import {
 import { CurrentUser } from "@/app/types/auth";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import useLoading from "@/app/hooks/useLoading";
-import { EditEmail, EditPassword, EditUser, User } from "@/app/types/user";
+import { EditEmail, EditPassword, User } from "@/app/types/user";
 import {
   EditEmailRequest,
   EditPasswordRequest,
@@ -41,21 +41,29 @@ import { useRouter } from "next/navigation";
 import deleteUserSession from "@/app/actions/deleteUserSession";
 import isUserAdmin from "@/app/actions/isUserAdmin";
 import { PASSWORD } from "@/app/constants";
-import { validEmail, validLettersAndNumbers, validWithNoSpaces } from "@/app/utils/InputUtils";
+import {
+  validEmail,
+  validLettersAndNumbers,
+  validWithNoSpaces,
+} from "@/app/utils/InputUtils";
 import { formatCompanyNameToUrlName } from "@/app/utils/Utils";
+import useChangeCompanyImage from "@/app/hooks/useChangeCompanyImage";
 
 const AccountClient = () => {
   const { push } = useRouter();
   const isLoading = useLoading();
   const toast = useToast();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const { triggerSignal } = useChangeCompanyImage();
+  const [imagesToSave, setImagesToSave] = useState<File[]>([]);
+  const [imagesLoaded, setImagesLoaded] = useState<File[]>([]);
+  const [companyImageUrl, setCompanyImageUrl] = useState<string>("/images/account/user.png");
   const confirmChangeModal = useWarningModal();
 
   const [companyFormData, setCompanyFormData] = useState<EditCompany>({
     id: 0,
     name: "",
     nameFormatUrl: "",
-    imageUrl: "",
   });
   const [emailFormData, setEmailFormData] = useState<EditEmail>({
     id: 0,
@@ -70,21 +78,25 @@ const AccountClient = () => {
   const handleCompanyFormChange = (event: any) => {
     const { name, value } = event.target;
 
-    if(value && !validLettersAndNumbers(value, true)) return;
+    if (value && !validLettersAndNumbers(value, true)) return;
 
     let formatUrl = formatCompanyNameToUrlName(value);
-    setCompanyFormData((prev) => ({ ...prev, [name]: value, ['nameFormatUrl']: formatUrl }));
+    setCompanyFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ["nameFormatUrl"]: formatUrl,
+    }));
   };
 
   const handleEmailFormChange = (event: any) => {
     const { name, value } = event.target;
-    if(value && !validWithNoSpaces(value)) return;
+    if (value && !validWithNoSpaces(value)) return;
     setEmailFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordFormChange = (event: any) => {
     const { name, value } = event.target;
-    if(value && !validLettersAndNumbers(value)) return;
+    if (value && !validLettersAndNumbers(value)) return;
     setPasswordFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -100,8 +112,23 @@ const AccountClient = () => {
           id: company.id ?? 0,
           name: company.name ?? "",
           nameFormatUrl: company.nameFormatUrl ?? "",
-          imageUrl: company.imageUrl ?? "",
         });
+
+        if (company.imageUrl) {
+          // Convert image URL to File[] type
+          setCompanyImageUrl(company.imageUrl);
+          const response = await fetch(company.imageUrl);
+          const blob = await response.blob();
+          const fileName = company.imageUrl.split("/").pop() || "image.jpg";
+          const fileExtension = fileName.split(".").pop();
+          const fileBaseName = fileName.split(".").slice(0, -1).join(".");
+          const fileImage = new File(
+            [blob],
+            `${fileBaseName}.${fileExtension}`,
+            { type: blob.type }
+          );
+          setImagesLoaded([fileImage]);
+        }
       }
 
       isLoading.onEndLoading();
@@ -167,8 +194,7 @@ const AccountClient = () => {
       return false;
     if (passwordFormData.password.length < PASSWORD.MIN_PASSWORD_LEGTH)
       return false;
-    if (!validLettersAndNumbers(passwordFormData.password))
-      return false;
+    if (!validLettersAndNumbers(passwordFormData.password)) return false;
 
     return true;
   };
@@ -176,11 +202,15 @@ const AccountClient = () => {
   const onCompanySubmit = async () => {
     if (isCompanyFormValid()) {
       isLoading.onStartLoading();
-      let editCompany: any = await EditCompanyRequest(companyFormData);
+      let editCompany: any = await EditCompanyRequest(
+        companyFormData,
+        imagesToSave
+      );
       if (editCompany?.error) {
         isLoading.onEndLoading();
         showErrorMessage(editCompany.error);
       } else {
+        triggerSignal();
         isLoading.onEndLoading();
         showSuccessCreationMessage("Empresa modificada exitosamente");
       }
@@ -253,6 +283,22 @@ const AccountClient = () => {
     });
   };
 
+  const handleUploadFiles = (files: File[]) => {
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const imageUrl = event.target?.result as string;
+        setCompanyImageUrl(imageUrl);
+      };
+
+      reader.readAsDataURL(files[0]);
+    } else {
+      setCompanyImageUrl("/images/account/user.png");
+    }
+
+    setImagesToSave(files);
+  };
+
   return (
     <Container maxW="4xl" py={8}>
       <SimpleCard>
@@ -264,12 +310,24 @@ const AccountClient = () => {
         />
         <div className="p-4">
           <Flex align="center" gap={4}>
-            <Avatar size="xl" src="/placeholder.svg?height=80&width=80" />
+            <Avatar
+              size="xl"
+              src={
+                companyImageUrl
+              }
+            />
             <Box>
               <Heading size="lg" className="break-all">
                 {companyFormData.name}
               </Heading>
-              <span className="text-gray-500"><a href={`https://www.${companyFormData.nameFormatUrl}.com`} target="_blank">www.{companyFormData.nameFormatUrl}.com</a></span>
+              <span className="text-gray-500">
+                <a
+                  href={`https://www.${companyFormData.nameFormatUrl}.com`}
+                  target="_blank"
+                >
+                  www.{companyFormData.nameFormatUrl}.com
+                </a>
+              </span>
             </Box>
           </Flex>
           <Tabs isFitted variant="enclosed" className="mt-8">
@@ -303,7 +361,8 @@ const AccountClient = () => {
                       <ImagesUpload
                         maxImagesNumber={1}
                         isViewOnlyImage={!isAdmin}
-                        onUploadFiles={() => {}}
+                        onUploadFiles={handleUploadFiles}
+                        defaultImages={imagesLoaded}
                       />
                     </div>
                   </FormControl>

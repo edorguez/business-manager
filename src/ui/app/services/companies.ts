@@ -41,7 +41,7 @@ export async function GetCompanyByNameRequest(name: string) {
   }
 }
 
-export async function EditCompanyRequest(request: EditCompany) {
+export async function EditCompanyRequest(request: EditCompany, images: File[]) {
   try {
     const headers = new Headers();
     const token = Cookies.get("token");
@@ -49,10 +49,20 @@ export async function EditCompanyRequest(request: EditCompany) {
 
     request.name = request.name.trim();
 
+    const formData = new FormData();
+
+    // Add JSON data as a string
+    formData.append("json", JSON.stringify(request));
+
+    // Add images to the FormData
+    images.forEach((image, index) => {
+      formData.append(`files`, image);
+    });
+
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: "PUT",
       headers: headers,
-      body: JSON.stringify(request),
+      body: formData,
     });
 
     if(res.status === 204) {

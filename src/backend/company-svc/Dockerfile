@@ -5,10 +5,16 @@ FROM golang:1.22.4-alpine AS deps
 WORKDIR /workspace
 
 # Copy only the  go.mod files
+COPY company-svc.go.work go.work
 COPY company-svc/go.mod company-svc/go.mod
+COPY file-svc/go.mod file-svc/go.mod
 
 # Download dependencies for company-svc
 WORKDIR /workspace/company-svc
+RUN go mod tidy -e
+
+# Download dependencies for file-svc (if referenced by company-svc)
+WORKDIR /workspace/file-svc
 RUN go mod tidy -e
 
 # Stage 2: Build
@@ -20,6 +26,7 @@ WORKDIR /workspace
 # Copy the dependency cache and service files
 COPY --from=deps /workspace /workspace
 COPY company-svc/ company-svc/
+COPY file-svc/ file-svc/
 
 # Build the binary for company-svc
 WORKDIR /workspace/company-svc

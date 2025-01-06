@@ -63,9 +63,6 @@ export async function EditProductRequest(request: EditProduct, images: File[]) {
       formData.append(`files`, image);
     });
 
-    console.log('images')
-    console.log(images)
-
     const res = await fetch(`${baseUrl}/${request.id}`, {
       method: "PUT",
       headers: headers,
