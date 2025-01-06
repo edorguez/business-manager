@@ -53,7 +53,6 @@ func CreateCompany(body contracts.CreateCompanyRequest, c context.Context) (*pb.
 
 	createCompanyParams := &pb.CreateCompanyRequest{
 		Name:            body.Name,
-		ImageUrl:        body.ImageUrl,
 		LastPaymentDate: timestamppb.New(body.LastPaymentDate),
 	}
 
@@ -198,7 +197,7 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 	return cr, nil
 }
 
-func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, c context.Context) (*pb.UpdateCompanyResponse, *contracts.Error) {
+func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, image []byte, c context.Context) (*pb.UpdateCompanyResponse, *contracts.Error) {
 	fmt.Println("Company CLIENT :  UpdateCompany")
 
 	fmt.Println("Company CLIENT :  UpdateCompany - Body")
@@ -209,7 +208,7 @@ func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, c context.Cont
 		Id:            int64(id),
 		Name:          body.Name,
 		NameFormatUrl: body.NameFormatUrl,
-		ImageUrl:      body.ImageUrl,
+		Image:         image,
 	}
 
 	res, err := companyServiceClient.UpdateCompany(c, updateCompanyParams)

@@ -17,8 +17,7 @@ service CompanyService{
 
 message CreateCompanyRequest{
   string name = 1;
-  optional string imageUrl = 2;
-	google.protobuf.Timestamp lastPaymentDate = 3;
+	google.protobuf.Timestamp lastPaymentDate = 2;
 }
 
 message CreateCompanyResponse{
@@ -72,7 +71,7 @@ message UpdateCompanyRequest{
   int64 id = 1;
   string name = 2;
   string name_format_url = 3;
-  optional string imageUrl = 4;
+  optional bytes image = 4;
 }
 
 message UpdateCompanyResponse{

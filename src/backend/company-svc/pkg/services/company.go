@@ -5,16 +5,21 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 
+	"github.com/EdoRguez/business-manager/company-svc/pkg/client"
+	"github.com/EdoRguez/business-manager/company-svc/pkg/config"
 	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
 	"github.com/EdoRguez/business-manager/company-svc/pkg/pb/company"
 	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
+	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type CompanyService struct {
-	Repo *repo.CompanyRepo
+	Repo   *repo.CompanyRepo
+	Config *config.Config
 	company.UnimplementedCompanyServiceServer
 }
 
@@ -26,7 +31,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 
 	createCompanyParams := db.CreateCompanyParams{
 		Name:            req.Name,
-		ImageUrl:        type_converter.NewSqlNullString(req.ImageUrl),
+		ImageUrl:        sql.NullString{},
 		LastPaymentDate: req.LastPaymentDate.AsTime(),
 	}
 
@@ -168,14 +173,75 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, req *company.UpdateC
 	fmt.Println(req)
 	fmt.Println("----------------")
 
+	if err := client.InitFileServiceClient(s.Config); err != nil {
+		return &company.UpdateCompanyResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	c, err := s.Repo.GetCompany(ctx, req.Id)
+	if err != nil {
+		fmt.Println("Company Service :  UpdateCompany - ERROR")
+		fmt.Println(err.Error())
+
+		return &company.UpdateCompanyResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if c.ImageUrl.Valid {
+		lastIndex := strings.LastIndex(c.ImageUrl.String, "/")
+		imageName := c.ImageUrl.String[lastIndex+1:]
+
+		fmt.Println("Company Service :  UpdateCompany - Image To Delete")
+		fmt.Println(imageName)
+
+		imagesToDelete := []string{imageName}
+		_, err = client.DeleteFiles("business-manager-bucket-s3", "images/companies", imagesToDelete, ctx)
+		if err != nil {
+			fmt.Println("Company Service :  UpdateCompany - ERROR")
+			fmt.Println(err.Error())
+			return &company.UpdateCompanyResponse{
+				Status: http.StatusConflict,
+				Error:  err.Error(),
+			}, nil
+		}
+	}
+
+	var imageUrl string
+	if req.Image != nil {
+		fileData := client.FileData{
+			FileName: fmt.Sprintf("company-%d-image-%s", req.Id, uuid.New()),
+			FileData: req.Image,
+		}
+
+		filesToUpload := []client.FileData{fileData}
+
+		imagesUrl, err := client.UploadFiles("business-manager-bucket-s3", "images/companies", filesToUpload, ctx)
+		if err != nil {
+			fmt.Println("Product Service :  UpdateCompany - ERROR")
+			fmt.Println(err.Error())
+			return &company.UpdateCompanyResponse{
+				Status: http.StatusConflict,
+				Error:  err.Error(),
+			}, nil
+		}
+
+		if imagesUrl != nil && len(imagesUrl.FileUrls) > 0 {
+			imageUrl = imagesUrl.FileUrls[0]
+		}
+	}
+
 	params := db.UpdateCompanyParams{
 		ID:            req.Id,
 		Name:          req.Name,
 		NameFormatUrl: req.NameFormatUrl,
-		ImageUrl:      type_converter.NewSqlNullString(req.ImageUrl),
+		ImageUrl:      type_converter.NewSqlNullString(&imageUrl),
 	}
 
-	_, err := s.Repo.UpdateCompany(ctx, params)
+	_, err = s.Repo.UpdateCompany(ctx, params)
 	if err != nil {
 		fmt.Println("Company Service :  UpdateCompany - ERROR")
 		fmt.Println(err.Error())

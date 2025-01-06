@@ -8,7 +8,6 @@ import (
 
 type CreateCompanyRequest struct {
 	Name            string    `json:"name" validate:"required,max=50"`
-	ImageUrl        *string   `json:"imageUrl" validate:"omitempty,required"`
 	LastPaymentDate time.Time `json:"lastPaymentDate" validate:"required"`
 }
 

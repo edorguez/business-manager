@@ -53,7 +53,8 @@ func main() {
 	fmt.Println("Client Service ON: ", c.Port)
 
 	cs := services.CompanyService{
-		Repo: repo.NewCompanyRepo(storage),
+		Repo:   repo.NewCompanyRepo(storage),
+		Config: &c,
 	}
 
 	ps := services.PaymentService{
