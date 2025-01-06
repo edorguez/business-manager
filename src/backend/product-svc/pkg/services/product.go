@@ -87,7 +87,7 @@ func (s *ProductService) CreateProduct(ctx context.Context, req *product.CreateP
 		})
 	}
 
-	uploadFiles, err := client.UploadFiles("business-manager-bucket-s3", "images", fileData, ctx)
+	uploadFiles, err := client.UploadFiles("business-manager-bucket-s3", "images/products", fileData, ctx)
 	if err != nil {
 		fmt.Println("Product Service :  CreateProduct - ERROR")
 		fmt.Println(err.Error())
@@ -301,7 +301,7 @@ func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateP
 	fmt.Println("Product Service :  UpdateProduct - Images To Delete")
 	fmt.Println(imagesNames)
 
-	_, err = client.DeleteFiles("business-manager-bucket-s3", "images", imagesNames, ctx)
+	_, err = client.DeleteFiles("business-manager-bucket-s3", "images/products", imagesNames, ctx)
 	if err != nil {
 		fmt.Println("Product Service :  DeleteProduct - ERROR")
 		fmt.Println(err.Error())
@@ -320,7 +320,7 @@ func (s *ProductService) UpdateProduct(ctx context.Context, req *product.UpdateP
 		})
 	}
 
-	uploadFiles, err := client.UploadFiles("business-manager-bucket-s3", "images", fileData, ctx)
+	uploadFiles, err := client.UploadFiles("business-manager-bucket-s3", "images/products", fileData, ctx)
 	if err != nil {
 		fmt.Println("Product Service :  UpdateProduct - ERROR")
 		fmt.Println(err.Error())
@@ -437,7 +437,7 @@ func (s *ProductService) DeleteProduct(ctx context.Context, req *product.DeleteP
 	fmt.Println("Product Service :  DeleteProduct - Images To Delete")
 	fmt.Println(imagesNames)
 
-	_, err = client.DeleteFiles("business-manager-bucket-s3", "images", imagesNames, ctx)
+	_, err = client.DeleteFiles("business-manager-bucket-s3", "images/products", imagesNames, ctx)
 	if err != nil {
 		fmt.Println("Product Service :  DeleteProduct - ERROR")
 		fmt.Println(err.Error())

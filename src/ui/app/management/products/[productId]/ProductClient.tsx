@@ -59,6 +59,7 @@ const ProductClient = () => {
   });
 
   const getProduct = useCallback(async () => {
+    isLoading.onStartLoading();
     let product: any = await GetProductRequest({
       id: String(params.productId),
     });
@@ -90,6 +91,8 @@ const ProductClient = () => {
         setImagesLoaded(imageFiles);
       }
     }
+
+    isLoading.onEndLoading();
   }, [params.productId]);
 
   useEffect(() => {
@@ -191,8 +194,6 @@ const ProductClient = () => {
   };
 
   const handleUploadFiles = (files: File[]) => {
-    console.log('Base Updated')
-    console.log(files)
     setImagesToSave(files);
   }
 

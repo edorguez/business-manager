@@ -302,7 +302,8 @@ const AccountClient = () => {
                     <div className="border rounded py-5 px-3">
                       <ImagesUpload
                         maxImagesNumber={1}
-                        showAddImage={isAdmin}
+                        isViewOnlyImage={!isAdmin}
+                        onUploadFiles={() => {}}
                       />
                     </div>
                   </FormControl>
