@@ -1,51 +1,83 @@
-'use client'
+"use client";
 
 import { Product } from "@/app/types/product";
 import { numberMoveDecimal } from "@/app/utils/Utils";
 import { Button } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 interface ProductCardProps {
-    product: Product;
-    onAddToCard: () => void;
+  product: Product;
+  onAddToCard: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-    product,
-    onAddToCard
-}) => {
-    return (
-        <div
-        key={product.id}
-        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-        >
-        <div className="relative w-full h-60">
-            <Image
-                src={ product.images ? product.images[0] : '/images/products/no_product.png'} 
-                alt={product.name}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-t-lg"
-            />
-        </div>
-        <div className="p-4">
-            <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-            <p className="text-gray-600 mb-2">{product.description}</p>
-            <div className="flex items-center justify-between">
-            <span className="text-lg font-bold">
-                ${numberMoveDecimal(product.price, 2)}
-            </span>
-            <Button
-                variant="main"
-                size="sm"
-                onClick={() => onAddToCard()}
-            >
-                + Agregar
-            </Button>
-            </div>
-        </div>
-        </div>
+const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+
+  const nextImage = () => {
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex + 1) % (product.images?.length || 1)
     );
-}
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? (product.images?.length || 1) - 1 : prevIndex - 1
+    );
+  };
+
+  return (
+    <div
+      key={product.id}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+    >
+      <div className="relative w-full h-60">
+        <Image
+          src={
+            product.images && product.images.length > 0
+              ? product.images[currentImageIndex]
+              : "/images/products/no_product.png"
+          }
+          alt={product.name}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-t-lg select-none"
+          draggable="false"
+        />
+        {product.images && product.images.length > 1 && (
+          <>
+            <button
+              onClick={prevImage}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200"
+              aria-label="Previous image"
+            >
+              <Icon icon="material-symbols:chevron-left" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200"
+              aria-label="Next image"
+            >
+              <Icon icon="material-symbols:chevron-right" />
+            </button>
+          </>
+        )}
+      </div>
+      <div className="p-4">
+        <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+        <p className="text-gray-600 mb-2">{product.description}</p>
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-bold">
+            ${numberMoveDecimal(product.price, 2)}
+          </span>
+          <Button variant="main" size="sm" onClick={() => onAddToCard()}>
+            + Agregar
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default ProductCard;
