@@ -47,7 +47,7 @@ const WelcomeBanner = () => {
 
       {/* Content */}
       <div className="relative">
-        <h1 className="text-2xl md:text-3xl text-thirdcolor font-bold mb-1">Buenos días, Business Manager. 👋!</h1>
+        <h1 className="text-2xl md:text-3xl text-thirdcolor font-bold mb-1">Buenos días, Edezco. 👋!</h1>
         <p className="text-black">Aquí tenemos los datos de tu dashboard de hoy:</p>
       </div>
     </div>

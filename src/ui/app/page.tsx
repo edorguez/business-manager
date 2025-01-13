@@ -11,7 +11,7 @@ export default function Home() {
         <div className="flex items-center justify-center">
           <Image src="/images/logo.png" alt="Logo" width={28} height={28} />
           <span className="ml-2 text-2xl font-bold text-white">
-            Business Manager
+            Edezco
           </span>
         </div>
         <nav className="ml-auto sm:flex gap-4 sm:gap-6 hidden">
@@ -203,7 +203,7 @@ export default function Home() {
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500">
-          © {new Date().getFullYear()} Business Manager
+          © {new Date().getFullYear()} Edezco
         </p>
         {/* <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <a

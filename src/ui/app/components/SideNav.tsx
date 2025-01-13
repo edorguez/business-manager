@@ -32,7 +32,7 @@ const SideNav = () => {
         >
           <Image src="/images/logo.png" alt="Logo" width={28} height={28} />
           <span className="font-bold text-sm hidden md:flex text-thirdcolor">
-            Business Manager
+            Edezco
           </span>
         </Link>
 

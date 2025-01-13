@@ -76,7 +76,7 @@ const Header = () => {
             className="flex flex-row space-x-3 items-center justify-center md:hidden"
           >
             <Image src={userImage} alt="Logo" width={28} height={28} />
-            <span className="font-bold text-xl flex ">Business Manager</span>
+            <span className="font-bold text-xl flex ">Edezco</span>
           </Link>
         </div>
 
