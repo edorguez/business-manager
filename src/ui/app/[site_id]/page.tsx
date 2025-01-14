@@ -27,7 +27,6 @@ const SitePage = () => {
       params.site_id.toString()
     );
     if (!getCompany?.id || getCompany?.lastPaymentDate < new Date()) {
-      console.log("EPA FUERA");
       // I need to create my not found route
       router.push("/404");
     } else {

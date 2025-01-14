@@ -3,16 +3,23 @@
 import { Button } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function Home() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+    });
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <header className="px-4 lg:px-6 h-16 flex items-center bg-maincolor">
         <div className="flex items-center justify-center">
           <Image src="/images/logo.png" alt="Logo" width={28} height={28} />
-          <span className="ml-2 text-2xl font-bold text-white">
-            Edezco
-          </span>
+          <span className="ml-2 text-2xl font-bold text-white">Edezco</span>
         </div>
         <nav className="ml-auto sm:flex gap-4 sm:gap-6 hidden">
           <a
@@ -29,7 +36,7 @@ export default function Home() {
           </a>
           <a
             className="text-sm font-medium hover:underline underline-offset-4 text-white"
-            href="https://wa.link/zsqo0x"
+            href="https://wa.link/bpguv0"
             target="_blank"
           >
             Contáctanos
@@ -51,7 +58,7 @@ export default function Home() {
               </div>
               <div className="space-x-4">
                 <Button variant="third">
-                  <a href="https://wa.link/zsqo0x" target="_blank">
+                  <a href="https://wa.link/bpguv0" target="_blank">
                     Comenzar
                   </a>
                 </Button>
@@ -105,18 +112,47 @@ export default function Home() {
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-white" id="plans">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-14">
+            <h2
+              className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-14"
+              data-aos="fade-up"
+            >
               Planes
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:px-52">
-              <div className="flex flex-col p-6 bg-white rounded-lg shadow-lg border border-maincolor">
+            <div className="grid gap-6 sm:grid-cols-3 lg:px-52">
+              <div
+                className="flex flex-col p-6 bg-white rounded-lg shadow-lg border border-maincolor"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
                 <h3 className="text-2xl font-bold text-maincolor mb-4">
-                  Básico
+                  Gratis
                 </h3>
                 <p className="text-4xl font-bold mb-4">
-                  $15<span className="text-xl text-gray-500">/mensual</span>
+                  $0<span className="text-xl text-gray-500">/mensual</span>
                 </p>
                 <ul className="mb-6 space-y-2">
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> Todo el plan
+                    básico
+                  </li>
+                  <li className="flex items-center">
+                    <Icon icon="material-symbols-light:check" /> 7 días de
+                    prueba
+                  </li>
+                </ul>
+              </div>
+              <div
+                className="flex flex-col p-6 bg-white rounded-lg shadow-lg border border-thirdcolor"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                <h3 className="text-2xl font-bold text-thirdcolor mb-4">
+                  Básico
+                </h3>
+                <p className="text-4xl font-bold mb-4 text-black">
+                  $15<span className="text-xl text-black">/mensual</span>
+                </p>
+                <ul className="mb-6 space-y-2 text-black">
                   <li className="flex items-center">
                     <Icon icon="material-symbols-light:check" /> Tienda online
                   </li>
@@ -141,7 +177,11 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-              <div className="flex flex-col p-6 bg-maincolor rounded-lg shadow-lg">
+              <div
+                className="flex flex-col p-6 bg-maincolor rounded-lg shadow-lg"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
                 <h3 className="text-2xl font-bold text-white mb-4">Pro</h3>
                 <p className="text-4xl font-bold text-white mb-4">
                   $25<span className="text-xl text-gray-200">/mensual</span>
@@ -182,17 +222,28 @@ export default function Home() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white">
+                <h2
+                  className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white"
+                  data-aos="fade-up"
+                >
                   ¿Preparado para transformar tu negocio?
                 </h2>
-                <p className="mx-auto max-w-[600px] text-gray-100 md:text-xl">
+                <p
+                  className="mx-auto max-w-[600px] text-gray-100 md:text-xl"
+                  data-aos="fade-up"
+                  data-aos-delay="400"
+                >
                   Únete a nuestros clientes satisfechos y toma el primer paso
                   para el éxito
                 </p>
               </div>
-              <div className="w-full max-w-sm space-y-2">
+              <div
+                className="w-full max-w-sm space-y-2"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
                 <Button variant="main">
-                  <a href="https://wa.link/zsqo0x" target="_blank">
+                  <a href="https://wa.link/bpguv0" target="_blank">
                     Comenzar
                   </a>
                 </Button>
