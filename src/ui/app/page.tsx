@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import FloatingItem from "./components/framer-motion/FloatingItem";
 
 export default function Home() {
   useEffect(() => {
@@ -44,11 +45,73 @@ export default function Home() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-maincolor to-white">
-          <div className="container mx-auto px-4 md:px-6">
+        <section className="relative w-full py-48 xl:py-64 bg-gradient-to-b from-maincolor to-white overflow-hidden mb-20">
+          {/* Image Container with Absolute Positioning */}
+          <div className="absolute inset-0 pointer-events-none">
+            <FloatingItem className="absolute top-10 left-1/4 animate-float">
+              <Image
+                src="/images/home/bag.png"
+                alt="Bag"
+                width={64}
+                height={64}
+              />
+            </FloatingItem>
+            <FloatingItem className="absolute top-5 right-80 animate-float">
+              <Image
+                src="/images/home/box.png"
+                alt="Box"
+                width={64}
+                height={64}
+              />
+            </FloatingItem>
+            <FloatingItem className="absolute bottom-10 left-1/4 animate-float">
+              <Image
+                src="/images/home/graph.png"
+                alt="Graph"
+                width={64}
+                height={64}
+              />
+            </FloatingItem>
+            <FloatingItem className="absolute top-1/2 left-80 animate-float">
+              <Image
+                src="/images/home/order-processing.png"
+                alt="Order"
+                width={64}
+                height={64}
+              />
+            </FloatingItem>
+            <FloatingItem className="absolute bottom-20 right-1/4 animate-float">
+              <Image
+                src="/images/home/smartphone.png"
+                alt="Smartphone"
+                width={64}
+                height={64}
+              />
+            </FloatingItem>
+            <FloatingItem className="absolute top-40 right-60 animate-float">
+              <Image
+                src="/images/home/whatsapp.png"
+                alt="WhatsApp"
+                width={64}
+                height={64}
+              />
+            </FloatingItem>
+          </div>
+
+          {/* Main Content Section */}
+          <div className="container relative z-10 mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                <div className="rounded-full flex justify-center">
+                  <Image
+                    className="rounded-full border-rose-500 "
+                    src="/images/logo.png"
+                    width={100}
+                    height={100}
+                    alt="logo"
+                  />
+                </div>
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none relative">
                   Automatiza tus ventas
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-700 md:text-xl">
@@ -56,13 +119,43 @@ export default function Home() {
                   ventas
                 </p>
               </div>
-              <div className="space-x-4">
+              <div className="space-x-4 transition-transform transform hover:scale-125 duration-300 ease-in-out">
                 <Button variant="third">
                   <a href="https://wa.link/bpguv0" target="_blank">
                     Comenzar
                   </a>
                 </Button>
               </div>
+            </div>
+          </div>
+        </section>
+        <section className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            {/* Left side - Laptop image */}
+            <div data-aos="fade-right" className="w-full lg:w-1/2">
+              <div className="relative aspect-video">
+                <Image
+                  src="/images/home/page-pc.png"
+                  alt="Product on Laptop"
+                  layout="fill"
+                  objectFit="contain"
+                  className="rounded-lg object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Right side - Product description */}
+            <div
+              className="w-full lg:w-1/2 space-y-4 text-center"
+              data-aos="fade-left"
+            >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
+                Crea tu tienda en segundos
+              </h2>
+              <p className="text-base sm:text-lg text-gray-600">
+                Vende tus productos a través de tu propia tienda personalizada a
+                tu medida
+              </p>
             </div>
           </div>
         </section>
@@ -137,7 +230,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-center">
                     <Icon icon="material-symbols-light:check" /> 7 días de
-                    prueba
+                    período de prueba
                   </li>
                 </ul>
               </div>

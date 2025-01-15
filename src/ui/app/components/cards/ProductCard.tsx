@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
       key={product.id}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
     >
-      <div className="relative w-full h-60">
+      <div className="relative w-full h-80 overflow-hidden">
         <Image
           src={
             product.images && product.images.length > 0
@@ -41,8 +41,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
           }
           alt={product.name}
           layout="fill"
-          objectFit="cover"
-          className="rounded-t-lg select-none"
+          objectFit="contain"
+          className="rounded-t-lg select-none object-center scale-100 hover:scale-105 transition-transform duration-300"
           draggable="false"
         />
         {product.images && product.images.length > 1 && (
