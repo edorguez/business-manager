@@ -37,8 +37,7 @@ export default function Home() {
           </a>
           <a
             className="text-sm font-medium hover:underline underline-offset-4 text-white"
-            href="https://wa.link/bpguv0"
-            target="_blank"
+            href="#contact"
           >
             Contáctanos
           </a>
@@ -116,7 +115,7 @@ export default function Home() {
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-700 md:text-xl">
                   Crea tu tienda online y lleva control de todos tus productos y
-                  ventas
+                  ventas en cualquier lugar
                 </p>
               </div>
               <div className="space-x-4 transition-transform transform hover:scale-125 duration-300 ease-in-out">
@@ -131,8 +130,7 @@ export default function Home() {
         </section>
         <section className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-            {/* Left side - Laptop image */}
-            <div data-aos="fade-right" className="w-full lg:w-1/2">
+            <div data-aos="fade-up" className="w-full lg:w-1/2">
               <div className="relative aspect-video">
                 <Image
                   src="/images/home/page-pc.png"
@@ -143,14 +141,12 @@ export default function Home() {
                 />
               </div>
             </div>
-
-            {/* Right side - Product description */}
             <div
               className="w-full lg:w-1/2 space-y-4 text-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
             >
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
-                Crea tu tienda en segundos
+                Tu tienda en segundos
               </h2>
               <p className="text-base sm:text-lg text-gray-600">
                 Vende tus productos a través de tu propia tienda personalizada a
@@ -159,15 +155,107 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <section className="w-full bg-maincolor">
+          <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div
+                className="w-full lg:w-1/2 space-y-4 text-center"
+                data-aos="fade-up"
+              >
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                  Notificaciones
+                </h2>
+                <p className="text-base sm:text-lg text-white">
+                  Obtén notificaciones a través de WhatsApp con información
+                  detallada sobre tus pedidos
+                </p>
+              </div>
+              <div data-aos="fade-up" className="w-full lg:w-1/2">
+                <div className="relative aspect-video">
+                  <Image
+                    src="/images/home/page-phone.png"
+                    alt="Product on Phone"
+                    layout="fill"
+                    objectFit="contain"
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="w-full bg-white">
+          <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div data-aos="fade-up" className="w-full lg:w-1/2">
+                <div className="relative aspect-video">
+                  <Image
+                    src="/images/home/page-laptop.png"
+                    alt="Product on Laptop"
+                    layout="fill"
+                    objectFit="contain"
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+              </div>
+              <div
+                className="w-full lg:w-1/2 space-y-4 text-center"
+                data-aos="fade-up"
+              >
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
+                  Analíticas
+                </h2>
+                <p className="text-base sm:text-lg text-gray-600">
+                  Obtén información sobre tus productos, clientes y métodos de
+                  pago
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="w-full bg-thirdcolor">
+          <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div
+                className="w-full lg:w-1/2 space-y-4 text-center"
+                data-aos="fade-up"
+              >
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                  Administra
+                </h2>
+                <p className="text-base sm:text-lg text-white">
+                  Lleva control detallado de tus productos y clientes
+                </p>
+              </div>
+              <div data-aos="fade-up" className="w-full lg:w-1/2">
+                <div className="relative aspect-video">
+                  <Image
+                    src="/images/home/page-tablet.png"
+                    alt="Product on Laptop"
+                    layout="fill"
+                    objectFit="contain"
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         <section
           className="w-full py-12 md:py-24 lg:py-32 bg-gray-100"
           id="features"
         >
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-14">
+            <h2
+              className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-14"
+              data-aos="fade-up"
+            >
               Características
             </h2>
-            <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
+            <div
+              className="grid gap-10 sm:grid-cols-2 md:grid-cols-3"
+              data-aos="fade-up"
+            >
               <div className="flex flex-col items-center text-center">
                 <Icon
                   icon="ion:storefront"
@@ -335,11 +423,67 @@ export default function Home() {
                 data-aos="fade-up"
                 data-aos-delay="400"
               >
-                <Button variant="main">
-                  <a href="https://wa.link/bpguv0" target="_blank">
-                    Comenzar
-                  </a>
-                </Button>
+                <div className="space-x-4 transition-transform transform hover:scale-125 duration-300 ease-in-out">
+                  <Button variant="main">
+                    <a href="https://wa.link/bpguv0" target="_blank">
+                      Comenzar
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="w-full bg-white" id="contact">
+          <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div
+                className="w-full lg:w-1/2 space-y-4 text-center"
+                data-aos="fade-up"
+              >
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black">
+                  Contáctanos
+                </h2>
+                <div
+                  className="grid sm:grid-cols-2"
+                  data-aos="fade-up"
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <Icon
+                      icon="material-symbols:mail-outline"
+                      className="text-maincolor text-6xl"
+                    />
+                    <h3 className="text-xl font-bold mt-4 mb-2">
+                      Correo
+                    </h3>
+                    <p className="text-gray-600">
+                      info@edezco.com
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <Icon
+                      icon="lineicons:phone"
+                      className="text-maincolor text-6xl"
+                    />
+                    <h3 className="text-xl font-bold mt-4 mb-2">
+                      Teléfono
+                    </h3>
+                    <p className="text-gray-600">
+                      +58 0412-0238498
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div data-aos="fade-up" className="w-full lg:w-1/2">
+                <div className="relative aspect-video">
+                  <Image
+                    src="/images/home/contact.png"
+                    alt="Contact"
+                    layout="fill"
+                    objectFit="contain"
+                    className="rounded-lg object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -349,20 +493,6 @@ export default function Home() {
         <p className="text-xs text-gray-500">
           © {new Date().getFullYear()} Edezco
         </p>
-        {/* <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <a
-            className="text-xs hover:underline underline-offset-4 text-gray-500"
-            href="#"
-          >
-            Terms of Service
-          </a>
-          <a
-            className="text-xs hover:underline underline-offset-4 text-gray-500"
-            href="#"
-          >
-            Privacy
-          </a>
-        </nav> */}
       </footer>
     </div>
   );

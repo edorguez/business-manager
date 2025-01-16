@@ -66,25 +66,31 @@ const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
     },
   };
 
-  for (let key in dates) {
-    let baseDate: Date = new Date(dates[key]);
+  let oneMonthNumber = new Date().getMonth();
+  let twoMonthsNumber = new Date().getMonth() - 1;
+  let threeMonthsNumber = new Date().getMonth() - 2;
+
+  if(twoMonthsNumber < 0) twoMonthsNumber = 11;
+  if(threeMonthsNumber === -1) threeMonthsNumber = 11;
+  if(threeMonthsNumber === -2) threeMonthsNumber = 10;
+
+  for (let i = 0; i < dates.length; i++) {
+    let baseDate: Date = new Date(dates[i]);
     convertToTimezone(baseDate, new Date().getTimezoneOffset());
 
-    const currentUserMonth: number = new Date().getMonth();
-
-    if (baseDate.getMonth() === currentUserMonth) {
+    if (baseDate.getMonth() === oneMonthNumber) {
       const idx: number = array30Days.findIndex(
         (x) => x.toLocaleDateString() === baseDate.toLocaleDateString()
       );
       result.oneMonth.data[idx]++;
       result.oneMonth.total++;
-    } else if (baseDate.getMonth() === currentUserMonth - 1) {
+    } else if (baseDate.getMonth() === twoMonthsNumber) {
       const idx: number = array60Days.findIndex(
         (x) => x.toLocaleDateString() === baseDate.toLocaleDateString()
       );
       result.twoMonths.data[idx] += 1;
       result.twoMonths.total++;
-    } else if (baseDate.getMonth() === currentUserMonth - 2) {
+    } else if (baseDate.getMonth() === threeMonthsNumber) {
       const idx: number = array90Days.findIndex(
         (x) => x.toLocaleDateString() === baseDate.toLocaleDateString()
       );
