@@ -116,7 +116,7 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *co
 }
 
 func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNameResponse, *contracts.Error) {
-	fmt.Println("Company CLIENT :  GetCompany")
+	fmt.Println("Company CLIENT :  GetCompanyByName")
 
 	params := &pb.GetCompanyByNameRequest{
 		Name: name,
@@ -147,6 +147,47 @@ func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNa
 	}
 
 	return &contracts.GetCompanyByNameResponse{
+		Id:              res.Id,
+		Name:            res.Name,
+		NameFormatUrl:   res.NameFormatUrl,
+		ImageUrl:        res.ImageUrl,
+		PlanId:          res.PlanId,
+		LastPaymentDate: res.LastPaymentDate.AsTime(),
+	}, nil
+}
+
+func GetCompanyByNameUrl(nameUrl string, c context.Context) (*contracts.GetCompanyByNameUrlResponse, *contracts.Error) {
+	fmt.Println("Company CLIENT :  GetCompanyByNameUrl")
+
+	params := &pb.GetCompanyByNameUrlRequest{
+		NameUrl: nameUrl,
+	}
+
+	res, err := companyServiceClient.GetCompanyByNameUrl(c, params)
+
+	if err != nil {
+		fmt.Println("Company CLIENT :  GetCompanyByNameUrl - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Company CLIENT :  GetCompanyByNameUrl - SUCCESS")
+
+	if res.Status != http.StatusOK {
+		error := &contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		}
+		return nil, error
+	}
+
+	return &contracts.GetCompanyByNameUrlResponse{
 		Id:              res.Id,
 		Name:            res.Name,
 		NameFormatUrl:   res.NameFormatUrl,

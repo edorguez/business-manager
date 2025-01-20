@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
       key={product.id}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
     >
-      <div className="relative w-full h-80 overflow-hidden">
+      <div className="relative w-full h-40 lg:h-64 overflow-hidden">
         <Image
           src={
             product.images && product.images.length > 0
@@ -67,7 +67,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
         <p className="text-gray-600 mb-2">{product.description}</p>
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between flex-col md:flex-row md:items-center">
           <span className="text-lg font-bold">
             ${numberMoveDecimal(product.price, 2)}
           </span>

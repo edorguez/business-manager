@@ -5,13 +5,14 @@ import { useCallback, useEffect, useState } from "react";
 import { Company } from "../types/company";
 import { Product } from "../types/product";
 import ProductCard from "../components/cards/ProductCard";
-import { GetCompanyByNameRequest } from "../services/companies";
-import { useParams, useRouter } from "next/navigation";
+import { GetCompanyByNameUrlRequest } from "../services/companies";
+import { notFound, useParams, useRouter } from "next/navigation";
 import useGeneralLoading from "../hooks/useGeneralLoading";
 import { GetProductsRequest } from "../services/products";
 import ProductsCartDrawer from "../components/drawers/ProductsCartDrawer";
 import useProductsCart from "@/app/hooks/useProductsCart";
 import useCompanyInfo from "../hooks/useCompanyInfo";
+import NotFound from "../components/NotFound";
 
 const SitePage = () => {
   const cart = useProductsCart();
@@ -20,22 +21,21 @@ const SitePage = () => {
   const params = useParams();
   const isLoading = useGeneralLoading();
   const [company, setCompany] = useState<Company | null>(null);
+  const [isNotFound, setIsNotFound] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
 
   const getCompany = useCallback(async () => {
-    let getCompany: Company = await GetCompanyByNameRequest(
+    let getCompany: Company = await GetCompanyByNameUrlRequest(
       params.site_id.toString()
     );
     if (!getCompany?.id || getCompany?.lastPaymentDate < new Date()) {
-      // I need to create my not found route
-      router.push("/404");
+      setIsNotFound(true);
     } else {
       setCompany(getCompany);
       companyInfo.setCompany(getCompany);
       getProductsByCompanyId(getCompany);
-
-      isLoading.onEndLoading();
     }
+    isLoading.onEndLoading();
   }, [params.site_id, router]);
 
   const getProductsByCompanyId = useCallback(async (comp: Company) => {
@@ -59,9 +59,13 @@ const SitePage = () => {
     return cart.items.reduce((total, item) => total + item.quantity, 0);
   };
 
+   if (isNotFound) {
+    return <NotFound />;
+  }
+
   return (
     <div>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-200">
         {/* Header */}
         <header className="bg-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -79,7 +83,7 @@ const SitePage = () => {
         {/* Main Content */}
         <main className="container mx-auto px-4 py-8">
           {/* <h2 className="text-2xl font-semibold mb-6">Our Menu</h2> */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {products.map((product) => (
               <ProductCard
                 key={product.id}

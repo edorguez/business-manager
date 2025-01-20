@@ -126,6 +126,43 @@ func (s *CompanyService) GetCompanyByName(ctx context.Context, req *company.GetC
 	}, nil
 }
 
+func (s *CompanyService) GetCompanyByNameUrl(ctx context.Context, req *company.GetCompanyByNameUrlRequest) (*company.GetCompanyByNameUrlResponse, error) {
+	fmt.Println("Company Service :  GetCompanyByNameUrl")
+	fmt.Println("Company Service :  GetCompanyByNameUrl - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	c, err := s.Repo.GetCompanyByNameUrl(ctx, req.NameUrl)
+	if err != nil {
+		fmt.Println("Company Service :  GetCompanyByNameUrl - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
+		return &company.GetCompanyByNameUrlResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
+	fmt.Println("Company Service :  GetCompanyByNameUrl - SUCCESS")
+	return &company.GetCompanyByNameUrlResponse{
+		Id:              c.ID,
+		Name:            c.Name,
+		NameFormatUrl:   c.NameFormatUrl,
+		ImageUrl:        type_converter.NewString(c.ImageUrl),
+		PlanId:          c.PlanID,
+		LastPaymentDate: timestamppb.New(c.LastPaymentDate),
+		Status:          http.StatusOK,
+	}, nil
+}
+
 func (s *CompanyService) GetCompanies(ctx context.Context, req *company.GetCompaniesRequest) (*company.GetCompaniesResponse, error) {
 	fmt.Println("Company Service :  GetCompanies")
 	fmt.Println("Company Service :  GetCompanies - Req")

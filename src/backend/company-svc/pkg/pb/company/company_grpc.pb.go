@@ -19,12 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CompanyService_CreateCompany_FullMethodName    = "/company.CompanyService/CreateCompany"
-	CompanyService_GetCompany_FullMethodName       = "/company.CompanyService/GetCompany"
-	CompanyService_GetCompanyByName_FullMethodName = "/company.CompanyService/GetCompanyByName"
-	CompanyService_GetCompanies_FullMethodName     = "/company.CompanyService/GetCompanies"
-	CompanyService_UpdateCompany_FullMethodName    = "/company.CompanyService/UpdateCompany"
-	CompanyService_DeleteCompany_FullMethodName    = "/company.CompanyService/DeleteCompany"
+	CompanyService_CreateCompany_FullMethodName       = "/company.CompanyService/CreateCompany"
+	CompanyService_GetCompany_FullMethodName          = "/company.CompanyService/GetCompany"
+	CompanyService_GetCompanyByName_FullMethodName    = "/company.CompanyService/GetCompanyByName"
+	CompanyService_GetCompanyByNameUrl_FullMethodName = "/company.CompanyService/GetCompanyByNameUrl"
+	CompanyService_GetCompanies_FullMethodName        = "/company.CompanyService/GetCompanies"
+	CompanyService_UpdateCompany_FullMethodName       = "/company.CompanyService/UpdateCompany"
+	CompanyService_DeleteCompany_FullMethodName       = "/company.CompanyService/DeleteCompany"
 )
 
 // CompanyServiceClient is the client API for CompanyService service.
@@ -34,6 +35,7 @@ type CompanyServiceClient interface {
 	CreateCompany(ctx context.Context, in *CreateCompanyRequest, opts ...grpc.CallOption) (*CreateCompanyResponse, error)
 	GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*GetCompanyResponse, error)
 	GetCompanyByName(ctx context.Context, in *GetCompanyByNameRequest, opts ...grpc.CallOption) (*GetCompanyByNameResponse, error)
+	GetCompanyByNameUrl(ctx context.Context, in *GetCompanyByNameUrlRequest, opts ...grpc.CallOption) (*GetCompanyByNameUrlResponse, error)
 	GetCompanies(ctx context.Context, in *GetCompaniesRequest, opts ...grpc.CallOption) (*GetCompaniesResponse, error)
 	UpdateCompany(ctx context.Context, in *UpdateCompanyRequest, opts ...grpc.CallOption) (*UpdateCompanyResponse, error)
 	DeleteCompany(ctx context.Context, in *DeleteCompanyRequest, opts ...grpc.CallOption) (*DeleteCompanyResponse, error)
@@ -77,6 +79,16 @@ func (c *companyServiceClient) GetCompanyByName(ctx context.Context, in *GetComp
 	return out, nil
 }
 
+func (c *companyServiceClient) GetCompanyByNameUrl(ctx context.Context, in *GetCompanyByNameUrlRequest, opts ...grpc.CallOption) (*GetCompanyByNameUrlResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCompanyByNameUrlResponse)
+	err := c.cc.Invoke(ctx, CompanyService_GetCompanyByNameUrl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *companyServiceClient) GetCompanies(ctx context.Context, in *GetCompaniesRequest, opts ...grpc.CallOption) (*GetCompaniesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCompaniesResponse)
@@ -114,6 +126,7 @@ type CompanyServiceServer interface {
 	CreateCompany(context.Context, *CreateCompanyRequest) (*CreateCompanyResponse, error)
 	GetCompany(context.Context, *GetCompanyRequest) (*GetCompanyResponse, error)
 	GetCompanyByName(context.Context, *GetCompanyByNameRequest) (*GetCompanyByNameResponse, error)
+	GetCompanyByNameUrl(context.Context, *GetCompanyByNameUrlRequest) (*GetCompanyByNameUrlResponse, error)
 	GetCompanies(context.Context, *GetCompaniesRequest) (*GetCompaniesResponse, error)
 	UpdateCompany(context.Context, *UpdateCompanyRequest) (*UpdateCompanyResponse, error)
 	DeleteCompany(context.Context, *DeleteCompanyRequest) (*DeleteCompanyResponse, error)
@@ -135,6 +148,9 @@ func (UnimplementedCompanyServiceServer) GetCompany(context.Context, *GetCompany
 }
 func (UnimplementedCompanyServiceServer) GetCompanyByName(context.Context, *GetCompanyByNameRequest) (*GetCompanyByNameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompanyByName not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetCompanyByNameUrl(context.Context, *GetCompanyByNameUrlRequest) (*GetCompanyByNameUrlResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCompanyByNameUrl not implemented")
 }
 func (UnimplementedCompanyServiceServer) GetCompanies(context.Context, *GetCompaniesRequest) (*GetCompaniesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompanies not implemented")
@@ -220,6 +236,24 @@ func _CompanyService_GetCompanyByName_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_GetCompanyByNameUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCompanyByNameUrlRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).GetCompanyByNameUrl(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CompanyService_GetCompanyByNameUrl_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).GetCompanyByNameUrl(ctx, req.(*GetCompanyByNameUrlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CompanyService_GetCompanies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCompaniesRequest)
 	if err := dec(in); err != nil {
@@ -292,6 +326,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCompanyByName",
 			Handler:    _CompanyService_GetCompanyByName_Handler,
+		},
+		{
+			MethodName: "GetCompanyByNameUrl",
+			Handler:    _CompanyService_GetCompanyByNameUrl_Handler,
 		},
 		{
 			MethodName: "GetCompanies",

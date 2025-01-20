@@ -41,6 +41,25 @@ export async function GetCompanyByNameRequest(name: string) {
   }
 }
 
+export async function GetCompanyByNameUrlRequest(nameUrl: string) {
+  try {
+    const headers = new Headers();
+    const token = Cookies.get("token");
+    headers.append("Authorization", <string>token);
+
+    const res = await fetch(`${baseUrl}/nameUrl/${nameUrl}`, {
+      method: "GET",
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString());
+  }
+}
+
 export async function EditCompanyRequest(request: EditCompany, images: File[]) {
   try {
     const headers = new Headers();

@@ -38,6 +38,7 @@ func loadCompanyRoutes(router *mux.Router, c *config.Config) {
 
 	getCompanyByNameRouter := baseRoute.Methods(http.MethodGet).Subrouter()
 	getCompanyByNameRouter.HandleFunc("/name/{name}", cr.GetCompanyByName)
+	getCompanyByNameRouter.HandleFunc("/nameUrl/{nameUrl}", cr.GetCompanyByNameUrl)
 
 	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("", cr.CreateCompany)
@@ -115,6 +116,11 @@ func (cr *CompanyRoutes) GetCompany(w http.ResponseWriter, r *http.Request) {
 func (cr *CompanyRoutes) GetCompanyByName(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  GetCompanyByName Called --> 1")
 	routes.GetCompanyByName(w, r, cr.config)
+}
+
+func (cr *CompanyRoutes) GetCompanyByNameUrl(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetCompanyByNameUrl Called --> 1")
+	routes.GetCompanyByNameUrl(w, r, cr.config)
 }
 
 func (cr *CompanyRoutes) GetCompanies(w http.ResponseWriter, r *http.Request) {

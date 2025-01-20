@@ -67,6 +67,23 @@ func (companyRepo *CompanyRepo) GetCompanyByName(ctx context.Context, name strin
 	return result, err
 }
 
+func (companyRepo *CompanyRepo) GetCompanyByNameUrl(ctx context.Context, nameUrl string) (db.CompanyCompany, error) {
+	var result db.CompanyCompany
+
+	err := companyRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.GetCompanyByNameUrl(ctx, nameUrl)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
 func (companyRepo *CompanyRepo) GetCompanies(ctx context.Context, arg db.GetCompaniesParams) ([]db.CompanyCompany, error) {
 	var result []db.CompanyCompany
 

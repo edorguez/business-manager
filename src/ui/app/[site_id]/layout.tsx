@@ -5,7 +5,6 @@ import { MoonLoader } from "react-spinners";
 import React from "react";
 import useGeneralLoading from "../hooks/useGeneralLoading";
 
-
 export default function SiteLayout({
   // params,
   children,
@@ -18,7 +17,7 @@ export default function SiteLayout({
 
   useEffect(() => {
     setIsLoading(generalLoading.isLoading);
-  }, [generalLoading])
+  }, [generalLoading]);
 
   return (
     <>
@@ -33,10 +32,7 @@ export default function SiteLayout({
           />
         </div>
       )}
-      
-          <div className={`${isLoading ? 'hidden' : ''}`}>
-            {children}
-          </div>
+      <div className={isLoading ? "hidden" : ""}>{children}</div>
     </>
   );
 }

@@ -10,6 +10,7 @@ service CompanyService{
   rpc CreateCompany(CreateCompanyRequest) returns (CreateCompanyResponse);
   rpc GetCompany(GetCompanyRequest) returns (GetCompanyResponse);
   rpc GetCompanyByName(GetCompanyByNameRequest) returns (GetCompanyByNameResponse);
+  rpc GetCompanyByNameUrl(GetCompanyByNameUrlRequest) returns (GetCompanyByNameUrlResponse);
   rpc GetCompanies(GetCompaniesRequest) returns (GetCompaniesResponse);
   rpc UpdateCompany(UpdateCompanyRequest) returns (UpdateCompanyResponse);
   rpc DeleteCompany(DeleteCompanyRequest) returns (DeleteCompanyResponse);
@@ -46,6 +47,21 @@ message GetCompanyByNameRequest{
 }
 
 message GetCompanyByNameResponse{
+  int64 id = 1;
+  string name = 2;
+  string name_format_url = 3;
+  optional string imageUrl = 4;
+  int64 plan_id = 5;
+	google.protobuf.Timestamp lastPaymentDate = 6;
+  int64 status = 7;
+  string error = 8;
+}
+
+message GetCompanyByNameUrlRequest{
+  string nameUrl = 1;
+}
+
+message GetCompanyByNameUrlResponse{
   int64 id = 1;
   string name = 2;
   string name_format_url = 3;

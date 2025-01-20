@@ -12,14 +12,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetCompanyByName(w http.ResponseWriter, r *http.Request, c *config.Config) {
+func GetCompanyByNameUrl(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
-	name := vars["name"]
-	if name == "" {
+	nameUrl := vars["nameUrl"]
+	if nameUrl == "" {
 		json.NewEncoder(w).Encode(&contracts.Error{
 			Status: http.StatusBadRequest,
-			Error:  "Name param must be provided",
+			Error:  "Name URL param must be provided",
 		})
 		return
 	}
@@ -32,15 +32,15 @@ func GetCompanyByName(w http.ResponseWriter, r *http.Request, c *config.Config) 
 		return
 	}
 
-	res, errCompany := client.GetCompanyByName(strings.ToLower(name), r.Context())
+	res, errCompany := client.GetCompanyByNameUrl(strings.ToLower(nameUrl), r.Context())
 
 	if errCompany != nil {
-		fmt.Println("API Gateway :  GetCompanyByName - ERROR")
+		fmt.Println("API Gateway :  GetCompanyByNameUrl - ERROR")
 		json.NewEncoder(w).Encode(errCompany)
 		return
 	}
 
-	fmt.Println("API Gateway :  GetCompanyByName - SUCCESS")
+	fmt.Println("API Gateway :  GetCompanyByNameUrl - SUCCESS")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(res)
 }

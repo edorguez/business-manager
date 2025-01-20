@@ -16,6 +16,7 @@ type Querier interface {
 	GetCompanies(ctx context.Context, arg GetCompaniesParams) ([]CompanyCompany, error)
 	GetCompany(ctx context.Context, id int64) (CompanyCompany, error)
 	GetCompanyByName(ctx context.Context, lower string) (CompanyCompany, error)
+	GetCompanyByNameUrl(ctx context.Context, lower string) (CompanyCompany, error)
 	GetPayment(ctx context.Context, id int64) (GetPaymentRow, error)
 	GetPaymentType(ctx context.Context, id int64) (GetPaymentTypeRow, error)
 	GetPaymentTypes(ctx context.Context, arg GetPaymentTypesParams) ([]GetPaymentTypesRow, error)

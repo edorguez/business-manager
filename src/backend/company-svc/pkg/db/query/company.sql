@@ -42,6 +42,22 @@ WHERE
   LOWER(name) = LOWER($1)
 LIMIT 1;
 
+-- name: GetCompanyByNameUrl :one
+SELECT 
+  id,
+  name,
+  name_format_url,
+  image_url,
+  plan_id,
+  last_payment_date,
+  created_at,
+  modified_at
+FROM 
+  company.company
+WHERE 
+  LOWER(name_format_url) = LOWER($1)
+LIMIT 1;
+
 -- name: GetCompanies :many
 SELECT 
   id,
