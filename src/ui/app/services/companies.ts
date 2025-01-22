@@ -1,7 +1,10 @@
 import { EditCompany, GetCompany } from "@/app/types/company";
 import Cookies from "js-cookie";
 
-const baseUrl: string = "http://localhost:3001/api/companies";
+const baseUrl: string =
+  process.env.ENVIRONMENT === "production"
+    ? "http://gateway:3001/api/companies"
+    : "http://localhost:3001/api/companies";
 
 export async function GetCompanyRequest(request: GetCompany) {
   try {
@@ -84,7 +87,7 @@ export async function EditCompanyRequest(request: EditCompany, images: File[]) {
       body: formData,
     });
 
-    if(res.status === 204) {
+    if (res.status === 204) {
       return;
     }
 

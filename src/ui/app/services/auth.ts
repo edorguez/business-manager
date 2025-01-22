@@ -3,11 +3,16 @@
 import { Login } from "@/app/types/auth"
 import { cookies } from "next/headers";
 
+const baseUrl: string =
+  process.env.ENVIRONMENT === "production"
+    ? "http://gateway:3001/api/auth"
+    : "http://localhost:3001/api/auth";
+
 export async function login(
   request: Login,
 ) {
   try {
-    const res = await fetch('http://localhost:3001/api/auth/login', {
+    const res = await fetch(`${baseUrl}/login`, {
       method: 'POST',
       body: JSON.stringify(request)
     });

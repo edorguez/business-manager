@@ -22,7 +22,7 @@ function handleSubdomains(request: NextRequest) {
   const hostname = request.headers.get("host");
 
   let currentHost;
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.ENVIRONMENT === "production") {
     // Production logic remains the same
     const baseDomain = process.env.BASE_DOMAIN;
     currentHost = hostname?.replace(`.${baseDomain}`, "");

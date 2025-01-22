@@ -9,7 +9,10 @@ import {
 } from "@/app/types/product";
 import Cookies from "js-cookie";
 
-const baseUrl: string = "http://localhost:3001/api/products";
+const baseUrl: string =
+  process.env.ENVIRONMENT === "production"
+    ? "http://gateway:3001/api/products"
+    : "http://localhost:3001/api/products";
 
 export async function CreateProductRequest(request: CreateProduct, images: File[]) {
   try {

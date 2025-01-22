@@ -1,6 +1,9 @@
 import { CreateOrder } from "../types/order";
 
-const baseUrl: string = "http://localhost:3001/api/orders";
+const baseUrl: string =
+  process.env.ENVIRONMENT === "production"
+    ? "http://gateway:3001/api/orders"
+    : "http://localhost:3001/api/orders";
 
 export async function CreateOrderRequest(request: CreateOrder) {
   try {

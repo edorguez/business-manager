@@ -9,7 +9,10 @@ import {
 } from "@/app/types/user";
 import Cookies from "js-cookie";
 
-const baseUrl: string = "http://localhost:3001/api/users";
+const baseUrl: string =
+  process.env.ENVIRONMENT === "production"
+    ? "http://gateway:3001/api/users"
+    : "http://localhost:3001/api/users";
 
 export async function CreateUserRequest(request: CreateUser) {
   try {
