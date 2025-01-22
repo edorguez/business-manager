@@ -42,6 +42,8 @@ yarn-error.log*
 /src/ui/yarn-error.log*
 
 # Environment files
+/src/ui/*.env
+/src/ui/!example.env
 /src/backend/*.env
 /src/backend/!example.env
 /src/backend/gateway/*.env
