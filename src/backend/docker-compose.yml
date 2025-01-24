@@ -9,6 +9,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    restart: always
 
   ui:
     container_name: ui-business-manager
