@@ -6,6 +6,7 @@ services:
     container_name: business-manager-nginx-proxy
     volumes:
       - $HOME/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - $HOME/nginx/certs:/etc/nginx/certs:ro
     ports:
       - "80:80"
       - "443:443"
