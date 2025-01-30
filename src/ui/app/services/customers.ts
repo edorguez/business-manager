@@ -2,8 +2,8 @@ import { CreateCustomer, DeleteCustomer, EditCustomer, GetCustomer, GetCustomers
 import Cookies from 'js-cookie';
 
 const baseUrl: string =
-  process.env.ENVIRONMENT === "production"
-    ? "http://gateway:3001/api/customers"
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "http://0.0.0.0:3001/api/customers"
     : "http://localhost:3001/api/customers";
 
 export async function CreateCustomerRequest(

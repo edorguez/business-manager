@@ -10,8 +10,8 @@ import {
 import Cookies from "js-cookie";
 
 const baseUrl: string =
-  process.env.ENVIRONMENT === "production"
-    ? "http://gateway:3001/api/products"
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "http://0.0.0.0:3001/api/products"
     : "http://localhost:3001/api/products";
 
 export async function CreateProductRequest(request: CreateProduct, images: File[]) {

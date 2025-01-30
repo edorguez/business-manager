@@ -1,8 +1,8 @@
 import Cookies from "js-cookie";
 
 const baseUrl: string =
-  process.env.ENVIRONMENT === "production"
-    ? "http://gateway:3001/api/roles"
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "http://0.0.0.0:3001/api/roles"
     : "http://localhost:3001/api/roles";
 
 export async function GetRolesRequest() {

@@ -12,6 +12,10 @@ export async function login(
   request: Login,
 ) {
   try {
+    console.log('check borma')
+    console.log(baseUrl);
+    console.log(process.env.ENVIRONMENT);
+
     const res = await fetch(`${baseUrl}/login`, {
       method: 'POST',
       body: JSON.stringify(request)

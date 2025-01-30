@@ -2,8 +2,8 @@ import { ChangeStatusPayment, CreatePayment, DeletePayment, EditPayment, GetPaym
 import Cookies from 'js-cookie';
 
 const baseUrl: string =
-  process.env.ENVIRONMENT === "production"
-    ? "http://gateway:3001/api/payments"
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "http://0.0.0.0:3001/api/payments"
     : "http://localhost:3001/api/payments";
 
 export async function CreatePaymentRequest(

@@ -2,8 +2,8 @@ import { EditCompany, GetCompany } from "@/app/types/company";
 import Cookies from "js-cookie";
 
 const baseUrl: string =
-  process.env.ENVIRONMENT === "production"
-    ? "http://gateway:3001/api/companies"
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "http://0.0.0.0:3001/api/companies"
     : "http://localhost:3001/api/companies";
 
 export async function GetCompanyRequest(request: GetCompany) {

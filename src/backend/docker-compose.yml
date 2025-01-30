@@ -21,6 +21,7 @@ services:
       context: ./nextjs-app
     environment:
       - ENVIRONMENT=production
+      - NEXT_PUBLIC_ENVIRONMENT=production
     depends_on:
       - gateway
     restart: always

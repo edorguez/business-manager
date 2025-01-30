@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 
 const baseUrl: string =
-  process.env.ENVIRONMENT === "production"
-    ? "http://gateway:3001/api/paymentTypes"
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
+    ? "http://0.0.0.0:3001/api/paymentTypes"
     : "http://localhost:3001/api/paymentTypes";
 
 export async function GetPaymentTypesRequest() {
