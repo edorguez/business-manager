@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "http://0.0.0.0:3001/api/payments"
+    ? "https://0.0.0.0:3001/api/payments"
     : "http://localhost:3001/api/payments";
 
 export async function CreatePaymentRequest(
