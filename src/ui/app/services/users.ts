@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://0.0.0.0:3001/api/users"
+    ? "https://edezco.com/api/users"
     : "http://localhost:3001/api/users";
 
 export async function CreateUserRequest(request: CreateUser) {

@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://0.0.0.0:3001/api/roles"
+    ? "https://edezco.com/api/roles"
     : "http://localhost:3001/api/roles";
 
 export async function GetRolesRequest() {
