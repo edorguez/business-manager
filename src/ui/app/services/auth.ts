@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 const baseUrl: string =
   process.env.ENVIRONMENT === "production"
-    ? "https://gateway:3001/api/auth"
+    ? "http://gateway:3001/api/auth"
     : "http://localhost:3001/api/auth";
 
 export async function login(
