@@ -31,7 +31,7 @@ const LoginClient = () => {
   const onLogin = async () => {
     isLoading.onStartLoading();
     let result: any = await login(formData);
-    if (!result.error) {
+    if (!result?.error) {
       push("/management/home");
     } else {
       toast({

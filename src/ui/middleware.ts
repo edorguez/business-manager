@@ -15,84 +15,80 @@ export function middleware(request: NextRequest) {
 }
 
 function handleSubdomains(request: NextRequest) {
+  console.log("----------------------------------");
+
   const url = request.nextUrl;
-  const pathname = url.pathname;
+  let hostname = request.headers.get("host");
 
-  // Get hostname (e.g., 'mike.com', 'test.mike.com')
-  const hostname = request.headers.get("host");
-
-  let currentHost;
-  if (process.env.ENVIRONMENT === "production") {
-    // Production logic remains the same
-    const baseDomain = process.env.BASE_DOMAIN;
-    currentHost = hostname?.replace(`.${baseDomain}`, "");
-  } else {
-    // Updated development logic
-    currentHost = hostname?.split(":")[0].replace(".localhost", "");
+  if (!hostname) {
+    return NextResponse.next(); // No host header, continue normally
   }
 
-  // If there's no currentHost, likely accessing the root domain, handle accordingly
-  if (!currentHost) {
-    // Continue to the next middleware or serve the root content
+  // Cloudflare might send 'x-forwarded-host'
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  if (forwardedHost) {
+    hostname = forwardedHost;
+  }
+
+  let currentHost: string | undefined;
+  const baseDomain = process.env.BASE_DOMAIN || "edezco.com";
+
+  if (hostname.endsWith(baseDomain)) {
+    currentHost = hostname.replace(`.${baseDomain}`, "");
+  }
+
+  console.log("Detected Hostname:", hostname);
+  console.log("Extracted Subdomain:", currentHost);
+
+  // If it's the main domain, continue normally
+  if (!currentHost || currentHost === baseDomain) {
     return NextResponse.next();
   }
 
   // Fetch tenant-specific data based on the hostname
-  const response: any = [{ hola: true, chao: 1 }]; //await readSiteDomain(currentHost);
+  // const tenantData = getTenantData(currentHost); // Replace with actual data fetching
 
-  // Handle the case where no domain data is found
-  if (!response || !response.length) {
-    // Continue to the next middleware or serve the root content
-    return NextResponse.next();
-  }
+  // if (!tenantData) {
+  //   console.log(`No tenant found for ${currentHost}`);
+  //   return NextResponse.rewrite(new URL("/not-found", request.url));
+  // }
 
-  const site_id = response[0]?.site_id;
-  const tenantSubdomain = response[0]?.site_subdomain;
-  const mainDomain = response[0]?.site_custom_domain;
+  console.log("Tenant Found:", currentHost);
 
-
-  // console.log('values')
-  // console.log(site_id)
-  // console.log(tenantSubdomain)
-  // console.log(mainDomain)
-
-  // Determine which domain to use for rewriting
-  const rewriteDomain = tenantSubdomain || mainDomain;
-
-  // console.log("Hostname:", hostname);
-  // console.log("Current Host:", currentHost);
-  // console.log("Rewrite Domain:", rewriteDomain);
-
-  if (rewriteDomain) {
-    // Rewrite the URL to the tenant-specific path, using the site_id
-    return NextResponse.rewrite(new URL(`/${site_id}${pathname}`, request.url));
-  }
-
-  // If no rewrite domain is found, continue to the next middleware
-  return NextResponse.next();
+  return NextResponse.rewrite(
+    new URL(`/${currentHost}${url.pathname}`, request.url)
+  );
 }
 
 function handleManagementRoute(request: NextRequest) {
-  // Validate if user is logged
-  const isUserLogged: boolean = isValidLogin();
-  if (!isUserLogged)
+  const isUserLogged = isValidLogin(); // Ensure this function is correctly defined
+  if (!isUserLogged) {
     return NextResponse.redirect(new URL("/login", request.url));
+  }
 
-  // Validate if user role has permission to path
-  const sideNavItem: SideNavItem | undefined = SIDENAV_ITEMS.find((x) =>
+  const sideNavItem = SIDENAV_ITEMS.find((x) =>
     request.nextUrl.pathname.includes(x.path)
   );
   if (sideNavItem) {
-    const user: CurrentUser | null = getCurrentUserServer();
+    const user = getCurrentUserServer();
     if (user && !validateUserInRoles(sideNavItem.roleIds, user.roleId)) {
       return NextResponse.redirect(new URL("/management/home", request.url));
     }
   }
 
-  // Allow access to path
   return NextResponse.next();
 }
 
-// export const config = {
-//   matcher: ["/management/:path*"], // Routes that should use this middleware
-// };
+// // Mock function for tenant data (Replace this with database or API call)
+// function getTenantData(subdomain: string): any {
+//   const mockTenants = {
+//     test: { site_id: "test" },
+//     demo: { site_id: "demo" },
+//   };
+
+//   return mockTenants[subdomain] || null;
+// }
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
