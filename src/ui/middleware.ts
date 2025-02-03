@@ -7,11 +7,12 @@ import getCurrentUserServer from "./app/actions/getCurrentUserServer";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // ✅ Exclude static files and Next.js API from rewriting
   if (
-    pathname.startsWith("/_next/static") ||
-    pathname.startsWith("/_next/image") ||
-    pathname.startsWith("/api") ||
-    pathname === "/favicon.ico"
+    pathname.startsWith("/_next/") || // ✅ Exclude Next.js static files & images
+    pathname.startsWith("/images/") || // ✅ Exclude images directory
+    pathname === "/favicon.ico" || // ✅ Exclude favicon
+    pathname.startsWith("/api/") // ✅ Exclude API requests
   ) {
     return NextResponse.next();
   }
@@ -24,7 +25,7 @@ export function middleware(request: NextRequest) {
 }
 
 function handleSubdomains(request: NextRequest) {
-  console.log("----------------------------------");
+  console.log("---- Handling Subdomain ----");
 
   const url = request.nextUrl;
   let hostname = request.headers.get("host");
@@ -49,20 +50,12 @@ function handleSubdomains(request: NextRequest) {
   console.log("Detected Hostname:", hostname);
   console.log("Extracted Subdomain:", currentHost);
 
-  // If it's the main domain, continue normally
+  // ✅ If it's the main domain, continue normally
   if (!currentHost || currentHost === baseDomain) {
     return NextResponse.next();
   }
 
-  // Fetch tenant-specific data based on the hostname
-  // const tenantData = getTenantData(currentHost); // Replace with actual data fetching
-
-  // if (!tenantData) {
-  //   console.log(`No tenant found for ${currentHost}`);
-  //   return NextResponse.rewrite(new URL("/not-found", request.url));
-  // }
-
-  console.log("Tenant Found:", currentHost);
+  console.log("✅ Tenant Found:", currentHost);
 
   return NextResponse.rewrite(
     new URL(`/${currentHost}${url.pathname}`, request.url)
@@ -70,7 +63,7 @@ function handleSubdomains(request: NextRequest) {
 }
 
 function handleManagementRoute(request: NextRequest) {
-  const isUserLogged = isValidLogin(); // Ensure this function is correctly defined
+  const isUserLogged = isValidLogin();
   if (!isUserLogged) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -88,16 +81,7 @@ function handleManagementRoute(request: NextRequest) {
   return NextResponse.next();
 }
 
-// // Mock function for tenant data (Replace this with database or API call)
-// function getTenantData(subdomain: string): any {
-//   const mockTenants = {
-//     test: { site_id: "test" },
-//     demo: { site_id: "demo" },
-//   };
-
-//   return mockTenants[subdomain] || null;
-// }
-
+// ✅ Ensure Next.js doesn't process static files
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/|images/|favicon.ico|api/).*)"],
 };
