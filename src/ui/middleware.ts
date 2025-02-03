@@ -1,13 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import isValidLogin from "./app/actions/isValidLogin";
-import { SideNavItem } from "./app/types";
 import { SIDENAV_ITEMS } from "./app/constants";
-import { CurrentUser } from "./app/types/auth";
 import { validateUserInRoles } from "./app/utils/Utils";
 import getCurrentUserServer from "./app/actions/getCurrentUserServer";
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/management")) {
+  const { pathname } = request.nextUrl;
+
+  if (
+    pathname.startsWith("/_next/static") ||
+    pathname.startsWith("/_next/image") ||
+    pathname.startsWith("/api") ||
+    pathname === "/favicon.ico"
+  ) {
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/management")) {
     return handleManagementRoute(request);
   }
 

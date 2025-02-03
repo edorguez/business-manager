@@ -93,6 +93,13 @@ const SitePage = () => {
                 }}
               />
             ))}
+            {
+              products?.length <= 0 && (
+                <div className="col-span-full text-center w-full">
+                  <h2 className="text-2xl font-semibold mb-6">No hay productos disponibles</h2>
+                </div>
+              )
+            }
           </div>
         </main>
 

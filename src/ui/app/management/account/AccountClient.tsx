@@ -322,10 +322,10 @@ const AccountClient = () => {
               </Heading>
               <span className="text-gray-500">
                 <a
-                  href={`https://www.${companyFormData.nameFormatUrl}.com`}
+                  href={`https://${companyFormData.nameFormatUrl}.edezco.com`}
                   target="_blank"
                 >
-                  www.{companyFormData.nameFormatUrl}.com
+                  https://{companyFormData.nameFormatUrl}.edezco.com
                 </a>
               </span>
             </Box>
