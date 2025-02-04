@@ -68,16 +68,16 @@ services:
         - product-db
       restart: always
 
-  # whatsapp-svc:
-  #     container_name: whatsapp-svc
-  #     image: EdoRguez/whatsapp-svc
-  #     ports:
-  #       - "${WHATSAPP_SVC_PORT}:${WHATSAPP_SVC_PORT}"
-        # environment:
-        #       - ENVIRONMENT=production
-  #     depends_on:
-  #       - whatsapp-db
-  #     restart: always
+  whatsapp-svc:
+      container_name: whatsapp-svc
+      image: EdoRguez/whatsapp-svc
+      ports:
+        - "${WHATSAPP_SVC_PORT}:${WHATSAPP_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      depends_on:
+        - whatsapp-db
+      restart: always
 
   auth-svc:
       container_name: auth-svc
