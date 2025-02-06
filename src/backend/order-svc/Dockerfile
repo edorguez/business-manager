@@ -8,6 +8,7 @@ WORKDIR /workspace
 COPY order-svc.go.work go.work
 COPY order-svc/go.mod order-svc/go.mod
 COPY customer-svc/go.mod customer-svc/go.mod
+COPY whatsapp-svc/go.mod whatsapp-svc/go.mod
 
 # Download dependencies for order-svc
 WORKDIR /workspace/order-svc
@@ -15,6 +16,10 @@ RUN go mod tidy -e
 
 # Download dependencies for customer-svc (if referenced by order-svc)
 WORKDIR /workspace/customer-svc
+RUN go mod tidy -e
+
+# Download dependencies for whatsapp-svc (if referenced by order-svc)
+WORKDIR /workspace/whatsapp-svc
 RUN go mod tidy -e
 
 # Stage 2: Build
@@ -27,6 +32,7 @@ WORKDIR /workspace
 COPY --from=deps /workspace /workspace
 COPY order-svc/ order-svc/
 COPY customer-svc/ customer-svc/
+COPY whatsapp-svc/ whatsapp-svc/
 
 # Build the binary for order-svc
 WORKDIR /workspace/order-svc

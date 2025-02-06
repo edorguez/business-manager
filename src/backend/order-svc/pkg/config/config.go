@@ -8,6 +8,7 @@ type Config struct {
 	Port              string `mapstructure:"PORT"`
 	Customer_Svc_Url  string `mapstructure:"CUSTOMER_SVC_URL"`
 	Customer_Svc_Port string `mapstructure:"CUSTOMER_SVC_PORT"`
+	Whatsapp_Svc_Url  string `mapstructure:"WHATSAPP_SVC_URL"`
 	Whatsapp_Svc_Port string `mapstructure:"WHATSAPP_SVC_PORT"`
 }
 

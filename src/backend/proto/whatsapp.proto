@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package whatsapp;
+
+option go_package= "./whatsapp";
+
+service WhatsappService{
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+}
+
+message SendMessageRequest {
+    string toPhone = 1;
+    string template = 2;
+    string message = 3;
+}
+
+message SendMessageResponse {
+  int64 status = 1;
+  string error = 2;
+}

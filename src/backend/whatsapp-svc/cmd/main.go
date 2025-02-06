@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
+	pbwhatsapp "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/services"
 	"google.golang.org/grpc"
 )
@@ -23,13 +24,13 @@ func main() {
 
 	fmt.Println("Client Service ON: ", c.Port)
 
-	ps := services.OrderService{
+	ps := services.WhatsappService{
 		Config: &c,
 	}
 
 	grpcServer := grpc.NewServer()
 
-	pborder.RegisterOrderServiceServer(grpcServer, &ps)
+	pbwhatsapp.RegisterWhatsappServiceServer(grpcServer, &ps)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

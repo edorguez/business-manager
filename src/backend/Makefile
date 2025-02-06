@@ -4,6 +4,7 @@ OUT_DIR_COMPANY=./company-svc/pkg/pb
 OUT_DIR_CUSTOMER=./customer-svc/pkg/pb
 OUT_DIR_ORDER=./order-svc/pkg/pb
 OUT_DIR_FILE=./file-svc/pkg/pb
+OUT_DIR_WHATSAPP=./whatsapp-svc/pkg/pb
 OUT_DIR_PRODUCT=./product-svc/pkg/pb
 OUT_DIR_GATEWAY=./gateway/pkg/pb
 
@@ -102,6 +103,15 @@ file-proto:
 		   --experimental_allow_proto3_optional \
 	       $(PROTO_DIR)/file.proto
 
+# Generate gRPC code for whatsapp-svc
+whatsapp-proto:
+	@echo "Generating gRPC code for whatsapp-proto..."
+	mkdir -p $(OUT_DIR_WHATSAPP)
+	protoc --go_out=$(OUT_DIR_WHATSAPP) \
+	       --go-grpc_out=$(OUT_DIR_WHATSAPP) \
+		   --experimental_allow_proto3_optional \
+	       $(PROTO_DIR)/whatsapp.proto
+
 # Generate gRPC code for Gateway
 gateway-proto:
 	@echo "Generating gRPC code for gateway..."
@@ -112,7 +122,6 @@ gateway-proto:
 	       $(PROTO_DIR)/company.proto \
 	       $(PROTO_DIR)/auth.proto \
 	       $(PROTO_DIR)/customer.proto \
-	       $(PROTO_DIR)/order.proto \
 	       $(PROTO_DIR)/file.proto \
 	       $(PROTO_DIR)/payment_type.proto \
 	       $(PROTO_DIR)/payment.proto \
@@ -121,5 +130,5 @@ gateway-proto:
 	       $(PROTO_DIR)/user.proto
 
 # Generate all proto files
-proto-all: tools gateway-proto company-proto payment-proto payment-type-proto auth-proto role-proto user-proto customer-proto product-proto order-proto file-proto
+proto-all: tools gateway-proto company-proto payment-proto payment-type-proto auth-proto role-proto user-proto customer-proto product-proto order-proto file-proto whatsapp-proto
 	@echo "All services gRPC code generated successfully!"

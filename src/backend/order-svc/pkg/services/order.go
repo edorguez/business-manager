@@ -9,6 +9,7 @@ import (
 	"github.com/EdoRguez/business-manager/order-svc/pkg/client"
 	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
 	order "github.com/EdoRguez/business-manager/order-svc/pkg/pb/order"
+	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
 )
 
 type OrderService struct {
@@ -23,6 +24,21 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 	fmt.Println("----------------")
 
 	if err := client.InitCustomerServiceClient(s.Config); err != nil {
+		return &order.CreateOrderResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if err := client.InitWhatsappServiceClient(s.Config); err != nil {
+		return &order.CreateOrderResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	_, err := client.SendMessage(&whatsapp.SendMessageRequest{ToPhone: "", Template: "", Message: ""}, ctx)
+	if err != nil {
 		return &order.CreateOrderResponse{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
