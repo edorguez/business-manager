@@ -1,14 +1,15 @@
 package services
 
 import (
-	"bytes"
 	"context"
 	"fmt"
-	"io"
+	"log"
 	"net/http"
 
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
+	"github.com/twilio/twilio-go"
+	api "github.com/twilio/twilio-go/rest/api/v2010"
 )
 
 type WhatsappService struct {
@@ -22,53 +23,32 @@ func (s *WhatsappService) SendMessage(ctx context.Context, req *whatsapp.SendMes
 	fmt.Println(req)
 	fmt.Println("----------------")
 
-	// Replace with your actual token and phone number ID
-	token := s.Config.Token
-	phoneNumberID := s.Config.Phone_Id
-	url := fmt.Sprintf("https://graph.facebook.com/v21.0/%s/messages", phoneNumberID)
+	accountSid := s.Config.Twilio_Account_SID
+	authToken := s.Config.Twilio_Auth_Token
 
-	// JSON payload
-	payload := []byte(`{
-		"messaging_product": "whatsapp",
-		"to": "584141280555",
-		"type": "template",
-		"template": {
-			"name": "hello_world",
-			"language": {
-				"code": "en_US"
-			}
-		}
-	}`)
+	// Initialize Twilio client
+	client := twilio.NewRestClientWithParams(twilio.ClientParams{
+		Username: accountSid,
+		Password: authToken,
+	})
 
-	// Create a new HTTP request
-	httpReq, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
+	// Define message parameters
+	params := &api.CreateMessageParams{}
+	params.SetTo("whatsapp:+584141280555")                                   // Recipient
+	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number)) // Twilio WhatsApp Number
+	params.SetContentSid("HX350d429d32e64a552466cafecbe95f3c")               // Content SID
+	params.SetBody(`{"1":"12/1","2":"3pm"}`)                                 // Dynamic variables
+
+	// Send WhatsApp message
+	resp, err := client.Api.CreateMessage(params)
 	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return &whatsapp.SendMessageResponse{
-			Status: http.StatusInternalServerError,
-			Error:  err.Error(),
-		}, nil
+		log.Fatalf("Failed to send message: %v", err)
 	}
 
-	// Set headers
-	httpReq.Header.Set("Authorization", "Bearer "+token)
-	httpReq.Header.Set("Content-Type", "application/json")
-
-	// Send the request
-	client := &http.Client{}
-	resp, err := client.Do(httpReq)
-	if err != nil {
-		fmt.Println("Error sending request:", err)
-		// return
+	// Print message SID (Twilio's unique ID for the message)
+	if resp.Sid != nil {
+		fmt.Println("Message Sent! SID:", *resp.Sid)
 	}
-	defer resp.Body.Close()
-
-	// Print the response status
-	fmt.Println("Response Status:", resp.Status)
-
-	// Optionally, read and print the response body
-	body, _ := io.ReadAll(resp.Body)
-	fmt.Println("Response Body:", string(body))
 
 	fmt.Println("Whatsapp Service :  SendMessage - SUCCESS")
 	return &whatsapp.SendMessageResponse{
