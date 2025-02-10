@@ -37,7 +37,7 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 		}, nil
 	}
 
-	_, err := client.SendMessage(&whatsapp.SendMessageRequest{ToPhone: "", Template: "", Message: ""}, ctx)
+	_, err := client.SendMessage(&whatsapp.SendMessageRequest{ToPhone: req.Customer.Phone, Template: "", Message: ""}, ctx)
 	if err != nil {
 		return &order.CreateOrderResponse{
 			Status: http.StatusInternalServerError,
