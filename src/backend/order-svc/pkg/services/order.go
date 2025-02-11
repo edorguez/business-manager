@@ -37,7 +37,24 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 		}, nil
 	}
 
-	_, err := client.SendMessage(&whatsapp.SendMessageRequest{ToPhone: req.Customer.Phone, Template: "", Message: ""}, ctx)
+	fmt.Println("2----------------------")
+	fmt.Println(req.Products)
+	fmt.Println("-2-------------------------")
+
+	orderProducts := make([]*whatsapp.OrderProductRequest, 0, len(req.Products))
+	for _, v := range req.Products {
+		orderProducts = append(orderProducts, &whatsapp.OrderProductRequest{
+			Name:     v.Name,
+			Quantity: v.Quantity,
+			Price:    v.Price,
+		})
+	}
+
+	fmt.Println("----------------------")
+	fmt.Println(orderProducts)
+	fmt.Println("--------------------------")
+
+	_, err := client.SendOrderCustomerMessage(&whatsapp.SendOrderCustomerMessageRequest{ToPhone: req.Customer.Phone, CustomerName: req.Customer.FirstName, ContactNumber: req.Customer.Phone, Products: orderProducts}, ctx)
 	if err != nil {
 		return &order.CreateOrderResponse{
 			Status: http.StatusInternalServerError,

@@ -41,22 +41,21 @@ func InitWhatsappServiceClient(c *config.Config) error {
 	return nil
 }
 
-func SendMessage(params *pb.SendMessageRequest, c context.Context) (*pb.SendMessageResponse, error) {
-	fmt.Println("Whatsapp CLIENT :  SendMessage")
-
-	fmt.Println("Whatsapp CLIENT :  SendMessage - Body")
+func SendOrderCustomerMessage(params *pb.SendOrderCustomerMessageRequest, c context.Context) (*pb.SendOrderCustomerMessageResponse, error) {
+	fmt.Println("Whatsapp CLIENT :  SendOrderCustomerMessage")
+	fmt.Println("Whatsapp CLIENT :  SendOrderCustomerMessage - Body")
 	fmt.Println(params)
 	fmt.Println("-----------------")
 
-	res, err := whatsappServiceClient.SendMessage(c, params)
+	res, err := whatsappServiceClient.SendOrderCustomerMessage(c, params)
 
 	if err != nil {
-		fmt.Println("Whatsapp CLIENT :  SendMessage - ERROR")
+		fmt.Println("Whatsapp CLIENT :  SendOrderCustomerMessage - ERROR")
 		fmt.Println(err.Error())
 
 		return nil, err
 	}
 
-	fmt.Println("Whatsapp CLIENT :  SendMessage - SUCCESS")
+	fmt.Println("Whatsapp CLIENT :  SendOrderCustomerMessage - SUCCESS")
 	return res, nil
 }

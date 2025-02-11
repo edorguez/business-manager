@@ -59,12 +59,13 @@ func CreateOrder(body contracts.CreateOrderRequest, c context.Context) (*pb.Crea
 			IdentificationNumber: body.Customer.IdentificationNumber,
 			IdentificationType:   body.Customer.IdentificationType,
 		},
-		Products: make([]*pb.CreateOrderProductRequest, len(body.Products)),
+		Products: make([]*pb.CreateOrderProductRequest, 0, len(body.Products)),
 	}
 
 	for _, product := range body.Products {
 		createOrderParams.Products = append(createOrderParams.Products, &pb.CreateOrderProductRequest{
 			ProductId: product.ProductId,
+			Name:      product.Name,
 			Quantity:  product.Quantity,
 			Price:     product.Price,
 		})

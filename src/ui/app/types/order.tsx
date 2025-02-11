@@ -14,6 +14,7 @@ export type CreateOrderCustomer = {
 
 export type CreateOrderProduct = {
   productId: string;
+  name: string;
   quantity: number;
   price: number;
 };

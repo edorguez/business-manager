@@ -24,8 +24,9 @@ message CreateOrderCustomerRequest {
 
 message CreateOrderProductRequest {
     string productId = 1;
-    uint64 quantity = 2;
-    uint64 price = 3;
+    string name = 2;
+    uint64 quantity = 3;
+    uint64 price = 4;
 }
 
 message CreateOrderResponse{

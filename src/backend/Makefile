@@ -122,6 +122,7 @@ gateway-proto:
 	       $(PROTO_DIR)/company.proto \
 	       $(PROTO_DIR)/auth.proto \
 	       $(PROTO_DIR)/customer.proto \
+	       $(PROTO_DIR)/order.proto \
 	       $(PROTO_DIR)/file.proto \
 	       $(PROTO_DIR)/payment_type.proto \
 	       $(PROTO_DIR)/payment.proto \

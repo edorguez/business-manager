@@ -5,16 +5,23 @@ package whatsapp;
 option go_package= "./whatsapp";
 
 service WhatsappService{
-  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc SendOrderCustomerMessage(SendOrderCustomerMessageRequest) returns (SendOrderCustomerMessageResponse);
 }
 
-message SendMessageRequest {
-    string toPhone = 1;
-    string template = 2;
-    string message = 3;
+message SendOrderCustomerMessageRequest {
+  string toPhone = 1;
+  string customerName = 2;
+  string contactNumber = 3;
+  repeated OrderProductRequest products = 4;
 }
 
-message SendMessageResponse {
+message SendOrderCustomerMessageResponse {
   int64 status = 1;
   string error = 2;
+}
+
+message OrderProductRequest {
+    string name = 1;
+    uint64 quantity = 2;
+    uint64 price = 3;
 }

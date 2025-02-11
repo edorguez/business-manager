@@ -64,6 +64,7 @@ const CheckoutModal = () => {
         (res: CreateOrderProduct[], item: CartItem) => {
           res.push({
             productId: item.id,
+            name: item.name,
             quantity: item.quantity,
             price: item.price,
           });

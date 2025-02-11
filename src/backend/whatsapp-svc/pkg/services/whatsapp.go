@@ -18,9 +18,9 @@ type WhatsappService struct {
 	whatsapp.UnimplementedWhatsappServiceServer
 }
 
-func (s *WhatsappService) SendMessage(ctx context.Context, req *whatsapp.SendMessageRequest) (*whatsapp.SendMessageResponse, error) {
-	fmt.Println("Whatsapp Service :  SendMessage")
-	fmt.Println("Whatsapp Service :  SendMessage - Req")
+func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *whatsapp.SendOrderCustomerMessageRequest) (*whatsapp.SendOrderCustomerMessageResponse, error) {
+	fmt.Println("Whatsapp Service :  SendOrderCustomerMessage")
+	fmt.Println("Whatsapp Service :  SendOrderCustomerMessage - Req")
 	fmt.Println(req)
 	fmt.Println("----------------")
 
@@ -33,32 +33,21 @@ func (s *WhatsappService) SendMessage(ctx context.Context, req *whatsapp.SendMes
 		Password: authToken,
 	})
 
-	// Sample data (replace with your dynamic data)
-	customerName := "John"
-	products := []struct {
-		Name     string
-		Price    float64
-		Quantity int
-	}{
-		{"Product A", 10.0, 2},
-		{"Product B", 15.0, 1},
-	}
-
 	// Format product list
 	var productList string
 	var total float64
-	for _, p := range products {
-		productList += fmt.Sprintf("- %s: $%.2f x %d = $%.2f\n", p.Name, p.Price, p.Quantity, p.Price*float64(p.Quantity))
-		total += p.Price * float64(p.Quantity)
+	for _, p := range req.Products {
+		productPrice := float64(p.Price) / 100
+		productList += fmt.Sprintf("- %s: $%.2f x %d = $%.2f\n", p.Name, productPrice, p.Quantity, productPrice*float64(p.Quantity))
+		total += productPrice * float64(p.Quantity)
 	}
 
 	// WhatsApp contact link
-	contactNumber := "1234567890" // Replace with your contact number (E.164 format without "+")
-	contactLink := fmt.Sprintf("https://wa.me/%s", contactNumber)
+	contactLink := fmt.Sprintf("https://wa.me/%s", req.ContactNumber)
 
 	// Create dynamic variables JSON
 	contentVariables := map[string]string{
-		"1": customerName,
+		"1": req.CustomerName,
 		"2": productList,
 		"3": fmt.Sprintf("$%.2f", total),
 		"4": contactLink,
@@ -69,9 +58,8 @@ func (s *WhatsappService) SendMessage(ctx context.Context, req *whatsapp.SendMes
 	params := &api.CreateMessageParams{}
 	params.SetTo(fmt.Sprintf("whatsapp:+58%v", req.ToPhone))                 // Recipient
 	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number)) // Twilio WhatsApp Number
-	params.SetContentSid("HX64a2489d722cfd55de289b7f8710a434")               // Content SID
-	// params.SetBody(`{"1":"12/1","2":"3pm"}`)                                 // Dynamic variables
-	params.SetContentVariables(string(contentVariablesJSON)) // Dynamic variables
+	params.SetContentSid("HXf5305de969b2c33adfe6138fac5781df")               // Content SID
+	params.SetContentVariables(string(contentVariablesJSON))                 // Dynamic variables
 
 	// Send WhatsApp message
 	resp, err := client.Api.CreateMessage(params)
@@ -84,8 +72,8 @@ func (s *WhatsappService) SendMessage(ctx context.Context, req *whatsapp.SendMes
 		fmt.Println("Message Sent! SID:", *resp.Sid)
 	}
 
-	fmt.Println("Whatsapp Service :  SendMessage - SUCCESS")
-	return &whatsapp.SendMessageResponse{
+	fmt.Println("Whatsapp Service :  SendOrderCustomerMessage - SUCCESS")
+	return &whatsapp.SendOrderCustomerMessageResponse{
 		Status: http.StatusCreated,
 	}, nil
 }
