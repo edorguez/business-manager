@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	WhatsappService_SendOrderCustomerMessage_FullMethodName = "/whatsapp.WhatsappService/SendOrderCustomerMessage"
+	WhatsappService_SendOrderBusinessMessage_FullMethodName = "/whatsapp.WhatsappService/SendOrderBusinessMessage"
 )
 
 // WhatsappServiceClient is the client API for WhatsappService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WhatsappServiceClient interface {
 	SendOrderCustomerMessage(ctx context.Context, in *SendOrderCustomerMessageRequest, opts ...grpc.CallOption) (*SendOrderCustomerMessageResponse, error)
+	SendOrderBusinessMessage(ctx context.Context, in *SendOrderBusinessMessageRequest, opts ...grpc.CallOption) (*SendOrderBusinessMessageResponse, error)
 }
 
 type whatsappServiceClient struct {
@@ -47,11 +49,22 @@ func (c *whatsappServiceClient) SendOrderCustomerMessage(ctx context.Context, in
 	return out, nil
 }
 
+func (c *whatsappServiceClient) SendOrderBusinessMessage(ctx context.Context, in *SendOrderBusinessMessageRequest, opts ...grpc.CallOption) (*SendOrderBusinessMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendOrderBusinessMessageResponse)
+	err := c.cc.Invoke(ctx, WhatsappService_SendOrderBusinessMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WhatsappServiceServer is the server API for WhatsappService service.
 // All implementations must embed UnimplementedWhatsappServiceServer
 // for forward compatibility.
 type WhatsappServiceServer interface {
 	SendOrderCustomerMessage(context.Context, *SendOrderCustomerMessageRequest) (*SendOrderCustomerMessageResponse, error)
+	SendOrderBusinessMessage(context.Context, *SendOrderBusinessMessageRequest) (*SendOrderBusinessMessageResponse, error)
 	mustEmbedUnimplementedWhatsappServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedWhatsappServiceServer struct{}
 
 func (UnimplementedWhatsappServiceServer) SendOrderCustomerMessage(context.Context, *SendOrderCustomerMessageRequest) (*SendOrderCustomerMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendOrderCustomerMessage not implemented")
+}
+func (UnimplementedWhatsappServiceServer) SendOrderBusinessMessage(context.Context, *SendOrderBusinessMessageRequest) (*SendOrderBusinessMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendOrderBusinessMessage not implemented")
 }
 func (UnimplementedWhatsappServiceServer) mustEmbedUnimplementedWhatsappServiceServer() {}
 func (UnimplementedWhatsappServiceServer) testEmbeddedByValue()                         {}
@@ -104,6 +120,24 @@ func _WhatsappService_SendOrderCustomerMessage_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WhatsappService_SendOrderBusinessMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendOrderBusinessMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WhatsappServiceServer).SendOrderBusinessMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WhatsappService_SendOrderBusinessMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WhatsappServiceServer).SendOrderBusinessMessage(ctx, req.(*SendOrderBusinessMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // WhatsappService_ServiceDesc is the grpc.ServiceDesc for WhatsappService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var WhatsappService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendOrderCustomerMessage",
 			Handler:    _WhatsappService_SendOrderCustomerMessage_Handler,
+		},
+		{
+			MethodName: "SendOrderBusinessMessage",
+			Handler:    _WhatsappService_SendOrderBusinessMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

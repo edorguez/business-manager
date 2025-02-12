@@ -59,3 +59,22 @@ func SendOrderCustomerMessage(params *pb.SendOrderCustomerMessageRequest, c cont
 	fmt.Println("Whatsapp CLIENT :  SendOrderCustomerMessage - SUCCESS")
 	return res, nil
 }
+
+func SendOrderBusinessMessage(params *pb.SendOrderBusinessMessageRequest, c context.Context) (*pb.SendOrderBusinessMessageResponse, error) {
+	fmt.Println("Whatsapp CLIENT :  SendOrderBusinessMessage")
+	fmt.Println("Whatsapp CLIENT :  SendOrderBusinessMessage - Body")
+	fmt.Println(params)
+	fmt.Println("-----------------")
+
+	res, err := whatsappServiceClient.SendOrderBusinessMessage(c, params)
+
+	if err != nil {
+		fmt.Println("Whatsapp CLIENT :  SendOrderBusinessMessage - ERROR")
+		fmt.Println(err.Error())
+
+		return nil, err
+	}
+
+	fmt.Println("Whatsapp CLIENT :  SendOrderBusinessMessage - SUCCESS")
+	return res, nil
+}
