@@ -98,16 +98,16 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
       USER_ROLE_ID.REGULAR,
     ],
   },
-  // {
-  //   title: "WhatsApp",
-  //   path: "/management/whatsapp",
-  //   icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
-  //   roleIds: [
-  //     USER_ROLE_ID.SUPER_ADMIN,
-  //     USER_ROLE_ID.ADMIN,
-  //     USER_ROLE_ID.REGULAR,
-  //   ],
-  // },
+  {
+    title: "WhatsApp",
+    path: "/management/whatsapp",
+    icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
+    roleIds: [
+      USER_ROLE_ID.SUPER_ADMIN,
+      USER_ROLE_ID.ADMIN,
+      USER_ROLE_ID.REGULAR,
+    ],
+  },
   {
     title: "Usuarios",
     path: "/management/users",
