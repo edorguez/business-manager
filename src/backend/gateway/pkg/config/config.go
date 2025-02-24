@@ -18,6 +18,8 @@ type Config struct {
 	Order_Svc_Port    string `mapstructure:"ORDER_SVC_PORT"`
 	File_Svc_Url      string `mapstructure:"FILE_SVC_URL"`
 	File_Svc_Port     string `mapstructure:"FILE_SVC_PORT"`
+	Whatsapp_Svc_Url  string `mapstructure:"WHATSAPP_SVC_URL"`
+	Whatsapp_Svc_Port string `mapstructure:"WHATSAPP_SVC_PORT"`
 }
 
 func LoadConfig() (config Config, err error) {

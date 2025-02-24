@@ -128,6 +128,7 @@ gateway-proto:
 	       $(PROTO_DIR)/payment.proto \
 	       $(PROTO_DIR)/product.proto \
 	       $(PROTO_DIR)/role.proto \
+	       $(PROTO_DIR)/whatsapp.proto \
 	       $(PROTO_DIR)/user.proto
 
 # Generate all proto files
