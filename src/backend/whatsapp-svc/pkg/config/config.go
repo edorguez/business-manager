@@ -3,10 +3,10 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Environment         string `mapstructure:"ENVIRONMENT"`
 	Port                string `mapstructure:"PORT"`
 	DBDriver            string `mapstructure:"DB_DRIVER"`
-	DBSource            string `mapstructure:"DB_SOURCE"`
+	DBSourceDevelopment string `mapstructure:"DB_SOURCE_DEVELOPMENT"`
+	DBSourceProduction  string `mapstructure:"DB_SOURCE_PRODUCTION"`
 	Twilio_Account_SID  string `mapstructure:"TWILIO_ACCOUNT_SID"`
 	Twilio_Auth_Token   string `mapstructure:"TWILIO_AUTH_TOKEN"`
 	Twilio_Phone_Number string `mapstructure:"TWILIO_PHONE_NUMBER"`

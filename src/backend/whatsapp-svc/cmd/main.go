@@ -1,13 +1,18 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
+	db "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/db/sqlc"
 	pbwhatsapp "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
+	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/repository"
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/services"
+	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 )
 
@@ -22,9 +27,31 @@ func main() {
 		log.Fatalln("Failed to listing:", err)
 	}
 
+	appEnv := os.Getenv("ENVIRONMENT")
+	if appEnv == "" {
+		appEnv = "development" // Default to development if the variable is not set
+	}
+
+	var dbSource string
+	if appEnv == "production" {
+		fmt.Println("Running in production mode")
+		dbSource = c.DBSourceProduction
+	} else {
+		fmt.Println("Running in development mode")
+		dbSource = c.DBSourceDevelopment
+	}
+
+	conn, err := sql.Open(c.DBDriver, dbSource)
+	if err != nil {
+		log.Fatal("Cannot connect to db: ", err)
+	}
+
+	storage := db.NewStorage(conn)
+
 	fmt.Println("Client Service ON: ", c.Port)
 
 	ps := services.WhatsappService{
+		Repo:   repository.NewWhatsappRepo(storage),
 		Config: &c,
 	}
 

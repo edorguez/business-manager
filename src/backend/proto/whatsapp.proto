@@ -7,7 +7,9 @@ option go_package= "./whatsapp";
 service WhatsappService{
   rpc SendOrderCustomerMessage(SendOrderCustomerMessageRequest) returns (SendOrderCustomerMessageResponse);
   rpc SendOrderBusinessMessage(SendOrderBusinessMessageRequest) returns (SendOrderBusinessMessageResponse);
+  rpc CreateBusinessPhone(CreateBusinessPhoneRequest) returns (CreateBusinessPhoneResponse);
   rpc UpdateBusinessPhone(UpdateBusinessPhoneRequest) returns (UpdateBusinessPhoneResponse);
+  rpc GetBusinessPhoneByCompanyId(GetBusinessPhoneByCompanyIdRequest) returns (GetBusinessPhoneByCompanyIdResponse);
 }
 
 message SendOrderCustomerMessageRequest {
@@ -40,6 +42,16 @@ message OrderProductRequest {
   uint64 price = 3;
 }
 
+message CreateBusinessPhoneRequest {
+  int64 companyId = 1;
+  string phone = 2;
+}
+
+message CreateBusinessPhoneResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
 message UpdateBusinessPhoneRequest {
   int64 companyId = 1;
   string phone = 2;
@@ -48,4 +60,16 @@ message UpdateBusinessPhoneRequest {
 message UpdateBusinessPhoneResponse {
   int64 status = 1;
   string error = 2;
+}
+
+message GetBusinessPhoneByCompanyIdRequest{
+  int64 companyId = 1;
+}
+
+message GetBusinessPhoneByCompanyIdResponse{
+  int64 id = 1;
+  int64 companyId = 2;
+  string phone = 3;
+  int64 status = 4;
+  string error = 5;
 }

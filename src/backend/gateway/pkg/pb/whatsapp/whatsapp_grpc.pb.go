@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	WhatsappService_SendOrderCustomerMessage_FullMethodName = "/whatsapp.WhatsappService/SendOrderCustomerMessage"
-	WhatsappService_SendOrderBusinessMessage_FullMethodName = "/whatsapp.WhatsappService/SendOrderBusinessMessage"
-	WhatsappService_UpdateBusinessPhone_FullMethodName      = "/whatsapp.WhatsappService/UpdateBusinessPhone"
+	WhatsappService_SendOrderCustomerMessage_FullMethodName    = "/whatsapp.WhatsappService/SendOrderCustomerMessage"
+	WhatsappService_SendOrderBusinessMessage_FullMethodName    = "/whatsapp.WhatsappService/SendOrderBusinessMessage"
+	WhatsappService_CreateBusinessPhone_FullMethodName         = "/whatsapp.WhatsappService/CreateBusinessPhone"
+	WhatsappService_UpdateBusinessPhone_FullMethodName         = "/whatsapp.WhatsappService/UpdateBusinessPhone"
+	WhatsappService_GetBusinessPhoneByCompanyId_FullMethodName = "/whatsapp.WhatsappService/GetBusinessPhoneByCompanyId"
 )
 
 // WhatsappServiceClient is the client API for WhatsappService service.
@@ -30,7 +32,9 @@ const (
 type WhatsappServiceClient interface {
 	SendOrderCustomerMessage(ctx context.Context, in *SendOrderCustomerMessageRequest, opts ...grpc.CallOption) (*SendOrderCustomerMessageResponse, error)
 	SendOrderBusinessMessage(ctx context.Context, in *SendOrderBusinessMessageRequest, opts ...grpc.CallOption) (*SendOrderBusinessMessageResponse, error)
+	CreateBusinessPhone(ctx context.Context, in *CreateBusinessPhoneRequest, opts ...grpc.CallOption) (*CreateBusinessPhoneResponse, error)
 	UpdateBusinessPhone(ctx context.Context, in *UpdateBusinessPhoneRequest, opts ...grpc.CallOption) (*UpdateBusinessPhoneResponse, error)
+	GetBusinessPhoneByCompanyId(ctx context.Context, in *GetBusinessPhoneByCompanyIdRequest, opts ...grpc.CallOption) (*GetBusinessPhoneByCompanyIdResponse, error)
 }
 
 type whatsappServiceClient struct {
@@ -61,10 +65,30 @@ func (c *whatsappServiceClient) SendOrderBusinessMessage(ctx context.Context, in
 	return out, nil
 }
 
+func (c *whatsappServiceClient) CreateBusinessPhone(ctx context.Context, in *CreateBusinessPhoneRequest, opts ...grpc.CallOption) (*CreateBusinessPhoneResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateBusinessPhoneResponse)
+	err := c.cc.Invoke(ctx, WhatsappService_CreateBusinessPhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *whatsappServiceClient) UpdateBusinessPhone(ctx context.Context, in *UpdateBusinessPhoneRequest, opts ...grpc.CallOption) (*UpdateBusinessPhoneResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateBusinessPhoneResponse)
 	err := c.cc.Invoke(ctx, WhatsappService_UpdateBusinessPhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *whatsappServiceClient) GetBusinessPhoneByCompanyId(ctx context.Context, in *GetBusinessPhoneByCompanyIdRequest, opts ...grpc.CallOption) (*GetBusinessPhoneByCompanyIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBusinessPhoneByCompanyIdResponse)
+	err := c.cc.Invoke(ctx, WhatsappService_GetBusinessPhoneByCompanyId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +101,9 @@ func (c *whatsappServiceClient) UpdateBusinessPhone(ctx context.Context, in *Upd
 type WhatsappServiceServer interface {
 	SendOrderCustomerMessage(context.Context, *SendOrderCustomerMessageRequest) (*SendOrderCustomerMessageResponse, error)
 	SendOrderBusinessMessage(context.Context, *SendOrderBusinessMessageRequest) (*SendOrderBusinessMessageResponse, error)
+	CreateBusinessPhone(context.Context, *CreateBusinessPhoneRequest) (*CreateBusinessPhoneResponse, error)
 	UpdateBusinessPhone(context.Context, *UpdateBusinessPhoneRequest) (*UpdateBusinessPhoneResponse, error)
+	GetBusinessPhoneByCompanyId(context.Context, *GetBusinessPhoneByCompanyIdRequest) (*GetBusinessPhoneByCompanyIdResponse, error)
 	mustEmbedUnimplementedWhatsappServiceServer()
 }
 
@@ -94,8 +120,14 @@ func (UnimplementedWhatsappServiceServer) SendOrderCustomerMessage(context.Conte
 func (UnimplementedWhatsappServiceServer) SendOrderBusinessMessage(context.Context, *SendOrderBusinessMessageRequest) (*SendOrderBusinessMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendOrderBusinessMessage not implemented")
 }
+func (UnimplementedWhatsappServiceServer) CreateBusinessPhone(context.Context, *CreateBusinessPhoneRequest) (*CreateBusinessPhoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBusinessPhone not implemented")
+}
 func (UnimplementedWhatsappServiceServer) UpdateBusinessPhone(context.Context, *UpdateBusinessPhoneRequest) (*UpdateBusinessPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBusinessPhone not implemented")
+}
+func (UnimplementedWhatsappServiceServer) GetBusinessPhoneByCompanyId(context.Context, *GetBusinessPhoneByCompanyIdRequest) (*GetBusinessPhoneByCompanyIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBusinessPhoneByCompanyId not implemented")
 }
 func (UnimplementedWhatsappServiceServer) mustEmbedUnimplementedWhatsappServiceServer() {}
 func (UnimplementedWhatsappServiceServer) testEmbeddedByValue()                         {}
@@ -154,6 +186,24 @@ func _WhatsappService_SendOrderBusinessMessage_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WhatsappService_CreateBusinessPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBusinessPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WhatsappServiceServer).CreateBusinessPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WhatsappService_CreateBusinessPhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WhatsappServiceServer).CreateBusinessPhone(ctx, req.(*CreateBusinessPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _WhatsappService_UpdateBusinessPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateBusinessPhoneRequest)
 	if err := dec(in); err != nil {
@@ -168,6 +218,24 @@ func _WhatsappService_UpdateBusinessPhone_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WhatsappServiceServer).UpdateBusinessPhone(ctx, req.(*UpdateBusinessPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WhatsappService_GetBusinessPhoneByCompanyId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBusinessPhoneByCompanyIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WhatsappServiceServer).GetBusinessPhoneByCompanyId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WhatsappService_GetBusinessPhoneByCompanyId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WhatsappServiceServer).GetBusinessPhoneByCompanyId(ctx, req.(*GetBusinessPhoneByCompanyIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -188,8 +256,16 @@ var WhatsappService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _WhatsappService_SendOrderBusinessMessage_Handler,
 		},
 		{
+			MethodName: "CreateBusinessPhone",
+			Handler:    _WhatsappService_CreateBusinessPhone_Handler,
+		},
+		{
 			MethodName: "UpdateBusinessPhone",
 			Handler:    _WhatsappService_UpdateBusinessPhone_Handler,
+		},
+		{
+			MethodName: "GetBusinessPhoneByCompanyId",
+			Handler:    _WhatsappService_GetBusinessPhoneByCompanyId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
