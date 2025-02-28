@@ -26,13 +26,30 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 
 	mw := MiddlewareConfig{}
 
+	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/businessPhone/{id}", wr.GetBusinessPhoneByCompanyId)
+
+	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/businessPhone", wr.CreateBusinessPhone)
+	postRouter.Use(mw.MiddlewareValidateCreateBusinessPhone)
+
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
-	putRouter.HandleFunc("/businessNumber", wr.UpdateBusinessNumber)
+	putRouter.HandleFunc("/businessPhone", wr.UpdateBusinessPhone)
 	putRouter.Use(mw.MiddlewareValidateUpdateBusinessPhone)
 
 }
 
-func (wr *WhatsappRoutes) UpdateBusinessNumber(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("API Gateway : UpdateBusinessNumber Called --> 1")
-	routes.UpdateBusinessNumber(w, r, wr.config)
+func (wr *WhatsappRoutes) GetBusinessPhoneByCompanyId(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway : GetBusinessPhoneByCompanyId Called --> 1")
+	routes.GetBusinessPhoneByCompanyId(w, r, wr.config)
+}
+
+func (wr *WhatsappRoutes) CreateBusinessPhone(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway : CreateBusinessPhone Called --> 1")
+	routes.CreateBusinessPhone(w, r, wr.config)
+}
+
+func (wr *WhatsappRoutes) UpdateBusinessPhone(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway : UpdateBusinessPhone Called --> 1")
+	routes.UpdateBusinessPhone(w, r, wr.config)
 }

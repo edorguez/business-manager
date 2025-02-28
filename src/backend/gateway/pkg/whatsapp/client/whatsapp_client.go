@@ -43,6 +43,73 @@ func InitWhatsappServiceClient(c *config.Config) error {
 	return nil
 }
 
+func GetBusinessPhoneByCompanyId(companyId int64, c context.Context) (*contracts.GetBusinessPhoneResponse, *contracts.Error) {
+	fmt.Println("Whatsapp CLIENT :  GetBusinessPhoneByCompanyId")
+
+	params := &pb.GetBusinessPhoneByCompanyIdRequest{
+		CompanyId: companyId,
+	}
+
+	res, err := whatsappServiceClient.GetBusinessPhoneByCompanyId(c, params)
+
+	if err != nil {
+		fmt.Println("Whatsapp CLIENT :  GetBusinessPhoneByCompanyId - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Whatsapp CLIENT :  GetBusinessPhoneByCompanyId - SUCCESS")
+
+	if res.Status != http.StatusOK {
+		error := &contracts.Error{
+			Status: res.Status,
+			Error:  res.Error,
+		}
+		return nil, error
+	}
+
+	return &contracts.GetBusinessPhoneResponse{
+		CompanyId: res.CompanyId,
+		Phone:     res.Phone,
+	}, nil
+}
+
+func CreateBusinessPhone(body contracts.CreateBusinessPhoneRequest, c context.Context) (*pb.CreateBusinessPhoneResponse, *contracts.Error) {
+	fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone")
+
+	fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone - Body")
+	fmt.Println(body)
+	fmt.Println("-----------------")
+
+	createWhatsappParams := &pb.CreateBusinessPhoneRequest{
+		CompanyId: body.CompanyId,
+		Phone:     body.Phone,
+	}
+
+	res, err := whatsappServiceClient.CreateBusinessPhone(c, createWhatsappParams)
+
+	if err != nil {
+		fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone - ERROR")
+		fmt.Println(err.Error())
+
+		error := &contracts.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone - SUCCESS")
+	return res, nil
+}
+
 func UpdateBusinessPhone(body contracts.UpdateBusinessPhoneRequest, c context.Context) (*pb.UpdateBusinessPhoneResponse, *contracts.Error) {
 	fmt.Println("Whatsapp CLIENT :  UpdateBusinessPhone")
 

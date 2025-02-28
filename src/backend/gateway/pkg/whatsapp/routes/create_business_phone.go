@@ -10,14 +10,14 @@ import (
 	"github.com/EdoRguez/business-manager/gateway/pkg/whatsapp/contracts"
 )
 
-func UpdateBusinessNumber(w http.ResponseWriter, r *http.Request, c *config.Config) {
+func CreateBusinessPhone(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("API Gateway :  UpdateBusinessNumber")
+	fmt.Println("API Gateway :  CreateBusinessPhone")
 
 	// We got our body through context, since we saved it in a middleware
-	body := r.Context().Value(contracts.UpdateBusinessPhoneRequest{}).(contracts.UpdateBusinessPhoneRequest)
+	body := r.Context().Value(contracts.CreateBusinessPhoneRequest{}).(contracts.CreateBusinessPhoneRequest)
 
-	fmt.Println("API Gateway :  UpdateBusinessNumber - Body")
+	fmt.Println("API Gateway :  CreateBusinessPhone - Body")
 	fmt.Println(body)
 	fmt.Println("-----------------")
 
@@ -29,15 +29,15 @@ func UpdateBusinessNumber(w http.ResponseWriter, r *http.Request, c *config.Conf
 		return
 	}
 
-	res, errUpdate := client.UpdateBusinessPhone(body, r.Context())
+	res, errCreate := client.CreateBusinessPhone(body, r.Context())
 
-	if errUpdate != nil {
-		fmt.Println("API Gateway :  UpdateBusinessNumber - ERROR")
-		json.NewEncoder(w).Encode(errUpdate)
+	if errCreate != nil {
+		fmt.Println("API Gateway :  CreateBusinessPhone - ERROR")
+		json.NewEncoder(w).Encode(errCreate)
 		return
 	}
 
-	fmt.Println("API Gateway :  UpdateBusinessNumber - SUCCESS")
+	fmt.Println("API Gateway :  CreateBusinessPhone - SUCCESS")
 	w.WriteHeader(int(res.Status))
 	json.NewEncoder(w).Encode(res)
 }
