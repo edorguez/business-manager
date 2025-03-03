@@ -21,7 +21,6 @@ export type CreateBusinessPhone = {
 }
 
 export type EditBusinessPhone = {
-  id: number;
   companyId: number;
   phone: string;
 }

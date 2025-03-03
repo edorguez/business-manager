@@ -3,10 +3,14 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import SimpleCard from "@/app/components/cards/SimpleCard";
 import useLoading from "@/app/hooks/useLoading";
-import { GetBusinessPhoneByCompanyIdRequest } from "@/app/services/whatsapp";
+import {
+  CreateBusinessPhoneRequest,
+  EditBusinessPhoneRequest,
+  GetBusinessPhoneByCompanyIdRequest,
+} from "@/app/services/whatsapp";
 import { CurrentUser } from "@/app/types/auth";
 import { BusinessPhone } from "@/app/types/whatsapp";
-import { validNumbers } from "@/app/utils/InputUtils";
+import { validNumbers, validPhone } from "@/app/utils/InputUtils";
 import { Button, Input, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useCallback, useEffect, useState } from "react";
@@ -77,7 +81,9 @@ import { useCallback, useEffect, useState } from "react";
 const WhatsAppClient = () => {
   const toast = useToast();
   const isLoading = useLoading();
+  const [isEditPhone, setIsEditPhone] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>("");
+  const [companyId, setComanyId] = useState<number>(0);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const handleNumberChange = (event: any) => {
@@ -95,9 +101,14 @@ const WhatsAppClient = () => {
     const currentUser: CurrentUser | null = getCurrentUser();
 
     if (currentUser) {
-      let data: BusinessPhone = await GetBusinessPhoneByCompanyIdRequest(currentUser.companyId);
-      if(data?.phone)
+      setComanyId(currentUser.companyId);
+      let data: BusinessPhone = await GetBusinessPhoneByCompanyIdRequest(
+        currentUser.companyId
+      );
+      if (data?.phone) {
+        setIsEditPhone(true);
         setPhone(data.phone);
+      }
     }
     isLoading.onEndLoading();
   }, []);
@@ -105,6 +116,43 @@ const WhatsAppClient = () => {
   useEffect(() => {
     getBusinessPhone();
   }, []);
+
+  const onSubmit = async () => {
+    if (isFormValid()) {
+      isLoading.onStartLoading();
+      let res: any;
+
+      if (isEditPhone) {
+        let res: any = await EditBusinessPhoneRequest({
+          companyId: companyId,
+          phone: phone,
+        });
+      } else {
+        let res: any = await CreateBusinessPhoneRequest({
+          companyId: companyId,
+          phone: phone,
+        });
+      }
+
+      if (res?.error) {
+        showErrorMessage(res.error);
+        isLoading.onEndLoading();
+      } else {
+        showSuccessMessage("Número guardado exitosamente");
+        isLoading.onEndLoading();
+      }
+
+      setIsEditMode(false);
+    } else {
+      showErrorMessage("El número es requerido y debe tener el siguiente formato: 04141234567");
+    }
+  };
+
+  const isFormValid = (): boolean => {
+    if (phone && !validPhone(phone)) return false;
+
+    return true;
+  };
 
   const showSuccessMessage = (msg: string) => {
     toast({
@@ -137,14 +185,14 @@ const WhatsAppClient = () => {
           <Input
             size="sm"
             name="phone"
-            placeholder="04141234567"
+            disabled={!isEditMode}
             value={phone}
             onChange={handleNumberChange}
             maxLength={11}
           />
         </div>
         <div className="flex items-end">
-          {isEditMode ? (
+          {!isEditMode ? (
             <Button
               size="sm"
               variant="main"
@@ -167,7 +215,7 @@ const WhatsAppClient = () => {
                 size="sm"
                 variant="main"
                 className="mx-1"
-                onClick={handleEditMode}
+                onClick={onSubmit}
               >
                 <Icon icon="lucide:check" />
               </Button>
