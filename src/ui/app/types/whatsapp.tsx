@@ -14,3 +14,20 @@ export type WhatsappMessage = {
   wasRead: boolean;
   fromMe: boolean;
 }
+
+export type CreateBusinessPhone = {
+  companyId: number;
+  phone: string;
+}
+
+export type EditBusinessPhone = {
+  id: number;
+  companyId: number;
+  phone: string;
+}
+
+export type BusinessPhone = {
+  id: number;
+  companyId: number;
+  phone: string;
+}

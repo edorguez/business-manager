@@ -43,8 +43,6 @@ const CheckoutModal = () => {
     count: 2,
   });
 
-
-
   const createOrder = useCallback(async (request: CreateOrder) => {
     const res = await CreateOrderRequest(request);
     if (!res?.error) {
