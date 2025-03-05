@@ -13,9 +13,9 @@ service WhatsappService{
 }
 
 message SendOrderCustomerMessageRequest {
-  string toPhone = 1;
-  string customerName = 2;
-  string contactNumber = 3;
+  int64 companyId = 1;
+  string toPhone = 2;
+  string customerName = 3;
   repeated OrderProductRequest products = 4;
 }
 
@@ -25,7 +25,7 @@ message SendOrderCustomerMessageResponse {
 }
 
 message SendOrderBusinessMessageRequest {
-  string toPhone = 1;
+  int64 companyId = 1;
   string customerName = 2;
   string contactNumber = 3;
   repeated OrderProductRequest products = 4;

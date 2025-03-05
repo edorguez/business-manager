@@ -12,6 +12,7 @@ import (
 	db "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/db/sqlc"
 	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
 	repo "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/repository"
+	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/util/phone"
 	"github.com/twilio/twilio-go"
 	api "github.com/twilio/twilio-go/rest/api/v2010"
 )
@@ -31,6 +32,25 @@ func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *wha
 	accountSid := s.Config.Twilio_Account_SID
 	authToken := s.Config.Twilio_Auth_Token
 
+	c, err := s.Repo.GetBusinessPhoneByCompanyId(ctx, req.CompanyId)
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Whatsapp Service :  GetBusinessPhoneByCompanyId - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Company number not found"
+		}
+
+		return &whatsapp.SendOrderCustomerMessageResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
 	// Initialize Twilio client
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
 		Username: accountSid,
@@ -48,7 +68,7 @@ func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *wha
 
 	// WhatsApp contact link
 	// contactLink := fmt.Sprintf("\u200bhttps://wa.me/%s", req.ContactNumber)
-	contactLink := req.ContactNumber
+	contactLink := c.Phone
 
 	// Create dynamic variables JSON
 	contentVariables := map[string]string{
@@ -61,10 +81,10 @@ func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *wha
 
 	// Define message parameters
 	params := &api.CreateMessageParams{}
-	params.SetTo(fmt.Sprintf("whatsapp:+58%v", req.ToPhone))                 // Recipient
-	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number)) // Twilio WhatsApp Number
-	params.SetContentSid("HX3929fc4860efca29f7312839fa3a0827")               // Content SID
-	params.SetContentVariables(string(contentVariablesJSON))                 // Dynamic variables
+	params.SetTo(fmt.Sprintf("whatsapp:+58%v", phone.RemovePhoneZero(req.ToPhone))) // Recipient
+	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number))        // Twilio WhatsApp Number
+	params.SetContentSid("HX3929fc4860efca29f7312839fa3a0827")                      // Content SID
+	params.SetContentVariables(string(contentVariablesJSON))                        // Dynamic variables
 
 	// Send WhatsApp message
 	resp, err := client.Api.CreateMessage(params)
@@ -92,6 +112,25 @@ func (s *WhatsappService) SendOrderBusinessMessage(ctx context.Context, req *wha
 	accountSid := s.Config.Twilio_Account_SID
 	authToken := s.Config.Twilio_Auth_Token
 
+	c, err := s.Repo.GetBusinessPhoneByCompanyId(ctx, req.CompanyId)
+	if err != nil && err != sql.ErrNoRows {
+		fmt.Println("Whatsapp Service :  GetBusinessPhoneByCompanyId - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Company number not found"
+		}
+
+		return &whatsapp.SendOrderBusinessMessageResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
 	// Initialize Twilio client
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
 		Username: accountSid,
@@ -122,10 +161,10 @@ func (s *WhatsappService) SendOrderBusinessMessage(ctx context.Context, req *wha
 
 	// Define message parameters
 	params := &api.CreateMessageParams{}
-	params.SetTo(fmt.Sprintf("whatsapp:+58%v", req.ToPhone))                 // Recipient
-	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number)) // Twilio WhatsApp Number
-	params.SetContentSid("HX15a23f804b9a05bb807a843c09ac5975")               // Content SID
-	params.SetContentVariables(string(contentVariablesJSON))                 // Dynamic variables
+	params.SetTo(fmt.Sprintf("whatsapp:+58%v", phone.RemovePhoneZero(c.Phone))) // Recipient
+	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number))    // Twilio WhatsApp Number
+	params.SetContentSid("HX15a23f804b9a05bb807a843c09ac5975")                  // Content SID
+	params.SetContentVariables(string(contentVariablesJSON))                    // Dynamic variables
 
 	// Send WhatsApp message
 	resp, err := client.Api.CreateMessage(params)

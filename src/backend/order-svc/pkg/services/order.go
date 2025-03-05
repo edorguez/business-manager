@@ -46,7 +46,7 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 		})
 	}
 
-	_, err := client.SendOrderBusinessMessage(&whatsapp.SendOrderBusinessMessageRequest{ToPhone: req.Customer.Phone, CustomerName: req.Customer.FirstName, ContactNumber: req.Customer.Phone, Products: orderProducts}, ctx)
+	_, err := client.SendOrderBusinessMessage(&whatsapp.SendOrderBusinessMessageRequest{CompanyId: req.CompanyId, CustomerName: req.Customer.FirstName, ContactNumber: req.Customer.Phone, Products: orderProducts}, ctx)
 	if err != nil {
 		return &order.CreateOrderResponse{
 			Status: http.StatusInternalServerError,
@@ -54,7 +54,7 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 		}, nil
 	}
 
-	_, err = client.SendOrderCustomerMessage(&whatsapp.SendOrderCustomerMessageRequest{ToPhone: req.Customer.Phone, CustomerName: req.Customer.FirstName, ContactNumber: req.Customer.Phone, Products: orderProducts}, ctx)
+	_, err = client.SendOrderCustomerMessage(&whatsapp.SendOrderCustomerMessageRequest{CompanyId: req.CompanyId, ToPhone: req.Customer.Phone, CustomerName: req.Customer.FirstName, Products: orderProducts}, ctx)
 	if err != nil {
 		return &order.CreateOrderResponse{
 			Status: http.StatusInternalServerError,
