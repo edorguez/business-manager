@@ -62,20 +62,16 @@ func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *wha
 	var total float64
 	for _, p := range req.Products {
 		productPrice := float64(p.Price) / 100
-		productList += fmt.Sprintf("- %s: $%.2f x %d = $%.2f\n", p.Name, productPrice, p.Quantity, productPrice*float64(p.Quantity))
+		productList += fmt.Sprintf("- %s: $%.2f x %d = $%.2f\r", p.Name, productPrice, p.Quantity, productPrice*float64(p.Quantity))
 		total += productPrice * float64(p.Quantity)
 	}
-
-	// WhatsApp contact link
-	// contactLink := fmt.Sprintf("\u200bhttps://wa.me/%s", req.ContactNumber)
-	contactLink := c.Phone
 
 	// Create dynamic variables JSON
 	contentVariables := map[string]string{
 		"1": req.CustomerName,
 		"2": productList,
 		"3": fmt.Sprintf("$%.2f", total),
-		"4": contactLink,
+		"4": c.Phone,
 	}
 	contentVariablesJSON, _ := json.Marshal(contentVariables)
 
@@ -142,20 +138,16 @@ func (s *WhatsappService) SendOrderBusinessMessage(ctx context.Context, req *wha
 	var total float64
 	for _, p := range req.Products {
 		productPrice := float64(p.Price) / 100
-		productList += fmt.Sprintf("- %s: $%.2f x %d = $%.2f\n", p.Name, productPrice, p.Quantity, productPrice*float64(p.Quantity))
+		productList += fmt.Sprintf("- %s: $%.2f x %d = $%.2f\r", p.Name, productPrice, p.Quantity, productPrice*float64(p.Quantity))
 		total += productPrice * float64(p.Quantity)
 	}
-
-	// WhatsApp contact link
-	// contactLink := fmt.Sprintf("\u200bhttps://wa.me/%s", req.ContactNumber)
-	contactLink := req.ContactNumber
 
 	// Create dynamic variables JSON
 	contentVariables := map[string]string{
 		"1": req.CustomerName,
 		"2": productList,
 		"3": fmt.Sprintf("$%.2f", total),
-		"4": contactLink,
+		"4": req.ContactNumber,
 	}
 	contentVariablesJSON, _ := json.Marshal(contentVariables)
 
