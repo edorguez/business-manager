@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import CreateCustomerComponent from "../orders/CreateOrderCustomer";
 import SuccessCheckout from "../checkout/SuccessCheckout";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   CreateOrder,
   CreateOrderCustomer,
@@ -46,10 +46,10 @@ const CheckoutModal = () => {
   const createOrder = useCallback(async (request: CreateOrder) => {
     const res = await CreateOrderRequest(request);
     if (!res?.error) {
-        setActiveStep(1);
-      } else {
-        showErrorMessage(res.error);
-      }
+      setActiveStep(1);
+    } else {
+      showErrorMessage(res.error);
+    }
   }, []);
 
   const handleStartCreateOrder = async (customer: CreateOrderCustomer) => {
@@ -76,6 +76,11 @@ const CheckoutModal = () => {
     await createOrder(request);
   };
 
+  const handleOnCloseModal = () => {
+    checkoutModal.onClose();
+    setActiveStep(0);
+  };
+
   const showErrorMessage = (msg: string) => {
     toast({
       title: "Error",
@@ -87,12 +92,19 @@ const CheckoutModal = () => {
     });
   };
 
+  useEffect(() => {
+    if (activeStep === 1) {
+      setAllowCloseModal(true);
+      cart.onClearCart();
+    }
+  }, [activeStep]);
+
   return (
     <>
       <Modal
         closeOnOverlayClick={allowCloseModal}
         isOpen={checkoutModal.isOpen}
-        onClose={checkoutModal.onClose}
+        onClose={handleOnCloseModal}
       >
         <ModalOverlay />
         <ModalContent>
@@ -107,7 +119,7 @@ const CheckoutModal = () => {
                   />
                 </StepIndicator>
 
-                <Box flexShrink="0">
+                <Box flexShrink="0" className="select-none">
                   <StepTitle>Información</StepTitle>
                   <StepDescription>Datos básicos</StepDescription>
                 </Box>
@@ -123,7 +135,7 @@ const CheckoutModal = () => {
                   />
                 </StepIndicator>
 
-                <Box flexShrink="0">
+                <Box flexShrink="0" className="select-none">
                   <StepTitle>Completado</StepTitle>
                   <StepDescription>Pedido realizado</StepDescription>
                 </Box>

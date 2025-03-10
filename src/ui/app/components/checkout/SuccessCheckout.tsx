@@ -21,11 +21,16 @@ const SuccessCheckout = () => {
 
   return (
     <>
-        <Confetti width={width} height={height} numberOfPieces={150} style={{ position: 'fixed', top: 0, left: 0 }} />
+      <Confetti
+        width={width}
+        height={height}
+        numberOfPieces={150}
+        style={{ position: "fixed", top: 0, left: 0 }}
+      />
       <div className="flex justify-center text-9xl text-maincolor">
         <Icon icon="icon-park-twotone:check-one" />
       </div>
-      <div className="mt-3">
+      <div className="mt-3 select-none">
         <h1 className="text-center font-bold text-lg">¡Pedido realizado!</h1>
         <p className="text-center text-sm">
           Nos comunicaremos contigo para concretar la orden

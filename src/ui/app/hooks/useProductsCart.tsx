@@ -8,6 +8,7 @@ interface ProductsCartStore {
   onClose: () => void;
   onAddToCart: (product: Product) => void;
   onRemoveFromCart: (productId: string) => void;
+  onClearCart: () => void;
 }
 
 export interface CartItem extends Product {
@@ -45,6 +46,11 @@ const useProductsCart = create<ProductsCartStore>((set) => ({
         .filter((item) => item.quantity > 0);
 
       return { ...state, items: updatedCarts };
+    });
+  },
+  onClearCart: () => {
+    set((state) => {
+      return { ...state, items: [] };
     });
   },
 }));

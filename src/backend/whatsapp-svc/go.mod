@@ -9,7 +9,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/twilio/twilio-go v1.23.11
 	go.mau.fi/whatsmeow v0.0.0-20241215104421-68b0856cce22
-	google.golang.org/grpc v1.62.1
+	google.golang.org/grpc v1.69.0
 	google.golang.org/protobuf v1.36.0
 )
 
@@ -17,7 +17,6 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -41,7 +40,7 @@ require (
 	golang.org/x/net v0.32.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240314234333-6e1732d8331c // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241015192408-796eee8c2d53 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
