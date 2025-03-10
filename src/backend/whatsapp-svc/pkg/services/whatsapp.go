@@ -33,7 +33,7 @@ func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *wha
 	authToken := s.Config.Twilio_Auth_Token
 
 	c, err := s.Repo.GetBusinessPhoneByCompanyId(ctx, req.CompanyId)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil {
 		fmt.Println("Whatsapp Service :  GetBusinessPhoneByCompanyId - ERROR")
 		fmt.Println(err.Error())
 
@@ -109,7 +109,7 @@ func (s *WhatsappService) SendOrderBusinessMessage(ctx context.Context, req *wha
 	authToken := s.Config.Twilio_Auth_Token
 
 	c, err := s.Repo.GetBusinessPhoneByCompanyId(ctx, req.CompanyId)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil {
 		fmt.Println("Whatsapp Service :  GetBusinessPhoneByCompanyId - ERROR")
 		fmt.Println(err.Error())
 
