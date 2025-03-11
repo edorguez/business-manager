@@ -10,6 +10,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - my_app_network
     restart: always
 
   ui:
@@ -22,6 +24,8 @@ services:
     environment:
       - ENVIRONMENT=production
       - NEXT_PUBLIC_ENVIRONMENT=production
+    networks:
+      - my_app_network
     depends_on:
       - gateway
     restart: always
@@ -32,7 +36,9 @@ services:
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     environment:
-        - ENVIRONMENT=production
+      - ENVIRONMENT=production
+    networks:
+      - my_app_network
     restart: always
 
   customer-svc:
@@ -42,6 +48,8 @@ services:
         - "${CUSTOMER_SVC_PORT}:${CUSTOMER_SVC_PORT}"
       environment:
         - ENVIRONMENT=production
+      networks:
+        - my_app_network
       depends_on:
         - customer-db
       restart: always
@@ -53,6 +61,8 @@ services:
         - "${COMPANY_SVC_PORT}:${COMPANY_SVC_PORT}"
       environment:
         - ENVIRONMENT=production
+      networks:
+        - my_app_network
       depends_on:
         - company-db
       restart: always
@@ -64,6 +74,8 @@ services:
         - "${PRODUCT_SVC_PORT}:${PRODUCT_SVC_PORT}"
       environment:
         - ENVIRONMENT=production
+      networks:
+        - my_app_network
       depends_on:
         - product-db
       restart: always
@@ -75,6 +87,8 @@ services:
         - "${WHATSAPP_SVC_PORT}:${WHATSAPP_SVC_PORT}"
       environment:
         - ENVIRONMENT=production
+      networks:
+        - my_app_network
       depends_on:
         - whatsapp-db
       restart: always
@@ -86,6 +100,8 @@ services:
         - "${AUTH_SVC_PORT}:${AUTH_SVC_PORT}"
       environment:
         - ENVIRONMENT=production
+      networks:
+        - my_app_network
       depends_on:
         - auth-db
       restart: always
@@ -106,6 +122,8 @@ services:
         - "${FILE_SVC_PORT}:${FILE_SVC_PORT}"
       environment:
         - ENVIRONMENT=production
+      networks:
+        - my_app_network
       restart: always
 
   customer-db:
@@ -117,6 +135,8 @@ services:
       - POSTGRES_DB=${CUSTOMER_SVC_DB}
       - POSTGRES_USER=${CUSTOMER_SVC_DB_USER}
       - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
     restart: always
 
   company-db:
@@ -128,6 +148,8 @@ services:
       - POSTGRES_DB=${COMPANY_SVC_DB}
       - POSTGRES_USER=${COMPANY_SVC_DB_USER}
       - POSTGRES_PASSWORD=${COMPANY_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
     restart: always
 
   product-db:
@@ -138,6 +160,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${PRODUCT_SVC_DB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${PRODUCT_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
     restart: always
 
   whatsapp-db:
@@ -149,6 +173,8 @@ services:
       - POSTGRES_DB=${WHATSAPP_SVC_DB}
       - POSTGRES_USER=${WHATSAPP_SVC_DB_USER}
       - POSTGRES_PASSWORD=${WHATSAPP_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
     restart: always
 
   auth-db:
@@ -160,4 +186,10 @@ services:
       - POSTGRES_DB=${AUTH_SVC_DB}
       - POSTGRES_USER=${AUTH_SVC_DB_USER}
       - POSTGRES_PASSWORD=${AUTH_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
     restart: always
+
+networks:
+  my_app_network:
+    name: my_app_network
