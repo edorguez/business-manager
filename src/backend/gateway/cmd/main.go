@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -103,10 +104,16 @@ func startServer(address string, conf *config.Config) error {
 
 func routesConfig(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Set CORS headers
-		w.Header().Set("Access-Control-Allow-Origin", "*") // Allow any origin
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		// Get the Origin header from the request
+		origin := r.Header.Get("Origin")
+
+		// Check if the origin is from your domain or its subdomains
+		if isValidOrigin(origin) {
+			// Set the Access-Control-Allow-Origin header to the specific origin
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		}
 
 		// Set JSON Content-Type
 		w.Header().Set("Content-Type", "application/json")
@@ -120,5 +127,23 @@ func routesConfig(next http.Handler) http.Handler {
 		// Pass down the request to the next middleware (or final handler)
 		next.ServeHTTP(w, r)
 	})
+}
 
+// isValidOrigin checks if the origin is from your domain or its subdomains
+func isValidOrigin(origin string) bool {
+	// Define your main domain
+	mainDomain := "www.edezco.com"
+
+	// Check if the origin is exactly your main domain
+	if origin == "https://"+mainDomain || origin == "http://"+mainDomain {
+		return true
+	}
+
+	// Check if the origin is a subdomain of your main domain
+	if strings.HasSuffix(origin, "."+mainDomain) {
+		return true
+	}
+
+	// If the origin doesn't match, return false
+	return false
 }
