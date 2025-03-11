@@ -131,7 +131,7 @@ func routesConfig(next http.Handler) http.Handler {
 
 func isValidOrigin(origin string) bool {
 	// Define your main domain
-	mainDomain := "www.edezco.com"
+	mainDomain := "edezco.com"
 
 	// Check if the origin is exactly your main domain
 	if origin == "https://"+mainDomain || origin == "http://"+mainDomain {
