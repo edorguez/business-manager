@@ -73,8 +73,8 @@ func startServer(address string, conf *config.Config) error {
 		Addr:         address,
 		Handler:      rc,
 		IdleTimeout:  120 * time.Second,
-		ReadTimeout:  1 * time.Second,
-		WriteTimeout: 1 * time.Second,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	go func() {
@@ -104,8 +104,8 @@ func startServer(address string, conf *config.Config) error {
 
 func routesConfig(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Get the Origin header from the request
 		origin := r.Header.Get("Origin")
+		fmt.Println("Received Origin:", origin)
 
 		// Check if the origin is from your domain or its subdomains
 		if isValidOrigin(origin) {
@@ -129,7 +129,6 @@ func routesConfig(next http.Handler) http.Handler {
 	})
 }
 
-// isValidOrigin checks if the origin is from your domain or its subdomains
 func isValidOrigin(origin string) bool {
 	// Define your main domain
 	mainDomain := "www.edezco.com"
