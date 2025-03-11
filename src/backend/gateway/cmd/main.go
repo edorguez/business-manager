@@ -105,7 +105,7 @@ func startServer(address string, conf *config.Config) error {
 func routesConfig(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
-		fmt.Println("Received Origin:", origin)
+		fmt.Println("--> Received Origin:", origin)
 
 		// Check if the origin is from your domain or its subdomains
 		if isValidOrigin(origin) {
