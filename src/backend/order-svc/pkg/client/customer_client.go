@@ -26,7 +26,7 @@ func InitCustomerServiceClient(c *config.Config) error {
 		customerSvcUrl = c.Customer_Svc_Url + ":" + c.Customer_Svc_Port
 	} else {
 		fmt.Println("Running in development mode")
-		customerSvcUrl = c.Development_Url + ":" + c.Customer_Svc_Port
+		customerSvcUrl = "localhost:" + c.Customer_Svc_Port
 	}
 
 	// using WithInsecure() because no SSL running

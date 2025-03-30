@@ -27,7 +27,7 @@ func InitFileServiceClient(c *config.Config) error {
 		fileSvcUrl = c.File_Svc_Url + ":" + c.File_Svc_Port
 	} else {
 		fmt.Println("Running in development mode")
-		fileSvcUrl = c.Development_Url + ":" + c.File_Svc_Port
+		fileSvcUrl = "localhost:" + c.File_Svc_Port
 	}
 
 	// using WithInsecure() because no SSL running

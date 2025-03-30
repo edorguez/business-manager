@@ -26,7 +26,7 @@ func InitWhatsappServiceClient(c *config.Config) error {
 		whatsappSvcUrl = c.Whatsapp_Svc_Url + ":" + c.Whatsapp_Svc_Port
 	} else {
 		fmt.Println("Running in development mode")
-		whatsappSvcUrl = c.Development_Url + ":" + c.Whatsapp_Svc_Port
+		whatsappSvcUrl = "localhost:" + c.Whatsapp_Svc_Port
 	}
 
 	// using WithInsecure() because no SSL running

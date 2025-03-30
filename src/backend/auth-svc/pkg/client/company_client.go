@@ -27,7 +27,7 @@ func InitCompanyServiceClient(c *config.Config) error {
 		companySvcUrl = c.Company_Svc_Url + ":" + c.Company_Svc_Port
 	} else {
 		fmt.Println("Running in development mode")
-		companySvcUrl = c.Development_Url + ":" + c.Company_Svc_Port
+		companySvcUrl = "localhost:" + c.Company_Svc_Port
 	}
 
 	// using WithInsecure() because no SSL running
