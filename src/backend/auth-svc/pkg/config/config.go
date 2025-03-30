@@ -3,8 +3,6 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Production_Url      string `mapstructure:"PRODUCTION_URL"`
-	Development_Url     string `mapstructure:"DEVELOPMENT_URL"`
 	Port                string `mapstructure:"PORT"`
 	DBDriver            string `mapstructure:"DB_DRIVER"`
 	DBSourceDevelopment string `mapstructure:"DB_SOURCE_DEVELOPMENT"`
