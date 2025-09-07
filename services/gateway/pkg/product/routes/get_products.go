@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/product"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
+	pb "github.com/edorguez/business-manager/shared/pb/product"
+	"github.com/edorguez/business-manager/shared/util/query_params"
 )
 
 func GetProducts(w http.ResponseWriter, r *http.Request, c *config.Config) {

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/customer/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/customer/contracts"
 	"github.com/gorilla/mux"
 )
 

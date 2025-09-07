@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/util/random"
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/util/type_converter"
+	"github.com/edorguez/business-manager/shared/util/random"
+	"github.com/edorguez/business-manager/shared/util/type_converter"
 	"github.com/stretchr/testify/require"
 )
 

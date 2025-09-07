@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/whatsapp"
-	"github.com/EdoRguez/business-manager/gateway/pkg/whatsapp/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp/contracts"
+	pb "github.com/edorguez/business-manager/shared/pb/whatsapp"
 	"google.golang.org/grpc"
 )
 

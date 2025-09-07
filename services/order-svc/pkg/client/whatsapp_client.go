@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
-	pb "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
+	"github.com/edorguez/business-manager/services/order-svc/pkg/config"
+	pb "github.com/edorguez/business-manager/shared/pb/whatsapp"
 	"google.golang.org/grpc"
 )
 

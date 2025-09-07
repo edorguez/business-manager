@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
 )
 
 type MiddlewareConfig struct{}

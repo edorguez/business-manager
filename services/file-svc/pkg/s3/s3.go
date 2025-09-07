@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/EdoRguez/business-manager/file-svc/pkg/config"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/edorguez/business-manager/services/file-svc/pkg/config"
 )
 
 const region = "us-east-1"

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/whatsapp/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/whatsapp/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp/contracts"
 	"github.com/gorilla/mux"
 )
 

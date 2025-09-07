@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	auth "github.com/EdoRguez/business-manager/gateway/pkg/auth"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/routes"
+	auth "github.com/edorguez/business-manager/services/gateway/pkg/auth"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product/routes"
 	"github.com/gorilla/mux"
 )
 

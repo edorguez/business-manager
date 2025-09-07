@@ -85,7 +85,7 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 
 func (c *Client) newWhatsappClient(container *sqlstore.Container) {
 	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
-	deviceStore, err := container.GetFirstDevice()
+	deviceStore, err := container.GetFirstDevice(context.Background())
 	if err != nil {
 		panic(err)
 	}

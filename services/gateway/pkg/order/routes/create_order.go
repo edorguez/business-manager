@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	companyClient "github.com/EdoRguez/business-manager/gateway/pkg/company/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	orderClient "github.com/EdoRguez/business-manager/gateway/pkg/order/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/order/contracts"
+	companyClient "github.com/edorguez/business-manager/services/gateway/pkg/company/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	orderClient "github.com/edorguez/business-manager/services/gateway/pkg/order/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/order/contracts"
 )
 
 func CreateOrder(w http.ResponseWriter, r *http.Request, c *config.Config) {

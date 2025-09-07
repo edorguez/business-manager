@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
-	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/customer"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/customer/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/customer/contracts"
+	pb "github.com/edorguez/business-manager/shared/pb/customer"
+	"github.com/edorguez/business-manager/shared/util/query_params"
 )
 
 func GetCustomersByMonths(w http.ResponseWriter, r *http.Request, c *config.Config) {

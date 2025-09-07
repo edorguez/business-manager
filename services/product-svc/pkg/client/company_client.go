@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	pb "github.com/EdoRguez/business-manager/company-svc/pkg/pb/company"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/config"
+	pb "github.com/edorguez/business-manager/shared/pb/company"
 	"google.golang.org/grpc"
 )
 

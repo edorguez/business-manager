@@ -7,11 +7,11 @@ import (
 	"net"
 	"os"
 
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
-	db "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/db/sqlc"
-	pbwhatsapp "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/services"
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/config"
+	db "github.com/edorguez/business-manager/services/whatsapp-svc/pkg/db/sqlc"
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/repository"
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/services"
+	pbwhatsapp "github.com/edorguez/business-manager/shared/pb/whatsapp"
 	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 )

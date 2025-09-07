@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	companyClient "github.com/EdoRguez/business-manager/gateway/pkg/company/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	customerClient "github.com/EdoRguez/business-manager/gateway/pkg/customer/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
+	companyClient "github.com/edorguez/business-manager/services/gateway/pkg/company/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	customerClient "github.com/edorguez/business-manager/services/gateway/pkg/customer/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/customer/contracts"
 )
 
 func CreateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {

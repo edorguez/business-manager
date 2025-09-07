@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/company-svc/pkg/constants"
-	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/pb/payment"
-	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
+	"github.com/edorguez/business-manager/services/company-svc/pkg/constants"
+	db "github.com/edorguez/business-manager/services/company-svc/pkg/db/sqlc"
+	repo "github.com/edorguez/business-manager/services/company-svc/pkg/repository"
+	"github.com/edorguez/business-manager/shared/pb/payment"
+	"github.com/edorguez/business-manager/shared/util/type_converter"
 )
 
 type PaymentService struct {

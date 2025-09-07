@@ -1,6 +1,6 @@
 package contracts
 
-import "github.com/go-playground/validator"
+import "github.com/go-playground/validator/v10"
 
 type UpdateBusinessPhoneRequest struct {
 	CompanyId int64  `json:"companyId" validate:"required"`

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/file-svc/pkg/config"
-	file "github.com/EdoRguez/business-manager/file-svc/pkg/pb/file"
-	s3 "github.com/EdoRguez/business-manager/file-svc/pkg/s3"
+	"github.com/edorguez/business-manager/services/file-svc/pkg/config"
+	s3 "github.com/edorguez/business-manager/services/file-svc/pkg/s3"
+	file "github.com/edorguez/business-manager/shared/pb/file"
 )
 
 type FileService struct {

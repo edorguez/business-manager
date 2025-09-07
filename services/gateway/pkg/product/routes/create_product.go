@@ -7,11 +7,11 @@ import (
 	"io"
 	"net/http"
 
-	companyClient "github.com/EdoRguez/business-manager/gateway/pkg/company/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	productClient "github.com/EdoRguez/business-manager/gateway/pkg/product/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util/file_validator"
+	companyClient "github.com/edorguez/business-manager/services/gateway/pkg/company/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	productClient "github.com/edorguez/business-manager/services/gateway/pkg/product/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
+	"github.com/edorguez/business-manager/shared/util/file_validator"
 )
 
 func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {

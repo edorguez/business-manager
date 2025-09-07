@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
-	pborder "github.com/EdoRguez/business-manager/order-svc/pkg/pb/order"
-	"github.com/EdoRguez/business-manager/order-svc/pkg/services"
+	"github.com/edorguez/business-manager/services/order-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/order-svc/pkg/services"
+	pborder "github.com/edorguez/business-manager/shared/pb/order"
 	"google.golang.org/grpc"
 )
 

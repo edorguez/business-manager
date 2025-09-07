@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/whatsapp/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp/contracts"
 )
 
 type MiddlewareConfig struct{}

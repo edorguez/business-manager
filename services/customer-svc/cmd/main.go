@@ -7,11 +7,11 @@ import (
 	"net"
 	"os"
 
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/config"
-	db "github.com/EdoRguez/business-manager/customer-svc/pkg/db/sqlc"
-	pbcustomer "github.com/EdoRguez/business-manager/customer-svc/pkg/pb/customer"
-	repo "github.com/EdoRguez/business-manager/customer-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/services"
+	"github.com/edorguez/business-manager/services/customer-svc/pkg/config"
+	db "github.com/edorguez/business-manager/services/customer-svc/pkg/db/sqlc"
+	repo "github.com/edorguez/business-manager/services/customer-svc/pkg/repository"
+	"github.com/edorguez/business-manager/services/customer-svc/pkg/services"
+	pbcustomer "github.com/edorguez/business-manager/shared/pb/customer"
 	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 )

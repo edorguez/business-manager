@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/EdoRguez/business-manager/file-svc/pkg/config"
-	pbfile "github.com/EdoRguez/business-manager/file-svc/pkg/pb/file"
-	"github.com/EdoRguez/business-manager/file-svc/pkg/services"
+	"github.com/edorguez/business-manager/services/file-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/file-svc/pkg/services"
+	pbfile "github.com/edorguez/business-manager/shared/pb/file"
 	"google.golang.org/grpc"
 )
 

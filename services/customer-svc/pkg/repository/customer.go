@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	db "github.com/EdoRguez/business-manager/customer-svc/pkg/db/sqlc"
+	db "github.com/edorguez/business-manager/services/customer-svc/pkg/db/sqlc"
 )
 
 type CustomerRepo struct {

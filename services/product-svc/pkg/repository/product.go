@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

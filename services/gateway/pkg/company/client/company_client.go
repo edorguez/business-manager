@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/company"
+	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	pb "github.com/edorguez/business-manager/shared/pb/company"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

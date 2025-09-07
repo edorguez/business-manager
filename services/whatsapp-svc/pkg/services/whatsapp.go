@@ -8,11 +8,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/config"
-	db "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/db/sqlc"
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/pb/whatsapp"
-	repo "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/whatsapp-svc/pkg/util/phone"
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/config"
+	db "github.com/edorguez/business-manager/services/whatsapp-svc/pkg/db/sqlc"
+	repo "github.com/edorguez/business-manager/services/whatsapp-svc/pkg/repository"
+	"github.com/edorguez/business-manager/shared/pb/whatsapp"
+	"github.com/edorguez/business-manager/shared/util/phone"
 	"github.com/twilio/twilio-go"
 	api "github.com/twilio/twilio-go/rest/api/v2010"
 )

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
+	db "github.com/edorguez/business-manager/services/company-svc/pkg/db/sqlc"
 )
 
 type CompanyRepo struct {

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	pb "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/role"
-	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/type_converter"
+	repo "github.com/edorguez/business-manager/services/auth-svc/pkg/repository"
+	pb "github.com/edorguez/business-manager/shared/pb/role"
+	"github.com/edorguez/business-manager/shared/util/type_converter"
 )
 
 type RoleService struct {

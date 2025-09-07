@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	db "github.com/EdoRguez/business-manager/whatsapp-svc/pkg/db/sqlc"
+	db "github.com/edorguez/business-manager/services/whatsapp-svc/pkg/db/sqlc"
 )
 
 type WhatsappRepo struct {

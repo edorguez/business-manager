@@ -3,14 +3,14 @@ package client
 import (
 	"os"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/payment"
+	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
+	pb "github.com/edorguez/business-manager/shared/pb/payment"
 
 	"context"
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"google.golang.org/grpc"
 )
 

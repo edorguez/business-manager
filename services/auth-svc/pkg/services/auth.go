@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/EdoRguez/business-manager/auth-svc/pkg/client"
-	"github.com/EdoRguez/business-manager/auth-svc/pkg/config"
-	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
-	pb "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/auth"
-	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/jwt_manager"
-	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/password_hash"
+	"github.com/edorguez/business-manager/services/auth-svc/pkg/client"
+	"github.com/edorguez/business-manager/services/auth-svc/pkg/config"
+	db "github.com/edorguez/business-manager/services/auth-svc/pkg/db/sqlc"
+	repo "github.com/edorguez/business-manager/services/auth-svc/pkg/repository"
+	pb "github.com/edorguez/business-manager/shared/pb/auth"
+	"github.com/edorguez/business-manager/shared/util/jwt_manager"
+	"github.com/edorguez/business-manager/shared/util/password_hash"
 )
 
 type AuthService struct {

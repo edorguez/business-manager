@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"net/http"
 
-	db "github.com/EdoRguez/business-manager/customer-svc/pkg/db/sqlc"
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/pb/customer"
-	repo "github.com/EdoRguez/business-manager/customer-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/customer-svc/pkg/util/type_converter"
+	db "github.com/edorguez/business-manager/services/customer-svc/pkg/db/sqlc"
+	repo "github.com/edorguez/business-manager/services/customer-svc/pkg/repository"
+	"github.com/edorguez/business-manager/shared/pb/customer"
+	"github.com/edorguez/business-manager/shared/util/type_converter"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

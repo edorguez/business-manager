@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer/contracts"
-	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/customer"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/customer/contracts"
+	pb "github.com/edorguez/business-manager/shared/pb/customer"
 	"google.golang.org/grpc"
 )
 

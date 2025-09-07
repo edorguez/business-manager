@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	pb "github.com/EdoRguez/business-manager/gateway/pkg/pb/company"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util/query_params"
+	"github.com/edorguez/business-manager/services/gateway/pkg/company/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	pb "github.com/edorguez/business-manager/shared/pb/company"
+	"github.com/edorguez/business-manager/shared/util/query_params"
 )
 
 func GetCompanies(w http.ResponseWriter, r *http.Request, c *config.Config) {

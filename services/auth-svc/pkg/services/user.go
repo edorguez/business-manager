@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"strings"
 
-	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
-	pb "github.com/EdoRguez/business-manager/auth-svc/pkg/pb/user"
-	repo "github.com/EdoRguez/business-manager/auth-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/auth-svc/pkg/util/password_hash"
+	db "github.com/edorguez/business-manager/services/auth-svc/pkg/db/sqlc"
+	repo "github.com/edorguez/business-manager/services/auth-svc/pkg/repository"
+	pb "github.com/edorguez/business-manager/shared/pb/user"
+	"github.com/edorguez/business-manager/shared/util/password_hash"
 )
 
 type UserService struct {
@@ -261,7 +261,7 @@ func (s *UserService) UpdateEmail(ctx context.Context, req *pb.UpdateEmailReques
 		}, nil
 	}
 
-	if strings.ToLower(u.Email) == strings.ToLower(req.Email) {
+	if strings.EqualFold(u.Email, req.Email) {
 		fmt.Println("Auth Service :  UpdateEmail - ERROR")
 		fmt.Println("Email already exists")
 		return &pb.UpdateEmailResponse{

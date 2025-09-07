@@ -11,13 +11,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/auth"
-	"github.com/EdoRguez/business-manager/gateway/pkg/company"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/customer"
-	"github.com/EdoRguez/business-manager/gateway/pkg/order"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product"
-	"github.com/EdoRguez/business-manager/gateway/pkg/whatsapp"
+	"github.com/edorguez/business-manager/services/gateway/pkg/auth"
+	"github.com/edorguez/business-manager/services/gateway/pkg/company"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/customer"
+	"github.com/edorguez/business-manager/services/gateway/pkg/order"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product"
+	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp"
 	"github.com/gorilla/mux"
 )
 

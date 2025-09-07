@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/EdoRguez/business-manager/product-svc/pkg/client"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/constants"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/models"
-	product "github.com/EdoRguez/business-manager/product-svc/pkg/pb/product"
-	repo "github.com/EdoRguez/business-manager/product-svc/pkg/repository"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/client"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/constants"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/models"
+	repo "github.com/edorguez/business-manager/services/product-svc/pkg/repository"
+	product "github.com/edorguez/business-manager/shared/pb/product"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

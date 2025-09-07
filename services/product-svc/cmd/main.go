@@ -7,11 +7,11 @@ import (
 	"net"
 	"os"
 
-	"github.com/EdoRguez/business-manager/product-svc/pkg/config"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/db"
-	pbproduct "github.com/EdoRguez/business-manager/product-svc/pkg/pb/product"
-	repo "github.com/EdoRguez/business-manager/product-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/product-svc/pkg/services"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/db"
+	repo "github.com/edorguez/business-manager/services/product-svc/pkg/repository"
+	"github.com/edorguez/business-manager/services/product-svc/pkg/services"
+	pbproduct "github.com/edorguez/business-manager/shared/pb/product"
 	"google.golang.org/grpc"
 )
 

@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/EdoRguez/business-manager/company-svc/pkg/client"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/config"
-	db "github.com/EdoRguez/business-manager/company-svc/pkg/db/sqlc"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/pb/company"
-	repo "github.com/EdoRguez/business-manager/company-svc/pkg/repository"
-	"github.com/EdoRguez/business-manager/company-svc/pkg/util/type_converter"
+	"github.com/edorguez/business-manager/services/company-svc/pkg/client"
+	"github.com/edorguez/business-manager/services/company-svc/pkg/config"
+	db "github.com/edorguez/business-manager/services/company-svc/pkg/db/sqlc"
+	repo "github.com/edorguez/business-manager/services/company-svc/pkg/repository"
+	"github.com/edorguez/business-manager/shared/pb/company"
+	"github.com/edorguez/business-manager/shared/util/type_converter"
 	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

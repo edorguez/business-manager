@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	db "github.com/EdoRguez/business-manager/auth-svc/pkg/db/sqlc"
+	db "github.com/edorguez/business-manager/services/auth-svc/pkg/db/sqlc"
 )
 
 type UserRepo struct {

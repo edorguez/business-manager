@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/company/contracts"
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/util/file_validator"
+	"github.com/edorguez/business-manager/services/gateway/pkg/company/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/shared/util/file_validator"
 	"github.com/gorilla/mux"
 )
 

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/EdoRguez/business-manager/gateway/pkg/config"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/client"
-	"github.com/EdoRguez/business-manager/gateway/pkg/product/contracts"
+	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product/client"
+	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
 	"github.com/gorilla/mux"
 )
 

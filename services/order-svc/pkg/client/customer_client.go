@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	pb "github.com/EdoRguez/business-manager/customer-svc/pkg/pb/customer"
-	"github.com/EdoRguez/business-manager/order-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/order-svc/pkg/config"
+	pb "github.com/edorguez/business-manager/shared/pb/customer"
 	"google.golang.org/grpc"
 )
 
