@@ -1,0 +1,182 @@
+version: '3.9'
+
+services:
+  ui:
+    container_name: edezco
+    image: EdoRguez/ui-business-manager
+    ports:
+      - "${UI_PORT}:${UI_PORT}"
+    build:
+      context: ./nextjs-app
+    environment:
+      - ENVIRONMENT=production
+      - NEXT_PUBLIC_ENVIRONMENT=production
+    networks:
+      - my_app_network
+    depends_on:
+      - gateway
+    restart: always
+
+  gateway:
+    container_name: gateway
+    image: EdoRguez/gateway
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    environment:
+      - ENVIRONMENT=production
+    networks:
+      - my_app_network
+    restart: always
+
+  customer-svc:
+      container_name: customer-svc
+      image: EdoRguez/customer-svc
+      ports:
+        - "${CUSTOMER_SVC_PORT}:${CUSTOMER_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      networks:
+        - my_app_network
+      depends_on:
+        - customer-db
+      restart: always
+
+  company-svc:
+      container_name: company-svc
+      image: EdoRguez/company-svc
+      ports:
+        - "${COMPANY_SVC_PORT}:${COMPANY_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      networks:
+        - my_app_network
+      depends_on:
+        - company-db
+      restart: always
+
+  product-svc:
+      container_name: product-svc
+      image: EdoRguez/product-svc
+      ports:
+        - "${PRODUCT_SVC_PORT}:${PRODUCT_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      networks:
+        - my_app_network
+      depends_on:
+        - product-db
+      restart: always
+
+  whatsapp-svc:
+      container_name: whatsapp-svc
+      image: EdoRguez/whatsapp-svc
+      ports:
+        - "${WHATSAPP_SVC_PORT}:${WHATSAPP_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      networks:
+        - my_app_network
+      depends_on:
+        - whatsapp-db
+      restart: always
+
+  auth-svc:
+      container_name: auth-svc
+      image: EdoRguez/auth-svc
+      ports:
+        - "${AUTH_SVC_PORT}:${AUTH_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      networks:
+        - my_app_network
+      depends_on:
+        - auth-db
+      restart: always
+
+  order-svc:
+      container_name: order-svc
+      image: EdoRguez/order-svc
+      ports:
+        - "${ORDER_SVC_PORT}:${ORDER_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      restart: always
+
+  file-svc:
+      container_name: file-svc
+      image: EdoRguez/file-svc
+      ports:
+        - "${FILE_SVC_PORT}:${FILE_SVC_PORT}"
+      environment:
+        - ENVIRONMENT=production
+      networks:
+        - my_app_network
+      restart: always
+
+  customer-db:
+    container_name: customer-db
+    image: postgres:16.2
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=${CUSTOMER_SVC_DB}
+      - POSTGRES_USER=${CUSTOMER_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
+    restart: always
+
+  company-db:
+    container_name: company-db
+    image: postgres:16.2
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=${COMPANY_SVC_DB}
+      - POSTGRES_USER=${COMPANY_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${COMPANY_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
+    restart: always
+
+  product-db:
+    container_name: product-db
+    image: mongo:7.0.8
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${PRODUCT_SVC_DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${PRODUCT_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
+    restart: always
+
+  whatsapp-db:
+    container_name: whatsapp-db
+    image: postgres:16.2
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_DB=${WHATSAPP_SVC_DB}
+      - POSTGRES_USER=${WHATSAPP_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${WHATSAPP_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
+    restart: always
+
+  auth-db:
+    container_name: auth-db
+    image: postgres:16.2
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=${AUTH_SVC_DB}
+      - POSTGRES_USER=${AUTH_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${AUTH_SVC_DB_PASSWORD}
+    networks:
+        - my_app_network
+    restart: always
+
+networks:
+  my_app_network:
+    name: my_app_network

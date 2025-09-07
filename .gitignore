@@ -2,70 +2,65 @@
 
 # dependencies
 /node_modules
-/src/ui/node_modules
+/web/node_modules
 /.pnp
-/src/ui/.pnp
+/web/.pnp
 .pnp.js
-/src/ui/.pnp.js
+/web/.pnp.js
 
 # vscode
 .vscode
-/src/ui/.vscode
-/src/backend/.vscode
+/web/.vscode
 
 # testing
 /coverage
-/src/ui/coverage
+/web/coverage
 
 # next.js
 /.next/
-/src/ui/.next/
+/web/.next/
 /out/
-/src/ui/out/
+/web/out/
 
 # production
 /build
-/src/ui/build
+/web/build
 
 # misc
 .DS_Store
-/src/ui/.DS_Store
+/web/.DS_Store
 *.pem
-/src/ui/*.pem
+/web/*.pem
 
 # debug
 npm-debug.log*
-/src/ui/npm-debug.log*
+/web/npm-debug.log*
 yarn-debug.log*
-/src/ui/yarn-debug.log*
+/web/yarn-debug.log*
 yarn-error.log*
-/src/ui/yarn-error.log*
+/web/yarn-error.log*
 
 # Environment files
-/src/ui/*.env
-/src/ui/!example.env
-/src/backend/*.env
-/src/backend/!example.env
-/src/backend/gateway/*.env
-/src/backend/gateway/!example.env
-/src/backend/customer-svc/*.env
-/src/backend/customer-svc/!example.env
-/src/backend/company-svc/*.env
-/src/backend/company-svc/!example.env
-/src/backend/product-svc/*.env
-/src/backend/product-svc/!example.env
-/src/backend/whatsapp-svc/*.env
-/src/backend/whatsapp-svc/!example.env
-/src/backend/auth-svc/*.env
-/src/backend/auth-svc/!example.env
-/src/backend/order-svc/*.env
-/src/backend/order-svc/!example.env
-/src/backend/file-svc/*.env
-/src/backend/file-svc/!example.env
-
-# Workspaces
-src/backend/business-manager-backend.code-workspace
-src/ui/business-manager-ui.code-workspace
+/.env
+/env/!example.env
+/web/*.env
+/web/!example.env
+/services/gateway/*.env
+/services/gateway/!example.env
+/services/customer-svc/*.env
+/services/customer-svc/!example.env
+/services/company-svc/*.env
+/services/company-svc/!example.env
+/services/product-svc/*.env
+/services/product-svc/!example.env
+/services/whatsapp-svc/*.env
+/services/whatsapp-svc/!example.env
+/services/auth-svc/*.env
+/services/auth-svc/!example.env
+/services/order-svc/*.env
+/services/order-svc/!example.env
+/services/file-svc/*.env
+/services/file-svc/!example.env
 
 # local env files
 .env*.local
@@ -73,10 +68,10 @@ src/ui/business-manager-ui.code-workspace
 
 # vercel
 .vercel
-/src/ui/.vercel
+/web/.vercel
 
 # typescript
 *.tsbuildinfo
-/src/ui/*.tsbuildinfo
+/web/*.tsbuildinfo
 next-env.d.ts
-/src/ui/next-env.d.ts
+/web/next-env.d.ts
