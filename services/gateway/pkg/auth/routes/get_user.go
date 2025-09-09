@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/auth/client"
-	"github.com/edorguez/business-manager/services/gateway/pkg/auth/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/gorilla/mux"
 )
 
@@ -17,7 +17,7 @@ func GetUser(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Unable to convert ID",
 		})
@@ -25,7 +25,7 @@ func GetUser(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	if err := client.InitUserServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

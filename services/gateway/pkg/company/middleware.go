@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 )
 
 type MiddlewareConfig struct{}
@@ -24,7 +25,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCompany(next http.Handler) ht
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateCompany")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}

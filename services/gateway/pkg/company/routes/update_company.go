@@ -11,6 +11,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/client"
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/edorguez/business-manager/shared/util/file_validator"
 	"github.com/gorilla/mux"
 )
@@ -25,7 +26,7 @@ func UpdateCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Unable to convert ID",
 		})
@@ -56,7 +57,7 @@ func UpdateCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		// Detect the content type
 		contentType := http.DetectContentType(buffer)
 		if !file_validator.IsValidImage(contentType) {
-			json.NewEncoder(w).Encode(&contracts.Error{
+			json.NewEncoder(w).Encode(&types.Error{
 				Status: http.StatusInternalServerError,
 				Error:  "Invalid file type uploaded",
 			})
@@ -79,7 +80,7 @@ func UpdateCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println("-----------------")
 
 	if err := client.InitCompanyServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

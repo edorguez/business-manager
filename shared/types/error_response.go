@@ -1,4 +1,4 @@
-package contracts
+package types
 
 type Error struct {
 	Status int64  `json:"status"`

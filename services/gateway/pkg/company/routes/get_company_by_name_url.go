@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/client"
-	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/gorilla/mux"
 )
 
@@ -17,7 +17,7 @@ func GetCompanyByNameUrl(w http.ResponseWriter, r *http.Request, c *config.Confi
 	vars := mux.Vars(r)
 	nameUrl := vars["nameUrl"]
 	if nameUrl == "" {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Name URL param must be provided",
 		})
@@ -25,7 +25,7 @@ func GetCompanyByNameUrl(w http.ResponseWriter, r *http.Request, c *config.Confi
 	}
 
 	if err := client.InitCompanyServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

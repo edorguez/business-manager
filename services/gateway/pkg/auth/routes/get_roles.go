@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/auth/client"
-	"github.com/edorguez/business-manager/services/gateway/pkg/auth/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	pb "github.com/edorguez/business-manager/shared/pb/role"
+	"github.com/edorguez/business-manager/shared/types"
 )
 
 func GetRoles(w http.ResponseWriter, r *http.Request, c *config.Config) {
@@ -17,7 +17,7 @@ func GetRoles(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	params := &pb.GetRolesRequest{}
 
 	if err := client.InitRoleServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

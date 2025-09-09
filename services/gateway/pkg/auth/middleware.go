@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/auth/client"
 	"github.com/edorguez/business-manager/services/gateway/pkg/auth/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/shared/types"
 )
 
 type MiddlewareConfig struct {
@@ -27,7 +28,7 @@ func (m *MiddlewareConfig) MiddlewareValidateAuth(next http.Handler) http.Handle
 			fmt.Println("API Gateway :  Middleware - Error - Validate Auth")
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(&contracts.Error{
+			json.NewEncoder(w).Encode(&types.Error{
 				Status: http.StatusUnauthorized,
 				Error:  "Missing authorization header",
 			})
@@ -37,7 +38,7 @@ func (m *MiddlewareConfig) MiddlewareValidateAuth(next http.Handler) http.Handle
 		tokenString = tokenString[len("Bearer "):]
 
 		if err := client.InitAuthServiceClient(m.config); err != nil {
-			json.NewEncoder(w).Encode(&contracts.Error{
+			json.NewEncoder(w).Encode(&types.Error{
 				Status: http.StatusInternalServerError,
 				Error:  err.Error(),
 			})

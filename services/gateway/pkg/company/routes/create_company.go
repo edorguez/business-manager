@@ -8,6 +8,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/client"
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
+	"github.com/edorguez/business-manager/shared/types"
 )
 
 func CreateCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
@@ -22,7 +23,7 @@ func CreateCompany(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println("-----------------")
 
 	if err := client.InitCompanyServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

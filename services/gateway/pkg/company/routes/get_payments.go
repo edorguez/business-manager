@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/client"
-	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	pb "github.com/edorguez/business-manager/shared/pb/payment"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/edorguez/business-manager/shared/util/query_params"
 )
 
@@ -20,7 +20,7 @@ func GetPayments(w http.ResponseWriter, r *http.Request, c *config.Config) {
 
 	if companyId <= 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(contracts.Error{
+		json.NewEncoder(w).Encode(types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Company ID is required in order to get results",
 		})
@@ -29,7 +29,7 @@ func GetPayments(w http.ResponseWriter, r *http.Request, c *config.Config) {
 
 	if paymentTypeId < 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(contracts.Error{
+		json.NewEncoder(w).Encode(types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Payment Type ID is required in order to get results",
 		})
@@ -44,7 +44,7 @@ func GetPayments(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	if err := client.InitPaymentServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

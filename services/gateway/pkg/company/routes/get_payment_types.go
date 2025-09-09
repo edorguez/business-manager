@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/client"
-	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	pb "github.com/edorguez/business-manager/shared/pb/payment_type"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/edorguez/business-manager/shared/util/query_params"
 )
 
@@ -22,7 +22,7 @@ func GetPaymentTypes(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	if err := client.InitPaymentTypeServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})
