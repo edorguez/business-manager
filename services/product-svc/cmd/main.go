@@ -34,10 +34,10 @@ func main() {
 	var dbSource string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		dbSource = c.DBSourceProduction
+		dbSource = c.ProductDBSourceProduction
 	} else {
 		fmt.Println("Running in development mode")
-		dbSource = c.DBSourceDevelopment
+		dbSource = c.ProductDBSourceDevelopment
 	}
 
 	mongoClient, err := db.ConnectMongoDb(dbSource)

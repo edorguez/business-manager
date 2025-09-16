@@ -27,7 +27,7 @@ func NewProductRepo(client *mongo.Client, config config.Config) *ProductRepo {
 }
 
 func (productRepo *ProductRepo) CreateProduct(ctx context.Context, arg models.Product) (*primitive.ObjectID, error) {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
 	res, err := collection.InsertOne(ctx, arg)
 
@@ -43,7 +43,7 @@ func (productRepo *ProductRepo) CreateProduct(ctx context.Context, arg models.Pr
 }
 
 func (productRepo *ProductRepo) GetProduct(ctx context.Context, id primitive.ObjectID) (*models.GetProduct, error) {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
 	var result models.GetProduct
 	err := collection.FindOne(ctx, bson.M{"_id": id}).Decode(&result)
@@ -63,7 +63,7 @@ type GetProductsParams struct {
 }
 
 func (productRepo *ProductRepo) GetProducts(ctx context.Context, arg GetProductsParams) ([]models.GetProduct, error) {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
 	var result []models.GetProduct
 	options := options.Find().SetLimit(int64(arg.Limit)).SetSkip(int64(arg.Offset))
@@ -115,7 +115,7 @@ type GetLatestProductsParams struct {
 }
 
 func (productRepo *ProductRepo) GetLatestProducts(ctx context.Context, arg GetLatestProductsParams) ([]models.GetProduct, error) {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
 	var result []models.GetProduct
 	options := options.Find().SetLimit(int64(arg.Limit)).SetSort(bson.D{{Key: "createdAt", Value: -1}})
@@ -140,7 +140,7 @@ func (productRepo *ProductRepo) GetLatestProducts(ctx context.Context, arg GetLa
 }
 
 func (productRepo *ProductRepo) UpdateProduct(ctx context.Context, id primitive.ObjectID, arg models.Product) error {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
 	opts := options.Update().SetUpsert(true)
 	filter := bson.M{"_id": id}
@@ -160,7 +160,7 @@ func (productRepo *ProductRepo) UpdateProduct(ctx context.Context, id primitive.
 }
 
 func (productRepo *ProductRepo) UpdateProductStatus(ctx context.Context, id primitive.ObjectID, status uint32) error {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
 	opts := options.Update().SetUpsert(true)
 	filter := bson.M{"_id": id}
@@ -175,7 +175,7 @@ func (productRepo *ProductRepo) UpdateProductStatus(ctx context.Context, id prim
 }
 
 func (productRepo *ProductRepo) DeleteProduct(ctx context.Context, id primitive.ObjectID) error {
-	collection := productRepo.client.Database(productRepo.config.DBName).Collection(collectionName)
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
 	filter := bson.M{"_id": id}
 	_, err := collection.DeleteOne(ctx, filter)

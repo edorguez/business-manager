@@ -38,13 +38,13 @@ func main() {
 	var dbSource string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		dbSource = c.DBSourceProduction
+		dbSource = c.AuthDBSourceProduction
 	} else {
 		fmt.Println("Running in development mode")
-		dbSource = c.DBSourceDevelopment
+		dbSource = c.AuthDBSourceDevelopment
 	}
 
-	conn, err := sql.Open(c.DBDriver, dbSource)
+	conn, err := sql.Open(c.PostgresDBDriver, dbSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}
