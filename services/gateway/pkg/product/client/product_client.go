@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
 	pb "github.com/edorguez/business-manager/shared/pb/product"
+	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
 )
 
@@ -43,7 +44,7 @@ func InitProductServiceClient(c *config.Config) error {
 	return nil
 }
 
-func CreateProduct(body contracts.CreateProductRequest, images [][]byte, c context.Context) (*pb.CreateProductResponse, *contracts.Error) {
+func CreateProduct(body contracts.CreateProductRequest, images [][]byte, c context.Context) (*pb.CreateProductResponse, *types.Error) {
 	fmt.Println("Product CLIENT :  CreateProduct")
 
 	fmt.Println("Product CLIENT :  CreateProduct - Body")
@@ -67,7 +68,7 @@ func CreateProduct(body contracts.CreateProductRequest, images [][]byte, c conte
 		fmt.Println("Product CLIENT :  CreateProduct - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -79,7 +80,7 @@ func CreateProduct(body contracts.CreateProductRequest, images [][]byte, c conte
 	return res, nil
 }
 
-func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *contracts.Error) {
+func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *types.Error) {
 	fmt.Println("Product CLIENT :  GetProduct")
 
 	params := &pb.GetProductRequest{
@@ -92,7 +93,7 @@ func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *c
 		fmt.Println("Product CLIENT :  GetProduct - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -101,7 +102,7 @@ func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *c
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -122,11 +123,11 @@ func GetProduct(id string, c context.Context) (*contracts.GetProductResponse, *c
 	}, nil
 }
 
-func GetProducts(params *pb.GetProductsRequest, c context.Context) ([]*contracts.GetProductResponse, *contracts.Error) {
+func GetProducts(params *pb.GetProductsRequest, c context.Context) ([]*contracts.GetProductResponse, *types.Error) {
 	fmt.Println("Product CLIENT :  GetProduct")
 
 	if params.CompanyId <= 0 {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Company ID is required in order to get results",
 		}
@@ -140,7 +141,7 @@ func GetProducts(params *pb.GetProductsRequest, c context.Context) ([]*contracts
 		fmt.Println("Product CLIENT :  GetProducts - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -149,7 +150,7 @@ func GetProducts(params *pb.GetProductsRequest, c context.Context) ([]*contracts
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -176,11 +177,11 @@ func GetProducts(params *pb.GetProductsRequest, c context.Context) ([]*contracts
 	return pr, nil
 }
 
-func GetLatestProducts(params *pb.GetLatestProductsRequest, c context.Context) ([]*contracts.GetProductResponse, *contracts.Error) {
+func GetLatestProducts(params *pb.GetLatestProductsRequest, c context.Context) ([]*contracts.GetProductResponse, *types.Error) {
 	fmt.Println("Product CLIENT :  GetLatestProduct")
 
 	if params.CompanyId <= 0 {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Company ID is required in order to get results",
 		}
@@ -194,7 +195,7 @@ func GetLatestProducts(params *pb.GetLatestProductsRequest, c context.Context) (
 		fmt.Println("Product CLIENT :  GetLatestProducts - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -203,7 +204,7 @@ func GetLatestProducts(params *pb.GetLatestProductsRequest, c context.Context) (
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -230,7 +231,7 @@ func GetLatestProducts(params *pb.GetLatestProductsRequest, c context.Context) (
 	return pr, nil
 }
 
-func UpdateProduct(id string, body contracts.UpdateProductRequest, images [][]byte, c context.Context) (*pb.UpdateProductResponse, *contracts.Error) {
+func UpdateProduct(id string, body contracts.UpdateProductRequest, images [][]byte, c context.Context) (*pb.UpdateProductResponse, *types.Error) {
 	fmt.Println("Product CLIENT :  UpdateProduct")
 
 	fmt.Println("Product CLIENT :  UpdateProduct - Body")
@@ -254,7 +255,7 @@ func UpdateProduct(id string, body contracts.UpdateProductRequest, images [][]by
 		fmt.Println("Product CLIENT :  UpdateProduct - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -266,7 +267,7 @@ func UpdateProduct(id string, body contracts.UpdateProductRequest, images [][]by
 	return res, nil
 }
 
-func UpdateProductStatus(id string, body contracts.UpdateProductStatusRequest, c context.Context) (*pb.UpdateProductStatusResponse, *contracts.Error) {
+func UpdateProductStatus(id string, body contracts.UpdateProductStatusRequest, c context.Context) (*pb.UpdateProductStatusResponse, *types.Error) {
 	fmt.Println("Product CLIENT :  UpdateProductStatus")
 
 	fmt.Println("Product CLIENT :  UpdateProductStatus - Body")
@@ -289,7 +290,7 @@ func UpdateProductStatus(id string, body contracts.UpdateProductStatusRequest, c
 		fmt.Println("Product CLIENT :  UpdateProductStatus - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -301,7 +302,7 @@ func UpdateProductStatus(id string, body contracts.UpdateProductStatusRequest, c
 	return res, nil
 }
 
-func DeleteProduct(id string, c context.Context) (*pb.DeleteProductResponse, *contracts.Error) {
+func DeleteProduct(id string, c context.Context) (*pb.DeleteProductResponse, *types.Error) {
 	fmt.Println("Product CLIENT :  DeleteProduct")
 
 	params := &pb.DeleteProductRequest{
@@ -314,7 +315,7 @@ func DeleteProduct(id string, c context.Context) (*pb.DeleteProductResponse, *co
 		fmt.Println("Product CLIENT :  DeleteProduct - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}

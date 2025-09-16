@@ -65,7 +65,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateCompany(next http.Handler) ht
 		err = body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateCompany")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -95,7 +95,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreatePayment(next http.Handler) ht
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreatePayment")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -125,7 +125,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdatePayment(next http.Handler) ht
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdatePayment")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -155,7 +155,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdatePaymentStatus(next http.Handl
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdatePaymentStatus")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}

@@ -7,8 +7,8 @@ import (
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"github.com/edorguez/business-manager/services/gateway/pkg/customer/client"
-	"github.com/edorguez/business-manager/services/gateway/pkg/customer/contracts"
 	pb "github.com/edorguez/business-manager/shared/pb/customer"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/edorguez/business-manager/shared/util/query_params"
 )
 
@@ -30,7 +30,7 @@ func GetCustomers(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	if err := client.InitCustomerServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

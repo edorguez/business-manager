@@ -5,6 +5,7 @@ import (
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	pb "github.com/edorguez/business-manager/shared/pb/payment_type"
+	"github.com/edorguez/business-manager/shared/types"
 
 	"context"
 	"fmt"
@@ -45,7 +46,7 @@ func InitPaymentTypeServiceClient(c *config.Config) error {
 	return nil
 }
 
-func GetPaymentType(id int64, c context.Context) (*contracts.GetPaymentTypeResponse, *contracts.Error) {
+func GetPaymentType(id int64, c context.Context) (*contracts.GetPaymentTypeResponse, *types.Error) {
 	fmt.Println("PaymentType CLIENT :  GetPaymentType")
 
 	params := &pb.GetPaymentTypeRequest{
@@ -58,7 +59,7 @@ func GetPaymentType(id int64, c context.Context) (*contracts.GetPaymentTypeRespo
 		fmt.Println("PaymentType CLIENT :  GetPaymentType - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -69,7 +70,7 @@ func GetPaymentType(id int64, c context.Context) (*contracts.GetPaymentTypeRespo
 	fmt.Println("PaymentType CLIENT :  GetPaymentType - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -83,7 +84,7 @@ func GetPaymentType(id int64, c context.Context) (*contracts.GetPaymentTypeRespo
 	}, nil
 }
 
-func GetPaymentTypes(params *pb.GetPaymentTypesRequest, c context.Context) ([]*contracts.GetPaymentTypeResponse, *contracts.Error) {
+func GetPaymentTypes(params *pb.GetPaymentTypesRequest, c context.Context) ([]*contracts.GetPaymentTypeResponse, *types.Error) {
 	fmt.Println("PaymentType CLIENT :  GetPaymentTypes")
 
 	res, err := paymentTypeServiceClient.GetPaymentTypes(c, params)
@@ -92,7 +93,7 @@ func GetPaymentTypes(params *pb.GetPaymentTypesRequest, c context.Context) ([]*c
 		fmt.Println("PaymentType CLIENT :  GetPaymentTypes - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -100,7 +101,7 @@ func GetPaymentTypes(params *pb.GetPaymentTypesRequest, c context.Context) ([]*c
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}

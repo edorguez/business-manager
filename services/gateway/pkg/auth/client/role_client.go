@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/auth/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	pb "github.com/edorguez/business-manager/shared/pb/role"
+	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
 )
 
@@ -43,7 +44,7 @@ func InitRoleServiceClient(c *config.Config) error {
 	return nil
 }
 
-func GetRole(id int64, c context.Context) (*contracts.GetRoleResponse, *contracts.Error) {
+func GetRole(id int64, c context.Context) (*contracts.GetRoleResponse, *types.Error) {
 	fmt.Println("Role CLIENT :  GetRole")
 
 	params := &pb.GetRoleRequest{
@@ -56,7 +57,7 @@ func GetRole(id int64, c context.Context) (*contracts.GetRoleResponse, *contract
 		fmt.Println("Role CLIENT :  GetRole - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -67,7 +68,7 @@ func GetRole(id int64, c context.Context) (*contracts.GetRoleResponse, *contract
 	fmt.Println("Role CLIENT :  GetRole - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -80,7 +81,7 @@ func GetRole(id int64, c context.Context) (*contracts.GetRoleResponse, *contract
 	}, nil
 }
 
-func GetRoles(params *pb.GetRolesRequest, c context.Context) ([]*contracts.GetRoleResponse, *contracts.Error) {
+func GetRoles(params *pb.GetRolesRequest, c context.Context) ([]*contracts.GetRoleResponse, *types.Error) {
 	fmt.Println("Role CLIENT :  GetRoles")
 
 	res, err := roleServiceClient.GetRoles(c, params)
@@ -89,7 +90,7 @@ func GetRoles(params *pb.GetRolesRequest, c context.Context) ([]*contracts.GetRo
 		fmt.Println("Role CLIENT :  GetRoles - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -98,7 +99,7 @@ func GetRoles(params *pb.GetRolesRequest, c context.Context) ([]*contracts.GetRo
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}

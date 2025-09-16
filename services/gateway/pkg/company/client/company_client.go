@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	pb "github.com/edorguez/business-manager/shared/pb/company"
+	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -44,7 +45,7 @@ func InitCompanyServiceClient(c *config.Config) error {
 	return nil
 }
 
-func CreateCompany(body contracts.CreateCompanyRequest, c context.Context) (*pb.CreateCompanyResponse, *contracts.Error) {
+func CreateCompany(body contracts.CreateCompanyRequest, c context.Context) (*pb.CreateCompanyResponse, *types.Error) {
 	fmt.Println("Company CLIENT :  CreateCompany")
 
 	fmt.Println("Company CLIENT :  CreateCompany - Body")
@@ -62,7 +63,7 @@ func CreateCompany(body contracts.CreateCompanyRequest, c context.Context) (*pb.
 		fmt.Println("Company CLIENT :  CreateCompany - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -74,7 +75,7 @@ func CreateCompany(body contracts.CreateCompanyRequest, c context.Context) (*pb.
 	return res, nil
 }
 
-func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *contracts.Error) {
+func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *types.Error) {
 	fmt.Println("Company CLIENT :  GetCompany")
 
 	params := &pb.GetCompanyRequest{
@@ -87,7 +88,7 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *co
 		fmt.Println("Company CLIENT :  GetCompany - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -98,7 +99,7 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *co
 	fmt.Println("Company CLIENT :  GetCompany - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -115,7 +116,7 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *co
 	}, nil
 }
 
-func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNameResponse, *contracts.Error) {
+func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNameResponse, *types.Error) {
 	fmt.Println("Company CLIENT :  GetCompanyByName")
 
 	params := &pb.GetCompanyByNameRequest{
@@ -128,7 +129,7 @@ func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNa
 		fmt.Println("Company CLIENT :  GetCompanyByName - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -139,7 +140,7 @@ func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNa
 	fmt.Println("Company CLIENT :  GetCompanyByName - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -156,7 +157,7 @@ func GetCompanyByName(name string, c context.Context) (*contracts.GetCompanyByNa
 	}, nil
 }
 
-func GetCompanyByNameUrl(nameUrl string, c context.Context) (*contracts.GetCompanyByNameUrlResponse, *contracts.Error) {
+func GetCompanyByNameUrl(nameUrl string, c context.Context) (*contracts.GetCompanyByNameUrlResponse, *types.Error) {
 	fmt.Println("Company CLIENT :  GetCompanyByNameUrl")
 
 	params := &pb.GetCompanyByNameUrlRequest{
@@ -169,7 +170,7 @@ func GetCompanyByNameUrl(nameUrl string, c context.Context) (*contracts.GetCompa
 		fmt.Println("Company CLIENT :  GetCompanyByNameUrl - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -180,7 +181,7 @@ func GetCompanyByNameUrl(nameUrl string, c context.Context) (*contracts.GetCompa
 	fmt.Println("Company CLIENT :  GetCompanyByNameUrl - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -197,7 +198,7 @@ func GetCompanyByNameUrl(nameUrl string, c context.Context) (*contracts.GetCompa
 	}, nil
 }
 
-func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contracts.GetCompanyResponse, *contracts.Error) {
+func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contracts.GetCompanyResponse, *types.Error) {
 	fmt.Println("Company CLIENT :  GetCompanies")
 
 	res, err := companyServiceClient.GetCompanies(c, params)
@@ -206,7 +207,7 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 		fmt.Println("Company CLIENT :  GetCompanies - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -214,7 +215,7 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -238,7 +239,7 @@ func GetCompanies(params *pb.GetCompaniesRequest, c context.Context) ([]*contrac
 	return cr, nil
 }
 
-func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, image []byte, c context.Context) (*pb.UpdateCompanyResponse, *contracts.Error) {
+func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, image []byte, c context.Context) (*pb.UpdateCompanyResponse, *types.Error) {
 	fmt.Println("Company CLIENT :  UpdateCompany")
 
 	fmt.Println("Company CLIENT :  UpdateCompany - Body")
@@ -258,7 +259,7 @@ func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, image []byte, 
 		fmt.Println("Company CLIENT :  UpdateCompany - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -270,7 +271,7 @@ func UpdateCompany(id int64, body contracts.UpdateCompanyRequest, image []byte, 
 	return res, nil
 }
 
-func DeleteCompany(id int64, c context.Context) (*pb.DeleteCompanyResponse, *contracts.Error) {
+func DeleteCompany(id int64, c context.Context) (*pb.DeleteCompanyResponse, *types.Error) {
 	fmt.Println("Company CLIENT :  DeleteCompany")
 
 	params := &pb.DeleteCompanyRequest{
@@ -283,7 +284,7 @@ func DeleteCompany(id int64, c context.Context) (*pb.DeleteCompanyResponse, *con
 		fmt.Println("Company CLIENT :  DeleteCompany - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}

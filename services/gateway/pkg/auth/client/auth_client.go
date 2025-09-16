@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/auth/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	pb "github.com/edorguez/business-manager/shared/pb/auth"
+	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
 )
 
@@ -43,7 +44,7 @@ func InitAuthServiceClient(c *config.Config) error {
 	return nil
 }
 
-func Register(body contracts.CreateUserRequest, c context.Context) (*pb.RegisterResponse, *contracts.Error) {
+func Register(body contracts.CreateUserRequest, c context.Context) (*pb.RegisterResponse, *types.Error) {
 	fmt.Println("Auth CLIENT :  Register")
 
 	fmt.Println("Auth CLIENT :  Register - Body")
@@ -63,7 +64,7 @@ func Register(body contracts.CreateUserRequest, c context.Context) (*pb.Register
 		fmt.Println("Auth CLIENT :  Register - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -75,7 +76,7 @@ func Register(body contracts.CreateUserRequest, c context.Context) (*pb.Register
 	return res, nil
 }
 
-func Login(body contracts.LoginRequest, c context.Context) (*pb.LoginResponse, *contracts.Error) {
+func Login(body contracts.LoginRequest, c context.Context) (*pb.LoginResponse, *types.Error) {
 	fmt.Println("Auth CLIENT :  Login")
 
 	fmt.Println("Auth CLIENT :  Login - Body")
@@ -93,7 +94,7 @@ func Login(body contracts.LoginRequest, c context.Context) (*pb.LoginResponse, *
 		fmt.Println("Auth CLIENT :  Login - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -105,7 +106,7 @@ func Login(body contracts.LoginRequest, c context.Context) (*pb.LoginResponse, *
 	return res, nil
 }
 
-func Validate(body contracts.ValidateRequest, c context.Context) (*pb.ValidateResponse, *contracts.Error) {
+func Validate(body contracts.ValidateRequest, c context.Context) (*pb.ValidateResponse, *types.Error) {
 	fmt.Println("Auth CLIENT :  Login")
 
 	fmt.Println("Auth CLIENT :  Login - Body")
@@ -122,7 +123,7 @@ func Validate(body contracts.ValidateRequest, c context.Context) (*pb.ValidateRe
 		fmt.Println("Auth CLIENT :  Validate - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}

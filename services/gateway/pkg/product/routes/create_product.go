@@ -11,6 +11,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	productClient "github.com/edorguez/business-manager/services/gateway/pkg/product/client"
 	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/edorguez/business-manager/shared/util/file_validator"
 )
 
@@ -48,7 +49,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		// Detect the content type
 		contentType := http.DetectContentType(buffer)
 		if !file_validator.IsValidImage(contentType) {
-			json.NewEncoder(w).Encode(&contracts.Error{
+			json.NewEncoder(w).Encode(&types.Error{
 				Status: http.StatusInternalServerError,
 				Error:  "Invalid file type uploaded",
 			})
@@ -71,7 +72,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println("-----------------")
 
 	if err := productClient.InitProductServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})
@@ -79,7 +80,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	if err := companyClient.InitCompanyServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

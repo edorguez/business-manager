@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp/contracts"
 	pb "github.com/edorguez/business-manager/shared/pb/whatsapp"
+	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
 )
 
@@ -43,7 +44,7 @@ func InitWhatsappServiceClient(c *config.Config) error {
 	return nil
 }
 
-func GetBusinessPhoneByCompanyId(companyId int64, c context.Context) (*contracts.GetBusinessPhoneResponse, *contracts.Error) {
+func GetBusinessPhoneByCompanyId(companyId int64, c context.Context) (*contracts.GetBusinessPhoneResponse, *types.Error) {
 	fmt.Println("Whatsapp CLIENT :  GetBusinessPhoneByCompanyId")
 
 	params := &pb.GetBusinessPhoneByCompanyIdRequest{
@@ -56,7 +57,7 @@ func GetBusinessPhoneByCompanyId(companyId int64, c context.Context) (*contracts
 		fmt.Println("Whatsapp CLIENT :  GetBusinessPhoneByCompanyId - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -67,7 +68,7 @@ func GetBusinessPhoneByCompanyId(companyId int64, c context.Context) (*contracts
 	fmt.Println("Whatsapp CLIENT :  GetBusinessPhoneByCompanyId - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -80,7 +81,7 @@ func GetBusinessPhoneByCompanyId(companyId int64, c context.Context) (*contracts
 	}, nil
 }
 
-func CreateBusinessPhone(body contracts.CreateBusinessPhoneRequest, c context.Context) (*pb.CreateBusinessPhoneResponse, *contracts.Error) {
+func CreateBusinessPhone(body contracts.CreateBusinessPhoneRequest, c context.Context) (*pb.CreateBusinessPhoneResponse, *types.Error) {
 	fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone")
 
 	fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone - Body")
@@ -98,7 +99,7 @@ func CreateBusinessPhone(body contracts.CreateBusinessPhoneRequest, c context.Co
 		fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -110,7 +111,7 @@ func CreateBusinessPhone(body contracts.CreateBusinessPhoneRequest, c context.Co
 	return res, nil
 }
 
-func UpdateBusinessPhone(body contracts.UpdateBusinessPhoneRequest, c context.Context) (*pb.UpdateBusinessPhoneResponse, *contracts.Error) {
+func UpdateBusinessPhone(body contracts.UpdateBusinessPhoneRequest, c context.Context) (*pb.UpdateBusinessPhoneResponse, *types.Error) {
 	fmt.Println("Whatsapp CLIENT :  UpdateBusinessPhone")
 
 	fmt.Println("Whatsapp CLIENT :  UpdateBusinessPhone - Body")
@@ -128,7 +129,7 @@ func UpdateBusinessPhone(body contracts.UpdateBusinessPhoneRequest, c context.Co
 		fmt.Println("Whatsapp CLIENT :  UpdateBusinessPhone - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}

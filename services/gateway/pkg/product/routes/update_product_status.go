@@ -8,6 +8,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"github.com/edorguez/business-manager/services/gateway/pkg/product/client"
 	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/gorilla/mux"
 )
 
@@ -25,7 +26,7 @@ func UpdateProductStatus(w http.ResponseWriter, r *http.Request, c *config.Confi
 	fmt.Println("-----------------")
 
 	if err := client.InitProductServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 )
 
 type MiddlewareConfig struct{}
@@ -35,7 +36,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateProduct(next http.Handler) ht
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateProduct")
 			fmt.Println(err)
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -75,7 +76,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateProduct(next http.Handler) ht
 		err = body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateProduct")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -105,7 +106,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateProductStatus(next http.Handl
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateProductStatus")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}

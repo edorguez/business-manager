@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"github.com/edorguez/business-manager/services/gateway/pkg/order/contracts"
 	pb "github.com/edorguez/business-manager/shared/pb/order"
+	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
 )
 
@@ -43,7 +44,7 @@ func InitOrderServiceClient(c *config.Config) error {
 	return nil
 }
 
-func CreateOrder(body contracts.CreateOrderRequest, c context.Context) (*pb.CreateOrderResponse, *contracts.Error) {
+func CreateOrder(body contracts.CreateOrderRequest, c context.Context) (*pb.CreateOrderResponse, *types.Error) {
 	fmt.Println("Order CLIENT :  CreateOrder")
 
 	fmt.Println("Order CLIENT :  CreateOrder - Body")
@@ -77,7 +78,7 @@ func CreateOrder(body contracts.CreateOrderRequest, c context.Context) (*pb.Crea
 		fmt.Println("Order CLIENT :  CreateOrder - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}

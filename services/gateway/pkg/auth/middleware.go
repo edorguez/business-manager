@@ -59,7 +59,7 @@ func (m *MiddlewareConfig) MiddlewareValidateAuth(next http.Handler) http.Handle
 			fmt.Println("API Gateway :  Validate - ERROR")
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(int(validateToken.Status))
-			json.NewEncoder(w).Encode(&contracts.Error{
+			json.NewEncoder(w).Encode(&types.Error{
 				Status: validateToken.Status,
 				Error:  validateToken.Error,
 			})
@@ -83,7 +83,7 @@ func (m *MiddlewareConfig) MiddlewareValidateLogin(next http.Handler) http.Handl
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - Login")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -113,7 +113,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateUser(next http.Handler) http.
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateUser")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -143,7 +143,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateUser(next http.Handler) http.
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateUser")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -173,7 +173,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateEmail(next http.Handler) http
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateEmail")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -203,7 +203,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdatePassword(next http.Handler) h
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdatePassword")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}

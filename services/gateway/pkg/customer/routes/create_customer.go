@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	customerClient "github.com/edorguez/business-manager/services/gateway/pkg/customer/client"
 	"github.com/edorguez/business-manager/services/gateway/pkg/customer/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 )
 
 func CreateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
@@ -23,7 +24,7 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println("-----------------")
 
 	if err := customerClient.InitCustomerServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})
@@ -31,7 +32,7 @@ func CreateCustomer(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	}
 
 	if err := companyClient.InitCompanyServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

@@ -10,6 +10,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"github.com/edorguez/business-manager/services/gateway/pkg/product/client"
 	"github.com/edorguez/business-manager/services/gateway/pkg/product/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/edorguez/business-manager/shared/util/file_validator"
 	"github.com/gorilla/mux"
 )
@@ -50,7 +51,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		// Detect the content type
 		contentType := http.DetectContentType(buffer)
 		if !file_validator.IsValidImage(contentType) {
-			json.NewEncoder(w).Encode(&contracts.Error{
+			json.NewEncoder(w).Encode(&types.Error{
 				Status: http.StatusInternalServerError,
 				Error:  "Invalid file type uploaded",
 			})
@@ -73,7 +74,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	fmt.Println("-----------------")
 
 	if err := client.InitProductServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

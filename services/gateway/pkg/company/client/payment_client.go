@@ -5,6 +5,7 @@ import (
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/company/contracts"
 	pb "github.com/edorguez/business-manager/shared/pb/payment"
+	"github.com/edorguez/business-manager/shared/types"
 
 	"context"
 	"fmt"
@@ -45,7 +46,7 @@ func InitPaymentServiceClient(c *config.Config) error {
 	return nil
 }
 
-func CreatePayment(body contracts.CreatePaymentRequest, c context.Context) (*pb.CreatePaymentResponse, *contracts.Error) {
+func CreatePayment(body contracts.CreatePaymentRequest, c context.Context) (*pb.CreatePaymentResponse, *types.Error) {
 	fmt.Println("Payment CLIENT :  CreatePayment")
 
 	fmt.Println("Payment CLIENT :  CreatePayment - Body")
@@ -71,7 +72,7 @@ func CreatePayment(body contracts.CreatePaymentRequest, c context.Context) (*pb.
 		fmt.Println("Payment CLIENT :  CreatePayment - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -83,7 +84,7 @@ func CreatePayment(body contracts.CreatePaymentRequest, c context.Context) (*pb.
 	return res, nil
 }
 
-func GetPayment(id int64, c context.Context) (*contracts.GetPaymentResponse, *contracts.Error) {
+func GetPayment(id int64, c context.Context) (*contracts.GetPaymentResponse, *types.Error) {
 	fmt.Println("Payment CLIENT :  GetPayment")
 
 	params := &pb.GetPaymentRequest{
@@ -96,7 +97,7 @@ func GetPayment(id int64, c context.Context) (*contracts.GetPaymentResponse, *co
 		fmt.Println("Payment CLIENT :  GetPayment - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -107,7 +108,7 @@ func GetPayment(id int64, c context.Context) (*contracts.GetPaymentResponse, *co
 	fmt.Println("Payment CLIENT :  GetPayment - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -135,7 +136,7 @@ func GetPayment(id int64, c context.Context) (*contracts.GetPaymentResponse, *co
 	}, nil
 }
 
-func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts.GetPaymentResponse, *contracts.Error) {
+func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts.GetPaymentResponse, *types.Error) {
 	fmt.Println("Payment CLIENT :  GetPayments")
 
 	res, err := paymentServiceClient.GetPayments(c, params)
@@ -144,7 +145,7 @@ func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts
 		fmt.Println("Payment CLIENT :  GetPayments - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -152,7 +153,7 @@ func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -187,7 +188,7 @@ func GetPayments(params *pb.GetPaymentsRequest, c context.Context) ([]*contracts
 	return pr, nil
 }
 
-func GetPaymentsTypes(params *pb.GetPaymentsTypesRequest, c context.Context) ([]*contracts.GetPaymentsTypesResponse, *contracts.Error) {
+func GetPaymentsTypes(params *pb.GetPaymentsTypesRequest, c context.Context) ([]*contracts.GetPaymentsTypesResponse, *types.Error) {
 	fmt.Println("Payment CLIENT :  GetPaymentsTypes")
 
 	res, err := paymentServiceClient.GetPaymentsTypes(c, params)
@@ -196,7 +197,7 @@ func GetPaymentsTypes(params *pb.GetPaymentsTypesRequest, c context.Context) ([]
 		fmt.Println("Payment CLIENT :  GetPaymentsTypes - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -204,7 +205,7 @@ func GetPaymentsTypes(params *pb.GetPaymentsTypesRequest, c context.Context) ([]
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -231,7 +232,7 @@ func GetPaymentsTypes(params *pb.GetPaymentsTypesRequest, c context.Context) ([]
 	return pr, nil
 }
 
-func UpdatePayment(id int64, body contracts.UpdatePaymentRequest, c context.Context) (*pb.UpdatePaymentResponse, *contracts.Error) {
+func UpdatePayment(id int64, body contracts.UpdatePaymentRequest, c context.Context) (*pb.UpdatePaymentResponse, *types.Error) {
 	fmt.Println("Payment CLIENT :  UpdatePayment")
 
 	fmt.Println("Payment CLIENT :  UpdatePayment - Body")
@@ -257,7 +258,7 @@ func UpdatePayment(id int64, body contracts.UpdatePaymentRequest, c context.Cont
 		fmt.Println("Payment CLIENT :  UpdatePayment - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -269,7 +270,7 @@ func UpdatePayment(id int64, body contracts.UpdatePaymentRequest, c context.Cont
 	return res, nil
 }
 
-func UpdatePaymentStatus(id int64, body contracts.UpdatePaymentStatusRequest, c context.Context) (*pb.UpdatePaymentStatusResponse, *contracts.Error) {
+func UpdatePaymentStatus(id int64, body contracts.UpdatePaymentStatusRequest, c context.Context) (*pb.UpdatePaymentStatusResponse, *types.Error) {
 	fmt.Println("Payment CLIENT :  UpdatePaymentStatus")
 
 	fmt.Println("Payment CLIENT :  UpdatePaymentStatus - Body")
@@ -287,7 +288,7 @@ func UpdatePaymentStatus(id int64, body contracts.UpdatePaymentStatusRequest, c 
 		fmt.Println("Payment CLIENT :  UpdatePaymentStatus - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -299,7 +300,7 @@ func UpdatePaymentStatus(id int64, body contracts.UpdatePaymentStatusRequest, c 
 	return res, nil
 }
 
-func DeletePayment(id int64, c context.Context) (*pb.DeletePaymentResponse, *contracts.Error) {
+func DeletePayment(id int64, c context.Context) (*pb.DeletePaymentResponse, *types.Error) {
 	fmt.Println("Payment CLIENT :  DeletePayment")
 
 	params := &pb.DeletePaymentRequest{
@@ -312,7 +313,7 @@ func DeletePayment(id int64, c context.Context) (*pb.DeletePaymentResponse, *con
 		fmt.Println("Payment CLIENT :  DeletePayment - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/customer/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 )
 
 type MiddlewareConfig struct{}
@@ -24,7 +25,7 @@ func (m *MiddlewareConfig) MiddlewareValidateCreateCustomer(next http.Handler) h
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - CreateCustomer")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}
@@ -54,7 +55,7 @@ func (m *MiddlewareConfig) MiddlewareValidateUpdateCustomer(next http.Handler) h
 		err := body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - UpdateCustomer")
-			middleErr := contracts.Error{
+			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),
 			}

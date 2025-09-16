@@ -8,7 +8,7 @@ import (
 
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp/client"
-	"github.com/edorguez/business-manager/services/gateway/pkg/whatsapp/contracts"
+	"github.com/edorguez/business-manager/shared/types"
 	"github.com/gorilla/mux"
 )
 
@@ -17,7 +17,7 @@ func GetBusinessPhoneByCompanyId(w http.ResponseWriter, r *http.Request, c *conf
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusBadRequest,
 			Error:  "Unable to convert ID",
 		})
@@ -25,7 +25,7 @@ func GetBusinessPhoneByCompanyId(w http.ResponseWriter, r *http.Request, c *conf
 	}
 
 	if err := client.InitWhatsappServiceClient(c); err != nil {
-		json.NewEncoder(w).Encode(&contracts.Error{
+		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		})

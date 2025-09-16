@@ -9,6 +9,7 @@ import (
 	"github.com/edorguez/business-manager/services/gateway/pkg/auth/contracts"
 	"github.com/edorguez/business-manager/services/gateway/pkg/config"
 	pb "github.com/edorguez/business-manager/shared/pb/user"
+	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
 )
 
@@ -43,7 +44,7 @@ func InitUserServiceClient(c *config.Config) error {
 	return nil
 }
 
-func CreateUser(body contracts.CreateUserRequest, c context.Context) (*pb.CreateUserResponse, *contracts.Error) {
+func CreateUser(body contracts.CreateUserRequest, c context.Context) (*pb.CreateUserResponse, *types.Error) {
 	fmt.Println("User CLIENT :  CreateUser")
 
 	fmt.Println("User CLIENT :  CreateUser - Body")
@@ -63,7 +64,7 @@ func CreateUser(body contracts.CreateUserRequest, c context.Context) (*pb.Create
 		fmt.Println("User CLIENT :  CreateUser - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -75,7 +76,7 @@ func CreateUser(body contracts.CreateUserRequest, c context.Context) (*pb.Create
 	return res, nil
 }
 
-func GetUser(id int64, c context.Context) (*contracts.GetUserResponse, *contracts.Error) {
+func GetUser(id int64, c context.Context) (*contracts.GetUserResponse, *types.Error) {
 	fmt.Println("User CLIENT :  GetUser")
 
 	params := &pb.GetUserRequest{
@@ -88,7 +89,7 @@ func GetUser(id int64, c context.Context) (*contracts.GetUserResponse, *contract
 		fmt.Println("User CLIENT :  GetUser - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -99,7 +100,7 @@ func GetUser(id int64, c context.Context) (*contracts.GetUserResponse, *contract
 	fmt.Println("User CLIENT :  GetUser - SUCCESS")
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -114,7 +115,7 @@ func GetUser(id int64, c context.Context) (*contracts.GetUserResponse, *contract
 	}, nil
 }
 
-func GetUsers(params *pb.GetUsersRequest, c context.Context) ([]*contracts.GetUserResponse, *contracts.Error) {
+func GetUsers(params *pb.GetUsersRequest, c context.Context) ([]*contracts.GetUserResponse, *types.Error) {
 	fmt.Println("User CLIENT :  GetUser")
 
 	res, err := userServiceClient.GetUsers(c, params)
@@ -123,7 +124,7 @@ func GetUsers(params *pb.GetUsersRequest, c context.Context) ([]*contracts.GetUs
 		fmt.Println("User CLIENT :  GetUsers - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -132,7 +133,7 @@ func GetUsers(params *pb.GetUsersRequest, c context.Context) ([]*contracts.GetUs
 	}
 
 	if res.Status != http.StatusOK {
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: res.Status,
 			Error:  res.Error,
 		}
@@ -158,7 +159,7 @@ func GetUsers(params *pb.GetUsersRequest, c context.Context) ([]*contracts.GetUs
 	return cr, nil
 }
 
-func UpdateUser(id int64, body contracts.UpdateUserRequest, c context.Context) (*pb.UpdateUserResponse, *contracts.Error) {
+func UpdateUser(id int64, body contracts.UpdateUserRequest, c context.Context) (*pb.UpdateUserResponse, *types.Error) {
 	fmt.Println("User CLIENT :  UpdateUser")
 
 	fmt.Println("User CLIENT :  UpdateUser - Body")
@@ -178,7 +179,7 @@ func UpdateUser(id int64, body contracts.UpdateUserRequest, c context.Context) (
 		fmt.Println("User CLIENT :  UpdateUser - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -190,7 +191,7 @@ func UpdateUser(id int64, body contracts.UpdateUserRequest, c context.Context) (
 	return res, nil
 }
 
-func DeleteUser(id int64, c context.Context) (*pb.DeleteUserResponse, *contracts.Error) {
+func DeleteUser(id int64, c context.Context) (*pb.DeleteUserResponse, *types.Error) {
 	fmt.Println("User CLIENT :  DeleteUser")
 
 	params := &pb.DeleteUserRequest{
@@ -203,7 +204,7 @@ func DeleteUser(id int64, c context.Context) (*pb.DeleteUserResponse, *contracts
 		fmt.Println("User CLIENT :  DeleteUser - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -215,7 +216,7 @@ func DeleteUser(id int64, c context.Context) (*pb.DeleteUserResponse, *contracts
 	return res, nil
 }
 
-func UpdateEmail(id int64, body contracts.UpdateEmailRequest, c context.Context) (*pb.UpdateEmailResponse, *contracts.Error) {
+func UpdateEmail(id int64, body contracts.UpdateEmailRequest, c context.Context) (*pb.UpdateEmailResponse, *types.Error) {
 	fmt.Println("User CLIENT :  UpdateEmail")
 
 	fmt.Println("User CLIENT :  UpdateEmail - Body")
@@ -233,7 +234,7 @@ func UpdateEmail(id int64, body contracts.UpdateEmailRequest, c context.Context)
 		fmt.Println("User CLIENT :  UpdateEmail - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
@@ -245,7 +246,7 @@ func UpdateEmail(id int64, body contracts.UpdateEmailRequest, c context.Context)
 	return res, nil
 }
 
-func UpdatePassword(id int64, body contracts.UpdatePasswordRequest, c context.Context) (*pb.UpdatePasswordResponse, *contracts.Error) {
+func UpdatePassword(id int64, body contracts.UpdatePasswordRequest, c context.Context) (*pb.UpdatePasswordResponse, *types.Error) {
 	fmt.Println("User CLIENT :  UpdatePassword")
 
 	fmt.Println("User CLIENT :  UpdatePassword - Body")
@@ -263,7 +264,7 @@ func UpdatePassword(id int64, body contracts.UpdatePasswordRequest, c context.Co
 		fmt.Println("User CLIENT :  UpdatePassword - ERROR")
 		fmt.Println(err.Error())
 
-		error := &contracts.Error{
+		error := &types.Error{
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}
