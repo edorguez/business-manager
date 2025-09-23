@@ -23,10 +23,10 @@ func InitCustomerServiceClient(c *config.Config) error {
 	var customerSvcUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		customerSvcUrl = c.Customer_Svc_Url + ":" + c.Customer_Svc_Port
+		customerSvcUrl = c.CustomerSvcUrl + ":" + c.CustomerSvcPort
 	} else {
 		fmt.Println("Running in development mode")
-		customerSvcUrl = "localhost:" + c.Customer_Svc_Port
+		customerSvcUrl = "localhost:" + c.CustomerSvcPort
 	}
 
 	// using WithInsecure() because no SSL running

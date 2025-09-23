@@ -17,12 +17,12 @@ func main() {
 		log.Fatalln("Failed at config", err)
 	}
 
-	lis, err := net.Listen("tcp", ":"+c.Port)
+	lis, err := net.Listen("tcp", ":"+c.FileSvcPort)
 	if err != nil {
 		log.Fatalln("Failed to listing:", err)
 	}
 
-	fmt.Println("Client Service ON: ", c.Port)
+	fmt.Println("Client Service ON: ", c.FileSvcPort)
 
 	s := services.FileService{
 		Config: &c,

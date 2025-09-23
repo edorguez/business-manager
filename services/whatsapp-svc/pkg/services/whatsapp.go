@@ -29,8 +29,8 @@ func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *wha
 	fmt.Println(req)
 	fmt.Println("----------------")
 
-	accountSid := s.Config.Twilio_Account_SID
-	authToken := s.Config.Twilio_Auth_Token
+	accountSid := s.Config.TwilioAccountSID
+	authToken := s.Config.TwilioAuthToken
 
 	c, err := s.Repo.GetBusinessPhoneByCompanyId(ctx, req.CompanyId)
 	if err != nil {
@@ -78,7 +78,7 @@ func (s *WhatsappService) SendOrderCustomerMessage(ctx context.Context, req *wha
 	// Define message parameters
 	params := &api.CreateMessageParams{}
 	params.SetTo(fmt.Sprintf("whatsapp:+58%v", phone.RemovePhoneZero(req.ToPhone))) // Recipient
-	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number))        // Twilio WhatsApp Number
+	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.TwilioPhoneNumber))          // Twilio WhatsApp Number
 	params.SetContentSid("HX3929fc4860efca29f7312839fa3a0827")                      // Content SID
 	params.SetContentVariables(string(contentVariablesJSON))                        // Dynamic variables
 
@@ -105,8 +105,8 @@ func (s *WhatsappService) SendOrderBusinessMessage(ctx context.Context, req *wha
 	fmt.Println(req)
 	fmt.Println("----------------")
 
-	accountSid := s.Config.Twilio_Account_SID
-	authToken := s.Config.Twilio_Auth_Token
+	accountSid := s.Config.TwilioAccountSID
+	authToken := s.Config.TwilioAuthToken
 
 	c, err := s.Repo.GetBusinessPhoneByCompanyId(ctx, req.CompanyId)
 	if err != nil {
@@ -154,7 +154,7 @@ func (s *WhatsappService) SendOrderBusinessMessage(ctx context.Context, req *wha
 	// Define message parameters
 	params := &api.CreateMessageParams{}
 	params.SetTo(fmt.Sprintf("whatsapp:+58%v", phone.RemovePhoneZero(c.Phone))) // Recipient
-	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.Twilio_Phone_Number))    // Twilio WhatsApp Number
+	params.SetFrom(fmt.Sprintf("whatsapp:%v", s.Config.TwilioPhoneNumber))      // Twilio WhatsApp Number
 	params.SetContentSid("HX15a23f804b9a05bb807a843c09ac5975")                  // Content SID
 	params.SetContentVariables(string(contentVariablesJSON))                    // Dynamic variables
 

@@ -3,9 +3,9 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port                     string `mapstructure:"PORT"`
-	Aws_Access_Key_Id        string `mapstructure:"AWS_ACCESS_KEY_ID"`
-	Aws_Secret_Access_Key_Id string `mapstructure:"AWS_SECRET_ACCESS_KEY_ID"`
+	FileSvcPort          string `mapstructure:"FILE_SVC_PORT"`
+	AwsAccessKeyId       string `mapstructure:"AWS_ACCESS_KEY_ID"`
+	AwsSecretAccessKeyId string `mapstructure:"AWS_SECRET_ACCESS_KEY_ID"`
 }
 
 func LoadConfig() (config Config, err error) {

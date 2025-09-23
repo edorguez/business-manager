@@ -22,7 +22,7 @@ func main() {
 		log.Fatalln("Failed at config", err)
 	}
 
-	lis, err := net.Listen("tcp", ":"+c.Port)
+	lis, err := net.Listen("tcp", ":"+c.WhatsappSvcPort)
 	if err != nil {
 		log.Fatalln("Failed to listing:", err)
 	}
@@ -48,7 +48,7 @@ func main() {
 
 	storage := db.NewStorage(conn)
 
-	fmt.Println("Client Service ON: ", c.Port)
+	fmt.Println("Client Service ON: ", c.WhatsappSvcPort)
 
 	ps := services.WhatsappService{
 		Repo:   repository.NewWhatsappRepo(storage),

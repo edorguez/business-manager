@@ -21,7 +21,7 @@ func main() {
 		log.Fatalln("Failed at config", err)
 	}
 
-	lis, err := net.Listen("tcp", ":"+c.Port)
+	lis, err := net.Listen("tcp", ":"+c.ProductSvcPort)
 	if err != nil {
 		log.Fatalln("Failed to listing:", err)
 	}
@@ -46,7 +46,7 @@ func main() {
 	}
 	defer mongoClient.Disconnect(context.Background())
 
-	fmt.Println("Client Service ON: ", c.Port)
+	fmt.Println("Client Service ON: ", c.ProductSvcPort)
 
 	ps := services.ProductService{
 		Repo:   repo.NewProductRepo(mongoClient, c),

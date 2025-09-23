@@ -3,12 +3,12 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port                       string `mapstructure:"PORT"`
+	CompanySvcPort             string `mapstructure:"COMPANY_SVC_PORT"`
 	PostgresDBDriver           string `mapstructure:"POSTGRES_DB_DRIVER"`
 	CompanyDBSourceDevelopment string `mapstructure:"COMPANY_DB_SOURCE_DEVELOPMENT"`
 	CompanyDBSourceProduction  string `mapstructure:"COMPANY_DB_SOURCE_PRODUCTION"`
-	File_Svc_Url               string `mapstructure:"FILE_SVC_URL"`
-	File_Svc_Port              string `mapstructure:"FILE_SVC_PORT"`
+	FileSvcUrl                 string `mapstructure:"FILE_SVC_URL"`
+	FileSvcPort                string `mapstructure:"FILE_SVC_PORT"`
 }
 
 func LoadConfig() (config Config, err error) {

@@ -43,10 +43,10 @@ func main() {
 	var gatewayUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		gatewayUrl = conf.Production_Url + ":" + conf.Gateway_Port
+		gatewayUrl = conf.ProductionUrl + ":" + conf.GatewayPort
 	} else {
 		fmt.Println("Running in development mode")
-		gatewayUrl = conf.Development_Url + ":" + conf.Gateway_Port
+		gatewayUrl = conf.DevelopmentUrl + ":" + conf.GatewayPort
 	}
 
 	// run the server

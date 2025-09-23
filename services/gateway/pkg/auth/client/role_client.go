@@ -26,10 +26,10 @@ func InitRoleServiceClient(c *config.Config) error {
 	var authSvcUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		authSvcUrl = c.Auth_Svc_Url + ":" + c.Auth_Svc_Port
+		authSvcUrl = c.ProductionUrl + ":" + c.AuthSvcPort
 	} else {
 		fmt.Println("Running in development mode")
-		authSvcUrl = c.Development_Url + ":" + c.Auth_Svc_Port
+		authSvcUrl = c.DevelopmentUrl + ":" + c.AuthSvcPort
 	}
 
 	// using WithInsecure() because no SSL running

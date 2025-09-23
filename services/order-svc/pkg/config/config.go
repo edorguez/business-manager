@@ -3,11 +3,11 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port              string `mapstructure:"PORT"`
-	Customer_Svc_Url  string `mapstructure:"CUSTOMER_SVC_URL"`
-	Customer_Svc_Port string `mapstructure:"CUSTOMER_SVC_PORT"`
-	Whatsapp_Svc_Url  string `mapstructure:"WHATSAPP_SVC_URL"`
-	Whatsapp_Svc_Port string `mapstructure:"WHATSAPP_SVC_PORT"`
+	OrderSvcPort    string `mapstructure:"ORDER_SVC_PORT"`
+	CustomerSvcUrl  string `mapstructure:"CUSTOMER_SVC_URL"`
+	CustomerSvcPort string `mapstructure:"CUSTOMER_SVC_PORT"`
+	WhatsappSvcUrl  string `mapstructure:"WHATSAPP_SVC_URL"`
+	WhatsappSvcPort string `mapstructure:"WHATSAPP_SVC_PORT"`
 }
 
 func LoadConfig() (config Config, err error) {

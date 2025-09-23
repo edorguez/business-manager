@@ -22,7 +22,7 @@ type S3File struct {
 func UploadFiles(c *config.Config, bucketName string, folderName string, files []S3File) ([]string, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(region),
-		Credentials: credentials.NewStaticCredentials(c.Aws_Access_Key_Id, c.Aws_Secret_Access_Key_Id, ""),
+		Credentials: credentials.NewStaticCredentials(c.AwsAccessKeyId, c.AwsSecretAccessKeyId, ""),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to create S3 session: %w", err)
@@ -60,7 +60,7 @@ func UploadFiles(c *config.Config, bucketName string, folderName string, files [
 func DeleteFiles(c *config.Config, bucketName string, folderName string, files []string) error {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(region),
-		Credentials: credentials.NewStaticCredentials(c.Aws_Access_Key_Id, c.Aws_Secret_Access_Key_Id, ""),
+		Credentials: credentials.NewStaticCredentials(c.AwsAccessKeyId, c.AwsSecretAccessKeyId, ""),
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create S3 session: %w", err)

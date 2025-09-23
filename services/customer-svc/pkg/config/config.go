@@ -3,7 +3,7 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port                        string `mapstructure:"PORT"`
+	CustomerSvcPort             string `mapstructure:"CUSTOMER_SVC_PORT"`
 	PostgresDBDriver            string `mapstructure:"POSTGRES_DB_DRIVER"`
 	CustomerDBSourceDevelopment string `mapstructure:"CUSTOMER_DB_SOURCE_DEVELOPMENT"`
 	CustomerDBSourceProduction  string `mapstructure:"CUSTOMER_DB_SOURCE_PRODUCTION"`

@@ -3,13 +3,13 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port                        string `mapstructure:"PORT"`
+	WhatsappSvcPort             string `mapstructure:"WHATSAPP_SVC_PORT"`
 	PostgresDBDriver            string `mapstructure:"POSTGRES_DB_DRIVER"`
 	WhatsappDBSourceDevelopment string `mapstructure:"WHATSAPP_DB_SOURCE_DEVELOPMENT"`
 	WhatsappDBSourceProduction  string `mapstructure:"WHATSAPP_DB_SOURCE_PRODUCTION"`
-	Twilio_Account_SID          string `mapstructure:"TWILIO_ACCOUNT_SID"`
-	Twilio_Auth_Token           string `mapstructure:"TWILIO_AUTH_TOKEN"`
-	Twilio_Phone_Number         string `mapstructure:"TWILIO_PHONE_NUMBER"`
+	TwilioAccountSID            string `mapstructure:"TWILIO_ACCOUNT_SID"`
+	TwilioAuthToken             string `mapstructure:"TWILIO_AUTH_TOKEN"`
+	TwilioPhoneNumber           string `mapstructure:"TWILIO_PHONE_NUMBER"`
 }
 
 func LoadConfig() (config Config, err error) {

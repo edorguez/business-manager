@@ -24,7 +24,7 @@ func main() {
 		log.Fatalln("Failed at config", err)
 	}
 
-	lis, err := net.Listen("tcp", ":"+c.Port)
+	lis, err := net.Listen("tcp", ":"+c.CompanySvcPort)
 	if err != nil {
 		log.Fatalln("Failed to listing:", err)
 	}
@@ -50,7 +50,7 @@ func main() {
 
 	storage := db.NewStorage(conn)
 
-	fmt.Println("Client Service ON: ", c.Port)
+	fmt.Println("Client Service ON: ", c.CompanySvcPort)
 
 	cs := services.CompanyService{
 		Repo:   repo.NewCompanyRepo(storage),
