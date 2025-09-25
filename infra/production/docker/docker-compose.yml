@@ -1,9 +1,22 @@
 version: '3.9'
 
 services:
+  nginx:
+    image: nginx:1.27.3
+    container_name: business-manager-nginx-proxy
+    volumes:
+      - /home/edorguez/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /home/edorguez/nginx/certs:/etc/nginx/certs:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - my_app_network
+    restart: always
+
   ui:
     container_name: edezco
-    image: EdoRguez/ui-business-manager
+    image: edorguez/ui-business-manager
     ports:
       - "${UI_PORT}:${UI_PORT}"
     build:
@@ -19,7 +32,7 @@ services:
 
   gateway:
     container_name: gateway
-    image: EdoRguez/gateway
+    image: edorguez/gateway
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     environment:
@@ -30,7 +43,7 @@ services:
 
   customer-svc:
       container_name: customer-svc
-      image: EdoRguez/customer-svc
+      image: edorguez/customer-svc
       ports:
         - "${CUSTOMER_SVC_PORT}:${CUSTOMER_SVC_PORT}"
       environment:
@@ -43,7 +56,7 @@ services:
 
   company-svc:
       container_name: company-svc
-      image: EdoRguez/company-svc
+      image: edorguez/company-svc
       ports:
         - "${COMPANY_SVC_PORT}:${COMPANY_SVC_PORT}"
       environment:
@@ -56,7 +69,7 @@ services:
 
   product-svc:
       container_name: product-svc
-      image: EdoRguez/product-svc
+      image: edorguez/product-svc
       ports:
         - "${PRODUCT_SVC_PORT}:${PRODUCT_SVC_PORT}"
       environment:
@@ -69,7 +82,7 @@ services:
 
   whatsapp-svc:
       container_name: whatsapp-svc
-      image: EdoRguez/whatsapp-svc
+      image: edorguez/whatsapp-svc
       ports:
         - "${WHATSAPP_SVC_PORT}:${WHATSAPP_SVC_PORT}"
       environment:
@@ -82,7 +95,7 @@ services:
 
   auth-svc:
       container_name: auth-svc
-      image: EdoRguez/auth-svc
+      image: edorguez/auth-svc
       ports:
         - "${AUTH_SVC_PORT}:${AUTH_SVC_PORT}"
       environment:
@@ -95,7 +108,7 @@ services:
 
   order-svc:
       container_name: order-svc
-      image: EdoRguez/order-svc
+      image: edorguez/order-svc
       ports:
         - "${ORDER_SVC_PORT}:${ORDER_SVC_PORT}"
       environment:
@@ -104,7 +117,7 @@ services:
 
   file-svc:
       container_name: file-svc
-      image: EdoRguez/file-svc
+      image: edorguez/file-svc
       ports:
         - "${FILE_SVC_PORT}:${FILE_SVC_PORT}"
       environment:
