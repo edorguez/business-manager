@@ -1,5 +1,3 @@
-version: '3.9'
-
 volumes:
   customer_db_data:
     name: customer_db_data
