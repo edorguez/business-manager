@@ -1,5 +1,17 @@
 version: '3.9'
 
+volumes:
+  customer_db_data:
+    name: customer_db_data
+  company_db_data:
+    name: company_db_data
+  product_db_data:
+    name: product_db_data
+  whatsapp_db_data:
+    name: whatsapp_db_data
+  auth_db_data:
+    name: auth_db_data
+
 services:
   # nginx:
   #   image: nginx:1.27.3
@@ -194,6 +206,8 @@ services:
       - POSTGRES_DB=${CUSTOMER_SVC_DB}
       - POSTGRES_USER=${CUSTOMER_SVC_DB_USER}
       - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
+    volumes:
+      - customer_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
@@ -207,6 +221,8 @@ services:
       - POSTGRES_DB=${COMPANY_SVC_DB}
       - POSTGRES_USER=${COMPANY_SVC_DB_USER}
       - POSTGRES_PASSWORD=${COMPANY_SVC_DB_PASSWORD}
+    volumes:
+      - company_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
@@ -219,6 +235,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${PRODUCT_SVC_DB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${PRODUCT_SVC_DB_PASSWORD}
+    volumes:
+      - product_db_data:/data/db
     networks:
         - my_app_network
     restart: always
@@ -232,6 +250,8 @@ services:
       - POSTGRES_DB=${WHATSAPP_SVC_DB}
       - POSTGRES_USER=${WHATSAPP_SVC_DB_USER}
       - POSTGRES_PASSWORD=${WHATSAPP_SVC_DB_PASSWORD}
+    volumes:
+      - whatsapp_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
@@ -245,6 +265,8 @@ services:
       - POSTGRES_DB=${AUTH_SVC_DB}
       - POSTGRES_USER=${AUTH_SVC_DB_USER}
       - POSTGRES_PASSWORD=${AUTH_SVC_DB_PASSWORD}
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
