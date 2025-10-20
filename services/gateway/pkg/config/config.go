@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -37,8 +38,35 @@ func LoadConfig() (config Config, err error) {
 		log.Println("Using .env file for configuration")
 	} else {
 		log.Println("No .env file found, using environment variables")
+
+		config.ProductionUrl = getViperString("PRODUCTION_URL")
+		config.DevelopmentUrl = getViperString("DEVELOPMENT_URL")
+		config.GatewayPort = getViperString("GATEWAY_PORT")
+		config.CustomerSvcUrl = getViperString("CUSTOMER_SVC_URL")
+		config.CustomerSvcPort = getViperString("CUSTOMER_SVC_PORT")
+		config.CompanySvcUrl = getViperString("COMPANY_SVC_URL")
+		config.CompanySvcPort = getViperString("COMPANY_SVC_PORT")
+		config.ProductSvcUrl = getViperString("PRODUCT_SVC_URL")
+		config.ProductSvcPort = getViperString("PRODUCT_SVC_PORT")
+		config.AuthSvcUrl = getViperString("AUTH_SVC_URL")
+		config.AuthSvcPort = getViperString("AUTH_SVC_PORT")
+		config.OrderSvcUrl = getViperString("ORDER_SVC_URL")
+		config.OrderSvcPort = getViperString("ORDER_SVC_PORT")
+		config.FileSvcUrl = getViperString("FILE_SVC_URL")
+		config.FileSvcPort = getViperString("FILE_SVC_PORT")
+		config.WhatsappSvcUrl = getViperString("WHATSAPP_SVC_URL")
+		config.WhatsappSvcPort = getViperString("WHATSAPP_SVC_PORT")
 	}
 
 	err = viper.Unmarshal(&config)
 	return
+}
+
+func getViperString(key string) string {
+	// First try to get from viper (which includes environment variables)
+	if value := viper.GetString(key); value != "" {
+		return value
+	}
+	// Fallback to direct environment variable
+	return os.Getenv(key)
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -23,8 +24,24 @@ func LoadConfig() (config Config, err error) {
 		log.Println("Using .env file for configuration")
 	} else {
 		log.Println("No .env file found, using environment variables")
+
+		config.CompanySvcPort = getViperString("COMPANY_SVC_PORT")
+		config.PostgresDBDriver = getViperString("POSTGRES_DB_DRIVER")
+		config.CompanyDBSourceDevelopment = getViperString("COMPANY_DB_SOURCE_DEVELOPMENT")
+		config.CompanyDBSourceProduction = getViperString("COMPANY_DB_SOURCE_PRODUCTION")
+		config.FileSvcUrl = getViperString("FILE_SVC_URL")
+		config.FileSvcPort = getViperString("FILE_SVC_PORT")
 	}
 
 	err = viper.Unmarshal(&config)
 	return
+}
+
+func getViperString(key string) string {
+	// First try to get from viper (which includes environment variables)
+	if value := viper.GetString(key); value != "" {
+		return value
+	}
+	// Fallback to direct environment variable
+	return os.Getenv(key)
 }
