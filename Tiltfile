@@ -1,6 +1,23 @@
 # Load the restart_process extension
 load('ext://restart_process', 'docker_build_with_restart')
 
+# Load environment variables from .env file
+env_vars = read_dot_env('.env')
+
+# Create Kubernetes secret from .env variables
+k8s_yaml(f"""
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+type: Opaque
+data:
+{chr(10).join(f'  {k}: {str(v).encode("utf-8").hex()' for k, v in env_vars.items() if v)}
+""")
+
+# Make sure this secret is applied first
+k8s_yaml('./infra/development/k8s/app-config.yaml')
+
 ### K8s Config ###
 
 # Uncomment to use secrets

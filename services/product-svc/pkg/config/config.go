@@ -1,6 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"log"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	ProductSvcPort             string `mapstructure:"PRODUCT_SVC_PORT"`
@@ -14,15 +18,16 @@ type Config struct {
 }
 
 func LoadConfig() (config Config, err error) {
+	viper.AutomaticEnv()
+
 	viper.AddConfigPath(".")
 	viper.SetConfigType("env")
 	viper.SetConfigFile(".env")
 
-	viper.AutomaticEnv()
-
-	err = viper.ReadInConfig()
-	if err != nil {
-		return
+	if err := viper.ReadInConfig(); err == nil {
+		log.Println("Using .env file for configuration")
+	} else {
+		log.Println("No .env file found, using environment variables")
 	}
 
 	err = viper.Unmarshal(&config)

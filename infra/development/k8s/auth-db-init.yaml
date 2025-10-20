@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Job
+metadata:
+  name: auth-db-init
+spec:
+  template:
+    spec:
+      containers:
+      - name: init
+        image: postgres:16.2
+        command: ['sh', '-c', 
+          'until pg_isready -h auth-db; do sleep 2; done;
+           psql -h auth-db -U $POSTGRES_USER -d $POSTGRES_DB -c "CREATE TABLE IF NOT EXISTS schema_migrations (version bigint primary key);"']
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: auth-db-user
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: auth-db-name
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: auth-db-password
+      restartPolicy: Never
+  backoffLimit: 3
