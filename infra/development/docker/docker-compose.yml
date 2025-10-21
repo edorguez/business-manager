@@ -1,21 +1,44 @@
-version: '3.9'
+volumes:
+  customer_db_data:
+    name: customer_db_data
+  company_db_data:
+    name: company_db_data
+  product_db_data:
+    name: product_db_data
+  whatsapp_db_data:
+    name: whatsapp_db_data
+  auth_db_data:
+    name: auth_db_data
 
 services:
-  ui:
-    container_name: edezco
-    image: edorguez/ui-business-manager
-    ports:
-      - "${UI_PORT}:${UI_PORT}"
-    build:
-      context: ./nextjs-app
-    environment:
-      - ENVIRONMENT=production
-      - NEXT_PUBLIC_ENVIRONMENT=production
-    networks:
-      - my_app_network
-    depends_on:
-      - gateway
-    restart: always
+  # nginx:
+  #   image: nginx:1.27.3
+  #   container_name: business-manager-nginx-proxy
+  #   volumes:
+  #     - /home/edorguez/nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - /home/edorguez/nginx/certs:/etc/nginx/certs:ro
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   networks:
+  #     - my_app_network
+  #   restart: always
+  #
+  # ui:
+  #   container_name: edezco
+  #   image: edorguez/ui-business-manager
+  #   ports:
+  #     - "${UI_PORT}:${UI_PORT}"
+  #   build:
+  #     context: ./nextjs-app
+  #   environment:
+  #     - ENVIRONMENT=production
+  #     - NEXT_PUBLIC_ENVIRONMENT=production
+  #   networks:
+  #     - my_app_network
+  #   depends_on:
+  #     - gateway
+  #   restart: always
 
   gateway:
     container_name: gateway
@@ -23,7 +46,24 @@ services:
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     environment:
-      - ENVIRONMENT=production
+      - ENVIRONMENT=development
+      - PRODUCTION_URL=${PRODUCTION_URL}
+      - DEVELOPMENT_URL=${DEVELOPMENT_URL}
+      - GATEWAY_PORT=${GATEWAY_PORT}
+      - CUSTOMER_SVC_URL=${CUSTOMER_SVC_URL}
+      - CUSTOMER_SVC_PORT=${CUSTOMER_SVC_PORT}
+      - COMPANY_SVC_URL=${COMPANY_SVC_URL}
+      - COMPANY_SVC_PORT=${COMPANY_SVC_PORT}
+      - PRODUCT_SVC_URL=${PRODUCT_SVC_URL}
+      - PRODUCT_SVC_PORT=${PRODUCT_SVC_PORT}
+      - AUTH_SVC_URL=${AUTH_SVC_URL}
+      - AUTH_SVC_PORT=${AUTH_SVC_PORT}
+      - ORDER_SVC_URL=${ORDER_SVC_URL}
+      - ORDER_SVC_PORT=${ORDER_SVC_PORT}
+      - FILE_SVC_URL=${FILE_SVC_URL}
+      - FILE_SVC_PORT=${FILE_SVC_PORT}
+      - WHATSAPP_SVC_URL=${WHATSAPP_SVC_URL}
+      - WHATSAPP_SVC_PORT=${WHATSAPP_SVC_PORT}
     networks:
       - my_app_network
     restart: always
@@ -34,7 +74,11 @@ services:
       ports:
         - "${CUSTOMER_SVC_PORT}:${CUSTOMER_SVC_PORT}"
       environment:
-        - ENVIRONMENT=production
+        - ENVIRONMENT=development
+        - CUSTOMER_SVC_PORT=${CUSTOMER_SVC_PORT}
+        - POSTGRES_DB_DRIVER=${POSTGRES_DB_DRIVER}
+        - CUSTOMER_DB_SOURCE_DEVELOPMENT=${CUSTOMER_DB_SOURCE_DEVELOPMENT}
+        - CUSTOMER_DB_SOURCE_PRODUCTION=${CUSTOMER_DB_SOURCE_PRODUCTION}
       networks:
         - my_app_network
       depends_on:
@@ -47,7 +91,13 @@ services:
       ports:
         - "${COMPANY_SVC_PORT}:${COMPANY_SVC_PORT}"
       environment:
-        - ENVIRONMENT=production
+        - ENVIRONMENT=development
+        - COMPANY_SVC_PORT=${COMPANY_SVC_PORT}
+        - POSTGRES_DB_DRIVER=${POSTGRES_DB_DRIVER}
+        - COMPANY_DB_SOURCE_DEVELOPMENT=${COMPANY_DB_SOURCE_DEVELOPMENT}
+        - COMPANY_DB_SOURCE_PRODUCTION=${COMPANY_DB_SOURCE_PRODUCTION}
+        - FILE_SVC_URL=${FILE_SVC_URL}
+        - FILE_SVC_PORT=${FILE_SVC_PORT}
       networks:
         - my_app_network
       depends_on:
@@ -60,7 +110,15 @@ services:
       ports:
         - "${PRODUCT_SVC_PORT}:${PRODUCT_SVC_PORT}"
       environment:
-        - ENVIRONMENT=production
+        - ENVIRONMENT=development
+        - PRODUCT_SVC_PORT=${PRODUCT_SVC_PORT}
+        - PRODUCT_DB_NAME=${PRODUCT_DB_NAME}
+        - PRODUCT_DB_SOURCE_DEVELOPMENT=${PRODUCT_DB_SOURCE_DEVELOPMENT}
+        - PRODUCT_DB_SOURCE_PRODUCTION=${PRODUCT_DB_SOURCE_PRODUCTION}
+        - COMPANY_SVC_URL=${COMPANY_SVC_URL}
+        - COMPANY_SVC_PORT=${COMPANY_SVC_PORT}
+        - FILE_SVC_URL=${FILE_SVC_URL}
+        - FILE_SVC_PORT=${FILE_SVC_PORT}
       networks:
         - my_app_network
       depends_on:
@@ -73,7 +131,14 @@ services:
       ports:
         - "${WHATSAPP_SVC_PORT}:${WHATSAPP_SVC_PORT}"
       environment:
-        - ENVIRONMENT=production
+        - ENVIRONMENT=development
+        - WHATSAPP_SVC_PORT=${WHATSAPP_SVC_PORT}
+        - POSTGRES_DB_DRIVER=${POSTGRES_DB_DRIVER}
+        - WHATSAPP_DB_SOURCE_DEVELOPMENT=${WHATSAPP_DB_SOURCE_DEVELOPMENT}
+        - WHATSAPP_DB_SOURCE_PRODUCTION=${WHATSAPP_DB_SOURCE_PRODUCTION}
+        - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+        - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+        - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
       networks:
         - my_app_network
       depends_on:
@@ -86,7 +151,14 @@ services:
       ports:
         - "${AUTH_SVC_PORT}:${AUTH_SVC_PORT}"
       environment:
-        - ENVIRONMENT=production
+        - ENVIRONMENT=development
+        - AUTH_SVC_PORT=${AUTH_SVC_PORT}
+        - POSTGRES_DB_DRIVER=${POSTGRES_DB_DRIVER}
+        - AUTH_DB_SOURCE_DEVELOPMENT=${AUTH_DB_SOURCE_DEVELOPMENT}
+        - AUTH_DB_SOURCE_PRODUCTION=${AUTH_DB_SOURCE_PRODUCTION}
+        - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+        - COMPANY_SVC_URL=${COMPANY_SVC_URL}
+        - COMPANY_SVC_PORT=${COMPANY_SVC_PORT}
       networks:
         - my_app_network
       depends_on:
@@ -99,7 +171,14 @@ services:
       ports:
         - "${ORDER_SVC_PORT}:${ORDER_SVC_PORT}"
       environment:
-        - ENVIRONMENT=production
+        - ENVIRONMENT=development
+        - ORDER_SVC_PORT=${ORDER_SVC_PORT}
+        - CUSTOMER_SVC_URL=${CUSTOMER_SVC_URL}
+        - CUSTOMER_SVC_PORT=${CUSTOMER_SVC_PORT}
+        - WHATSAPP_SVC_URL=${WHATSAPP_SVC_URL}
+        - WHATSAPP_SVC_PORT=${WHATSAPP_SVC_PORT}
+      networks:
+        - my_app_network
       restart: always
 
   file-svc:
@@ -108,7 +187,10 @@ services:
       ports:
         - "${FILE_SVC_PORT}:${FILE_SVC_PORT}"
       environment:
-        - ENVIRONMENT=production
+        - ENVIRONMENT=development
+        - FILE_SVC_PORT=${FILE_SVC_PORT}
+        - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+        - AWS_SECRET_ACCESS_KEY_ID=${AWS_SECRET_ACCESS_KEY_ID}
       networks:
         - my_app_network
       restart: always
@@ -122,6 +204,8 @@ services:
       - POSTGRES_DB=${CUSTOMER_SVC_DB}
       - POSTGRES_USER=${CUSTOMER_SVC_DB_USER}
       - POSTGRES_PASSWORD=${CUSTOMER_SVC_DB_PASSWORD}
+    volumes:
+      - customer_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
@@ -135,6 +219,8 @@ services:
       - POSTGRES_DB=${COMPANY_SVC_DB}
       - POSTGRES_USER=${COMPANY_SVC_DB_USER}
       - POSTGRES_PASSWORD=${COMPANY_SVC_DB_PASSWORD}
+    volumes:
+      - company_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
@@ -147,6 +233,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${PRODUCT_SVC_DB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${PRODUCT_SVC_DB_PASSWORD}
+    volumes:
+      - product_db_data:/data/db
     networks:
         - my_app_network
     restart: always
@@ -160,6 +248,8 @@ services:
       - POSTGRES_DB=${WHATSAPP_SVC_DB}
       - POSTGRES_USER=${WHATSAPP_SVC_DB_USER}
       - POSTGRES_PASSWORD=${WHATSAPP_SVC_DB_PASSWORD}
+    volumes:
+      - whatsapp_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
@@ -173,6 +263,8 @@ services:
       - POSTGRES_DB=${AUTH_SVC_DB}
       - POSTGRES_USER=${AUTH_SVC_DB_USER}
       - POSTGRES_PASSWORD=${AUTH_SVC_DB_PASSWORD}
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always

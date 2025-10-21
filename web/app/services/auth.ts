@@ -1,10 +1,8 @@
-'use server'
-
 import { Login } from "@/app/types/auth"
-import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 
 const baseUrl: string =
-  process.env.ENVIRONMENT === "production"
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
     ? "http://gateway:3001/api/auth"
     : "http://localhost:3001/api/auth";
 
@@ -19,7 +17,7 @@ export async function login(
     let response = await res.json();
 
     if(!response.error) {
-      cookies().set('token', `Bearer ${response.token}`);
+      Cookies.set('token', `Bearer ${response.token}`);
     }
 
     return response;

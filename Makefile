@@ -13,8 +13,17 @@ proto-all:
 		--experimental_allow_proto3_optional \
 		$(PROTO_SRC)
 
-docker-compose-build:
+docker-compose-up-prod:
 	docker-compose -f infra/production/docker/docker-compose.yml --env-file .env -p "business-manager" up -d
+
+docker-compose-down-prod:
+	docker-compose -f infra/production/docker/docker-compose.yml --env-file .env -p "business-manager" down
+
+docker-compose-up-dev:
+	docker-compose -f infra/development/docker/docker-compose.yml --env-file .env -p "business-manager" up -d
+
+docker-compose-down-dev:
+	docker-compose -f infra/development/docker/docker-compose.yml --env-file .env -p "business-manager" down
 
 SERVICES = docker-auth-svc docker-company-svc docker-customer-svc docker-file-svc docker-gateway docker-order-svc docker-product-svc docker-whatsapp-svc
 REGISTRY = edorguez
