@@ -28,7 +28,7 @@ func InitPaymentServiceClient(c *config.Config) error {
 	var companySvcUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		companySvcUrl = c.ProductionUrl + ":" + c.CompanySvcPort
+		companySvcUrl = c.CompanySvcUrl + ":" + c.CompanySvcPort
 	} else {
 		fmt.Println("Running in development mode")
 		companySvcUrl = c.DevelopmentUrl + ":" + c.CompanySvcPort

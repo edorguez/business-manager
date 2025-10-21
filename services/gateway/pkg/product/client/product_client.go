@@ -26,7 +26,7 @@ func InitProductServiceClient(c *config.Config) error {
 	var productSvcUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		productSvcUrl = c.ProductionUrl + ":" + c.ProductSvcPort
+		productSvcUrl = c.ProductSvcUrl + ":" + c.ProductSvcPort
 	} else {
 		fmt.Println("Running in development mode")
 		productSvcUrl = c.DevelopmentUrl + ":" + c.ProductSvcPort

@@ -26,7 +26,7 @@ func InitWhatsappServiceClient(c *config.Config) error {
 	var whatsappSvcUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		whatsappSvcUrl = c.ProductionUrl + ":" + c.WhatsappSvcPort
+		whatsappSvcUrl = c.WhatsappSvcUrl + ":" + c.WhatsappSvcPort
 	} else {
 		fmt.Println("Running in development mode")
 		whatsappSvcUrl = c.DevelopmentUrl + ":" + c.WhatsappSvcPort

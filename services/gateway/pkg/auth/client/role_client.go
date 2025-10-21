@@ -26,7 +26,7 @@ func InitRoleServiceClient(c *config.Config) error {
 	var authSvcUrl string
 	if appEnv == "production" {
 		fmt.Println("Running in production mode")
-		authSvcUrl = c.ProductionUrl + ":" + c.AuthSvcPort
+		authSvcUrl = c.AuthSvcUrl + ":" + c.AuthSvcPort
 	} else {
 		fmt.Println("Running in development mode")
 		authSvcUrl = c.DevelopmentUrl + ":" + c.AuthSvcPort
