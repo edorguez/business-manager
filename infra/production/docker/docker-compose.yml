@@ -47,6 +47,7 @@ services:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     environment:
       - ENVIRONMENT=production
+      - ALLOW_ALL_CORS=true
       - PRODUCTION_URL=${PRODUCTION_URL}
       - DEVELOPMENT_URL=${DEVELOPMENT_URL}
       - GATEWAY_PORT=${GATEWAY_PORT}

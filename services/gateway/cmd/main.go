@@ -108,7 +108,7 @@ func routesConfig(next http.Handler) http.Handler {
 		fmt.Println("--> Received Origin:", origin)
 
 		// Check if the origin is from your domain or its subdomains
-		if isValidOrigin(origin) {
+		if isValidOrigin(origin) || os.Getenv("ALLOW_ALL_CORS") == "true" {
 			// Set the Access-Control-Allow-Origin header to the specific origin
 			w.Header().Set("Access-Control-Allow-Origin", origin)
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
