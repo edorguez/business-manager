@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Container,
-  Input,
   Step,
   StepDescription,
   StepIcon,
@@ -20,58 +19,29 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Login } from "../types/auth";
-import { login } from "../services/auth";
 import { useRouter } from "next/navigation";
 import useLoading from "../hooks/useLoading";
-import { validLettersAndNumbers, validWithNoSpaces } from "../utils/InputUtils";
 import { Icon } from "@iconify/react";
+import { SignUp } from "../types/signup";
+import SignUpStep1 from "../components/signup/SignUpStep1";
 
 const SignUpClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
-  const [formData, setFormData] = useState<Login>({ email: "", password: "" });
+  const [formData, setFormData] = useState<SignUp>({ company: { name: "", phone: ""}, user: { email: "", password: "" } });
+
+  const updateCompany = (updatedCompany: SignUp['company']) => {
+    setFormData(prev => ({
+      ...prev,
+      company: updatedCompany
+    }));
+  };
 
   const { activeStep, setActiveStep } = useSteps({
     index: 0,
     count: 2,
   });
-
-  const handleEmailChange = (event: any) => {
-    const { name, value } = event.target;
-    if (value && !validWithNoSpaces(value)) return;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
-
-  const handlePasswordChange = (event: any) => {
-    const { name, value } = event.target;
-    if (value && !validLettersAndNumbers(value)) return;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
-
-  const onLogin = async () => {
-    isLoading.onStartLoading();
-    let result: any = await login(formData);
-    if (!result?.error) {
-      push("/management/home");
-    } else {
-      toast({
-        title: "Error",
-        description: result.error,
-        variant: "customerror",
-        position: "top-right",
-        duration: 4000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const handleKeyDown = (event: any) => {
-    if (event.key === "Enter") {
-      onLogin();
-    }
-  };
 
   return (
     <>
@@ -138,20 +108,14 @@ const SignUpClient = () => {
                   </Stepper>
                   {activeStep === 0 && (
                     <div className="mt-7">
-                      Hola
-                      <div className="mt-3 flex justify-end">
-                        <Button variant="main" className="w-40" onClick={() => setActiveStep(1)}>
-                          Siguiente
-                          <Icon className="ml-2" icon="fa-solid:arrow-right" />
-                        </Button>
-                      </div>
+                      <SignUpStep1 companyForm={formData.company} onCompanyChange={updateCompany} onClickNextStep={() => console.log('hola')} />
                     </div>
                   )}
                   {activeStep === 1 && (
                     <div className="mt-7">
                       Chao
                       <div className="mt-3">
-                        <Button variant="main" className="w-40" onClick={onLogin}>
+                        <Button variant="main" className="w-40">
                           Siguiente
                           <Icon className="ml-2" icon="fa-solid:arrow-right" />
                         </Button>
