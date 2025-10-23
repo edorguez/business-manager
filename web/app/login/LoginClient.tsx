@@ -9,6 +9,7 @@ import { login } from "../services/auth";
 import { useRouter } from "next/navigation";
 import useLoading from "../hooks/useLoading";
 import { validLettersAndNumbers, validWithNoSpaces } from "../utils/InputUtils";
+import Link from "next/link";
 
 const LoginClient = () => {
   const isLoading = useLoading();
@@ -108,6 +109,11 @@ const LoginClient = () => {
                     <Button variant="main" className="w-full" onClick={onLogin}>
                       Iniciar Sesión
                     </Button>
+                  </div>
+                  <div className="mt-5 text-center hover:underline">
+                    <Link href="/signup">
+                      ¿No tienes cuenta? ¡Únete aquí!
+                    </Link>
                   </div>
                 </div>
               </SimpleCard>

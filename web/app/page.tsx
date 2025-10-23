@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import FloatingItem from "./components/framer-motion/FloatingItem";
+import Link from "next/link";
 
 export default function Home() {
   useEffect(() => {
@@ -20,27 +21,39 @@ export default function Home() {
       <header className="px-4 lg:px-6 h-16 flex items-center bg-maincolor">
         <div className="flex items-center justify-center">
           <Image src="/images/logo.png" alt="Logo" width={28} height={28} />
-          <span className="ml-2 text-2xl font-bold text-white">Edezco</span>
+          <span className="ml-2 text-2xl font-bold text-white xs:hidden">Edezco</span>
         </div>
-        <nav className="ml-auto sm:flex gap-4 sm:gap-6 hidden">
+        <nav className="ml-auto sm:flex gap-4 sm:gap-6 items-center">
           <a
-            className="text-sm font-medium hover:underline underline-offset-4 text-white"
+            className="text-sm font-medium hover:underline underline-offset-4 text-white xs:hidden sm:block"
             href="#features"
           >
             Características
           </a>
           <a
-            className="text-sm font-medium hover:underline underline-offset-4 text-white"
+            className="text-sm font-medium hover:underline underline-offset-4 text-white xs:hidden sm:block"
             href="#plans"
           >
             Planes
           </a>
           <a
-            className="text-sm font-medium hover:underline underline-offset-4 text-white"
+            className="text-sm font-medium hover:underline underline-offset-4 text-white xs:hidden sm:block"
             href="#contact"
           >
             Contáctanos
           </a>
+          <div className="flex gap-1">
+            <Link href="/signup">
+              <Button variant="third" className="w-32 text-sm" size='sm'>
+                Crear Cuenta
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button variant="fifth" className="w-32 text-sm" size='sm'>
+                Ingresar
+              </Button>
+            </Link>
+          </div>
         </nav>
       </header>
       <main className="flex-1">
@@ -119,11 +132,11 @@ export default function Home() {
                 </p>
               </div>
               <div className="space-x-4 transition-transform transform hover:scale-125 duration-300 ease-in-out">
-                <Button variant="third">
-                  <a href="https://wa.link/bpguv0" target="_blank">
+                <Link href="/signup">
+                  <Button variant="third">
                     Comenzar
-                  </a>
-                </Button>
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -424,11 +437,11 @@ export default function Home() {
                 data-aos-delay="400"
               >
                 <div className="space-x-4 transition-transform transform hover:scale-125 duration-300 ease-in-out">
-                  <Button variant="main">
-                    <a href="https://wa.link/bpguv0" target="_blank">
+                  <Link href="/signup">
+                    <Button variant="main">
                       Comenzar
-                    </a>
-                  </Button>
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

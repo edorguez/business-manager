@@ -25,6 +25,7 @@ import { login } from "../services/auth";
 import { useRouter } from "next/navigation";
 import useLoading from "../hooks/useLoading";
 import { validLettersAndNumbers, validWithNoSpaces } from "../utils/InputUtils";
+import { Icon } from "@iconify/react";
 
 const SignUpClient = () => {
   const isLoading = useLoading();
@@ -100,72 +101,64 @@ const SignUpClient = () => {
                 />
               </div>
               <SimpleCard>
-                <Stepper size="sm" colorScheme="main" index={activeStep}>
-                  <Step key={0}>
-                    <StepIndicator>
-                      <StepStatus
-                        complete={<StepIcon />}
-                        incomplete={<StepNumber />}
-                        active={<StepNumber />}
-                      />
-                    </StepIndicator>
-
-                    <Box flexShrink="0" className="select-none">
-                      <StepTitle>Información</StepTitle>
-                      <StepDescription>Datos básicos</StepDescription>
-                    </Box>
-
-                    <StepSeparator />
-                  </Step>
-                  <Step key={1}>
-                    <StepIndicator>
-                      <StepStatus
-                        complete={<StepIcon />}
-                        incomplete={<StepNumber />}
-                        active={<StepNumber />}
-                      />
-                    </StepIndicator>
-
-                    <Box flexShrink="0" className="select-none">
-                      <StepTitle>Completado</StepTitle>
-                      <StepDescription>Pedido realizado</StepDescription>
-                    </Box>
-
-                    <StepSeparator />
-                  </Step>
-                </Stepper>
-
-
                 <div className="px-1 py-8">
-                  <div className="mt-2">
-                    <label className="text-sm">Correo</label>
-                    <Input
-                      size="sm"
-                      type="email"
-                      name="email"
-                      maxLength={100}
-                      value={formData.email}
-                      onChange={handleEmailChange}
-                      onKeyDown={handleKeyDown}
-                    />
-                  </div>
-                  <div className="mt-2">
-                    <label className="text-sm">Contraseña</label>
-                    <Input
-                      size="sm"
-                      type="password"
-                      name="password"
-                      maxLength={20}
-                      value={formData.password}
-                      onChange={handlePasswordChange}
-                      onKeyDown={handleKeyDown}
-                    />
-                  </div>
-                  <div className="mt-3">
-                    <Button variant="main" className="w-full" onClick={onLogin}>
-                      Iniciar Sesión
-                    </Button>
-                  </div>
+                  <Stepper size="sm" colorScheme="main" index={activeStep}>
+                    <Step key={0}>
+                      <StepIndicator>
+                        <StepStatus
+                          complete={<StepIcon />}
+                          incomplete={<StepNumber />}
+                          active={<StepNumber />}
+                        />
+                      </StepIndicator>
+
+                      <Box flexShrink="0" className="select-none">
+                        <StepTitle>Empresa</StepTitle>
+                        <StepDescription>Datos empresa</StepDescription>
+                      </Box>
+
+                      <StepSeparator />
+                    </Step>
+                    <Step key={1}>
+                      <StepIndicator>
+                        <StepStatus
+                          complete={<StepIcon />}
+                          incomplete={<StepNumber />}
+                          active={<StepNumber />}
+                        />
+                      </StepIndicator>
+
+                      <Box flexShrink="0" className="select-none">
+                        <StepTitle>Usuario</StepTitle>
+                        <StepDescription>Datos usuario</StepDescription>
+                      </Box>
+
+                      <StepSeparator />
+                    </Step>
+                  </Stepper>
+                  {activeStep === 0 && (
+                    <div className="mt-7">
+                      Hola
+                      <div className="mt-3 flex justify-end">
+                        <Button variant="main" className="w-40" onClick={() => setActiveStep(1)}>
+                          Siguiente
+                          <Icon className="ml-2" icon="fa-solid:arrow-right" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {activeStep === 1 && (
+                    <div className="mt-7">
+                      Chao
+                      <div className="mt-3">
+                        <Button variant="main" className="w-40" onClick={onLogin}>
+                          Siguiente
+                          <Icon className="ml-2" icon="fa-solid:arrow-right" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  
                 </div>
               </SimpleCard>
             </div>
