@@ -4,7 +4,6 @@ import Image from "next/image";
 import SimpleCard from "../components/cards/SimpleCard";
 import {
   Box,
-  Button,
   Container,
   Step,
   StepDescription,
@@ -21,20 +20,38 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useLoading from "../hooks/useLoading";
-import { Icon } from "@iconify/react";
 import { SignUp } from "../types/signup";
 import SignUpStep1 from "../components/signup/SignUpStep1";
+import SignUpStep2 from "../components/signup/SignUpStep2";
 
 const SignUpClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
-  const [formData, setFormData] = useState<SignUp>({ company: { name: "", phone: ""}, user: { email: "", password: "" } });
+  const [formData, setFormData] = useState<SignUp>({ 
+    company: { 
+      name: "", 
+      phone: "", 
+      image: undefined 
+    }, 
+    user: { 
+      email: "", 
+      password: "", 
+      passwordRepeat: "" 
+    } 
+  });
 
   const updateCompany = (updatedCompany: SignUp['company']) => {
     setFormData(prev => ({
       ...prev,
       company: updatedCompany
+    }));
+  };
+
+  const updateUser = (updatedUser: SignUp['user']) => {
+    setFormData(prev => ({
+      ...prev,
+      user: updatedUser
     }));
   };
 
@@ -48,7 +65,7 @@ const SignUpClient = () => {
       <div className="grid grid-cols-8 h-screen">
         <div className="hidden md:flex col-span-3 bg-gradient-to-b from-thirdcolor to-fourthcolor flex-col items-center justify-center">
           <h1 className="mb-10 text-white font-medium text-xl text-center">
-            ¡Ingresa a tu cuenta y empieza a administrar tu negocio!
+            ¡Únete y empieza a administrar tu negocio!
           </h1>
           <Image
             className="rounded-lg"
@@ -108,21 +125,23 @@ const SignUpClient = () => {
                   </Stepper>
                   {activeStep === 0 && (
                     <div className="mt-7">
-                      <SignUpStep1 companyForm={formData.company} onCompanyChange={updateCompany} onClickNextStep={() => console.log('hola')} />
+                      <SignUpStep1 
+                        companyForm={formData.company} 
+                        onCompanyChange={updateCompany} 
+                        onClickNextStep={() => setActiveStep(1)} 
+                      />
                     </div>
                   )}
                   {activeStep === 1 && (
                     <div className="mt-7">
-                      Chao
-                      <div className="mt-3">
-                        <Button variant="main" className="w-40">
-                          Siguiente
-                          <Icon className="ml-2" icon="fa-solid:arrow-right" />
-                        </Button>
-                      </div>
-                    </div>
+                      <SignUpStep2
+                        userForm={formData.user} 
+                        onUserChange={updateUser} 
+                        onClickBackStep={() => setActiveStep(0)} 
+                        onClickNextStep={() => setActiveStep(1)} 
+                      />
+                    </div>                  
                   )}
-                  
                 </div>
               </SimpleCard>
             </div>

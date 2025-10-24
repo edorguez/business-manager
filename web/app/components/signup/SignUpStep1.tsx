@@ -5,12 +5,10 @@ import { validNumbers } from "@/app/utils/InputUtils";
 import { Button, Input } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import ImagesUpload from "../uploads/ImagesUpload";
-import { useState } from "react";
 
 interface SignUpStep1Props {
   companyForm: SignUp['company'],
   onCompanyChange: (company: SignUp['company']) => void;
-  onChangeImage: () => void;
   onClickNextStep: () => void
 }
 
@@ -19,10 +17,6 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
   onCompanyChange,
   onClickNextStep
 }) => {
-  const [imagesToSave, setImagesToSave] = useState<File[]>([]);
-  const [imagesLoaded, setImagesLoaded] = useState<File[]>([]);
-  const [companyImageUrl, setCompanyImageUrl] = useState<string>("/images/account/user.png");
-
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     onCompanyChange({
@@ -41,19 +35,10 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
   };
 
   const handleUploadFiles = (files: File[]) => {
-    if (files && files.length > 0) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const imageUrl = event.target?.result as string;
-        setCompanyImageUrl(imageUrl);
-      };
-
-      reader.readAsDataURL(files[0]);
-    } else {
-      setCompanyImageUrl("/images/account/user.png");
-    }
-
-    setImagesToSave(files);
+    onCompanyChange({
+      ...companyForm,
+      image: files
+    })
   };
 
   return (
@@ -86,7 +71,6 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
             maxImagesNumber={1}
             isViewOnlyImage={false}
             onUploadFiles={handleUploadFiles}
-            defaultImages={imagesLoaded}
           />
         </div>
       </div>
