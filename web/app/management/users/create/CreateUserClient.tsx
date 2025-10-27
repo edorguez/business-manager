@@ -89,6 +89,8 @@ const CreateUserClient = () => {
         showErrorMessage(createUser.error);
         isLoading.onEndLoading();
       }
+    } else if(formData.password && formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH) {
+      showErrorMessage(`La contraseña debe tener al menos ${PASSWORD.MIN_PASSWORD_LEGTH} caracteres`);
     } else {
       showErrorMessage("Algunos campos son requeridos o inválidos");
     }
@@ -100,7 +102,7 @@ const CreateUserClient = () => {
     if (!formData.email) return false;
     if (!validEmail(formData.email)) return false;
     if (!formData.password) return false;
-    if (formData.password.length < PASSWORD.MIN_PASSWORD_LEGTH) return false;
+    if (formData.password?.length < PASSWORD.MIN_PASSWORD_LEGTH) return false;
     if (!validLettersAndNumbers(formData.password)) return false;
 
     return true;

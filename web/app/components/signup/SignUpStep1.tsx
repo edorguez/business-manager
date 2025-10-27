@@ -1,8 +1,8 @@
 'use client'
 
 import { SignUp } from "@/app/types/signup";
-import { validNumbers } from "@/app/utils/InputUtils";
-import { Button, Input } from "@chakra-ui/react";
+import { validLettersAndNumbers, validNumbers, validPhone } from "@/app/utils/InputUtils";
+import { Button, Input, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import ImagesUpload from "../uploads/ImagesUpload";
 
@@ -17,8 +17,11 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
   onCompanyChange,
   onClickNextStep
 }) => {
+  const toast = useToast();
+
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    if (value && !validLettersAndNumbers(value, true)) return;
     onCompanyChange({
       ...companyForm,
       [name]: value
@@ -41,10 +44,40 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
     })
   };
 
+  const onNextStep = () => {
+    if(isFormValid()) {
+      onClickNextStep();
+    } else {
+      showErrorMessage("Algunos campos son requeridos o inválidos");
+    }
+  };
+
+  const isFormValid = (): boolean => {
+    if (!companyForm.name) return false;
+    if (companyForm.name && !validLettersAndNumbers(companyForm.name, true)) return false;
+    if (!companyForm.phone) return false;
+    if (companyForm.phone && !validPhone(companyForm.phone)) return false;
+
+    return true;
+  };
+
+  const showErrorMessage = (msg: string) => {
+    toast({
+      title: "Error",
+      description: msg,
+      variant: "customerror",
+      position: "top-right",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
   return (
     <>
       <div className="mt-2">
-        <label className="text-sm">Nombre Empresa</label>
+        <label className="text-sm">
+          Nombre Empresa<span className="text-thirdcolor">*</span>
+        </label>
         <Input
           size="sm"
           name="name"
@@ -54,7 +87,9 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
         />
       </div>
       <div className="mt-2">
-        <label className="text-sm">Número de WhatsApp</label>
+        <label className="text-sm">
+          Número de WhatsApp<span className="text-thirdcolor">*</span>
+        </label>
         <Input
           size="sm"
           type="tel"
@@ -75,7 +110,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
         </div>
       </div>
       <div className="mt-3 flex justify-end">
-        <Button variant="main" className="w-40" onClick={() => onClickNextStep()}>
+        <Button variant="main" className="w-40" onClick={onNextStep}>
           Siguiente
           <Icon className="ml-2" icon="fa-solid:arrow-right" />
         </Button>
