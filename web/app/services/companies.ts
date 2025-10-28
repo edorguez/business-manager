@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://edezco.com/api/companies"
+    ? "https://gateway:3001/api/companies"
     : "http://localhost:3001/api/companies";
 
 export async function GetCompanyRequest(request: GetCompany) {

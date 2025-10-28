@@ -1,4 +1,4 @@
-import { Login } from "@/app/types/auth"
+import { Login, SignUp } from "@/app/types/auth"
 import Cookies from "js-cookie";
 
 const baseUrl: string =
@@ -23,5 +23,38 @@ export async function login(
     return response;
   } catch (error: any) {
     console.log(error.toString())
+  }
+}
+
+export async function signUp(
+  request: SignUp,
+) {
+  try {
+    request.company.name = request.company.name.trim();
+
+    const formData = new FormData();
+
+    // Add JSON data as a string
+    formData.append("json", JSON.stringify(request));
+
+    // Add images to the FormData
+    request.company.images?.forEach((image) => {
+      formData.append(`files`, image);
+    });
+
+    const res = await fetch(`${baseUrl}/signUp`, {
+      method: "POST",
+      body: formData,
+    });
+
+    let response = await res.json();
+
+    if(!response.error) {
+      Cookies.set('token', `Bearer ${response.token}`);
+    }
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString());
   }
 }

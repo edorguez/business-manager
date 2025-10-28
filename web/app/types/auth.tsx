@@ -11,3 +11,20 @@ export type CurrentUser = {
   companyId: number;
   exp: number;
 }
+
+export type SignUp = {
+  company: SignUpCompany;
+  user: SignUpUser;
+}
+
+export type SignUpCompany = {
+  name: string;
+  phone: string;
+  images?: File[];
+}
+
+export type SignUpUser = {
+  email: string;
+  password: string;
+  passwordRepeat: string;
+}
