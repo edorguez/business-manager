@@ -33,8 +33,8 @@ func (companyRepo *CompanyRepo) CreateCompany(ctx context.Context, arg db.Create
 	return result, err
 }
 
-func (companyRepo *CompanyRepo) GetCompany(ctx context.Context, id int64) (db.CompanyCompany, error) {
-	var result db.CompanyCompany
+func (companyRepo *CompanyRepo) GetCompany(ctx context.Context, id int64) (db.GetCompanyRow, error) {
+	var result db.GetCompanyRow
 
 	err := companyRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
@@ -50,8 +50,8 @@ func (companyRepo *CompanyRepo) GetCompany(ctx context.Context, id int64) (db.Co
 	return result, err
 }
 
-func (companyRepo *CompanyRepo) GetCompanyByName(ctx context.Context, name string) (db.CompanyCompany, error) {
-	var result db.CompanyCompany
+func (companyRepo *CompanyRepo) GetCompanyByName(ctx context.Context, name string) (db.GetCompanyByNameRow, error) {
+	var result db.GetCompanyByNameRow
 
 	err := companyRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
@@ -67,8 +67,8 @@ func (companyRepo *CompanyRepo) GetCompanyByName(ctx context.Context, name strin
 	return result, err
 }
 
-func (companyRepo *CompanyRepo) GetCompanyByNameUrl(ctx context.Context, nameUrl string) (db.CompanyCompany, error) {
-	var result db.CompanyCompany
+func (companyRepo *CompanyRepo) GetCompanyByNameUrl(ctx context.Context, nameUrl string) (db.GetCompanyByNameUrlRow, error) {
+	var result db.GetCompanyByNameUrlRow
 
 	err := companyRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
@@ -84,8 +84,8 @@ func (companyRepo *CompanyRepo) GetCompanyByNameUrl(ctx context.Context, nameUrl
 	return result, err
 }
 
-func (companyRepo *CompanyRepo) GetCompanies(ctx context.Context, arg db.GetCompaniesParams) ([]db.CompanyCompany, error) {
-	var result []db.CompanyCompany
+func (companyRepo *CompanyRepo) GetCompanies(ctx context.Context, arg db.GetCompaniesParams) ([]db.GetCompaniesRow, error) {
+	var result []db.GetCompaniesRow
 
 	err := companyRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error

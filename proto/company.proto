@@ -18,7 +18,6 @@ service CompanyService{
 
 message CreateCompanyRequest{
   string name = 1;
-	google.protobuf.Timestamp lastPaymentDate = 2;
 }
 
 message CreateCompanyResponse{

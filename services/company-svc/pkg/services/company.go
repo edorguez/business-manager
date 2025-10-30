@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/edorguez/business-manager/services/company-svc/pkg/client"
 	"github.com/edorguez/business-manager/services/company-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/company-svc/pkg/constants"
 	db "github.com/edorguez/business-manager/services/company-svc/pkg/db/sqlc"
 	repo "github.com/edorguez/business-manager/services/company-svc/pkg/repository"
 	"github.com/edorguez/business-manager/shared/pb/company"
@@ -31,8 +33,11 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 
 	createCompanyParams := db.CreateCompanyParams{
 		Name:            req.Name,
+		NameFormatUrl:   string,
 		ImageUrl:        sql.NullString{},
-		LastPaymentDate: req.LastPaymentDate.AsTime(),
+		IsFreeTrial:     true,
+		PlanID:          constants.PLAN_ID_BASIC,
+		LastPaymentDate: time.Now().UTC(),
 	}
 
 	c, err := s.Repo.CreateCompany(ctx, createCompanyParams)

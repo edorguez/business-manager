@@ -5,6 +5,7 @@ CREATE TABLE "company"."company" (
   "name" varchar(50) NOT NULL,
   "name_format_url" varchar NOT NULL,
   "image_url" varchar,
+  "is_free_trial" bit NOT NULL,
   "plan_id" bigint NOT NULL,
   "last_payment_date" timestamptz NOT NULL DEFAULT (NOW()),
   "created_at" timestamptz NOT NULL DEFAULT (NOW()),

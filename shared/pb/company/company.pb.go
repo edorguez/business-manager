@@ -23,11 +23,10 @@ const (
 )
 
 type CreateCompanyRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Name            string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	LastPaymentDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=lastPaymentDate,proto3" json:"lastPaymentDate,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateCompanyRequest) Reset() {
@@ -65,13 +64,6 @@ func (x *CreateCompanyRequest) GetName() string {
 		return x.Name
 	}
 	return ""
-}
-
-func (x *CreateCompanyRequest) GetLastPaymentDate() *timestamppb.Timestamp {
-	if x != nil {
-		return x.LastPaymentDate
-	}
-	return nil
 }
 
 type CreateCompanyResponse struct {
@@ -898,10 +890,9 @@ var File_company_proto protoreflect.FileDescriptor
 
 const file_company_proto_rawDesc = "" +
 	"\n" +
-	"\rcompany.proto\x12\acompany\x1a\x1fgoogle/protobuf/timestamp.proto\"p\n" +
+	"\rcompany.proto\x12\acompany\x1a\x1fgoogle/protobuf/timestamp.proto\"*\n" +
 	"\x14CreateCompanyRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12D\n" +
-	"\x0flastPaymentDate\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x0flastPaymentDate\"U\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"U\n" +
 	"\x15CreateCompanyResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\x03R\x06status\x12\x14\n" +
@@ -1004,30 +995,29 @@ var file_company_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),       // 14: google.protobuf.Timestamp
 }
 var file_company_proto_depIdxs = []int32{
-	14, // 0: company.CreateCompanyRequest.lastPaymentDate:type_name -> google.protobuf.Timestamp
-	14, // 1: company.GetCompanyResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
-	14, // 2: company.GetCompanyByNameResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
-	14, // 3: company.GetCompanyByNameUrlResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
-	3,  // 4: company.GetCompaniesResponse.companies:type_name -> company.GetCompanyResponse
-	0,  // 5: company.CompanyService.CreateCompany:input_type -> company.CreateCompanyRequest
-	2,  // 6: company.CompanyService.GetCompany:input_type -> company.GetCompanyRequest
-	4,  // 7: company.CompanyService.GetCompanyByName:input_type -> company.GetCompanyByNameRequest
-	6,  // 8: company.CompanyService.GetCompanyByNameUrl:input_type -> company.GetCompanyByNameUrlRequest
-	8,  // 9: company.CompanyService.GetCompanies:input_type -> company.GetCompaniesRequest
-	10, // 10: company.CompanyService.UpdateCompany:input_type -> company.UpdateCompanyRequest
-	12, // 11: company.CompanyService.DeleteCompany:input_type -> company.DeleteCompanyRequest
-	1,  // 12: company.CompanyService.CreateCompany:output_type -> company.CreateCompanyResponse
-	3,  // 13: company.CompanyService.GetCompany:output_type -> company.GetCompanyResponse
-	5,  // 14: company.CompanyService.GetCompanyByName:output_type -> company.GetCompanyByNameResponse
-	7,  // 15: company.CompanyService.GetCompanyByNameUrl:output_type -> company.GetCompanyByNameUrlResponse
-	9,  // 16: company.CompanyService.GetCompanies:output_type -> company.GetCompaniesResponse
-	11, // 17: company.CompanyService.UpdateCompany:output_type -> company.UpdateCompanyResponse
-	13, // 18: company.CompanyService.DeleteCompany:output_type -> company.DeleteCompanyResponse
-	12, // [12:19] is the sub-list for method output_type
-	5,  // [5:12] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	14, // 0: company.GetCompanyResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
+	14, // 1: company.GetCompanyByNameResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
+	14, // 2: company.GetCompanyByNameUrlResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
+	3,  // 3: company.GetCompaniesResponse.companies:type_name -> company.GetCompanyResponse
+	0,  // 4: company.CompanyService.CreateCompany:input_type -> company.CreateCompanyRequest
+	2,  // 5: company.CompanyService.GetCompany:input_type -> company.GetCompanyRequest
+	4,  // 6: company.CompanyService.GetCompanyByName:input_type -> company.GetCompanyByNameRequest
+	6,  // 7: company.CompanyService.GetCompanyByNameUrl:input_type -> company.GetCompanyByNameUrlRequest
+	8,  // 8: company.CompanyService.GetCompanies:input_type -> company.GetCompaniesRequest
+	10, // 9: company.CompanyService.UpdateCompany:input_type -> company.UpdateCompanyRequest
+	12, // 10: company.CompanyService.DeleteCompany:input_type -> company.DeleteCompanyRequest
+	1,  // 11: company.CompanyService.CreateCompany:output_type -> company.CreateCompanyResponse
+	3,  // 12: company.CompanyService.GetCompany:output_type -> company.GetCompanyResponse
+	5,  // 13: company.CompanyService.GetCompanyByName:output_type -> company.GetCompanyByNameResponse
+	7,  // 14: company.CompanyService.GetCompanyByNameUrl:output_type -> company.GetCompanyByNameUrlResponse
+	9,  // 15: company.CompanyService.GetCompanies:output_type -> company.GetCompaniesResponse
+	11, // 16: company.CompanyService.UpdateCompany:output_type -> company.UpdateCompanyResponse
+	13, // 17: company.CompanyService.DeleteCompany:output_type -> company.DeleteCompanyResponse
+	11, // [11:18] is the sub-list for method output_type
+	4,  // [4:11] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_company_proto_init() }

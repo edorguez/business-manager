@@ -40,19 +40,19 @@ func loadCompanyRoutes(router *mux.Router, c *config.Config) {
 	getCompanyByNameRouter.HandleFunc("/name/{name}", cr.GetCompanyByName)
 	getCompanyByNameRouter.HandleFunc("/nameUrl/{nameUrl}", cr.GetCompanyByNameUrl)
 
-	postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("", cr.CreateCompany)
-	postRouter.Use(mw.MiddlewareValidateCreateCompany)
-	postRouter.Use(mwc.MiddlewareValidateAuth)
+	// postRouter := baseRoute.Methods(http.MethodPost).Subrouter()
+	// postRouter.HandleFunc("", cr.CreateCompany)
+	// postRouter.Use(mw.MiddlewareValidateCreateCompany)
+	// postRouter.Use(mwc.MiddlewareValidateAuth)
 
 	putRouter := baseRoute.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id:[0-9]+}", cr.UpdateCompany)
 	putRouter.Use(mw.MiddlewareValidateUpdateCompany)
 	putRouter.Use(mwc.MiddlewareValidateAuth)
 
-	deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
-	deleteRouter.HandleFunc("/{id:[0-9]+}", cr.DeleteCompany)
-	deleteRouter.Use(mwc.MiddlewareValidateAuth)
+	// deleteRouter := baseRoute.Methods(http.MethodDelete).Subrouter()
+	// deleteRouter.HandleFunc("/{id:[0-9]+}", cr.DeleteCompany)
+	// deleteRouter.Use(mwc.MiddlewareValidateAuth)
 }
 
 func loadPaymentRoutes(router *mux.Router, c *config.Config) {
