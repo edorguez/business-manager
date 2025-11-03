@@ -73,3 +73,27 @@ func GetCompany(id int64, c context.Context) (*pb.GetCompanyResponse, error) {
 		LastPaymentDate: res.LastPaymentDate,
 	}, nil
 }
+
+func CreateCompany(params *pb.CreateCompanyRequest, c context.Context) (*pb.CreateCompanyResponse, error) {
+	fmt.Println("Company CLIENT :  CreateCompany")
+
+	res, err := companyServiceClient.CreateCompany(c, params)
+
+	if err != nil {
+		fmt.Println("Company CLIENT :  CreateCompany - ERROR")
+		fmt.Println(err.Error())
+
+		return nil, err
+	}
+
+	fmt.Println("Company CLIENT :  CreateCompany - SUCCESS")
+
+	if res.Status != http.StatusOK {
+		return nil, err
+	}
+
+	return &pb.CreateCompanyResponse{
+		Id:     res.Id,
+		Status: res.Status,
+	}, nil
+}

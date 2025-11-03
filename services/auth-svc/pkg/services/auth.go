@@ -9,9 +9,11 @@ import (
 
 	"github.com/edorguez/business-manager/services/auth-svc/pkg/client"
 	"github.com/edorguez/business-manager/services/auth-svc/pkg/config"
+	"github.com/edorguez/business-manager/services/auth-svc/pkg/constants"
 	db "github.com/edorguez/business-manager/services/auth-svc/pkg/db/sqlc"
 	repo "github.com/edorguez/business-manager/services/auth-svc/pkg/repository"
 	pb "github.com/edorguez/business-manager/shared/pb/auth"
+	pbcompany "github.com/edorguez/business-manager/shared/pb/company"
 	"github.com/edorguez/business-manager/shared/util/jwt_manager"
 	"github.com/edorguez/business-manager/shared/util/password_hash"
 )
@@ -23,49 +25,70 @@ type AuthService struct {
 	pb.UnimplementedAuthServiceServer
 }
 
-func (s *AuthService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	fmt.Println("Auth Service :  Register")
-	fmt.Println("Auth Service :  Register - Req")
+func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.SignUpResponse, error) {
+	fmt.Println("Auth Service :  Sign Up")
+	fmt.Println("Auth Service :  Sign Up - Req")
 	fmt.Println("----------------")
 
-	u, err := s.Repo.GetUserByEmail(ctx, req.Email)
+	u, err := s.Repo.GetUserByEmail(ctx, req.User.Email)
 	if err != nil && err != sql.ErrNoRows {
 		fmt.Println("Auth Service :  Register - ERROR")
 		fmt.Println(err.Error())
-		return &pb.RegisterResponse{
+		return &pb.SignUpResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
-	if u.Email == req.Email {
-		fmt.Println("Auth Service :  Register - ERROR")
-		fmt.Println("User already exists")
-		return &pb.RegisterResponse{
+	if u.Email == req.User.Email {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		fmt.Println("User email already exists")
+		return &pb.SignUpResponse{
 			Status: http.StatusInternalServerError,
-			Error:  "User already exists",
+			Error:  "User email already exists",
+		}, nil
+	}
+
+	if err := client.InitCompanyServiceClient(s.Config); err != nil {
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	companyParams := &pbcompany.CreateCompanyRequest{
+		Name: req.Company.Name,
+	}
+
+	company, errCompany := client.CreateCompany(companyParams, ctx)
+
+	if errCompany != nil {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  errCompany.Error(),
 		}, nil
 	}
 
 	createUserParams := db.CreateUserParams{
-		CompanyID:    req.CompanyId,
-		RoleID:       req.RoleId,
-		Email:        req.Email,
-		PasswordHash: password_hash.HashPassword(req.Password),
+		CompanyID:    company.Id,
+		RoleID:       constants.ROLE_ID_ADMIN,
+		Email:        req.User.Email,
+		PasswordHash: password_hash.HashPassword(req.User.Password),
 	}
 
 	_, err = s.Repo.CreateUser(ctx, createUserParams)
 	if err != nil {
-		fmt.Println("Auth Service :  Register - ERROR")
+		fmt.Println("Auth Service :  Sign Up - ERROR")
 		fmt.Println(err.Error())
-		return &pb.RegisterResponse{
+		return &pb.SignUpResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
 	}
 
-	fmt.Println("Auth Service :  Register - SUCCESS")
-	return &pb.RegisterResponse{
+	fmt.Println("Auth Service :  Sign Up - SUCCESS")
+	return &pb.SignUpResponse{
 		Status: http.StatusCreated,
 	}, nil
 }

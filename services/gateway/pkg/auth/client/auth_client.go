@@ -44,24 +44,29 @@ func InitAuthServiceClient(c *config.Config) error {
 	return nil
 }
 
-func Register(body contracts.CreateUserRequest, c context.Context) (*pb.RegisterResponse, *types.Error) {
-	fmt.Println("Auth CLIENT :  Register")
+func SignUp(body contracts.SignUpRequest, images [][]byte, c context.Context) (*pb.SignUpResponse, *types.Error) {
+	fmt.Println("Auth CLIENT :  Sign Up")
 
-	fmt.Println("Auth CLIENT :  Register - Body")
+	fmt.Println("Auth CLIENT :  Sign Up - Body")
 	// fmt.Println(body)
 	fmt.Println("-----------------")
 
-	registerParams := &pb.RegisterRequest{
-		CompanyId: body.CompanyId,
-		RoleId:    body.RoleId,
-		Email:     body.Email,
-		Password:  body.Password,
+	signUpParams := &pb.SignUpRequest{
+		Company: &pb.SignUpCompany{
+			Name:   body.Company.Name,
+			Phone:  body.Company.Phone,
+			Images: images,
+		},
+		User: &pb.SignUpUser{
+			Email:    body.User.Email,
+			Password: body.User.Password,
+		},
 	}
 
-	res, err := authServiceClient.Register(c, registerParams)
+	res, err := authServiceClient.SignUp(c, signUpParams)
 
 	if err != nil {
-		fmt.Println("Auth CLIENT :  Register - ERROR")
+		fmt.Println("Auth CLIENT :  Sign Up - ERROR")
 		fmt.Println(err.Error())
 
 		error := &types.Error{
@@ -72,7 +77,7 @@ func Register(body contracts.CreateUserRequest, c context.Context) (*pb.Register
 		return nil, error
 	}
 
-	fmt.Println("Auth CLIENT :  Register - SUCCESS")
+	fmt.Println("Auth CLIENT :  Sign Up - SUCCESS")
 	return res, nil
 }
 

@@ -63,9 +63,8 @@ func loadAuthRoutes(router *mux.Router, c *config.Config) {
 	mw := InitAuthMiddleware(c)
 
 	registerRouter := baseRoute.Methods(http.MethodPost).Subrouter()
-	registerRouter.HandleFunc("/register", ar.Register)
-	// registerRouter.Use(mw.MiddlewareValidateAuth)
-	registerRouter.Use(mw.MiddlewareValidateCreateUser)
+	registerRouter.HandleFunc("/signup", ar.SignUp)
+	registerRouter.Use(mw.MiddlewareValidateSignUp)
 
 	loginRouter := baseRoute.Methods(http.MethodPost).Subrouter()
 	loginRouter.HandleFunc("/login", ar.Login)
@@ -122,9 +121,9 @@ func (ar *AuthRoutes) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	routes.DeleteUser(w, r, ar.config)
 }
 
-func (ar *AuthRoutes) Register(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("API Gateway :  Register Called --> 1")
-	routes.Register(w, r, ar.config)
+func (ar *AuthRoutes) SignUp(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  Sign Up Called --> 1")
+	routes.SignUp(w, r, ar.config)
 }
 
 func (ar *AuthRoutes) Login(w http.ResponseWriter, r *http.Request) {

@@ -5,55 +5,48 @@ package auth;
 option go_package= "./auth";
 
 service AuthService{
-  // Register
-  // This method allows a user to register by providing their email and password.
-  // The server will respond with a status indicating the result of the registration
-  // attempt and an error message if applicable.
-  rpc Register(RegisterRequest) returns (RegisterResponse){}
-
-  // Login
-  // This method allows a user to log in by providing their email and password.
-  // Upon successful login, the server will respond with a status indicating the
-  // login result, an error message if applicable, and a token that can be used for
-  // subsequent authenticated requests.
+  rpc SignUp(SignUpRequest) returns (SignUpResponse){}
   rpc Login(LoginRequest) returns (LoginResponse) {}
-
-  // Validate
-  // This method is used to validate a token received from a client.
-  // The client sends the token in a ValidateRequest, and the server responds with
-  // a status indicating the validation result, an error message if applicable, and
-  // the user ID associated with the token if the validation is successful.
   rpc Validate(ValidateRequest) returns (ValidateResponse) {}
 }
 
-message RegisterRequest{
-  int64 company_id = 1;
-  int64 role_id = 2;
-  string email = 3;
-  string password = 4;
+message SignUpRequest {
+  SignUpCompany company = 1;
+  SignUpUser user = 2;
 }
 
-message RegisterResponse{
-  int64 status = 1;
-  string error = 2;
+message SignUpCompany {
+  string name = 1;
+  string phone = 2;
+  repeated bytes images = 3;
 }
 
-message LoginRequest{
+message SignUpUser {
   string email = 1;
   string password = 2;
 }
 
-message  LoginResponse{
+message SignUpResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message  LoginResponse {
   string token = 1;
   int64 status = 2;
   string error = 3;
 }
 
-message ValidateRequest{
+message ValidateRequest {
   string token = 1;
 }
 
-message ValidateResponse{
+message ValidateResponse {
   int64 status = 1;
   string error = 2;
 }
