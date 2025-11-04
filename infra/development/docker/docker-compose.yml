@@ -160,6 +160,8 @@ services:
         - JWT_SECRET_KEY=${JWT_SECRET_KEY}
         - COMPANY_SVC_URL=${COMPANY_SVC_URL}
         - COMPANY_SVC_PORT=${COMPANY_SVC_PORT}
+        - FILE_SVC_URL=${FILE_SVC_URL}
+        - FILE_SVC_PORT=${FILE_SVC_PORT}
       networks:
         - my_app_network
       depends_on:

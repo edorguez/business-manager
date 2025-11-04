@@ -34,7 +34,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 	createCompanyParams := db.CreateCompanyParams{
 		Name:            req.Name,
 		NameFormatUrl:   string,
-		ImageUrl:        sql.NullString{},
+		ImageUrl:        type_converter.NewSqlNullString(&req.ImageUrl),
 		IsFreeTrial:     true,
 		PlanID:          constants.PLAN_ID_BASIC,
 		LastPaymentDate: time.Now().UTC(),

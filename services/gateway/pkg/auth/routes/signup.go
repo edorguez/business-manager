@@ -21,7 +21,7 @@ func SignUp(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	// We got our body through context, since we saved it in a middleware
 	body := r.Context().Value(contracts.SignUpRequest{}).(contracts.SignUpRequest)
 
-	var images [][]byte
+	var image []byte
 
 	// Get the files
 	files := r.MultipartForm.File["files"]
@@ -63,7 +63,7 @@ func SignUp(w http.ResponseWriter, r *http.Request, c *config.Config) {
 			return
 		}
 
-		images = append(images, fileData.Bytes())
+		image = fileData.Bytes()
 	}
 
 	fmt.Println("API Gateway :  SignUpRequest - Body")
@@ -78,7 +78,7 @@ func SignUp(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		return
 	}
 
-	res, err := client.SignUp(body, images, r.Context())
+	res, err := client.SignUp(body, image, r.Context())
 
 	if err != nil {
 		fmt.Println("API Gateway :  Sign Up - ERROR")

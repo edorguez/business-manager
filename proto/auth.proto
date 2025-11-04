@@ -18,7 +18,7 @@ message SignUpRequest {
 message SignUpCompany {
   string name = 1;
   string phone = 2;
-  repeated bytes images = 3;
+  bytes image = 3;
 }
 
 message SignUpUser {

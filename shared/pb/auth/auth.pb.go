@@ -77,7 +77,7 @@ type SignUpCompany struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Phone         string                 `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
-	Images        [][]byte               `protobuf:"bytes,3,rep,name=images,proto3" json:"images,omitempty"`
+	Image         []byte                 `protobuf:"bytes,3,opt,name=image,proto3" json:"image,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -126,9 +126,9 @@ func (x *SignUpCompany) GetPhone() string {
 	return ""
 }
 
-func (x *SignUpCompany) GetImages() [][]byte {
+func (x *SignUpCompany) GetImage() []byte {
 	if x != nil {
-		return x.Images
+		return x.Image
 	}
 	return nil
 }
@@ -453,11 +453,11 @@ const file_auth_proto_rawDesc = "" +
 	"auth.proto\x12\x04auth\"d\n" +
 	"\rSignUpRequest\x12-\n" +
 	"\acompany\x18\x01 \x01(\v2\x13.auth.SignUpCompanyR\acompany\x12$\n" +
-	"\x04user\x18\x02 \x01(\v2\x10.auth.SignUpUserR\x04user\"Q\n" +
+	"\x04user\x18\x02 \x01(\v2\x10.auth.SignUpUserR\x04user\"O\n" +
 	"\rSignUpCompany\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05phone\x18\x02 \x01(\tR\x05phone\x12\x16\n" +
-	"\x06images\x18\x03 \x03(\fR\x06images\">\n" +
+	"\x05phone\x18\x02 \x01(\tR\x05phone\x12\x14\n" +
+	"\x05image\x18\x03 \x01(\fR\x05image\">\n" +
 	"\n" +
 	"SignUpUser\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +

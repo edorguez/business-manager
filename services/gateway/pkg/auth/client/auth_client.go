@@ -44,18 +44,17 @@ func InitAuthServiceClient(c *config.Config) error {
 	return nil
 }
 
-func SignUp(body contracts.SignUpRequest, images [][]byte, c context.Context) (*pb.SignUpResponse, *types.Error) {
+func SignUp(body contracts.SignUpRequest, image []byte, c context.Context) (*pb.SignUpResponse, *types.Error) {
 	fmt.Println("Auth CLIENT :  Sign Up")
-
 	fmt.Println("Auth CLIENT :  Sign Up - Body")
 	// fmt.Println(body)
 	fmt.Println("-----------------")
 
 	signUpParams := &pb.SignUpRequest{
 		Company: &pb.SignUpCompany{
-			Name:   body.Company.Name,
-			Phone:  body.Company.Phone,
-			Images: images,
+			Name:  body.Company.Name,
+			Phone: body.Company.Phone,
+			Image: image,
 		},
 		User: &pb.SignUpUser{
 			Email:    body.User.Email,

@@ -16,6 +16,7 @@ import (
 	pbcompany "github.com/edorguez/business-manager/shared/pb/company"
 	"github.com/edorguez/business-manager/shared/util/jwt_manager"
 	"github.com/edorguez/business-manager/shared/util/password_hash"
+	"github.com/google/uuid"
 )
 
 type AuthService struct {
@@ -85,6 +86,37 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 			Status: http.StatusConflict,
 			Error:  err.Error(),
 		}, nil
+	}
+
+	if err := client.InitFileServiceClient(s.Config); err != nil {
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	var imageUrl string
+	if req.Company.Image != nil {
+		fileData := client.FileData{
+			FileName: fmt.Sprintf("company-%d-image-%s", company.Id, uuid.New()),
+			FileData: req.Company.Image,
+		}
+
+		filesToUpload := []client.FileData{fileData}
+
+		imagesUrl, err := client.UploadFiles("business-manager-bucket-s3", "images/companies", filesToUpload, ctx)
+		if err != nil {
+			fmt.Println("Auth Service :  Sign Up - ERROR")
+			fmt.Println(err.Error())
+			return &pb.SignUpResponse{
+				Status: http.StatusConflict,
+				Error:  err.Error(),
+			}, nil
+		}
+
+		if imagesUrl != nil && len(imagesUrl.FileUrls) > 0 {
+			imageUrl = imagesUrl.FileUrls[0]
+		}
 	}
 
 	fmt.Println("Auth Service :  Sign Up - SUCCESS")
