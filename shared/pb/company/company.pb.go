@@ -25,6 +25,7 @@ const (
 type CreateCompanyRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	NameFormatUrl string                 `protobuf:"bytes,2,opt,name=name_format_url,json=nameFormatUrl,proto3" json:"name_format_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -62,6 +63,13 @@ func (*CreateCompanyRequest) Descriptor() ([]byte, []int) {
 func (x *CreateCompanyRequest) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateCompanyRequest) GetNameFormatUrl() string {
+	if x != nil {
+		return x.NameFormatUrl
 	}
 	return ""
 }
@@ -886,13 +894,118 @@ func (x *DeleteCompanyResponse) GetError() string {
 	return ""
 }
 
+type UpdateCompanyImageUrlRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ImageUrl      string                 `protobuf:"bytes,2,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCompanyImageUrlRequest) Reset() {
+	*x = UpdateCompanyImageUrlRequest{}
+	mi := &file_company_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCompanyImageUrlRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCompanyImageUrlRequest) ProtoMessage() {}
+
+func (x *UpdateCompanyImageUrlRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCompanyImageUrlRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCompanyImageUrlRequest) Descriptor() ([]byte, []int) {
+	return file_company_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *UpdateCompanyImageUrlRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateCompanyImageUrlRequest) GetImageUrl() string {
+	if x != nil {
+		return x.ImageUrl
+	}
+	return ""
+}
+
+type UpdateCompanyImageUrlResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        int64                  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Error         string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCompanyImageUrlResponse) Reset() {
+	*x = UpdateCompanyImageUrlResponse{}
+	mi := &file_company_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCompanyImageUrlResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCompanyImageUrlResponse) ProtoMessage() {}
+
+func (x *UpdateCompanyImageUrlResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_company_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCompanyImageUrlResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCompanyImageUrlResponse) Descriptor() ([]byte, []int) {
+	return file_company_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *UpdateCompanyImageUrlResponse) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *UpdateCompanyImageUrlResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
 var File_company_proto protoreflect.FileDescriptor
 
 const file_company_proto_rawDesc = "" +
 	"\n" +
-	"\rcompany.proto\x12\acompany\x1a\x1fgoogle/protobuf/timestamp.proto\"*\n" +
+	"\rcompany.proto\x12\acompany\x1a\x1fgoogle/protobuf/timestamp.proto\"R\n" +
 	"\x14CreateCompanyRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"U\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12&\n" +
+	"\x0fname_format_url\x18\x02 \x01(\tR\rnameFormatUrl\"U\n" +
 	"\x15CreateCompanyResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\x03R\x06status\x12\x14\n" +
@@ -953,7 +1066,13 @@ const file_company_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"E\n" +
 	"\x15DeleteCompanyResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\x03R\x06status\x12\x14\n" +
-	"\x05error\x18\x02 \x01(\tR\x05error2\xcf\x04\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error\"K\n" +
+	"\x1cUpdateCompanyImageUrlRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
+	"\timage_url\x18\x02 \x01(\tR\bimageUrl\"M\n" +
+	"\x1dUpdateCompanyImageUrlResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\x03R\x06status\x12\x14\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error2\xb7\x05\n" +
 	"\x0eCompanyService\x12N\n" +
 	"\rCreateCompany\x12\x1d.company.CreateCompanyRequest\x1a\x1e.company.CreateCompanyResponse\x12E\n" +
 	"\n" +
@@ -962,7 +1081,8 @@ const file_company_proto_rawDesc = "" +
 	"\x13GetCompanyByNameUrl\x12#.company.GetCompanyByNameUrlRequest\x1a$.company.GetCompanyByNameUrlResponse\x12K\n" +
 	"\fGetCompanies\x12\x1c.company.GetCompaniesRequest\x1a\x1d.company.GetCompaniesResponse\x12N\n" +
 	"\rUpdateCompany\x12\x1d.company.UpdateCompanyRequest\x1a\x1e.company.UpdateCompanyResponse\x12N\n" +
-	"\rDeleteCompany\x12\x1d.company.DeleteCompanyRequest\x1a\x1e.company.DeleteCompanyResponseB\vZ\t./companyb\x06proto3"
+	"\rDeleteCompany\x12\x1d.company.DeleteCompanyRequest\x1a\x1e.company.DeleteCompanyResponse\x12f\n" +
+	"\x15UpdateCompanyImageUrl\x12%.company.UpdateCompanyImageUrlRequest\x1a&.company.UpdateCompanyImageUrlResponseB\vZ\t./companyb\x06proto3"
 
 var (
 	file_company_proto_rawDescOnce sync.Once
@@ -976,28 +1096,30 @@ func file_company_proto_rawDescGZIP() []byte {
 	return file_company_proto_rawDescData
 }
 
-var file_company_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_company_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_company_proto_goTypes = []any{
-	(*CreateCompanyRequest)(nil),        // 0: company.CreateCompanyRequest
-	(*CreateCompanyResponse)(nil),       // 1: company.CreateCompanyResponse
-	(*GetCompanyRequest)(nil),           // 2: company.GetCompanyRequest
-	(*GetCompanyResponse)(nil),          // 3: company.GetCompanyResponse
-	(*GetCompanyByNameRequest)(nil),     // 4: company.GetCompanyByNameRequest
-	(*GetCompanyByNameResponse)(nil),    // 5: company.GetCompanyByNameResponse
-	(*GetCompanyByNameUrlRequest)(nil),  // 6: company.GetCompanyByNameUrlRequest
-	(*GetCompanyByNameUrlResponse)(nil), // 7: company.GetCompanyByNameUrlResponse
-	(*GetCompaniesRequest)(nil),         // 8: company.GetCompaniesRequest
-	(*GetCompaniesResponse)(nil),        // 9: company.GetCompaniesResponse
-	(*UpdateCompanyRequest)(nil),        // 10: company.UpdateCompanyRequest
-	(*UpdateCompanyResponse)(nil),       // 11: company.UpdateCompanyResponse
-	(*DeleteCompanyRequest)(nil),        // 12: company.DeleteCompanyRequest
-	(*DeleteCompanyResponse)(nil),       // 13: company.DeleteCompanyResponse
-	(*timestamppb.Timestamp)(nil),       // 14: google.protobuf.Timestamp
+	(*CreateCompanyRequest)(nil),          // 0: company.CreateCompanyRequest
+	(*CreateCompanyResponse)(nil),         // 1: company.CreateCompanyResponse
+	(*GetCompanyRequest)(nil),             // 2: company.GetCompanyRequest
+	(*GetCompanyResponse)(nil),            // 3: company.GetCompanyResponse
+	(*GetCompanyByNameRequest)(nil),       // 4: company.GetCompanyByNameRequest
+	(*GetCompanyByNameResponse)(nil),      // 5: company.GetCompanyByNameResponse
+	(*GetCompanyByNameUrlRequest)(nil),    // 6: company.GetCompanyByNameUrlRequest
+	(*GetCompanyByNameUrlResponse)(nil),   // 7: company.GetCompanyByNameUrlResponse
+	(*GetCompaniesRequest)(nil),           // 8: company.GetCompaniesRequest
+	(*GetCompaniesResponse)(nil),          // 9: company.GetCompaniesResponse
+	(*UpdateCompanyRequest)(nil),          // 10: company.UpdateCompanyRequest
+	(*UpdateCompanyResponse)(nil),         // 11: company.UpdateCompanyResponse
+	(*DeleteCompanyRequest)(nil),          // 12: company.DeleteCompanyRequest
+	(*DeleteCompanyResponse)(nil),         // 13: company.DeleteCompanyResponse
+	(*UpdateCompanyImageUrlRequest)(nil),  // 14: company.UpdateCompanyImageUrlRequest
+	(*UpdateCompanyImageUrlResponse)(nil), // 15: company.UpdateCompanyImageUrlResponse
+	(*timestamppb.Timestamp)(nil),         // 16: google.protobuf.Timestamp
 }
 var file_company_proto_depIdxs = []int32{
-	14, // 0: company.GetCompanyResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
-	14, // 1: company.GetCompanyByNameResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
-	14, // 2: company.GetCompanyByNameUrlResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
+	16, // 0: company.GetCompanyResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
+	16, // 1: company.GetCompanyByNameResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
+	16, // 2: company.GetCompanyByNameUrlResponse.lastPaymentDate:type_name -> google.protobuf.Timestamp
 	3,  // 3: company.GetCompaniesResponse.companies:type_name -> company.GetCompanyResponse
 	0,  // 4: company.CompanyService.CreateCompany:input_type -> company.CreateCompanyRequest
 	2,  // 5: company.CompanyService.GetCompany:input_type -> company.GetCompanyRequest
@@ -1006,15 +1128,17 @@ var file_company_proto_depIdxs = []int32{
 	8,  // 8: company.CompanyService.GetCompanies:input_type -> company.GetCompaniesRequest
 	10, // 9: company.CompanyService.UpdateCompany:input_type -> company.UpdateCompanyRequest
 	12, // 10: company.CompanyService.DeleteCompany:input_type -> company.DeleteCompanyRequest
-	1,  // 11: company.CompanyService.CreateCompany:output_type -> company.CreateCompanyResponse
-	3,  // 12: company.CompanyService.GetCompany:output_type -> company.GetCompanyResponse
-	5,  // 13: company.CompanyService.GetCompanyByName:output_type -> company.GetCompanyByNameResponse
-	7,  // 14: company.CompanyService.GetCompanyByNameUrl:output_type -> company.GetCompanyByNameUrlResponse
-	9,  // 15: company.CompanyService.GetCompanies:output_type -> company.GetCompaniesResponse
-	11, // 16: company.CompanyService.UpdateCompany:output_type -> company.UpdateCompanyResponse
-	13, // 17: company.CompanyService.DeleteCompany:output_type -> company.DeleteCompanyResponse
-	11, // [11:18] is the sub-list for method output_type
-	4,  // [4:11] is the sub-list for method input_type
+	14, // 11: company.CompanyService.UpdateCompanyImageUrl:input_type -> company.UpdateCompanyImageUrlRequest
+	1,  // 12: company.CompanyService.CreateCompany:output_type -> company.CreateCompanyResponse
+	3,  // 13: company.CompanyService.GetCompany:output_type -> company.GetCompanyResponse
+	5,  // 14: company.CompanyService.GetCompanyByName:output_type -> company.GetCompanyByNameResponse
+	7,  // 15: company.CompanyService.GetCompanyByNameUrl:output_type -> company.GetCompanyByNameUrlResponse
+	9,  // 16: company.CompanyService.GetCompanies:output_type -> company.GetCompaniesResponse
+	11, // 17: company.CompanyService.UpdateCompany:output_type -> company.UpdateCompanyResponse
+	13, // 18: company.CompanyService.DeleteCompany:output_type -> company.DeleteCompanyResponse
+	15, // 19: company.CompanyService.UpdateCompanyImageUrl:output_type -> company.UpdateCompanyImageUrlResponse
+	12, // [12:20] is the sub-list for method output_type
+	4,  // [4:12] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
 	4,  // [4:4] is the sub-list for extension extendee
 	0,  // [0:4] is the sub-list for field type_name
@@ -1035,7 +1159,7 @@ func file_company_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_company_proto_rawDesc), len(file_company_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

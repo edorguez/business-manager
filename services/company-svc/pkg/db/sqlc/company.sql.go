@@ -16,31 +16,28 @@ INSERT INTO
   company.company (
     name,
     name_format_url,
-    image_url,
     is_free_trial,
     plan_id,
     last_payment_date
   ) 
 VALUES (
-  $1, $2, $3, $4, $5, $6
+  $1, $2, $3, $4, $5
 ) 
 RETURNING id, name, name_format_url, image_url, is_free_trial, plan_id, last_payment_date, created_at, modified_at
 `
 
 type CreateCompanyParams struct {
-	Name            string         `json:"name"`
-	NameFormatUrl   string         `json:"name_format_url"`
-	ImageUrl        sql.NullString `json:"image_url"`
-	IsFreeTrial     interface{}    `json:"is_free_trial"`
-	PlanID          int64          `json:"plan_id"`
-	LastPaymentDate time.Time      `json:"last_payment_date"`
+	Name            string      `json:"name"`
+	NameFormatUrl   string      `json:"name_format_url"`
+	IsFreeTrial     interface{} `json:"is_free_trial"`
+	PlanID          int64       `json:"plan_id"`
+	LastPaymentDate time.Time   `json:"last_payment_date"`
 }
 
 func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) (CompanyCompany, error) {
 	row := q.db.QueryRowContext(ctx, createCompany,
 		arg.Name,
 		arg.NameFormatUrl,
-		arg.ImageUrl,
 		arg.IsFreeTrial,
 		arg.PlanID,
 		arg.LastPaymentDate,
@@ -299,6 +296,39 @@ func (q *Queries) UpdateCompany(ctx context.Context, arg UpdateCompanyParams) (C
 		arg.NameFormatUrl,
 		arg.ImageUrl,
 	)
+	var i CompanyCompany
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.NameFormatUrl,
+		&i.ImageUrl,
+		&i.IsFreeTrial,
+		&i.PlanID,
+		&i.LastPaymentDate,
+		&i.CreatedAt,
+		&i.ModifiedAt,
+	)
+	return i, err
+}
+
+const updateCompanyImageUrl = `-- name: UpdateCompanyImageUrl :one
+UPDATE 
+  company.company
+SET 
+  image_url = $2,
+  modified_at = NOW()
+WHERE 
+  id = $1
+RETURNING id, name, name_format_url, image_url, is_free_trial, plan_id, last_payment_date, created_at, modified_at
+`
+
+type UpdateCompanyImageUrlParams struct {
+	ID       int64          `json:"id"`
+	ImageUrl sql.NullString `json:"image_url"`
+}
+
+func (q *Queries) UpdateCompanyImageUrl(ctx context.Context, arg UpdateCompanyImageUrlParams) (CompanyCompany, error) {
+	row := q.db.QueryRowContext(ctx, updateCompanyImageUrl, arg.ID, arg.ImageUrl)
 	var i CompanyCompany
 	err := row.Scan(
 		&i.ID,

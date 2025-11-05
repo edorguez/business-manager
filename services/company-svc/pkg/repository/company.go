@@ -130,3 +130,20 @@ func (companyRepo *CompanyRepo) DeleteCompany(ctx context.Context, id int64) err
 
 	return err
 }
+
+func (companyRepo *CompanyRepo) UpdateCompanyImageUrl(ctx context.Context, arg db.UpdateCompanyImageUrlParams) (db.CompanyCompany, error) {
+	var result db.CompanyCompany
+
+	err := companyRepo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.UpdateCompanyImageUrl(ctx, arg)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}

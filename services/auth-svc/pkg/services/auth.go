@@ -58,7 +58,8 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 	}
 
 	companyParams := &pbcompany.CreateCompanyRequest{
-		Name: req.Company.Name,
+		Name:          req.Company.Name,
+		NameFormatUrl: req.Company.NameFormatUrl,
 	}
 
 	company, errCompany := client.CreateCompany(companyParams, ctx)
@@ -117,6 +118,21 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 		if imagesUrl != nil && len(imagesUrl.FileUrls) > 0 {
 			imageUrl = imagesUrl.FileUrls[0]
 		}
+	}
+
+	companyUpdateImageUrlParams := &pbcompany.UpdateCompanyImageUrlRequest{
+		Id:       company.Id,
+		ImageUrl: imageUrl,
+	}
+
+	_, err = client.UpdateCompanyImageUrl(companyUpdateImageUrlParams, ctx)
+
+	if err != nil {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
 	}
 
 	fmt.Println("Auth Service :  Sign Up - SUCCESS")

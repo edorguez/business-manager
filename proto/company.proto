@@ -14,10 +14,12 @@ service CompanyService{
   rpc GetCompanies(GetCompaniesRequest) returns (GetCompaniesResponse);
   rpc UpdateCompany(UpdateCompanyRequest) returns (UpdateCompanyResponse);
   rpc DeleteCompany(DeleteCompanyRequest) returns (DeleteCompanyResponse);
+  rpc UpdateCompanyImageUrl(UpdateCompanyImageUrlRequest) returns (UpdateCompanyImageUrlResponse);
 }
 
 message CreateCompanyRequest{
   string name = 1;
+  string name_format_url = 2;
 }
 
 message CreateCompanyResponse{
@@ -99,6 +101,16 @@ message DeleteCompanyRequest{
 }
 
 message DeleteCompanyResponse{
+  int64 status = 1;
+  string error = 2;
+}
+
+message UpdateCompanyImageUrlRequest{
+  int64 id = 1;
+  string image_url = 2;
+}
+
+message UpdateCompanyImageUrlResponse{
   int64 status = 1;
   string error = 2;
 }

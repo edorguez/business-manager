@@ -33,8 +33,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 
 	createCompanyParams := db.CreateCompanyParams{
 		Name:            req.Name,
-		NameFormatUrl:   string,
-		ImageUrl:        type_converter.NewSqlNullString(&req.ImageUrl),
+		NameFormatUrl:   req.NameFormatUrl,
 		IsFreeTrial:     true,
 		PlanID:          constants.PLAN_ID_BASIC,
 		LastPaymentDate: time.Now().UTC(),
@@ -326,6 +325,60 @@ func (s *CompanyService) DeleteCompany(ctx context.Context, req *company.DeleteC
 
 	fmt.Println("Company Service :  DeleteCompany - SUCCESS")
 	return &company.DeleteCompanyResponse{
+		Status: http.StatusNoContent,
+	}, nil
+}
+
+func (s *CompanyService) UpdateCompanyImageUrl(ctx context.Context, req *company.UpdateCompanyImageUrlRequest) (*company.UpdateCompanyImageUrlResponse, error) {
+	fmt.Println("Company Service :  UpdateCompanyImageUrl")
+	fmt.Println("Company Service :  UpdateCompanyImageUrl - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	if err := client.InitFileServiceClient(s.Config); err != nil {
+		return &company.UpdateCompanyImageUrlResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	c, err := s.Repo.GetCompany(ctx, req.Id)
+	if err != nil {
+		fmt.Println("Company Service :  UpdateCompanyImageUrl - ERROR")
+		fmt.Println(err.Error())
+
+		return &company.UpdateCompanyImageUrlResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	params := db.UpdateCompanyImageUrlParams{
+		ID:       c.ID,
+		ImageUrl: type_converter.NewSqlNullString(&req.ImageUrl),
+	}
+
+	_, err = s.Repo.UpdateCompanyImageUrl(ctx, params)
+	if err != nil {
+		fmt.Println("Company Service :  UpdateCompanyImageUrl - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
+		return &company.UpdateCompanyImageUrlResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
+	fmt.Println("Company Service :  UpdateCompanyImageUrl - SUCCESS")
+	return &company.UpdateCompanyImageUrlResponse{
 		Status: http.StatusNoContent,
 	}, nil
 }

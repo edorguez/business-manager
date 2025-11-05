@@ -19,13 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CompanyService_CreateCompany_FullMethodName       = "/company.CompanyService/CreateCompany"
-	CompanyService_GetCompany_FullMethodName          = "/company.CompanyService/GetCompany"
-	CompanyService_GetCompanyByName_FullMethodName    = "/company.CompanyService/GetCompanyByName"
-	CompanyService_GetCompanyByNameUrl_FullMethodName = "/company.CompanyService/GetCompanyByNameUrl"
-	CompanyService_GetCompanies_FullMethodName        = "/company.CompanyService/GetCompanies"
-	CompanyService_UpdateCompany_FullMethodName       = "/company.CompanyService/UpdateCompany"
-	CompanyService_DeleteCompany_FullMethodName       = "/company.CompanyService/DeleteCompany"
+	CompanyService_CreateCompany_FullMethodName         = "/company.CompanyService/CreateCompany"
+	CompanyService_GetCompany_FullMethodName            = "/company.CompanyService/GetCompany"
+	CompanyService_GetCompanyByName_FullMethodName      = "/company.CompanyService/GetCompanyByName"
+	CompanyService_GetCompanyByNameUrl_FullMethodName   = "/company.CompanyService/GetCompanyByNameUrl"
+	CompanyService_GetCompanies_FullMethodName          = "/company.CompanyService/GetCompanies"
+	CompanyService_UpdateCompany_FullMethodName         = "/company.CompanyService/UpdateCompany"
+	CompanyService_DeleteCompany_FullMethodName         = "/company.CompanyService/DeleteCompany"
+	CompanyService_UpdateCompanyImageUrl_FullMethodName = "/company.CompanyService/UpdateCompanyImageUrl"
 )
 
 // CompanyServiceClient is the client API for CompanyService service.
@@ -39,6 +40,7 @@ type CompanyServiceClient interface {
 	GetCompanies(ctx context.Context, in *GetCompaniesRequest, opts ...grpc.CallOption) (*GetCompaniesResponse, error)
 	UpdateCompany(ctx context.Context, in *UpdateCompanyRequest, opts ...grpc.CallOption) (*UpdateCompanyResponse, error)
 	DeleteCompany(ctx context.Context, in *DeleteCompanyRequest, opts ...grpc.CallOption) (*DeleteCompanyResponse, error)
+	UpdateCompanyImageUrl(ctx context.Context, in *UpdateCompanyImageUrlRequest, opts ...grpc.CallOption) (*UpdateCompanyImageUrlResponse, error)
 }
 
 type companyServiceClient struct {
@@ -119,6 +121,16 @@ func (c *companyServiceClient) DeleteCompany(ctx context.Context, in *DeleteComp
 	return out, nil
 }
 
+func (c *companyServiceClient) UpdateCompanyImageUrl(ctx context.Context, in *UpdateCompanyImageUrlRequest, opts ...grpc.CallOption) (*UpdateCompanyImageUrlResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateCompanyImageUrlResponse)
+	err := c.cc.Invoke(ctx, CompanyService_UpdateCompanyImageUrl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility.
@@ -130,6 +142,7 @@ type CompanyServiceServer interface {
 	GetCompanies(context.Context, *GetCompaniesRequest) (*GetCompaniesResponse, error)
 	UpdateCompany(context.Context, *UpdateCompanyRequest) (*UpdateCompanyResponse, error)
 	DeleteCompany(context.Context, *DeleteCompanyRequest) (*DeleteCompanyResponse, error)
+	UpdateCompanyImageUrl(context.Context, *UpdateCompanyImageUrlRequest) (*UpdateCompanyImageUrlResponse, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -160,6 +173,9 @@ func (UnimplementedCompanyServiceServer) UpdateCompany(context.Context, *UpdateC
 }
 func (UnimplementedCompanyServiceServer) DeleteCompany(context.Context, *DeleteCompanyRequest) (*DeleteCompanyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCompany not implemented")
+}
+func (UnimplementedCompanyServiceServer) UpdateCompanyImageUrl(context.Context, *UpdateCompanyImageUrlRequest) (*UpdateCompanyImageUrlResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCompanyImageUrl not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 func (UnimplementedCompanyServiceServer) testEmbeddedByValue()                        {}
@@ -308,6 +324,24 @@ func _CompanyService_DeleteCompany_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_UpdateCompanyImageUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCompanyImageUrlRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).UpdateCompanyImageUrl(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CompanyService_UpdateCompanyImageUrl_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).UpdateCompanyImageUrl(ctx, req.(*UpdateCompanyImageUrlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -342,6 +376,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteCompany",
 			Handler:    _CompanyService_DeleteCompany_Handler,
+		},
+		{
+			MethodName: "UpdateCompanyImageUrl",
+			Handler:    _CompanyService_UpdateCompanyImageUrl_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

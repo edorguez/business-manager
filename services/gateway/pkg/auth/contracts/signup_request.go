@@ -8,8 +8,9 @@ type SignUpRequest struct {
 }
 
 type SignUpCompany struct {
-	Name  string `json:"name" validate:"required"`
-	Phone string `json:"phone" validate:"required"`
+	Name          string `json:"name" validate:"required"`
+	NameFormatUrl string `json:"nameFormatUrl" validate:"required"`
+	Phone         string `json:"phone" validate:"required"`
 }
 
 type SignUpUser struct {

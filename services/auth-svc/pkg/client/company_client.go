@@ -97,3 +97,27 @@ func CreateCompany(params *pb.CreateCompanyRequest, c context.Context) (*pb.Crea
 		Status: res.Status,
 	}, nil
 }
+
+func UpdateCompanyImageUrl(params *pb.UpdateCompanyImageUrlRequest, c context.Context) (*pb.UpdateCompanyImageUrlResponse, error) {
+	fmt.Println("Company CLIENT :  UpdateCompanyImageUrl")
+
+	res, err := companyServiceClient.UpdateCompanyImageUrl(c, params)
+
+	if err != nil {
+		fmt.Println("Company CLIENT :  UpdateCompanyImageUrl - ERROR")
+		fmt.Println(err.Error())
+
+		return nil, err
+	}
+
+	fmt.Println("Company CLIENT :  UpdateCompanyImageUrl - SUCCESS")
+
+	if res.Status != http.StatusOK {
+		return nil, err
+	}
+
+	return &pb.UpdateCompanyImageUrlResponse{
+		Status: res.Status,
+		Error:  res.Error,
+	}, nil
+}

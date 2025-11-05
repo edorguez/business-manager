@@ -23,6 +23,7 @@ type Querier interface {
 	GetPayments(ctx context.Context, arg GetPaymentsParams) ([]GetPaymentsRow, error)
 	GetPaymentsTypes(ctx context.Context, companyID int64) ([]GetPaymentsTypesRow, error)
 	UpdateCompany(ctx context.Context, arg UpdateCompanyParams) (CompanyCompany, error)
+	UpdateCompanyImageUrl(ctx context.Context, arg UpdateCompanyImageUrlParams) (CompanyCompany, error)
 	UpdatePayment(ctx context.Context, arg UpdatePaymentParams) (CompanyPayment, error)
 	UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) (CompanyPayment, error)
 }

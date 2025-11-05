@@ -52,9 +52,10 @@ func SignUp(body contracts.SignUpRequest, image []byte, c context.Context) (*pb.
 
 	signUpParams := &pb.SignUpRequest{
 		Company: &pb.SignUpCompany{
-			Name:  body.Company.Name,
-			Phone: body.Company.Phone,
-			Image: image,
+			Name:          body.Company.Name,
+			NameFormatUrl: body.Company.NameFormatUrl,
+			Phone:         body.Company.Phone,
+			Image:         image,
 		},
 		User: &pb.SignUpUser{
 			Email:    body.User.Email,

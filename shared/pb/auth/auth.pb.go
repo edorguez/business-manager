@@ -76,8 +76,9 @@ func (x *SignUpRequest) GetUser() *SignUpUser {
 type SignUpCompany struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Phone         string                 `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
-	Image         []byte                 `protobuf:"bytes,3,opt,name=image,proto3" json:"image,omitempty"`
+	NameFormatUrl string                 `protobuf:"bytes,2,opt,name=name_format_url,json=nameFormatUrl,proto3" json:"name_format_url,omitempty"`
+	Phone         string                 `protobuf:"bytes,3,opt,name=phone,proto3" json:"phone,omitempty"`
+	Image         []byte                 `protobuf:"bytes,4,opt,name=image,proto3" json:"image,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -115,6 +116,13 @@ func (*SignUpCompany) Descriptor() ([]byte, []int) {
 func (x *SignUpCompany) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *SignUpCompany) GetNameFormatUrl() string {
+	if x != nil {
+		return x.NameFormatUrl
 	}
 	return ""
 }
@@ -453,11 +461,12 @@ const file_auth_proto_rawDesc = "" +
 	"auth.proto\x12\x04auth\"d\n" +
 	"\rSignUpRequest\x12-\n" +
 	"\acompany\x18\x01 \x01(\v2\x13.auth.SignUpCompanyR\acompany\x12$\n" +
-	"\x04user\x18\x02 \x01(\v2\x10.auth.SignUpUserR\x04user\"O\n" +
+	"\x04user\x18\x02 \x01(\v2\x10.auth.SignUpUserR\x04user\"w\n" +
 	"\rSignUpCompany\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05phone\x18\x02 \x01(\tR\x05phone\x12\x14\n" +
-	"\x05image\x18\x03 \x01(\fR\x05image\">\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12&\n" +
+	"\x0fname_format_url\x18\x02 \x01(\tR\rnameFormatUrl\x12\x14\n" +
+	"\x05phone\x18\x03 \x01(\tR\x05phone\x12\x14\n" +
+	"\x05image\x18\x04 \x01(\fR\x05image\">\n" +
 	"\n" +
 	"SignUpUser\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +

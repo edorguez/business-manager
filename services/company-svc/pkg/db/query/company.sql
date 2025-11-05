@@ -3,13 +3,12 @@ INSERT INTO
   company.company (
     name,
     name_format_url,
-    image_url,
     is_free_trial,
     plan_id,
     last_payment_date
   ) 
 VALUES (
-  $1, $2, $3, $4, $5, $6
+  $1, $2, $3, $4, $5
 ) 
 RETURNING *;
 
@@ -97,3 +96,14 @@ DELETE FROM
   company.company
 WHERE 
   id = $1;
+
+-- name: UpdateCompanyImageUrl :one
+UPDATE 
+  company.company
+SET 
+  image_url = $2,
+  modified_at = NOW()
+WHERE 
+  id = $1
+RETURNING *;
+
