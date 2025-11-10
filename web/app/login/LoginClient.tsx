@@ -43,6 +43,7 @@ const LoginClient = () => {
         duration: 4000,
         isClosable: true,
       });
+      isLoading.onEndLoading();
     }
   };
 

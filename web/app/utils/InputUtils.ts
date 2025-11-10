@@ -51,3 +51,8 @@ export const validWithNoSpaces = (input: string): boolean => {
   const regex = /\s/;
   return !regex.test(input);
 };
+
+export const validSubdomain = (subdomain: string): boolean => {
+    const subdomainRegex = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i;
+    return subdomainRegex.test(subdomain);
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import { PASSWORD } from "@/app/constants";
-import { SignUp } from "@/app/types/signup";
+import { SignUp } from "@/app/types/auth";
 import { validEmail, validLettersAndNumbers, validWithNoSpaces } from "@/app/utils/InputUtils";
 import { Button, Input, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";

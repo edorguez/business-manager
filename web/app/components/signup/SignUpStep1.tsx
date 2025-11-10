@@ -1,10 +1,10 @@
 'use client'
 
-import { SignUp } from "@/app/types/signup";
-import { validLettersAndNumbers, validNumbers, validPhone } from "@/app/utils/InputUtils";
-import { Button, Input, useToast } from "@chakra-ui/react";
+import { validLettersAndNumbers, validNumbers, validPhone, validSubdomain } from "@/app/utils/InputUtils";
+import { Button, Input, InputGroup, InputRightAddon, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import ImagesUpload from "../uploads/ImagesUpload";
+import { SignUp } from "@/app/types/auth";
 
 interface SignUpStep1Props {
   companyForm: SignUp['company'],
@@ -22,6 +22,19 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (value && !validLettersAndNumbers(value, true)) return;
+
+    let urlValue: string = value.trimStart().replaceAll(/ /g, '-');
+
+    onCompanyChange({
+      ...companyForm,
+      [name]: value.trimStart(),
+      nameFormatUrl: urlValue
+    });
+  };
+
+  const handleNameFormatUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    if (value && !validSubdomain(value)) return;
     onCompanyChange({
       ...companyForm,
       [name]: value
@@ -40,7 +53,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
   const handleUploadFiles = (files: File[]) => {
     onCompanyChange({
       ...companyForm,
-      image: files
+      images: files
     })
   };
 
@@ -55,6 +68,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
   const isFormValid = (): boolean => {
     if (!companyForm.name) return false;
     if (companyForm.name && !validLettersAndNumbers(companyForm.name, true)) return false;
+    if (!companyForm.nameFormatUrl) return false;
     if (!companyForm.phone) return false;
     if (companyForm.phone && !validPhone(companyForm.phone)) return false;
 
@@ -85,6 +99,22 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
           value={companyForm.name}
           onChange={handleNameChange}
         />
+      </div>
+      <div className="mt-2">
+        <label className="text-sm">
+          URL Página Web<span className="text-thirdcolor">*</span>
+        </label>
+        
+        <InputGroup size='sm'>
+          <Input
+          size="sm"
+          name="nameFormatUrl"
+          maxLength={50}
+          value={companyForm.nameFormatUrl}
+          onChange={handleNameFormatUrlChange}
+          />
+          <InputRightAddon>.edezco.com</InputRightAddon>
+        </InputGroup>
       </div>
       <div className="mt-2">
         <label className="text-sm">

@@ -11,7 +11,6 @@ import (
 	pb "github.com/edorguez/business-manager/shared/pb/company"
 	"github.com/edorguez/business-manager/shared/types"
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var companyServiceClient pb.CompanyServiceClient
@@ -53,8 +52,7 @@ func CreateCompany(body contracts.CreateCompanyRequest, c context.Context) (*pb.
 	fmt.Println("-----------------")
 
 	createCompanyParams := &pb.CreateCompanyRequest{
-		Name:            body.Name,
-		LastPaymentDate: timestamppb.New(body.LastPaymentDate),
+		Name: body.Name,
 	}
 
 	res, err := companyServiceClient.CreateCompany(c, createCompanyParams)

@@ -19,6 +19,7 @@ export type SignUp = {
 
 export type SignUpCompany = {
   name: string;
+  nameFormatUrl: string;
   phone: string;
   images?: File[];
 }

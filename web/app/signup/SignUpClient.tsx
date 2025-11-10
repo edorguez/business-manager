@@ -20,9 +20,10 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useLoading from "../hooks/useLoading";
-import { SignUp } from "../types/signup";
 import SignUpStep1 from "../components/signup/SignUpStep1";
 import SignUpStep2 from "../components/signup/SignUpStep2";
+import { SignUp } from "../types/auth";
+import { signUp } from "../services/auth";
 
 const SignUpClient = () => {
   const isLoading = useLoading();
@@ -31,8 +32,9 @@ const SignUpClient = () => {
   const [formData, setFormData] = useState<SignUp>({ 
     company: { 
       name: "", 
+      nameFormatUrl: "",
       phone: "", 
-      image: undefined 
+      images: undefined 
     }, 
     user: { 
       email: "", 
@@ -42,14 +44,14 @@ const SignUpClient = () => {
   });
 
   const updateCompany = (updatedCompany: SignUp['company']) => {
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       company: updatedCompany
     }));
   };
 
   const updateUser = (updatedUser: SignUp['user']) => {
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       user: updatedUser
     }));
@@ -59,6 +61,24 @@ const SignUpClient = () => {
     index: 0,
     count: 2,
   });
+
+  const handleSignup = async () => {
+    isLoading.onStartLoading();
+    let result: any = await signUp(formData);
+    if (!result?.error) {
+      push("/management/home");
+    } else {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "customerror",
+        position: "top-right",
+        duration: 4000,
+        isClosable: true,
+      });
+      isLoading.onEndLoading();
+    }
+  }
 
   return (
     <>
@@ -138,7 +158,7 @@ const SignUpClient = () => {
                         userForm={formData.user} 
                         onUserChange={updateUser} 
                         onClickBackStep={() => setActiveStep(0)} 
-                        onClickNextStep={() => setActiveStep(1)} 
+                        onClickNextStep={handleSignup} 
                       />
                     </div>                  
                   )}
