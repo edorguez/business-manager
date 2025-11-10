@@ -10,9 +10,9 @@ import (
 
 	"github.com/edorguez/business-manager/services/company-svc/pkg/client"
 	"github.com/edorguez/business-manager/services/company-svc/pkg/config"
-	"github.com/edorguez/business-manager/services/company-svc/pkg/constants"
 	db "github.com/edorguez/business-manager/services/company-svc/pkg/db/sqlc"
 	repo "github.com/edorguez/business-manager/services/company-svc/pkg/repository"
+	"github.com/edorguez/business-manager/shared/constants"
 	"github.com/edorguez/business-manager/shared/pb/company"
 	"github.com/edorguez/business-manager/shared/util/type_converter"
 	"github.com/google/uuid"

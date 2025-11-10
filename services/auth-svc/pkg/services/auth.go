@@ -9,9 +9,9 @@ import (
 
 	"github.com/edorguez/business-manager/services/auth-svc/pkg/client"
 	"github.com/edorguez/business-manager/services/auth-svc/pkg/config"
-	"github.com/edorguez/business-manager/services/auth-svc/pkg/constants"
 	db "github.com/edorguez/business-manager/services/auth-svc/pkg/db/sqlc"
 	repo "github.com/edorguez/business-manager/services/auth-svc/pkg/repository"
+	"github.com/edorguez/business-manager/shared/constants"
 	pb "github.com/edorguez/business-manager/shared/pb/auth"
 	pbcompany "github.com/edorguez/business-manager/shared/pb/company"
 	"github.com/edorguez/business-manager/shared/util/jwt_manager"
@@ -135,9 +135,20 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 		}, nil
 	}
 
+	token, err := s.Jwt.GenerateToken(u.ID, u.Email, u.RoleID, u.CompanyID, constants.PLAN_ID_BASIC)
+	if err != nil {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		fmt.Println(err.Error())
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
 	fmt.Println("Auth Service :  Sign Up - SUCCESS")
 	return &pb.SignUpResponse{
 		Status: http.StatusCreated,
+		Token:  token,
 	}, nil
 }
 

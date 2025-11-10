@@ -28,8 +28,9 @@ message SignUpUser {
 }
 
 message SignUpResponse {
-  int64 status = 1;
-  string error = 2;
+  string token = 1;
+  int64 status = 2;
+  string error = 3;
 }
 
 message LoginRequest {
@@ -37,7 +38,7 @@ message LoginRequest {
   string password = 2;
 }
 
-message  LoginResponse {
+message LoginResponse {
   string token = 1;
   int64 status = 2;
   string error = 3;

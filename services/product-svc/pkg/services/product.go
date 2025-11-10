@@ -9,9 +9,9 @@ import (
 
 	"github.com/edorguez/business-manager/services/product-svc/pkg/client"
 	"github.com/edorguez/business-manager/services/product-svc/pkg/config"
-	"github.com/edorguez/business-manager/services/product-svc/pkg/constants"
 	"github.com/edorguez/business-manager/services/product-svc/pkg/models"
 	repo "github.com/edorguez/business-manager/services/product-svc/pkg/repository"
+	"github.com/edorguez/business-manager/shared/constants"
 	product "github.com/edorguez/business-manager/shared/pb/product"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
