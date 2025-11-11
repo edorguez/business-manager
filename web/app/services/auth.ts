@@ -42,7 +42,7 @@ export async function signUp(
       formData.append(`files`, image);
     });
 
-    const res = await fetch(`${baseUrl}/signUp`, {
+    const res = await fetch(`${baseUrl}/signup`, {
       method: "POST",
       body: formData,
     });

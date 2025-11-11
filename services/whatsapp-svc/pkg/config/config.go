@@ -8,13 +8,13 @@ import (
 )
 
 type Config struct {
-	WhatsappSvcPort             string `mapstructure:"WHATSAPP_SVC_PORT"`
-	PostgresDBDriver            string `mapstructure:"POSTGRES_DB_DRIVER"`
-	WhatsappDBSourceDevelopment string `mapstructure:"WHATSAPP_DB_SOURCE_DEVELOPMENT"`
-	WhatsappDBSourceProduction  string `mapstructure:"WHATSAPP_DB_SOURCE_PRODUCTION"`
-	TwilioAccountSID            string `mapstructure:"TWILIO_ACCOUNT_SID"`
-	TwilioAuthToken             string `mapstructure:"TWILIO_AUTH_TOKEN"`
-	TwilioPhoneNumber           string `mapstructure:"TWILIO_PHONE_NUMBER"`
+	WhatsappSvcPort                 string `mapstructure:"WHATSAPP_SVC_PORT"`
+	PostgresDBDriver                string `mapstructure:"POSTGRES_DB_DRIVER"`
+	WhatsappDBSourceDevelopment     string `mapstructure:"WHATSAPP_DB_SOURCE_DEVELOPMENT"`
+	WhatsappDBSourceDockerContainer string `mapstructure:"WHATSAPP_DB_SOURCE_DOCKER_CONTAINER"`
+	TwilioAccountSID                string `mapstructure:"TWILIO_ACCOUNT_SID"`
+	TwilioAuthToken                 string `mapstructure:"TWILIO_AUTH_TOKEN"`
+	TwilioPhoneNumber               string `mapstructure:"TWILIO_PHONE_NUMBER"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -32,7 +32,7 @@ func LoadConfig() (config Config, err error) {
 		config.WhatsappSvcPort = getViperString("WHATSAPP_SVC_PORT")
 		config.PostgresDBDriver = getViperString("POSTGRES_DB_DRIVER")
 		config.WhatsappDBSourceDevelopment = getViperString("WHATSAPP_DB_SOURCE_DEVELOPMENT")
-		config.WhatsappDBSourceProduction = getViperString("WHATSAPP_DB_SOURCE_PRODUCTION")
+		config.WhatsappDBSourceDockerContainer = getViperString("WHATSAPP_DB_SOURCE_DOCKER_CONTAINER")
 		config.TwilioAccountSID = getViperString("TWILIO_ACCOUNT_SID")
 		config.TwilioAuthToken = getViperString("TWILIO_AUTH_TOKEN")
 		config.TwilioPhoneNumber = getViperString("TWILIO_PHONE_NUMBER")

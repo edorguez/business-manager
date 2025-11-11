@@ -8,14 +8,14 @@ import (
 )
 
 type Config struct {
-	ProductSvcPort             string `mapstructure:"PRODUCT_SVC_PORT"`
-	ProductDBName              string `mapstructure:"PRODUCT_DB_NAME"`
-	ProductDBSourceDevelopment string `mapstructure:"PRODUCT_DB_SOURCE_DEVELOPMENT"`
-	ProductDBSourceProduction  string `mapstructure:"PRODUCT_DB_SOURCE_PRODUCTION"`
-	CompanySvcUrl              string `mapstructure:"COMPANY_SVC_URL"`
-	CompanySvcPort             string `mapstructure:"COMPANY_SVC_PORT"`
-	FileSvcUrl                 string `mapstructure:"FILE_SVC_URL"`
-	FileSvcPort                string `mapstructure:"FILE_SVC_PORT"`
+	ProductSvcPort                 string `mapstructure:"PRODUCT_SVC_PORT"`
+	ProductDBName                  string `mapstructure:"PRODUCT_DB_NAME"`
+	ProductDBSourceDevelopment     string `mapstructure:"PRODUCT_DB_SOURCE_DEVELOPMENT"`
+	ProductDBSourceDockerContainer string `mapstructure:"PRODUCT_DB_SOURCE_DOCKER_CONTAINER"`
+	CompanySvcUrl                  string `mapstructure:"COMPANY_SVC_URL"`
+	CompanySvcPort                 string `mapstructure:"COMPANY_SVC_PORT"`
+	FileSvcUrl                     string `mapstructure:"FILE_SVC_URL"`
+	FileSvcPort                    string `mapstructure:"FILE_SVC_PORT"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -33,7 +33,7 @@ func LoadConfig() (config Config, err error) {
 		config.ProductSvcPort = getViperString("PRODUCT_SVC_PORT")
 		config.ProductDBName = getViperString("PRODUCT_DB_NAME")
 		config.ProductDBSourceDevelopment = getViperString("PRODUCT_DB_SOURCE_DEVELOPMENT")
-		config.ProductDBSourceProduction = getViperString("PRODUCT_DB_SOURCE_PRODUCTION")
+		config.ProductDBSourceDockerContainer = getViperString("PRODUCT_DB_SOURCE_DOCKER_CONTAINER")
 		config.CompanySvcUrl = getViperString("COMPANY_SVC_URL")
 		config.CompanySvcPort = getViperString("COMPANY_SVC_PORT")
 		config.FileSvcUrl = getViperString("FILE_SVC_URL")

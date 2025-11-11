@@ -33,12 +33,12 @@ func main() {
 	}
 
 	var dbSource string
-	if appEnv == "production" {
-		fmt.Println("Running in production mode")
-		dbSource = c.WhatsappDBSourceProduction
-	} else {
+	if appEnv == "development" {
 		fmt.Println("Running in development mode")
 		dbSource = c.WhatsappDBSourceDevelopment
+	} else {
+		fmt.Println("Running in docker mode")
+		dbSource = c.WhatsappDBSourceDockerContainer
 	}
 
 	conn, err := sql.Open(c.PostgresDBDriver, dbSource)

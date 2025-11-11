@@ -32,12 +32,12 @@ func main() {
 	}
 
 	var dbSource string
-	if appEnv == "production" {
-		fmt.Println("Running in production mode")
-		dbSource = c.ProductDBSourceProduction
-	} else {
+	if appEnv == "development" {
 		fmt.Println("Running in development mode")
 		dbSource = c.ProductDBSourceDevelopment
+	} else {
+		fmt.Println("Running in docker mode")
+		dbSource = c.ProductDBSourceDockerContainer
 	}
 
 	mongoClient, err := db.ConnectMongoDb(dbSource)

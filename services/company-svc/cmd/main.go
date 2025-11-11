@@ -35,12 +35,12 @@ func main() {
 	}
 
 	var dbSource string
-	if appEnv == "production" {
-		fmt.Println("Running in production mode")
-		dbSource = c.CompanyDBSourceProduction
-	} else {
+	if appEnv == "development" {
 		fmt.Println("Running in development mode")
 		dbSource = c.CompanyDBSourceDevelopment
+	} else {
+		fmt.Println("Running in docker mode")
+		dbSource = c.CompanyDBSourceDockerContainer
 	}
 
 	conn, err := sql.Open(c.PostgresDBDriver, dbSource)

@@ -24,12 +24,12 @@ func InitOrderServiceClient(c *config.Config) error {
 	}
 
 	var orderSvcUrl string
-	if appEnv == "production" {
-		fmt.Println("Running in production mode")
-		orderSvcUrl = c.OrderSvcUrl + ":" + c.OrderSvcPort
-	} else {
+	if appEnv == "development" {
 		fmt.Println("Running in development mode")
 		orderSvcUrl = c.DevelopmentUrl + ":" + c.OrderSvcPort
+	} else {
+		fmt.Println("Running in docker mode")
+		orderSvcUrl = c.OrderSvcUrl + ":" + c.OrderSvcPort
 	}
 
 	// using WithInsecure() because no SSL running

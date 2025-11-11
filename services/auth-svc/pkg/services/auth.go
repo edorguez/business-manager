@@ -72,6 +72,12 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 		}, nil
 	}
 
+	fmt.Println("hola")
+	fmt.Println(constants.ROLE_ID_ADMIN)
+	fmt.Println(req.User.Email)
+	fmt.Println(req.User.Password)
+	fmt.Println(company.Id)
+
 	createUserParams := db.CreateUserParams{
 		CompanyID:    company.Id,
 		RoleID:       constants.ROLE_ID_ADMIN,

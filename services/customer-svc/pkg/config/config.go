@@ -8,10 +8,10 @@ import (
 )
 
 type Config struct {
-	CustomerSvcPort             string `mapstructure:"CUSTOMER_SVC_PORT"`
-	PostgresDBDriver            string `mapstructure:"POSTGRES_DB_DRIVER"`
-	CustomerDBSourceDevelopment string `mapstructure:"CUSTOMER_DB_SOURCE_DEVELOPMENT"`
-	CustomerDBSourceProduction  string `mapstructure:"CUSTOMER_DB_SOURCE_PRODUCTION"`
+	CustomerSvcPort                 string `mapstructure:"CUSTOMER_SVC_PORT"`
+	PostgresDBDriver                string `mapstructure:"POSTGRES_DB_DRIVER"`
+	CustomerDBSourceDevelopment     string `mapstructure:"CUSTOMER_DB_SOURCE_DEVELOPMENT"`
+	CustomerDBSourceDockerContainer string `mapstructure:"CUSTOMER_DB_SOURCE_DOCKER_CONTAINER"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -29,7 +29,7 @@ func LoadConfig() (config Config, err error) {
 		config.CustomerSvcPort = getViperString("CUSTOMER_SVC_PORT")
 		config.PostgresDBDriver = getViperString("POSTGRES_DB_DRIVER")
 		config.CustomerDBSourceDevelopment = getViperString("CUSTOMER_DB_SOURCE_DEVELOPMENT")
-		config.CustomerDBSourceProduction = getViperString("CUSTOMER_DB_SOURCE_PRODUCTION")
+		config.CustomerDBSourceDockerContainer = getViperString("CUSTOMER_DB_SOURCE_DOCKER_CONTAINER")
 	}
 
 	err = viper.Unmarshal(&config)

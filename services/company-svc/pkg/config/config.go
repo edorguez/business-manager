@@ -8,12 +8,12 @@ import (
 )
 
 type Config struct {
-	CompanySvcPort             string `mapstructure:"COMPANY_SVC_PORT"`
-	PostgresDBDriver           string `mapstructure:"POSTGRES_DB_DRIVER"`
-	CompanyDBSourceDevelopment string `mapstructure:"COMPANY_DB_SOURCE_DEVELOPMENT"`
-	CompanyDBSourceProduction  string `mapstructure:"COMPANY_DB_SOURCE_PRODUCTION"`
-	FileSvcUrl                 string `mapstructure:"FILE_SVC_URL"`
-	FileSvcPort                string `mapstructure:"FILE_SVC_PORT"`
+	CompanySvcPort                 string `mapstructure:"COMPANY_SVC_PORT"`
+	PostgresDBDriver               string `mapstructure:"POSTGRES_DB_DRIVER"`
+	CompanyDBSourceDevelopment     string `mapstructure:"COMPANY_DB_SOURCE_DEVELOPMENT"`
+	CompanyDBSourceDockerContainer string `mapstructure:"COMPANY_DB_SOURCE_DOCKER_CONTAINER"`
+	FileSvcUrl                     string `mapstructure:"FILE_SVC_URL"`
+	FileSvcPort                    string `mapstructure:"FILE_SVC_PORT"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -28,7 +28,7 @@ func LoadConfig() (config Config, err error) {
 		config.CompanySvcPort = getViperString("COMPANY_SVC_PORT")
 		config.PostgresDBDriver = getViperString("POSTGRES_DB_DRIVER")
 		config.CompanyDBSourceDevelopment = getViperString("COMPANY_DB_SOURCE_DEVELOPMENT")
-		config.CompanyDBSourceProduction = getViperString("COMPANY_DB_SOURCE_PRODUCTION")
+		config.CompanyDBSourceDockerContainer = getViperString("COMPANY_DB_SOURCE_DOCKER_CONTAINER")
 		config.FileSvcUrl = getViperString("FILE_SVC_URL")
 		config.FileSvcPort = getViperString("FILE_SVC_PORT")
 	}

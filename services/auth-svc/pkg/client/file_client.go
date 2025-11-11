@@ -22,12 +22,12 @@ func InitFileServiceClient(c *config.Config) error {
 	}
 
 	var fileSvcUrl string
-	if appEnv == "production" {
-		fmt.Println("Running in production mode")
-		fileSvcUrl = c.FileSvcUrl + ":" + c.FileSvcPort
-	} else {
+	if appEnv == "development" {
 		fmt.Println("Running in development mode")
 		fileSvcUrl = "localhost:" + c.FileSvcPort
+	} else {
+		fmt.Println("Running in docker mode")
+		fileSvcUrl = c.FileSvcUrl + ":" + c.FileSvcPort
 	}
 
 	// using WithInsecure() because no SSL running

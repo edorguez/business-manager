@@ -24,12 +24,12 @@ func InitAuthServiceClient(c *config.Config) error {
 	}
 
 	var authSvcUrl string
-	if appEnv == "production" {
-		fmt.Println("Running in production mode")
-		authSvcUrl = c.AuthSvcUrl + ":" + c.AuthSvcPort
-	} else {
+	if appEnv == "development" {
 		fmt.Println("Running in development mode")
 		authSvcUrl = c.DevelopmentUrl + ":" + c.AuthSvcPort
+	} else {
+		fmt.Println("Running in docker mode")
+		authSvcUrl = c.AuthSvcUrl + ":" + c.AuthSvcPort
 	}
 
 	// using WithInsecure() because no SSL running

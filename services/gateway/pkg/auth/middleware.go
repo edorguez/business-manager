@@ -104,15 +104,26 @@ func (m *MiddlewareConfig) MiddlewareValidateSignUp(next http.Handler) http.Hand
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body contracts.SignUpRequest
 
-		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		// Parse the form data
+		err := r.ParseMultipartForm(10 << 20) // 10 MB max memory
+		if err != nil {
+			http.Error(w, "Unable to parse form", http.StatusBadRequest)
+			return
+		}
+
+		// Get the JSON part
+		jsonData := r.FormValue("json")
+		err = json.Unmarshal([]byte(jsonData), &body)
+		if err != nil {
 			fmt.Println(err.Error())
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		err := body.Validate()
+		err = body.Validate()
 		if err != nil {
 			fmt.Println("API Gateway :  Middleware - Error - Sign Up")
+			fmt.Println(err)
 			middleErr := types.Error{
 				Status: http.StatusBadRequest,
 				Error:  err.Error(),

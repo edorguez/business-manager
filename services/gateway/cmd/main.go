@@ -41,12 +41,12 @@ func main() {
 	}
 
 	var gatewayUrl string
-	if appEnv == "production" {
-		fmt.Println("Running in production mode")
-		gatewayUrl = conf.ProductionUrl + ":" + conf.GatewayPort
-	} else {
+	if appEnv == "development" {
 		fmt.Println("Running in development mode")
 		gatewayUrl = conf.DevelopmentUrl + ":" + conf.GatewayPort
+	} else {
+		fmt.Println("Running in docker mode")
+		gatewayUrl = conf.DockerContainerUrl + ":" + conf.GatewayPort
 	}
 
 	// run the server
@@ -106,6 +106,8 @@ func routesConfig(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
 		fmt.Println("--> Received Origin:", origin)
+
+		fmt.Printf("--> Allow All CORS = %s\n", os.Getenv("ALLOW_ALL_CORS"))
 
 		// Check if the origin is from your domain or its subdomains
 		if isValidOrigin(origin) || os.Getenv("ALLOW_ALL_CORS") == "true" {
