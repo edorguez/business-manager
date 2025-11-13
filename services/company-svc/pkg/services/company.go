@@ -34,9 +34,9 @@ func (s *CompanyService) CreateCompany(ctx context.Context, req *company.CreateC
 	createCompanyParams := db.CreateCompanyParams{
 		Name:            req.Name,
 		NameFormatUrl:   req.NameFormatUrl,
-		IsFreeTrial:     true,
+		IsFreeTrial:     1,
 		PlanID:          constants.PLAN_ID_BASIC,
-		LastPaymentDate: time.Now().UTC(),
+		LastPaymentDate: time.Now().UTC().AddDate(0, 0, 7),
 	}
 
 	c, err := s.Repo.CreateCompany(ctx, createCompanyParams)

@@ -79,18 +79,18 @@ func CreateCompany(params *pb.CreateCompanyRequest, c context.Context) (*pb.Crea
 
 	res, err := companyServiceClient.CreateCompany(c, params)
 
-	if err != nil {
+	if err != nil || res.Error != "" {
 		fmt.Println("Company CLIENT :  CreateCompany - ERROR")
 		fmt.Println(err.Error())
 
 		return nil, err
 	}
 
-	fmt.Println("Company CLIENT :  CreateCompany - SUCCESS")
-
-	if res.Status != http.StatusOK {
+	if res.Status != http.StatusCreated {
 		return nil, err
 	}
+
+	fmt.Println("Company CLIENT :  CreateCompany - SUCCESS")
 
 	return &pb.CreateCompanyResponse{
 		Id:     res.Id,
