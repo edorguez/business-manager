@@ -14,6 +14,7 @@ import (
 	"github.com/edorguez/business-manager/shared/constants"
 	pb "github.com/edorguez/business-manager/shared/pb/auth"
 	pbcompany "github.com/edorguez/business-manager/shared/pb/company"
+	pbwhatsapp "github.com/edorguez/business-manager/shared/pb/whatsapp"
 	"github.com/edorguez/business-manager/shared/util/jwt_manager"
 	"github.com/edorguez/business-manager/shared/util/password_hash"
 	"github.com/google/uuid"
@@ -85,6 +86,28 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 		fmt.Println(err.Error())
 		return &pb.SignUpResponse{
 			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if err := client.InitWhatsappServiceClient(s.Config); err != nil {
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	whatsappParams := &pbwhatsapp.CreateBusinessPhoneRequest{
+		CompanyId: company.Id,
+		Phone:     req.Company.Phone,
+	}
+
+	_, err = client.CreateBusinessPhone(whatsappParams, ctx)
+
+	if err != nil {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}, nil
 	}

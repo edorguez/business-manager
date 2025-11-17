@@ -15,6 +15,8 @@ type Config struct {
 	JWTSecretKey                string `mapstructure:"JWT_SECRET_KEY"`
 	CompanySvcUrl               string `mapstructure:"COMPANY_SVC_URL"`
 	CompanySvcPort              string `mapstructure:"COMPANY_SVC_PORT"`
+	WhatsappSvcUrl              string `mapstructure:"WHATSAPP_SVC_URL"`
+	WhatsappSvcPort             string `mapstructure:"WHATSAPP_SVC_PORT"`
 	FileSvcUrl                  string `mapstructure:"FILE_SVC_URL"`
 	FileSvcPort                 string `mapstructure:"FILE_SVC_PORT"`
 }
@@ -38,6 +40,8 @@ func LoadConfig() (config Config, err error) {
 		config.JWTSecretKey = getViperString("JWT_SECRET_KEY")
 		config.CompanySvcUrl = getViperString("COMPANY_SVC_URL")
 		config.CompanySvcPort = getViperString("COMPANY_SVC_PORT")
+		config.WhatsappSvcUrl = getViperString("WHATSAPP_SVC_URL")
+		config.WhatsappSvcPort = getViperString("WHATSAPP_SVC_PORT")
 		config.FileSvcUrl = getViperString("FILE_SVC_URL")
 		config.FileSvcPort = getViperString("FILE_SVC_PORT")
 	}
