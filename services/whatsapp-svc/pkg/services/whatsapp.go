@@ -222,6 +222,40 @@ func (s *WhatsappService) CreateBusinessPhone(ctx context.Context, req *whatsapp
 	}, nil
 }
 
+func (s *WhatsappService) GetBusinessPhone(ctx context.Context, req *whatsapp.GetBusinessPhoneRequest) (*whatsapp.GetBusinessPhoneResponse, error) {
+	fmt.Println("Whatsapp Service :  GetBusinessPhone")
+	fmt.Println("Whatsapp Service :  GetBusinessPhone - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	c, err := s.Repo.GetBusinessPhone(ctx, req.Phone)
+	if err != nil {
+		fmt.Println("Whatsapp Service :  GetBusinessPhone - ERROR")
+		fmt.Println(err.Error())
+
+		resErrorStatus := http.StatusConflict
+		resErrorMessage := err.Error()
+
+		if err == sql.ErrNoRows {
+			resErrorStatus = http.StatusNotFound
+			resErrorMessage = "Record not found"
+		}
+
+		return &whatsapp.GetBusinessPhoneResponse{
+			Status: int64(resErrorStatus),
+			Error:  resErrorMessage,
+		}, nil
+	}
+
+	fmt.Println("Whatsapp Service :  GetBusinessPhone - SUCCESS")
+	return &whatsapp.GetBusinessPhoneResponse{
+		Id:        c.ID,
+		CompanyId: c.CompanyID,
+		Phone:     c.Phone,
+		Status:    http.StatusOK,
+	}, nil
+}
+
 func (s *WhatsappService) GetBusinessPhoneByCompanyId(ctx context.Context, req *whatsapp.GetBusinessPhoneByCompanyIdRequest) (*whatsapp.GetBusinessPhoneByCompanyIdResponse, error) {
 	fmt.Println("Whatsapp Service :  GetBusinessPhoneByCompanyId")
 	fmt.Println("Whatsapp Service :  GetBusinessPhoneByCompanyId - Req")

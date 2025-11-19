@@ -55,12 +55,41 @@ func CreateBusinessPhone(params *pb.CreateBusinessPhoneRequest, c context.Contex
 	}
 
 	if res.Status != http.StatusNoContent {
-		return nil, err
+		return nil, fmt.Errorf(res.Error)
 	}
 
 	fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone - SUCCESS")
 
 	return &pb.CreateBusinessPhoneResponse{
 		Status: res.Status,
+	}, nil
+}
+
+func GetBusinessPhone(phone string, c context.Context) (*pb.GetBusinessPhoneResponse, error) {
+	fmt.Println("Whatsapp CLIENT :  GetBusinessPhone")
+
+	params := &pb.GetBusinessPhoneRequest{
+		Phone: phone,
+	}
+
+	res, err := whatsappServiceClient.GetBusinessPhone(c, params)
+
+	if err != nil {
+		fmt.Println("Whatsapp CLIENT :  GetBusinessPhone - ERROR")
+		fmt.Println(err.Error())
+
+		return nil, err
+	}
+
+	fmt.Println("Whatsapp CLIENT :  GetBusinessPhone - SUCCESS")
+
+	if res.Status != http.StatusOK {
+		return nil, err
+	}
+
+	return &pb.GetBusinessPhoneResponse{
+		Id:        res.Id,
+		CompanyId: res.CompanyId,
+		Phone:     res.Phone,
 	}, nil
 }

@@ -74,6 +74,38 @@ func GetCompany(id int64, c context.Context) (*pb.GetCompanyResponse, error) {
 	}, nil
 }
 
+func GetCompanyByNameUrl(nameUrl string, c context.Context) (*pb.GetCompanyByNameUrlResponse, error) {
+	fmt.Println("Company CLIENT :  GetCompanyByNameUrl")
+
+	params := &pb.GetCompanyByNameUrlRequest{
+		NameUrl: nameUrl,
+	}
+
+	res, err := companyServiceClient.GetCompanyByNameUrl(c, params)
+
+	if err != nil {
+		fmt.Println("Company CLIENT :  GetCompanyByNameUrl - ERROR")
+		fmt.Println(err.Error())
+
+		return nil, err
+	}
+
+	fmt.Println("Company CLIENT :  GetCompanyByNameUrl - SUCCESS")
+
+	if res.Status != http.StatusOK {
+		return nil, err
+	}
+
+	return &pb.GetCompanyByNameUrlResponse{
+		Id:              res.Id,
+		Name:            res.Name,
+		NameFormatUrl:   res.NameFormatUrl,
+		ImageUrl:        res.ImageUrl,
+		PlanId:          res.PlanId,
+		LastPaymentDate: res.LastPaymentDate,
+	}, nil
+}
+
 func CreateCompany(params *pb.CreateCompanyRequest, c context.Context) (*pb.CreateCompanyResponse, error) {
 	fmt.Println("Company CLIENT :  CreateCompany")
 

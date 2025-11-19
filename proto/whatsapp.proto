@@ -9,6 +9,7 @@ service WhatsappService{
   rpc SendOrderBusinessMessage(SendOrderBusinessMessageRequest) returns (SendOrderBusinessMessageResponse);
   rpc CreateBusinessPhone(CreateBusinessPhoneRequest) returns (CreateBusinessPhoneResponse);
   rpc UpdateBusinessPhone(UpdateBusinessPhoneRequest) returns (UpdateBusinessPhoneResponse);
+  rpc GetBusinessPhone(GetBusinessPhoneRequest) returns (GetBusinessPhoneResponse);
   rpc GetBusinessPhoneByCompanyId(GetBusinessPhoneByCompanyIdRequest) returns (GetBusinessPhoneByCompanyIdResponse);
 }
 
@@ -60,6 +61,18 @@ message UpdateBusinessPhoneRequest {
 message UpdateBusinessPhoneResponse {
   int64 status = 1;
   string error = 2;
+}
+
+message GetBusinessPhoneRequest{
+  string phone = 1;
+}
+
+message GetBusinessPhoneResponse{
+  int64 id = 1;
+  int64 companyId = 2;
+  string phone = 3;
+  int64 status = 4;
+  string error = 5;
 }
 
 message GetBusinessPhoneByCompanyIdRequest{

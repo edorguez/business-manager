@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/edorguez/business-manager/services/auth-svc/pkg/client"
@@ -34,7 +35,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 
 	u, err := s.Repo.GetUserByEmail(ctx, req.User.Email)
 	if err != nil && err != sql.ErrNoRows {
-		fmt.Println("Auth Service :  Register - ERROR")
+		fmt.Println("Auth Service :  Sign Up - ERROR")
 		fmt.Println(err.Error())
 		return &pb.SignUpResponse{
 			Status: http.StatusConflict,
@@ -58,35 +59,23 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 		}, nil
 	}
 
-	companyParams := &pbcompany.CreateCompanyRequest{
-		Name:          req.Company.Name,
-		NameFormatUrl: req.Company.NameFormatUrl,
-	}
+	company, err := client.GetCompanyByNameUrl(strings.ToLower(req.Company.NameFormatUrl), ctx)
 
-	company, errCompany := client.CreateCompany(companyParams, ctx)
-
-	if errCompany != nil {
-		fmt.Println("Auth Service :  Sign Up - ERROR")
-		return &pb.SignUpResponse{
-			Status: http.StatusInternalServerError,
-			Error:  errCompany.Error(),
-		}, nil
-	}
-
-	createUserParams := db.CreateUserParams{
-		CompanyID:    company.Id,
-		RoleID:       constants.ROLE_ID_ADMIN,
-		Email:        req.User.Email,
-		PasswordHash: password_hash.HashPassword(req.User.Password),
-	}
-
-	_, err = s.Repo.CreateUser(ctx, createUserParams)
 	if err != nil {
 		fmt.Println("Auth Service :  Sign Up - ERROR")
 		fmt.Println(err.Error())
 		return &pb.SignUpResponse{
 			Status: http.StatusConflict,
 			Error:  err.Error(),
+		}, nil
+	}
+
+	if company != nil && company.Status != http.StatusNotFound {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		fmt.Println("Company web URL already exists")
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "Company web URL aready exists",
 		}, nil
 	}
 
@@ -97,8 +86,60 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 		}, nil
 	}
 
+	businessPhone, err := client.GetBusinessPhone(req.Company.Phone, ctx)
+
+	if err != nil {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		fmt.Println(err.Error())
+		return &pb.SignUpResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	if businessPhone != nil && businessPhone.Status != http.StatusNotFound {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		fmt.Println("Phone already exists")
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "Phone already exists",
+		}, nil
+	}
+
+	companyParams := &pbcompany.CreateCompanyRequest{
+		Name:          req.Company.Name,
+		NameFormatUrl: req.Company.NameFormatUrl,
+	}
+
+	createdCompany, errCompany := client.CreateCompany(companyParams, ctx)
+
+	if errCompany != nil {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		return &pb.SignUpResponse{
+			Status: http.StatusInternalServerError,
+			Error:  errCompany.Error(),
+		}, nil
+	}
+
+	createUserParams := db.CreateUserParams{
+		CompanyID:    createdCompany.Id,
+		RoleID:       constants.ROLE_ID_ADMIN,
+		Email:        req.User.Email,
+		PasswordHash: password_hash.HashPassword(req.User.Password),
+	}
+
+	createdUser, err := s.Repo.CreateUser(ctx, createUserParams)
+	if err != nil {
+		fmt.Println("Auth Service :  Sign Up - ERROR")
+		fmt.Println(err.Error())
+		return &pb.SignUpResponse{
+			Status: http.StatusConflict,
+			Error:  err.Error(),
+		}, nil
+	}
+
 	whatsappParams := &pbwhatsapp.CreateBusinessPhoneRequest{
-		CompanyId: company.Id,
+		CompanyId: createdCompany.Id,
 		Phone:     req.Company.Phone,
 	}
 
@@ -122,7 +163,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 	var imageUrl string
 	if req.Company.Image != nil {
 		fileData := client.FileData{
-			FileName: fmt.Sprintf("company-%d-image-%s", company.Id, uuid.New()),
+			FileName: fmt.Sprintf("company-%d-image-%s", createdCompany.Id, uuid.New()),
 			FileData: req.Company.Image,
 		}
 
@@ -144,7 +185,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 	}
 
 	companyUpdateImageUrlParams := &pbcompany.UpdateCompanyImageUrlRequest{
-		Id:       company.Id,
+		Id:       createdCompany.Id,
 		ImageUrl: imageUrl,
 	}
 
@@ -158,7 +199,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpRequest) (*pb.Si
 		}, nil
 	}
 
-	token, err := s.Jwt.GenerateToken(u.ID, u.Email, u.RoleID, u.CompanyID, constants.PLAN_ID_BASIC)
+	token, err := s.Jwt.GenerateToken(createdUser.ID, createdUser.Email, createdUser.RoleID, createdUser.CompanyID, constants.PLAN_ID_BASIC)
 	if err != nil {
 		fmt.Println("Auth Service :  Sign Up - ERROR")
 		fmt.Println(err.Error())

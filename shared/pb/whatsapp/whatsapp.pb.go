@@ -529,6 +529,126 @@ func (x *UpdateBusinessPhoneResponse) GetError() string {
 	return ""
 }
 
+type GetBusinessPhoneRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Phone         string                 `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBusinessPhoneRequest) Reset() {
+	*x = GetBusinessPhoneRequest{}
+	mi := &file_whatsapp_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBusinessPhoneRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBusinessPhoneRequest) ProtoMessage() {}
+
+func (x *GetBusinessPhoneRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_whatsapp_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBusinessPhoneRequest.ProtoReflect.Descriptor instead.
+func (*GetBusinessPhoneRequest) Descriptor() ([]byte, []int) {
+	return file_whatsapp_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetBusinessPhoneRequest) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+type GetBusinessPhoneResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	CompanyId     int64                  `protobuf:"varint,2,opt,name=companyId,proto3" json:"companyId,omitempty"`
+	Phone         string                 `protobuf:"bytes,3,opt,name=phone,proto3" json:"phone,omitempty"`
+	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	Error         string                 `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBusinessPhoneResponse) Reset() {
+	*x = GetBusinessPhoneResponse{}
+	mi := &file_whatsapp_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBusinessPhoneResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBusinessPhoneResponse) ProtoMessage() {}
+
+func (x *GetBusinessPhoneResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_whatsapp_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBusinessPhoneResponse.ProtoReflect.Descriptor instead.
+func (*GetBusinessPhoneResponse) Descriptor() ([]byte, []int) {
+	return file_whatsapp_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetBusinessPhoneResponse) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *GetBusinessPhoneResponse) GetCompanyId() int64 {
+	if x != nil {
+		return x.CompanyId
+	}
+	return 0
+}
+
+func (x *GetBusinessPhoneResponse) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+func (x *GetBusinessPhoneResponse) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *GetBusinessPhoneResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
 type GetBusinessPhoneByCompanyIdRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CompanyId     int64                  `protobuf:"varint,1,opt,name=companyId,proto3" json:"companyId,omitempty"`
@@ -538,7 +658,7 @@ type GetBusinessPhoneByCompanyIdRequest struct {
 
 func (x *GetBusinessPhoneByCompanyIdRequest) Reset() {
 	*x = GetBusinessPhoneByCompanyIdRequest{}
-	mi := &file_whatsapp_proto_msgTypes[9]
+	mi := &file_whatsapp_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -550,7 +670,7 @@ func (x *GetBusinessPhoneByCompanyIdRequest) String() string {
 func (*GetBusinessPhoneByCompanyIdRequest) ProtoMessage() {}
 
 func (x *GetBusinessPhoneByCompanyIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_whatsapp_proto_msgTypes[9]
+	mi := &file_whatsapp_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -563,7 +683,7 @@ func (x *GetBusinessPhoneByCompanyIdRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetBusinessPhoneByCompanyIdRequest.ProtoReflect.Descriptor instead.
 func (*GetBusinessPhoneByCompanyIdRequest) Descriptor() ([]byte, []int) {
-	return file_whatsapp_proto_rawDescGZIP(), []int{9}
+	return file_whatsapp_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetBusinessPhoneByCompanyIdRequest) GetCompanyId() int64 {
@@ -586,7 +706,7 @@ type GetBusinessPhoneByCompanyIdResponse struct {
 
 func (x *GetBusinessPhoneByCompanyIdResponse) Reset() {
 	*x = GetBusinessPhoneByCompanyIdResponse{}
-	mi := &file_whatsapp_proto_msgTypes[10]
+	mi := &file_whatsapp_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -598,7 +718,7 @@ func (x *GetBusinessPhoneByCompanyIdResponse) String() string {
 func (*GetBusinessPhoneByCompanyIdResponse) ProtoMessage() {}
 
 func (x *GetBusinessPhoneByCompanyIdResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_whatsapp_proto_msgTypes[10]
+	mi := &file_whatsapp_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -611,7 +731,7 @@ func (x *GetBusinessPhoneByCompanyIdResponse) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetBusinessPhoneByCompanyIdResponse.ProtoReflect.Descriptor instead.
 func (*GetBusinessPhoneByCompanyIdResponse) Descriptor() ([]byte, []int) {
-	return file_whatsapp_proto_rawDescGZIP(), []int{10}
+	return file_whatsapp_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetBusinessPhoneByCompanyIdResponse) GetId() int64 {
@@ -685,7 +805,15 @@ const file_whatsapp_proto_rawDesc = "" +
 	"\x05phone\x18\x02 \x01(\tR\x05phone\"K\n" +
 	"\x1bUpdateBusinessPhoneResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\x03R\x06status\x12\x14\n" +
-	"\x05error\x18\x02 \x01(\tR\x05error\"B\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error\"/\n" +
+	"\x17GetBusinessPhoneRequest\x12\x14\n" +
+	"\x05phone\x18\x01 \x01(\tR\x05phone\"\x8c\x01\n" +
+	"\x18GetBusinessPhoneResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
+	"\tcompanyId\x18\x02 \x01(\x03R\tcompanyId\x12\x14\n" +
+	"\x05phone\x18\x03 \x01(\tR\x05phone\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x14\n" +
+	"\x05error\x18\x05 \x01(\tR\x05error\"B\n" +
 	"\"GetBusinessPhoneByCompanyIdRequest\x12\x1c\n" +
 	"\tcompanyId\x18\x01 \x01(\x03R\tcompanyId\"\x97\x01\n" +
 	"#GetBusinessPhoneByCompanyIdResponse\x12\x0e\n" +
@@ -693,12 +821,13 @@ const file_whatsapp_proto_rawDesc = "" +
 	"\tcompanyId\x18\x02 \x01(\x03R\tcompanyId\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x14\n" +
-	"\x05error\x18\x05 \x01(\tR\x05error2\xbb\x04\n" +
+	"\x05error\x18\x05 \x01(\tR\x05error2\x96\x05\n" +
 	"\x0fWhatsappService\x12q\n" +
 	"\x18SendOrderCustomerMessage\x12).whatsapp.SendOrderCustomerMessageRequest\x1a*.whatsapp.SendOrderCustomerMessageResponse\x12q\n" +
 	"\x18SendOrderBusinessMessage\x12).whatsapp.SendOrderBusinessMessageRequest\x1a*.whatsapp.SendOrderBusinessMessageResponse\x12b\n" +
 	"\x13CreateBusinessPhone\x12$.whatsapp.CreateBusinessPhoneRequest\x1a%.whatsapp.CreateBusinessPhoneResponse\x12b\n" +
-	"\x13UpdateBusinessPhone\x12$.whatsapp.UpdateBusinessPhoneRequest\x1a%.whatsapp.UpdateBusinessPhoneResponse\x12z\n" +
+	"\x13UpdateBusinessPhone\x12$.whatsapp.UpdateBusinessPhoneRequest\x1a%.whatsapp.UpdateBusinessPhoneResponse\x12Y\n" +
+	"\x10GetBusinessPhone\x12!.whatsapp.GetBusinessPhoneRequest\x1a\".whatsapp.GetBusinessPhoneResponse\x12z\n" +
 	"\x1bGetBusinessPhoneByCompanyId\x12,.whatsapp.GetBusinessPhoneByCompanyIdRequest\x1a-.whatsapp.GetBusinessPhoneByCompanyIdResponseB\fZ\n" +
 	"./whatsappb\x06proto3"
 
@@ -714,7 +843,7 @@ func file_whatsapp_proto_rawDescGZIP() []byte {
 	return file_whatsapp_proto_rawDescData
 }
 
-var file_whatsapp_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_whatsapp_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_whatsapp_proto_goTypes = []any{
 	(*SendOrderCustomerMessageRequest)(nil),     // 0: whatsapp.SendOrderCustomerMessageRequest
 	(*SendOrderCustomerMessageResponse)(nil),    // 1: whatsapp.SendOrderCustomerMessageResponse
@@ -725,8 +854,10 @@ var file_whatsapp_proto_goTypes = []any{
 	(*CreateBusinessPhoneResponse)(nil),         // 6: whatsapp.CreateBusinessPhoneResponse
 	(*UpdateBusinessPhoneRequest)(nil),          // 7: whatsapp.UpdateBusinessPhoneRequest
 	(*UpdateBusinessPhoneResponse)(nil),         // 8: whatsapp.UpdateBusinessPhoneResponse
-	(*GetBusinessPhoneByCompanyIdRequest)(nil),  // 9: whatsapp.GetBusinessPhoneByCompanyIdRequest
-	(*GetBusinessPhoneByCompanyIdResponse)(nil), // 10: whatsapp.GetBusinessPhoneByCompanyIdResponse
+	(*GetBusinessPhoneRequest)(nil),             // 9: whatsapp.GetBusinessPhoneRequest
+	(*GetBusinessPhoneResponse)(nil),            // 10: whatsapp.GetBusinessPhoneResponse
+	(*GetBusinessPhoneByCompanyIdRequest)(nil),  // 11: whatsapp.GetBusinessPhoneByCompanyIdRequest
+	(*GetBusinessPhoneByCompanyIdResponse)(nil), // 12: whatsapp.GetBusinessPhoneByCompanyIdResponse
 }
 var file_whatsapp_proto_depIdxs = []int32{
 	4,  // 0: whatsapp.SendOrderCustomerMessageRequest.products:type_name -> whatsapp.OrderProductRequest
@@ -735,14 +866,16 @@ var file_whatsapp_proto_depIdxs = []int32{
 	2,  // 3: whatsapp.WhatsappService.SendOrderBusinessMessage:input_type -> whatsapp.SendOrderBusinessMessageRequest
 	5,  // 4: whatsapp.WhatsappService.CreateBusinessPhone:input_type -> whatsapp.CreateBusinessPhoneRequest
 	7,  // 5: whatsapp.WhatsappService.UpdateBusinessPhone:input_type -> whatsapp.UpdateBusinessPhoneRequest
-	9,  // 6: whatsapp.WhatsappService.GetBusinessPhoneByCompanyId:input_type -> whatsapp.GetBusinessPhoneByCompanyIdRequest
-	1,  // 7: whatsapp.WhatsappService.SendOrderCustomerMessage:output_type -> whatsapp.SendOrderCustomerMessageResponse
-	3,  // 8: whatsapp.WhatsappService.SendOrderBusinessMessage:output_type -> whatsapp.SendOrderBusinessMessageResponse
-	6,  // 9: whatsapp.WhatsappService.CreateBusinessPhone:output_type -> whatsapp.CreateBusinessPhoneResponse
-	8,  // 10: whatsapp.WhatsappService.UpdateBusinessPhone:output_type -> whatsapp.UpdateBusinessPhoneResponse
-	10, // 11: whatsapp.WhatsappService.GetBusinessPhoneByCompanyId:output_type -> whatsapp.GetBusinessPhoneByCompanyIdResponse
-	7,  // [7:12] is the sub-list for method output_type
-	2,  // [2:7] is the sub-list for method input_type
+	9,  // 6: whatsapp.WhatsappService.GetBusinessPhone:input_type -> whatsapp.GetBusinessPhoneRequest
+	11, // 7: whatsapp.WhatsappService.GetBusinessPhoneByCompanyId:input_type -> whatsapp.GetBusinessPhoneByCompanyIdRequest
+	1,  // 8: whatsapp.WhatsappService.SendOrderCustomerMessage:output_type -> whatsapp.SendOrderCustomerMessageResponse
+	3,  // 9: whatsapp.WhatsappService.SendOrderBusinessMessage:output_type -> whatsapp.SendOrderBusinessMessageResponse
+	6,  // 10: whatsapp.WhatsappService.CreateBusinessPhone:output_type -> whatsapp.CreateBusinessPhoneResponse
+	8,  // 11: whatsapp.WhatsappService.UpdateBusinessPhone:output_type -> whatsapp.UpdateBusinessPhoneResponse
+	10, // 12: whatsapp.WhatsappService.GetBusinessPhone:output_type -> whatsapp.GetBusinessPhoneResponse
+	12, // 13: whatsapp.WhatsappService.GetBusinessPhoneByCompanyId:output_type -> whatsapp.GetBusinessPhoneByCompanyIdResponse
+	8,  // [8:14] is the sub-list for method output_type
+	2,  // [2:8] is the sub-list for method input_type
 	2,  // [2:2] is the sub-list for extension type_name
 	2,  // [2:2] is the sub-list for extension extendee
 	0,  // [0:2] is the sub-list for field type_name
@@ -759,7 +892,7 @@ func file_whatsapp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_whatsapp_proto_rawDesc), len(file_whatsapp_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

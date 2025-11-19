@@ -33,6 +33,23 @@ func (wr *WhatsappRepo) CreateBusinessPhone(ctx context.Context, arg db.CreateBu
 	return result, err
 }
 
+func (wr *WhatsappRepo) GetBusinessPhone(ctx context.Context, phone string) (db.WhatsappBusinessPhone, error) {
+	var result db.WhatsappBusinessPhone
+
+	err := wr.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		result, err = q.GetBusinessPhone(ctx, phone)
+		if err != nil {
+			return err
+		}
+
+		return err
+	})
+
+	return result, err
+}
+
 func (wr *WhatsappRepo) GetBusinessPhoneByCompanyId(ctx context.Context, companyId int64) (db.WhatsappBusinessPhone, error) {
 	var result db.WhatsappBusinessPhone
 

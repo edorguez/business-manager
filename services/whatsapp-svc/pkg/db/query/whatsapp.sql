@@ -9,6 +9,19 @@ VALUES (
 )
 RETURNING *;
 
+-- name: GetBusinessPhone :one
+SELECT
+  id,
+  company_id,
+  phone,
+  created_at,
+  modified_at
+FROM
+  whatsapp.business_phone
+WHERE
+  LOWER(phone) = LOWER($1)
+LIMIT 1;
+
 -- name: GetBusinessPhoneByCompanyId :one
 SELECT
   id,
