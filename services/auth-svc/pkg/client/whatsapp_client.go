@@ -47,14 +47,14 @@ func CreateBusinessPhone(params *pb.CreateBusinessPhoneRequest, c context.Contex
 
 	res, err := whatsappServiceClient.CreateBusinessPhone(c, params)
 
-	if err != nil || res.Error != "" {
+	if err != nil {
 		fmt.Println("Whatsapp CLIENT :  CreateBusinessPhone - ERROR")
 		fmt.Println(err.Error())
 
 		return nil, err
 	}
 
-	if res.Status != http.StatusNoContent {
+	if res.Status != http.StatusCreated {
 		return nil, fmt.Errorf(res.Error)
 	}
 
