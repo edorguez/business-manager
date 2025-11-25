@@ -25,14 +25,23 @@ docker-compose-up-dev:
 docker-compose-down-dev:
 	docker-compose -f infra/development/docker/docker-compose.yml --env-file .env -p "business-manager" down
 
-SERVICES = docker-auth-svc docker-company-svc docker-customer-svc docker-file-svc docker-gateway docker-order-svc docker-product-svc docker-whatsapp-svc
+SERVICES_DEV = docker-auth-svc docker-company-svc docker-customer-svc docker-file-svc docker-gateway docker-order-svc docker-product-svc docker-whatsapp-svc
+SERVICES_PROD = docker-ui docker-auth-svc docker-company-svc docker-customer-svc docker-file-svc docker-gateway docker-order-svc docker-product-svc docker-whatsapp-svc
 REGISTRY = edorguez
 
-.PHONY: build-all $(SERVICES) clean list
+.PHONY: build-all $(SERVICES_PROD) clean list
+.PHONY: build-all $(SERVICES_DEV) clean list
 
 # Build all services sequentially
-docker-image-build-all: $(SERVICES)
+docker-image-build-all_PROD: $(SERVICES_PROD)
 	@echo "All services built successfully!"
+
+docker-image-build-all_DEV: $(SERVICES_DEV)
+	@echo "All services built successfully!"
+
+docker-ui:
+	@echo "Building ui..."
+	docker build -t $(REGISTRY)/ui -f infra/production/docker/ui.Dockerfile .
 
 docker-auth-svc:
 	@echo "Building auth-svc..."
