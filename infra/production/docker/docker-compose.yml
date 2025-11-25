@@ -26,7 +26,7 @@ services:
 
   ui:
     container_name: edezco
-    image: edorguez/ui-business-manager
+    image: edorguez/ui
     ports:
       - "${UI_PORT}:${UI_PORT}"
     build:
