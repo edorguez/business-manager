@@ -4,14 +4,14 @@ FROM node:18-alpine
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and package-lock.json from the web directory
+COPY ../../../web/package*.json ./
 
 # Install dependencies
 RUN npm install --production
 
-# Copy the rest of the application code
-COPY . .
+# Copy the rest of the web application code
+COPY ../../../web/ ./
 
 # Build the Next.js application
 RUN npm run build
