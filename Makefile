@@ -33,10 +33,10 @@ REGISTRY = edorguez
 .PHONY: build-all $(SERVICES_DEV) clean list
 
 # Build all services sequentially
-docker-image-build-all_PROD: $(SERVICES_PROD)
+docker-image-build-all-prod: $(SERVICES_PROD)
 	@echo "All services built successfully!"
 
-docker-image-build-all_DEV: $(SERVICES_DEV)
+docker-image-build-all-dev: $(SERVICES_DEV)
 	@echo "All services built successfully!"
 
 docker-ui:
