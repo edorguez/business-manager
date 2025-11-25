@@ -7,6 +7,5 @@ Dockerfile*
 docker-compose*
 infra/development/
 infra/production/docker/*.Dockerfile
-web/
 *.tmp
 *.log
