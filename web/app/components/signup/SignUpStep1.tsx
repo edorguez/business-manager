@@ -58,7 +58,8 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
   };
 
   const onNextStep = () => {
-    if(isFormValid()) {
+    if (isFormValid()) {
+      formatFields();
       onClickNextStep();
     } else {
       showErrorMessage("Algunos campos son requeridos o inválidos");
@@ -74,6 +75,19 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
 
     return true;
   };
+
+  const formatFields = (): void => {
+    onCompanyChange({
+      ...companyForm,
+      nameFormatUrl: companyForm.nameFormatUrl
+        // Remove all characters except letters, numbers, and dashes
+        .replace(/[^a-zA-Z0-9-]/g, '')
+        // Replace multiple consecutive dashes with a single dash
+        .replace(/-+/g, '-')
+        // Remove leading and trailing dashes
+        .replace(/^-|-$/g, '')
+    });
+  }
 
   const showErrorMessage = (msg: string) => {
     toast({
@@ -104,14 +118,14 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
         <label className="text-sm">
           URL Página Web<span className="text-thirdcolor">*</span>
         </label>
-        
+
         <InputGroup size='sm'>
           <Input
-          size="sm"
-          name="nameFormatUrl"
-          maxLength={50}
-          value={companyForm.nameFormatUrl}
-          onChange={handleNameFormatUrlChange}
+            size="sm"
+            name="nameFormatUrl"
+            maxLength={50}
+            value={companyForm.nameFormatUrl}
+            onChange={handleNameFormatUrlChange}
           />
           <InputRightAddon>.edezco.com</InputRightAddon>
         </InputGroup>

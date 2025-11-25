@@ -97,6 +97,10 @@ export const formatPriceNumberBackendToString = (price: number): string => {
 export const formatCompanyNameToUrlName = (name: string): string => {
   return name
     .toLowerCase()
-    .replace(/ /g, "-")
-    .replace(/[^a-zA-Z0-9-]/g, "");
+    // Remove all characters except letters, numbers, and spaces
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    // Trim leading and trailing spaces
+    .trim()
+    // Replace one or more consecutive spaces with a single dash
+    .replace(/\s+/g, '-');
 }
