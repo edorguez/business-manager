@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "http://edezco.com/api/auth"
+    ? "https://edezco.com/api/auth"
     : "http://localhost:3001/api/auth";
 
 export async function login(
