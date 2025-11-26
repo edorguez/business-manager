@@ -1,6 +1,9 @@
 # Use Node.js 18 as the base image
 FROM node:18-alpine
 
+# Set environment variables for the build
+ENV NEXT_PUBLIC_ENVIRONMENT=production
+
 # Set the working directory
 WORKDIR /app
 
