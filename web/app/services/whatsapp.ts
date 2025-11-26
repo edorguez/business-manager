@@ -3,7 +3,7 @@ import { CreateBusinessPhone, EditBusinessPhone } from '../types/whatsapp';
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://gateway:3001/api/whatsapp"
+    ? "https://edezco.com/api/whatsapp"
     : "http://localhost:3001/api/whatsapp";
 
 export async function CreateBusinessPhoneRequest(

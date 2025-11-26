@@ -2,7 +2,7 @@ import { CreateOrder } from "../types/order";
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://gateway:3001/api/orders"
+    ? "https://edezco.com/api/orders"
     : "http://localhost:3001/api/orders";
 
 export async function CreateOrderRequest(request: CreateOrder) {

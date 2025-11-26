@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://gateway:3001/api/products"
+    ? "https://edezco.com/api/products"
     : "http://localhost:3001/api/products";
 
 export async function CreateProductRequest(request: CreateProduct, images: File[]) {

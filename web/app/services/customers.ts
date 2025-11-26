@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://gateway:3001/api/customers"
+    ? "https://edezco.com/api/customers"
     : "http://localhost:3001/api/customers";
 
 export async function CreateCustomerRequest(
