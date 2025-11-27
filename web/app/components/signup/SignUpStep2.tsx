@@ -5,19 +5,22 @@ import { SignUp } from "@/app/types/auth";
 import { validEmail, validLettersAndNumbers, validWithNoSpaces } from "@/app/utils/InputUtils";
 import { Button, Input, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { useState } from "react";
 
 interface SignUpStep2Props {
-  userForm: SignUp['user'],
+  userForm: SignUp['user'];
   onUserChange: (user: SignUp['user']) => void;
-  onClickBackStep: () => void
-  onClickNextStep: () => void
+  onClickBackStep: () => void;
+  onClickNextStep: () => void;
+  isButtonDisabled: boolean;
 }
 
 const SignUpStep2: React.FC<SignUpStep2Props> = ({
   userForm,
   onUserChange,
   onClickBackStep,
-  onClickNextStep
+  onClickNextStep,
+  isButtonDisabled
 }) => {
   const toast = useToast();
 
@@ -119,7 +122,7 @@ const SignUpStep2: React.FC<SignUpStep2Props> = ({
           Atrás
         </Button>
 
-        <Button variant="main" className="w-40" onClick={onFinish}>
+        <Button variant="main" className="w-40" onClick={onFinish} isDisabled={isButtonDisabled}>
           Finalizar
         </Button>
       </div>

@@ -29,6 +29,7 @@ const SignUpClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [formData, setFormData] = useState<SignUp>({ 
     company: { 
       name: "", 
@@ -64,6 +65,7 @@ const SignUpClient = () => {
 
   const handleSignup = async () => {
     isLoading.onStartLoading();
+    setIsButtonDisabled(true);
     let result: any = await signUp(formData);
     if (!result?.error) {
       push("/management/home");
@@ -77,6 +79,7 @@ const SignUpClient = () => {
         isClosable: true,
       });
       isLoading.onEndLoading();
+      setIsButtonDisabled(false);
     }
   }
 
@@ -159,6 +162,7 @@ const SignUpClient = () => {
                         onUserChange={updateUser} 
                         onClickBackStep={() => setActiveStep(0)} 
                         onClickNextStep={handleSignup} 
+                        isButtonDisabled={isButtonDisabled}
                       />
                     </div>                  
                   )}
