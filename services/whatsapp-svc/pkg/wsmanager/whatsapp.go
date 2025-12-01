@@ -153,12 +153,12 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 			idFormat := re.FindString(jid.String())
 			addConversation.Name = idFormat
 
-			if users, err := c.whatsappClient.GetUserInfo([]types.JID{jid}); err != nil {
+			if users, err := c.whatsappClient.GetUserInfo(context.Background(), []types.JID{jid}); err != nil {
 				fmt.Println(err)
 			} else {
 				for _, user := range users {
 
-					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(jid, nil); err != nil || picture_info == nil {
+					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(context.Background(), jid, nil); err != nil || picture_info == nil {
 						fmt.Println("error", jid, user.PictureID, picture_info, err)
 					} else {
 						addConversation.ProfilePictureUrl = picture_info.URL
