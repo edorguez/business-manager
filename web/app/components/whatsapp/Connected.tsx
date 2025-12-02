@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
 interface ConnectedProps {
@@ -18,6 +18,7 @@ const Connected: React.FC<ConnectedProps> = ({
 
   return (
     <>
+      {/*
       <div className='flex justify-center mt-5'>
         <div className='rounded-full bg-maincolorhov text-maincolor text-9xl p-2'>
           <Icon icon="ic:twotone-check-circle" />
@@ -33,6 +34,16 @@ const Connected: React.FC<ConnectedProps> = ({
       <div className="mt-9 flex justify-center">
         <Button variant="third" size="sm">Desconectar</Button>
       </div>
+      */}
+      <Alert status='success' size='sm'>
+        <AlertIcon />
+        <div className="w-full flex justify-between items-center">
+          <span className="text-sm">
+            Conectado en WhatsApp {formatPhone()}
+          </span>
+          <Button variant="third" size="sm">Desconectar</Button>
+        </div>
+      </Alert>
     </>
   );
 }
