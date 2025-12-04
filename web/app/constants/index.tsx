@@ -24,6 +24,11 @@ export class PASSWORD {
   public static MIN_PASSWORD_LEGTH = 6;
 }
 
+export class EVENT {
+	public static SEND_MESSAGE = "send_message";
+	public static DISCONNECT = "disconnect";
+}
+
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
     title: "Home",

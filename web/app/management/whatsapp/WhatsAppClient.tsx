@@ -60,7 +60,7 @@ const WhatsAppClient = () => {
 
       {
         showAlreadyConnected && (
-          <Connected phone={messageData}/>
+          <Connected phone={messageData} sendMessage={sendMessage}/>
         )
       }
 

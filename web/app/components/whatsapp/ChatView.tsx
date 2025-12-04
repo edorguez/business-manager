@@ -9,6 +9,7 @@ import MessageBar from "./MessageBar";
 import SelectChatMessage from "./SelectChatMessage";
 import { WhatsappConversation } from "@/app/types/whatsapp";
 import { useState } from "react";
+import { EVENT } from "@/app/constants";
 
 interface ChatViewProps {
   conversations: WhatsappConversation[],
@@ -30,7 +31,7 @@ const ChatView: React.FC<ChatViewProps> = ({
     console.log(message);
 
     const result: any = {
-      type: 'send_message',
+      type: EVENT.SEND_MESSAGE,
       payload: {
         message: message,
         from: 'Eduardo'

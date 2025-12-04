@@ -1,19 +1,35 @@
 'use client';
 
+import { EVENT } from "@/app/constants";
 import { Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { SendMessage } from "react-use-websocket";
 
 interface ConnectedProps {
   phone: string
+  sendMessage: SendMessage;
 }
 
 const Connected: React.FC<ConnectedProps> = ({
-  phone
+  phone,
+  sendMessage
 }) => {
 
   const formatPhone = () => {
     const rgx = /^\d+/g;
     return '+' + rgx.exec(phone);
+  }
+
+  const onDisconnect = () => {
+    console.log('Send disonnect');
+
+    const result: any = {
+      type: EVENT.DISCONNECT,
+      payload: {
+        companyId: 1
+      }
+    };
+    sendMessage(JSON.stringify(result));
   }
 
   return (
@@ -41,7 +57,7 @@ const Connected: React.FC<ConnectedProps> = ({
           <span className="text-sm">
             Conectado en WhatsApp {formatPhone()}
           </span>
-          <Button variant="third" size="sm">Desconectar</Button>
+          <Button variant="third" size="sm" onClick={onDisconnect}>Desconectar</Button>
         </div>
       </Alert>
     </>

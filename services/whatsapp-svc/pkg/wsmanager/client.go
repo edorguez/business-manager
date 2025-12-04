@@ -1,6 +1,7 @@
 package wsmanager
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"time"
@@ -135,6 +136,7 @@ func (c *Client) writeMessages() {
 				log.Println(err)
 			}
 			log.Println("sent message")
+			log.Printf("%s", data)
 		case <-ticker.C:
 			// Send the Ping
 			if err := c.connection.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
@@ -143,4 +145,12 @@ func (c *Client) writeMessages() {
 			}
 		}
 	}
+}
+
+// disconnect is a function that removes the client
+func (c *Client) disconnect() {
+	if err := c.whatsappClient.Logout(context.Background()); err != nil {
+		log.Fatalf("Logout failed: %v", err)
+	}
+	c.manager.removeClient(c)
 }

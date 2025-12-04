@@ -76,6 +76,7 @@ func NewManager(ctx context.Context, container sqlstore.Container) *Manager {
 func (m *Manager) setupEventHandlers() {
 	m.handlers[EventSendMessage] = SendMessageHandler
 	m.handlers[EventChangeRoom] = ChatRoomHandler
+	m.handlers[EventDisconnect] = DisconnectHandler
 }
 
 // routeEvent is used to make sure the correct event goes into the correct handler
