@@ -5,6 +5,7 @@
 package db
 
 import (
+	"database/sql"
 	"time"
 )
 
@@ -14,4 +15,52 @@ type WhatsappBusinessPhone struct {
 	Phone      string    `json:"phone"`
 	CreatedAt  time.Time `json:"created_at"`
 	ModifiedAt time.Time `json:"modified_at"`
+}
+
+type WhatsappMessagingWhatsappConversation struct {
+	ID                   int64          `json:"id"`
+	CompanyID            int64          `json:"company_id"`
+	UserID               int64          `json:"user_id"`
+	Jid                  string         `json:"jid"`
+	Name                 sql.NullString `json:"name"`
+	UnreadCount          sql.NullInt32  `json:"unread_count"`
+	IsGroup              sql.NullBool   `json:"is_group"`
+	ProfilePictureUrl    sql.NullString `json:"profile_picture_url"`
+	LastMessageTimestamp sql.NullTime   `json:"last_message_timestamp"`
+	CreatedAt            sql.NullTime   `json:"created_at"`
+	ModifiedAt           sql.NullTime   `json:"modified_at"`
+}
+
+type WhatsappMessagingWhatsappMessage struct {
+	ID             int64          `json:"id"`
+	CompanyID      int64          `json:"company_id"`
+	ConversationID int64          `json:"conversation_id"`
+	MessageID      string         `json:"message_id"`
+	RemoteJid      string         `json:"remote_jid"`
+	FromMe         sql.NullBool   `json:"from_me"`
+	MessageType    string         `json:"message_type"`
+	MessageText    sql.NullString `json:"message_text"`
+	MediaUrl       sql.NullString `json:"media_url"`
+	MediaCaption   sql.NullString `json:"media_caption"`
+	Status         sql.NullString `json:"status"`
+	Timestamp      time.Time      `json:"timestamp"`
+	ReceivedAt     sql.NullTime   `json:"received_at"`
+	EditedAt       sql.NullTime   `json:"edited_at"`
+	IsForwarded    sql.NullBool   `json:"is_forwarded"`
+	IsDeleted      sql.NullBool   `json:"is_deleted"`
+	CreatedAt      sql.NullTime   `json:"created_at"`
+	ModifiedAt     sql.NullTime   `json:"modified_at"`
+}
+
+type WhatsappMessagingWhatsappUser struct {
+	ID                int64          `json:"id"`
+	CompanyID         int64          `json:"company_id"`
+	Phone             string         `json:"phone"`
+	WhatsappJid       string         `json:"whatsapp_jid"`
+	DisplayName       sql.NullString `json:"display_name"`
+	ProfilePictureUrl sql.NullString `json:"profile_picture_url"`
+	IsConnected       sql.NullBool   `json:"is_connected"`
+	LastConnectedAt   time.Time      `json:"last_connected_at"`
+	CreatedAt         sql.NullTime   `json:"created_at"`
+	ModifiedAt        sql.NullTime   `json:"modified_at"`
 }

@@ -10,8 +10,13 @@ import (
 
 type Querier interface {
 	CreateBusinessPhone(ctx context.Context, arg CreateBusinessPhoneParams) (WhatsappBusinessPhone, error)
+	CreateConversation(ctx context.Context, arg CreateConversationParams) (int64, error)
+	CreateMessage(ctx context.Context, arg CreateMessageParams) (int64, error)
 	GetBusinessPhone(ctx context.Context, lower string) (WhatsappBusinessPhone, error)
 	GetBusinessPhoneByCompanyId(ctx context.Context, companyID int64) (WhatsappBusinessPhone, error)
+	GetConversationByJID(ctx context.Context, arg GetConversationByJIDParams) (GetConversationByJIDRow, error)
+	GetConversationsByUser(ctx context.Context, arg GetConversationsByUserParams) ([]GetConversationsByUserRow, error)
+	GetMessagesByConversation(ctx context.Context, arg GetMessagesByConversationParams) ([]GetMessagesByConversationRow, error)
 	UpdateBusinessPhone(ctx context.Context, arg UpdateBusinessPhoneParams) (WhatsappBusinessPhone, error)
 }
 
