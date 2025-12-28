@@ -1,6 +1,9 @@
 package type_converter
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 func NewSqlNullString(s *string) sql.NullString {
 	if s == nil {
@@ -61,4 +64,23 @@ func NewBool(v sql.NullBool) *bool {
 	}
 
 	return &v.Bool
+}
+
+func NewSqlNullTime(v *time.Time) sql.NullTime {
+	if v == nil {
+		return sql.NullTime{}
+	}
+
+	return sql.NullTime{
+		Time:  *v,
+		Valid: true,
+	}
+}
+
+func NewTime(v sql.NullTime) *time.Time {
+	if !v.Valid {
+		return nil
+	}
+
+	return &v.Time
 }
