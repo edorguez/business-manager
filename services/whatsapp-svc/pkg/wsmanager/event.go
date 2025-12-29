@@ -3,7 +3,6 @@ package wsmanager
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 )
 

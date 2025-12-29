@@ -9,7 +9,138 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/lib/pq"
 )
+
+const bulkUpsertConversations = `-- name: BulkUpsertConversations :exec
+INSERT INTO whatsapp_messaging.whatsapp_conversations (
+    id, company_id, user_id, jid, name, unread_count, is_group, profile_picture_url
+) 
+SELECT 
+    unnest($1::bigint[]) as id,
+    unnest($2::bigint[]) as company_id,
+    unnest($3::bigint[]) as user_id,
+    unnest($4::text[]) as jid,
+    unnest($5::text[]) as name,
+    unnest($6::int[]) as unread_count,
+    unnest($7::boolean[]) as is_group,
+    unnest($8::text[]) as profile_picture_url
+ON CONFLICT (company_id, user_id, jid) 
+DO UPDATE SET
+    name = EXCLUDED.name,
+    unread_count = EXCLUDED.unread_count,
+    is_group = EXCLUDED.is_group,
+    profile_picture_url = EXCLUDED.profile_picture_url,
+    last_message_timestamp = CASE 
+        WHEN EXCLUDED.last_message_timestamp > whatsapp_messaging.whatsapp_conversations.last_message_timestamp 
+        OR whatsapp_messaging.whatsapp_conversations.last_message_timestamp IS NULL
+        THEN EXCLUDED.last_message_timestamp
+        ELSE whatsapp_messaging.whatsapp_conversations.last_message_timestamp
+    END
+WHERE excluded.id IS NOT NULL
+`
+
+type BulkUpsertConversationsParams struct {
+	Ids                []int64  `json:"ids"`
+	CompanyIds         []int64  `json:"company_ids"`
+	UserIds            []int64  `json:"user_ids"`
+	Jids               []string `json:"jids"`
+	Names              []string `json:"names"`
+	UnreadCounts       []int32  `json:"unread_counts"`
+	IsGroups           []bool   `json:"is_groups"`
+	ProfilePictureUrls []string `json:"profile_picture_urls"`
+}
+
+func (q *Queries) BulkUpsertConversations(ctx context.Context, arg BulkUpsertConversationsParams) error {
+	_, err := q.db.ExecContext(ctx, bulkUpsertConversations,
+		pq.Array(arg.Ids),
+		pq.Array(arg.CompanyIds),
+		pq.Array(arg.UserIds),
+		pq.Array(arg.Jids),
+		pq.Array(arg.Names),
+		pq.Array(arg.UnreadCounts),
+		pq.Array(arg.IsGroups),
+		pq.Array(arg.ProfilePictureUrls),
+	)
+	return err
+}
+
+const bulkUpsertMessages = `-- name: BulkUpsertMessages :exec
+INSERT INTO whatsapp_messaging.whatsapp_messages (
+    id, company_id, conversation_id, message_id, remote_jid, from_me,
+    message_type, message_text, media_url, media_caption, status,
+    timestamp, received_at, edited_at, is_forwarded, is_deleted
+) 
+SELECT 
+    unnest($1::bigint[]) as id,
+    unnest($2::bigint[]) as company_id,
+    unnest($3::bigint[]) as conversation_id,
+    unnest($4::text[]) as message_id,
+    unnest($5::text[]) as remote_jid,
+    unnest($6::boolean[]) as from_me,
+    unnest($7::text[]) as message_type,
+    unnest($8::text[]) as message_text,
+    unnest($9::text[]) as media_url,
+    unnest($10::text[]) as media_caption,
+    unnest($11::text[]) as status,
+    unnest($12::timestamptz[]) as timestamp,
+    unnest($13::timestamptz[]) as received_at,
+    unnest($14::timestamptz[]) as edited_at,
+    unnest($15::boolean[]) as is_forwarded,
+    unnest($16::boolean[]) as is_deleted
+ON CONFLICT (company_id, conversation_id, message_id) 
+DO UPDATE SET
+    message_text = EXCLUDED.message_text,
+    media_url = EXCLUDED.media_url,
+    media_caption = EXCLUDED.media_caption,
+    status = EXCLUDED.status,
+    edited_at = EXCLUDED.edited_at,
+    is_forwarded = EXCLUDED.is_forwarded,
+    is_deleted = EXCLUDED.is_deleted
+WHERE excluded.id IS NOT NULL
+`
+
+type BulkUpsertMessagesParams struct {
+	Ids             []int64     `json:"ids"`
+	CompanyIds      []int64     `json:"company_ids"`
+	ConversationIds []int64     `json:"conversation_ids"`
+	MessageIds      []string    `json:"message_ids"`
+	RemoteJids      []string    `json:"remote_jids"`
+	FromMes         []bool      `json:"from_mes"`
+	MessageTypes    []string    `json:"message_types"`
+	MessageTexts    []string    `json:"message_texts"`
+	MediaUrls       []string    `json:"media_urls"`
+	MediaCaptions   []string    `json:"media_captions"`
+	Statuses        []string    `json:"statuses"`
+	Timestamps      []time.Time `json:"timestamps"`
+	ReceivedAts     []time.Time `json:"received_ats"`
+	EditedAts       []time.Time `json:"edited_ats"`
+	IsForwardeds    []bool      `json:"is_forwardeds"`
+	IsDeleteds      []bool      `json:"is_deleteds"`
+}
+
+func (q *Queries) BulkUpsertMessages(ctx context.Context, arg BulkUpsertMessagesParams) error {
+	_, err := q.db.ExecContext(ctx, bulkUpsertMessages,
+		pq.Array(arg.Ids),
+		pq.Array(arg.CompanyIds),
+		pq.Array(arg.ConversationIds),
+		pq.Array(arg.MessageIds),
+		pq.Array(arg.RemoteJids),
+		pq.Array(arg.FromMes),
+		pq.Array(arg.MessageTypes),
+		pq.Array(arg.MessageTexts),
+		pq.Array(arg.MediaUrls),
+		pq.Array(arg.MediaCaptions),
+		pq.Array(arg.Statuses),
+		pq.Array(arg.Timestamps),
+		pq.Array(arg.ReceivedAts),
+		pq.Array(arg.EditedAts),
+		pq.Array(arg.IsForwardeds),
+		pq.Array(arg.IsDeleteds),
+	)
+	return err
+}
 
 const createConversation = `-- name: CreateConversation :one
 INSERT INTO 
@@ -123,6 +254,53 @@ func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (i
 	var id int64
 	err := row.Scan(&id)
 	return id, err
+}
+
+const getConversationByID = `-- name: GetConversationByID :one
+SELECT
+  id,
+  company_id,
+  user_id,
+  jid,
+  name,
+  unread_count,
+  is_group,
+  profile_picture_url,
+  last_message_timestamp
+FROM
+  whatsapp_messaging.whatsapp_conversations
+WHERE
+  id = $1
+LIMIT 1
+`
+
+type GetConversationByIDRow struct {
+	ID                   int64          `json:"id"`
+	CompanyID            int64          `json:"company_id"`
+	UserID               int64          `json:"user_id"`
+	Jid                  string         `json:"jid"`
+	Name                 sql.NullString `json:"name"`
+	UnreadCount          sql.NullInt32  `json:"unread_count"`
+	IsGroup              sql.NullBool   `json:"is_group"`
+	ProfilePictureUrl    sql.NullString `json:"profile_picture_url"`
+	LastMessageTimestamp sql.NullTime   `json:"last_message_timestamp"`
+}
+
+func (q *Queries) GetConversationByID(ctx context.Context, id int64) (GetConversationByIDRow, error) {
+	row := q.db.QueryRowContext(ctx, getConversationByID, id)
+	var i GetConversationByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.CompanyID,
+		&i.UserID,
+		&i.Jid,
+		&i.Name,
+		&i.UnreadCount,
+		&i.IsGroup,
+		&i.ProfilePictureUrl,
+		&i.LastMessageTimestamp,
+	)
+	return i, err
 }
 
 const getConversationByJID = `-- name: GetConversationByJID :one

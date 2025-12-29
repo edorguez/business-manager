@@ -36,8 +36,10 @@ type WhatsappMessage struct {
 func (c *Client) whatsappEventHandler(evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
+		fmt.Println("=====> Event MESSAGE")
 		fmt.Println("Received a message!", v.Message.GetConversation())
 	case *events.QR:
+		fmt.Println("=====> Event QR")
 		if len(v.Codes) > 0 {
 			c.SendServerMessage(v.Codes[0], QR_CODE)
 		}
@@ -51,6 +53,7 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 	// personMsg := map[string][]*events.Message
 	// evt, err := c.whatsappClient.ParseWebMessage(chatJID, historyMsg.GetMessage())
 	case *events.HistorySync:
+		fmt.Println("=====> Event HISTORY")
 		c.handleHistorySync(v)
 
 		// if v.Data.Progress != nil {
@@ -77,9 +80,9 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 		// }
 	default:
 		var r = reflect.TypeOf(v)
-		fmt.Println("----->")
-		fmt.Printf("-----> EVENT TYPE = %v", r)
-		fmt.Println("----->")
+		fmt.Println("======")
+		fmt.Printf("=====> DEFAULT EVENT TYPE = %v \n", r)
+		fmt.Println("======")
 	}
 }
 
@@ -138,6 +141,13 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 	if v.Data.Progress != nil {
 
 		result := make([]WhatsappConversation, 0, len(v.Data.Conversations))
+
+		fmt.Println("======> CHECK CONVERSATIONS")
+		fmt.Printf("%v\n", len(v.Data.Conversations))
+		fmt.Printf("%v\n", v.Data.Conversations[0])
+		fmt.Printf("%v\n", v.Data.Conversations[1])
+		fmt.Println("--------------")
+		fmt.Printf("%v\n", v.Data.Conversations)
 
 		for _, conversation := range v.Data.Conversations {
 			var addConversation WhatsappConversation
