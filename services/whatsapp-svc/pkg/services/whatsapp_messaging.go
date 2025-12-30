@@ -201,3 +201,15 @@ func (s *WhatsappMessagingService) GetMessagesByConversation(ctx context.Context
 
 	return messages, nil
 }
+
+func (s *WhatsappMessagingService) BulkSaveConversations(ctx context.Context, params datatransfer.BulkConversationParamsDto) error {
+	return s.Repo.BulkSaveConversations(ctx, params)
+}
+
+func (s *WhatsappMessagingService) BulkSaveMessages(ctx context.Context, params datatransfer.BulkMessageParamsDto) error {
+	return s.Repo.BulkSaveMessages(ctx, params)
+}
+
+func (s *WhatsappMessagingService) BulkSaveConversationsAndMessages(ctx context.Context, convParams datatransfer.BulkConversationParamsDto, msgParams datatransfer.BulkMessageParamsDto) error {
+	return s.Repo.BulkSaveConversationsAndMessages(ctx, convParams, msgParams)
+}

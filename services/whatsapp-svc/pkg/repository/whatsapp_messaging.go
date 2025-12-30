@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/datatransfer"
 	db "github.com/edorguez/business-manager/services/whatsapp-svc/pkg/db/sqlc"
 )
 
@@ -103,45 +103,7 @@ func (wr *WhatsappMessagingRepo) GetMessagesByConversation(ctx context.Context, 
 	return result, err
 }
 
-type BulkConversationParams struct {
-	Conversations []*ConversationData
-	CompanyID     int64
-}
-
-type BulkMessageParams struct {
-	Messages  []*MessageData
-	CompanyID int64
-}
-
-type ConversationData struct {
-	ID                int64
-	UserID            int64
-	JID               string
-	Name              string
-	UnreadCount       int32
-	IsGroup           bool
-	ProfilePictureURL string
-}
-
-type MessageData struct {
-	ID             int64
-	ConversationID int64
-	MessageID      string
-	RemoteJID      string
-	FromMe         bool
-	MessageType    string
-	MessageText    string
-	MediaURL       string
-	MediaCaption   string
-	Status         string
-	Timestamp      time.Time
-	ReceivedAt     time.Time
-	EditedAt       sql.NullTime
-	IsForwarded    bool
-	IsDeleted      bool
-}
-
-func (wr *WhatsappMessagingRepo) BulkSaveConversations(ctx context.Context, params BulkConversationParams) error {
+func (wr *WhatsappMessagingRepo) BulkSaveConversations(ctx context.Context, params datatransfer.BulkConversationParamsDto) error {
 	if len(params.Conversations) == 0 {
 		return nil
 	}
@@ -168,9 +130,9 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversations(ctx context.Context, para
 	}
 
 	bulkParams := db.BulkUpsertConversationsParams{
-		IDs:                ids,
-		CompanyIDs:         companyIDs,
-		UserIDs:            userIDs,
+		Ids:                ids,
+		CompanyIds:         companyIDs,
+		UserIds:            userIDs,
 		Jids:               jids,
 		Names:              names,
 		UnreadCounts:       unreadCounts,
@@ -185,7 +147,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversations(ctx context.Context, para
 	return err
 }
 
-func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params BulkMessageParams) error {
+func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params datatransfer.BulkMessageParamsDto) error {
 	if len(params.Messages) == 0 {
 		return nil
 	}
@@ -204,7 +166,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params Bu
 	statuses := make([]string, 0, len(params.Messages))
 	timestamps := make([]time.Time, 0, len(params.Messages))
 	receivedAts := make([]time.Time, 0, len(params.Messages))
-	editedAts := make([]sql.NullTime, 0, len(params.Messages))
+	editedAts := make([]time.Time, 0, len(params.Messages))
 	isForwardeds := make([]bool, 0, len(params.Messages))
 	isDeleteds := make([]bool, 0, len(params.Messages))
 
@@ -253,7 +215,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params Bu
 	return err
 }
 
-func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Context, convParams BulkConversationParams, msgParams BulkMessageParams) error {
+func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Context, convParams datatransfer.BulkConversationParamsDto, msgParams datatransfer.BulkMessageParamsDto) error {
 	return wr.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		// Save conversations first
 		if len(convParams.Conversations) > 0 {
@@ -279,9 +241,9 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			}
 
 			convBulkParams := db.BulkUpsertConversationsParams{
-				IDs:                ids,
-				CompanyIDs:         companyIDs,
-				UserIDs:            userIDs,
+				Ids:                ids,
+				CompanyIds:         companyIDs,
+				UserIds:            userIDs,
 				Jids:               jids,
 				Names:              names,
 				UnreadCounts:       unreadCounts,
@@ -310,7 +272,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			statuses := make([]string, 0, len(msgParams.Messages))
 			timestamps := make([]time.Time, 0, len(msgParams.Messages))
 			receivedAts := make([]time.Time, 0, len(msgParams.Messages))
-			editedAts := make([]sql.NullTime, 0, len(msgParams.Messages))
+			editedAts := make([]time.Time, 0, len(msgParams.Messages))
 			isForwardeds := make([]bool, 0, len(msgParams.Messages))
 			isDeleteds := make([]bool, 0, len(msgParams.Messages))
 

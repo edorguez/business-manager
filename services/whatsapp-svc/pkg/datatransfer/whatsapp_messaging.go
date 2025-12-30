@@ -1,6 +1,8 @@
 package datatransfer
 
-import "time"
+import (
+	"time"
+)
 
 type CreateConversationRequestDto struct {
 	ID                int64   `json:"id"`
@@ -92,4 +94,42 @@ type GetMessagesByConversationResponseDto struct {
 	EditedAt       *time.Time `json:"edited_at"`
 	IsForwarded    *bool      `json:"is_forwarded"`
 	IsDeleted      *bool      `json:"is_deleted"`
+}
+
+type BulkConversationParamsDto struct {
+	Conversations []*ConversationDataDto
+	CompanyID     int64
+}
+
+type BulkMessageParamsDto struct {
+	Messages  []*MessageDataDto
+	CompanyID int64
+}
+
+type ConversationDataDto struct {
+	ID                int64
+	UserID            int64
+	JID               string
+	Name              string
+	UnreadCount       int32
+	IsGroup           bool
+	ProfilePictureURL string
+}
+
+type MessageDataDto struct {
+	ID             int64
+	ConversationID int64
+	MessageID      string
+	RemoteJID      string
+	FromMe         bool
+	MessageType    string
+	MessageText    string
+	MediaURL       string
+	MediaCaption   string
+	Status         string
+	Timestamp      time.Time
+	ReceivedAt     time.Time
+	EditedAt       time.Time
+	IsForwarded    bool
+	IsDeleted      bool
 }

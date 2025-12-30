@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/datatransfer"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
@@ -149,6 +150,16 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 		fmt.Println("--------------")
 		fmt.Printf("%v\n", v.Data.Conversations)
 
+		convParams := datatransfer.BulkConversationParamsDto{
+			CompanyID:     1,
+			Conversations: make([]*datatransfer.ConversationDataDto, 0),
+		}
+
+		msgParams := datatransfer.BulkMessageParamsDto{
+			CompanyID: 1,
+			Messages:  make([]*datatransfer.MessageDataDto, 0),
+		}
+
 		for _, conversation := range v.Data.Conversations {
 			var addConversation WhatsappConversation
 
@@ -174,6 +185,15 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 						addConversation.ProfilePictureUrl = picture_info.URL
 					}
 				}
+
+				convParams.Conversations = append(convParams.Conversations, &datatransfer.ConversationDataDto{
+					ID: conversation.GetID(),
+					UserID: conversation.,
+					JID: conversation.GetNewJID(),
+					UnreadCount: int32(conversation.GetUnreadCount()),
+					IsGroup: converstaion.IsGroup,
+					ProfilePictureURL: addConversation.ProfilePictureUrl,
+				})
 
 				addConversation.Messages = make([]WhatsappMessage, 0, len(conversation.Messages))
 

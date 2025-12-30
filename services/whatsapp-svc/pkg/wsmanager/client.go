@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/services"
 	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq"
 	"go.mau.fi/whatsmeow"
@@ -26,7 +27,8 @@ type Client struct {
 	// chatroom is used to know what room user is in
 	chatroom string
 
-	whatsappClient *whatsmeow.Client
+	whatsappClient           *whatsmeow.Client
+	whatsappMessagingService services.WhatsappMessagingService
 }
 
 var (
@@ -39,11 +41,12 @@ var (
 )
 
 // NewClient is used to initialize a new Client with all required values initialized
-func NewClient(conn *websocket.Conn, manager *Manager) *Client {
+func NewClient(conn *websocket.Conn, manager *Manager, wms services.WhatsappMessagingService) *Client {
 	r := &Client{
-		connection: conn,
-		manager:    manager,
-		egress:     make(chan Event),
+		connection:               conn,
+		manager:                  manager,
+		egress:                   make(chan Event),
+		whatsappMessagingService: wms,
 	}
 	return r
 }

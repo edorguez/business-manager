@@ -70,8 +70,6 @@ func main() {
 		panic(err)
 	}
 
-	setupAPI(ctx, container)
-
 	fmt.Printf("gRPC Service ON: %s\n", c.WhatsappSvcPort)
 	fmt.Printf("HTTP WebSocket Service ON: %s\n", c.WhatsappWsPort)
 
@@ -80,8 +78,19 @@ func main() {
 		Config: &c,
 	}
 
+	wms := services.WhatsappMessagingService{
+		Repo: repository.NewWhatsappMessagingRepo(storage),
+	}
+
 	grpcServer := grpc.NewServer()
 	pbwhatsapp.RegisterWhatsappServiceServer(grpcServer, &ps)
+
+	setupAPI := setupAPI{
+		WhatsappMessagingService: wms,
+		Manager:                  wsmanager.NewManager(ctx, *container),
+	}
+
+	setupAPI.handleRoutes()
 
 	// Run both servers concurrently
 	go func() {
@@ -108,18 +117,25 @@ func main() {
 	cancel()
 }
 
-// setupAPI will start all Routes and their Handlers
-func setupAPI(ctx context.Context, container *sqlstore.Container) {
+type setupAPI struct {
+	WhatsappMessagingService services.WhatsappMessagingService
+	// Manager instance used to handle WebSocket Connections
+	Manager *wsmanager.Manager
+}
 
-	// Create a Manager instance used to handle WebSocket Connections
-	manager := wsmanager.NewManager(ctx, *container)
+// setupAPI will start all Routes and their Handlers
+func (s setupAPI) handleRoutes() {
 
 	// Serve the ./frontend directory at Route /
 	// http.Handle("/", http.FileServer(http.Dir("./frontend")))
-	http.HandleFunc("/login", manager.LoginHandler)
-	http.HandleFunc("/ws", manager.ServeWS)
+	http.HandleFunc("/login", s.Manager.LoginHandler)
+	http.HandleFunc("/ws", s.serveWS)
 
 	http.HandleFunc("/debug", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, len(manager.Clients))
+		fmt.Fprint(w, len(s.Manager.Clients))
 	})
+}
+
+func (s setupAPI) serveWS(w http.ResponseWriter, r *http.Request) {
+	s.Manager.ServeWS(w, r, s.WhatsappMessagingService)
 }
