@@ -20,7 +20,6 @@ type WhatsappBusinessPhone struct {
 type WhatsappMessagingWhatsappConversation struct {
 	ID                   int64          `json:"id"`
 	CompanyID            int64          `json:"company_id"`
-	UserID               int64          `json:"user_id"`
 	Jid                  string         `json:"jid"`
 	Name                 sql.NullString `json:"name"`
 	UnreadCount          sql.NullInt32  `json:"unread_count"`
@@ -50,17 +49,4 @@ type WhatsappMessagingWhatsappMessage struct {
 	IsDeleted      sql.NullBool   `json:"is_deleted"`
 	CreatedAt      sql.NullTime   `json:"created_at"`
 	ModifiedAt     sql.NullTime   `json:"modified_at"`
-}
-
-type WhatsappMessagingWhatsappUser struct {
-	ID                int64          `json:"id"`
-	CompanyID         int64          `json:"company_id"`
-	Phone             string         `json:"phone"`
-	WhatsappJid       string         `json:"whatsapp_jid"`
-	DisplayName       sql.NullString `json:"display_name"`
-	ProfilePictureUrl sql.NullString `json:"profile_picture_url"`
-	IsConnected       sql.NullBool   `json:"is_connected"`
-	LastConnectedAt   time.Time      `json:"last_connected_at"`
-	CreatedAt         sql.NullTime   `json:"created_at"`
-	ModifiedAt        sql.NullTime   `json:"modified_at"`
 }

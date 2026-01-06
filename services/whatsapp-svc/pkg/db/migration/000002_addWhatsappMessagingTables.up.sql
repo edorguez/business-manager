@@ -1,24 +1,8 @@
 CREATE SCHEMA IF NOT EXISTS "whatsapp_messaging";
 
-CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_users" (
-    "id" bigserial PRIMARY KEY,
-    "company_id" bigint NOT NULL,
-    "phone" varchar(50) NOT NULL,
-    "whatsapp_jid" varchar(255) NOT NULL,
-    "display_name" varchar(255),
-    "profile_picture_url" text,
-    "is_connected" boolean DEFAULT FALSE,
-    "last_connected_at" timestamptz NOT NULL DEFAULT (NOW()),
-    "created_at" timestamptz DEFAULT (NOW()),
-    "modified_at" timestamptz DEFAULT (NOW()),
-    UNIQUE("company_id", "phone"),
-    UNIQUE("whatsapp_jid")
-);
-
 CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_conversations" (
     "id" bigserial PRIMARY KEY,
     "company_id" bigint NOT NULL,
-    "user_id" bigint NOT NULL REFERENCES "whatsapp_messaging"."whatsapp_users"("id") ON DELETE CASCADE,
     "jid" varchar(255) NOT NULL,
     "name" VARCHAR(255),
     "unread_count" INTEGER DEFAULT 0,
@@ -27,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_conversations" (
     "last_message_timestamp" timestamptz,
     "created_at" timestamptz DEFAULT (NOW()),
     "modified_at" timestamptz DEFAULT (NOW()),
-    UNIQUE("company_id", "user_id", "jid")
+    UNIQUE("company_id", "jid")
 );
 
 CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_messages" (
@@ -52,8 +36,7 @@ CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_messages" (
     UNIQUE("company_id", "conversation_id", "message_id")
 );
 
-CREATE INDEX idx_whatsapp_conversations_tenant_user ON "whatsapp_messaging"."whatsapp_conversations"("company_id", "user_id");
-CREATE INDEX idx_whatsapp_conversations_jid ON "whatsapp_messaging"."whatsapp_conversations"("jid");
-CREATE INDEX idx_whatsapp_messages_conversation_timestamp ON "whatsapp_messaging"."whatsapp_messages"("conversation_id", "timestamp");
-CREATE INDEX idx_whatsapp_messages_tenant_conversation ON "whatsapp_messaging"."whatsapp_messages"("company_id", "conversation_id");
-CREATE INDEX idx_whatsapp_messages_message_id ON "whatsapp_messaging"."whatsapp_messages"("message_id");
+CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_jid ON "whatsapp_messaging"."whatsapp_conversations"("jid"); 
+CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_conversation_timestamp ON "whatsapp_messaging"."whatsapp_messages"("conversation_id", "timestamp");
+CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_tenant_conversation ON "whatsapp_messaging"."whatsapp_messages"("company_id", "conversation_id");
+CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_message_id ON "whatsapp_messaging"."whatsapp_messages"("message_id");

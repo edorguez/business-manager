@@ -15,18 +15,16 @@ import (
 
 const bulkUpsertConversations = `-- name: BulkUpsertConversations :exec
 INSERT INTO whatsapp_messaging.whatsapp_conversations (
-    id, company_id, user_id, jid, name, unread_count, is_group, profile_picture_url
+    company_id, jid, name, unread_count, is_group, profile_picture_url
 ) 
 SELECT 
-    unnest($1::bigint[]) as id,
-    unnest($2::bigint[]) as company_id,
-    unnest($3::bigint[]) as user_id,
-    unnest($4::text[]) as jid,
-    unnest($5::text[]) as name,
-    unnest($6::int[]) as unread_count,
-    unnest($7::boolean[]) as is_group,
-    unnest($8::text[]) as profile_picture_url
-ON CONFLICT (company_id, user_id, jid) 
+    unnest($1::bigint[]) as company_id,
+    unnest($2::text[]) as jid,
+    unnest($3::text[]) as name,
+    unnest($4::int[]) as unread_count,
+    unnest($5::boolean[]) as is_group,
+    unnest($6::text[]) as profile_picture_url
+ON CONFLICT (company_id, jid) 
 DO UPDATE SET
     name = EXCLUDED.name,
     unread_count = EXCLUDED.unread_count,
@@ -42,9 +40,7 @@ WHERE excluded.id IS NOT NULL
 `
 
 type BulkUpsertConversationsParams struct {
-	Ids                []int64  `json:"ids"`
 	CompanyIds         []int64  `json:"company_ids"`
-	UserIds            []int64  `json:"user_ids"`
 	Jids               []string `json:"jids"`
 	Names              []string `json:"names"`
 	UnreadCounts       []int32  `json:"unread_counts"`
@@ -54,9 +50,7 @@ type BulkUpsertConversationsParams struct {
 
 func (q *Queries) BulkUpsertConversations(ctx context.Context, arg BulkUpsertConversationsParams) error {
 	_, err := q.db.ExecContext(ctx, bulkUpsertConversations,
-		pq.Array(arg.Ids),
 		pq.Array(arg.CompanyIds),
-		pq.Array(arg.UserIds),
 		pq.Array(arg.Jids),
 		pq.Array(arg.Names),
 		pq.Array(arg.UnreadCounts),
@@ -68,27 +62,26 @@ func (q *Queries) BulkUpsertConversations(ctx context.Context, arg BulkUpsertCon
 
 const bulkUpsertMessages = `-- name: BulkUpsertMessages :exec
 INSERT INTO whatsapp_messaging.whatsapp_messages (
-    id, company_id, conversation_id, message_id, remote_jid, from_me,
+    company_id, conversation_id, message_id, remote_jid, from_me,
     message_type, message_text, media_url, media_caption, status,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
 SELECT 
-    unnest($1::bigint[]) as id,
-    unnest($2::bigint[]) as company_id,
-    unnest($3::bigint[]) as conversation_id,
-    unnest($4::text[]) as message_id,
-    unnest($5::text[]) as remote_jid,
-    unnest($6::boolean[]) as from_me,
-    unnest($7::text[]) as message_type,
-    unnest($8::text[]) as message_text,
-    unnest($9::text[]) as media_url,
-    unnest($10::text[]) as media_caption,
-    unnest($11::text[]) as status,
-    unnest($12::timestamptz[]) as timestamp,
-    unnest($13::timestamptz[]) as received_at,
-    unnest($14::timestamptz[]) as edited_at,
-    unnest($15::boolean[]) as is_forwarded,
-    unnest($16::boolean[]) as is_deleted
+    unnest($1::bigint[]) as company_id,
+    unnest($2::bigint[]) as conversation_id,
+    unnest($3::text[]) as message_id,
+    unnest($4::text[]) as remote_jid,
+    unnest($5::boolean[]) as from_me,
+    unnest($6::text[]) as message_type,
+    unnest($7::text[]) as message_text,
+    unnest($8::text[]) as media_url,
+    unnest($9::text[]) as media_caption,
+    unnest($10::text[]) as status,
+    unnest($11::timestamptz[]) as timestamp,
+    unnest($12::timestamptz[]) as received_at,
+    unnest($13::timestamptz[]) as edited_at,
+    unnest($14::boolean[]) as is_forwarded,
+    unnest($15::boolean[]) as is_deleted
 ON CONFLICT (company_id, conversation_id, message_id) 
 DO UPDATE SET
     message_text = EXCLUDED.message_text,
@@ -102,7 +95,6 @@ WHERE excluded.id IS NOT NULL
 `
 
 type BulkUpsertMessagesParams struct {
-	Ids             []int64     `json:"ids"`
 	CompanyIds      []int64     `json:"company_ids"`
 	ConversationIds []int64     `json:"conversation_ids"`
 	MessageIds      []string    `json:"message_ids"`
@@ -122,7 +114,6 @@ type BulkUpsertMessagesParams struct {
 
 func (q *Queries) BulkUpsertMessages(ctx context.Context, arg BulkUpsertMessagesParams) error {
 	_, err := q.db.ExecContext(ctx, bulkUpsertMessages,
-		pq.Array(arg.Ids),
 		pq.Array(arg.CompanyIds),
 		pq.Array(arg.ConversationIds),
 		pq.Array(arg.MessageIds),
@@ -145,9 +136,7 @@ func (q *Queries) BulkUpsertMessages(ctx context.Context, arg BulkUpsertMessages
 const createConversation = `-- name: CreateConversation :one
 INSERT INTO 
   whatsapp_messaging.whatsapp_conversations (
-	  id, 
     company_id, 
-    user_id, 
     jid, 
     name,
     unread_count,
@@ -155,15 +144,13 @@ INSERT INTO
     profile_picture_url
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8
+  $1, $2, $3, $4, $5, $6
   )
 RETURNING id
 `
 
 type CreateConversationParams struct {
-	ID                int64          `json:"id"`
 	CompanyID         int64          `json:"company_id"`
-	UserID            int64          `json:"user_id"`
 	Jid               string         `json:"jid"`
 	Name              sql.NullString `json:"name"`
 	UnreadCount       sql.NullInt32  `json:"unread_count"`
@@ -173,9 +160,7 @@ type CreateConversationParams struct {
 
 func (q *Queries) CreateConversation(ctx context.Context, arg CreateConversationParams) (int64, error) {
 	row := q.db.QueryRowContext(ctx, createConversation,
-		arg.ID,
 		arg.CompanyID,
-		arg.UserID,
 		arg.Jid,
 		arg.Name,
 		arg.UnreadCount,
@@ -190,7 +175,6 @@ func (q *Queries) CreateConversation(ctx context.Context, arg CreateConversation
 const createMessage = `-- name: CreateMessage :one
 INSERT INTO 
   whatsapp_messaging.whatsapp_messages (
-	  id, 
     company_id, 
     conversation_id, 
     message_id, 
@@ -208,13 +192,12 @@ INSERT INTO
     is_deleted
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
   )
 RETURNING id
 `
 
 type CreateMessageParams struct {
-	ID             int64          `json:"id"`
 	CompanyID      int64          `json:"company_id"`
 	ConversationID int64          `json:"conversation_id"`
 	MessageID      string         `json:"message_id"`
@@ -234,7 +217,6 @@ type CreateMessageParams struct {
 
 func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (int64, error) {
 	row := q.db.QueryRowContext(ctx, createMessage,
-		arg.ID,
 		arg.CompanyID,
 		arg.ConversationID,
 		arg.MessageID,
@@ -260,7 +242,6 @@ const getConversationByID = `-- name: GetConversationByID :one
 SELECT
   id,
   company_id,
-  user_id,
   jid,
   name,
   unread_count,
@@ -277,7 +258,6 @@ LIMIT 1
 type GetConversationByIDRow struct {
 	ID                   int64          `json:"id"`
 	CompanyID            int64          `json:"company_id"`
-	UserID               int64          `json:"user_id"`
 	Jid                  string         `json:"jid"`
 	Name                 sql.NullString `json:"name"`
 	UnreadCount          sql.NullInt32  `json:"unread_count"`
@@ -292,7 +272,6 @@ func (q *Queries) GetConversationByID(ctx context.Context, id int64) (GetConvers
 	err := row.Scan(
 		&i.ID,
 		&i.CompanyID,
-		&i.UserID,
 		&i.Jid,
 		&i.Name,
 		&i.UnreadCount,
@@ -307,7 +286,6 @@ const getConversationByJID = `-- name: GetConversationByJID :one
 SELECT
   id,
   company_id,
-  user_id,
   jid,
   name,
   unread_count,
@@ -318,21 +296,18 @@ FROM
   whatsapp_messaging.whatsapp_conversations
 WHERE
   company_id = $1 AND 
-  user_id = $2 AND
-  jid = $3
+  jid = $2
 LIMIT 1
 `
 
 type GetConversationByJIDParams struct {
 	CompanyID int64  `json:"company_id"`
-	UserID    int64  `json:"user_id"`
 	Jid       string `json:"jid"`
 }
 
 type GetConversationByJIDRow struct {
 	ID                   int64          `json:"id"`
 	CompanyID            int64          `json:"company_id"`
-	UserID               int64          `json:"user_id"`
 	Jid                  string         `json:"jid"`
 	Name                 sql.NullString `json:"name"`
 	UnreadCount          sql.NullInt32  `json:"unread_count"`
@@ -342,12 +317,11 @@ type GetConversationByJIDRow struct {
 }
 
 func (q *Queries) GetConversationByJID(ctx context.Context, arg GetConversationByJIDParams) (GetConversationByJIDRow, error) {
-	row := q.db.QueryRowContext(ctx, getConversationByJID, arg.CompanyID, arg.UserID, arg.Jid)
+	row := q.db.QueryRowContext(ctx, getConversationByJID, arg.CompanyID, arg.Jid)
 	var i GetConversationByJIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.CompanyID,
-		&i.UserID,
 		&i.Jid,
 		&i.Name,
 		&i.UnreadCount,
@@ -356,87 +330,6 @@ func (q *Queries) GetConversationByJID(ctx context.Context, arg GetConversationB
 		&i.LastMessageTimestamp,
 	)
 	return i, err
-}
-
-const getConversationsByUser = `-- name: GetConversationsByUser :many
-SELECT
-  id,
-  company_id,
-  user_id,
-  jid,
-  name,
-  unread_count,
-  is_group,
-  profile_picture_url,
-  last_message_timestamp
-FROM
-  whatsapp_messaging.whatsapp_conversations
-WHERE
-  company_id = $1 AND 
-  user_id = $2
-ORDER BY
-  last_message_timestamp DESC NULLS LAST
-LIMIT 
-  $3
-OFFSET 
-  $4
-`
-
-type GetConversationsByUserParams struct {
-	CompanyID int64 `json:"company_id"`
-	UserID    int64 `json:"user_id"`
-	Limit     int32 `json:"limit"`
-	Offset    int32 `json:"offset"`
-}
-
-type GetConversationsByUserRow struct {
-	ID                   int64          `json:"id"`
-	CompanyID            int64          `json:"company_id"`
-	UserID               int64          `json:"user_id"`
-	Jid                  string         `json:"jid"`
-	Name                 sql.NullString `json:"name"`
-	UnreadCount          sql.NullInt32  `json:"unread_count"`
-	IsGroup              sql.NullBool   `json:"is_group"`
-	ProfilePictureUrl    sql.NullString `json:"profile_picture_url"`
-	LastMessageTimestamp sql.NullTime   `json:"last_message_timestamp"`
-}
-
-func (q *Queries) GetConversationsByUser(ctx context.Context, arg GetConversationsByUserParams) ([]GetConversationsByUserRow, error) {
-	rows, err := q.db.QueryContext(ctx, getConversationsByUser,
-		arg.CompanyID,
-		arg.UserID,
-		arg.Limit,
-		arg.Offset,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []GetConversationsByUserRow{}
-	for rows.Next() {
-		var i GetConversationsByUserRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.CompanyID,
-			&i.UserID,
-			&i.Jid,
-			&i.Name,
-			&i.UnreadCount,
-			&i.IsGroup,
-			&i.ProfilePictureUrl,
-			&i.LastMessageTimestamp,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const getMessagesByConversation = `-- name: GetMessagesByConversation :many

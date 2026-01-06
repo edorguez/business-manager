@@ -52,23 +52,6 @@ func (wr *WhatsappMessagingRepo) GetConversationByJID(ctx context.Context, arg d
 	return result, err
 }
 
-func (wr *WhatsappMessagingRepo) GetConversationsByUser(ctx context.Context, arg db.GetConversationsByUserParams) ([]db.GetConversationsByUserRow, error) {
-	var result []db.GetConversationsByUserRow
-
-	err := wr.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
-		var err error
-
-		result, err = q.GetConversationsByUser(ctx, arg)
-		if err != nil {
-			return err
-		}
-
-		return err
-	})
-
-	return result, err
-}
-
 func (wr *WhatsappMessagingRepo) CreateMessage(ctx context.Context, arg db.CreateMessageParams) (int64, error) {
 	var result int64
 

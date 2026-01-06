@@ -187,11 +187,10 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 				}
 
 				convParams.Conversations = append(convParams.Conversations, &datatransfer.ConversationDataDto{
-					ID: conversation.GetID(),
-					UserID: conversation.,
-					JID: conversation.GetNewJID(),
-					UnreadCount: int32(conversation.GetUnreadCount()),
-					IsGroup: converstaion.IsGroup,
+					ID:                conversation.GetID(),
+					JID:               jid.String(),
+					UnreadCount:       int32(conversation.GetUnreadCount()),
+					IsGroup:           jid.Server == types.GroupServer,
 					ProfilePictureURL: addConversation.ProfilePictureUrl,
 				})
 

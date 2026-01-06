@@ -1,9 +1,7 @@
 -- name: CreateConversation :one
 INSERT INTO 
   whatsapp_messaging.whatsapp_conversations (
-	  id, 
     company_id, 
-    user_id, 
     jid, 
     name,
     unread_count,
@@ -11,7 +9,7 @@ INSERT INTO
     profile_picture_url
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8
+  $1, $2, $3, $4, $5, $6
   )
 RETURNING id;
 
@@ -19,7 +17,6 @@ RETURNING id;
 SELECT
   id,
   company_id,
-  user_id,
   jid,
   name,
   unread_count,
@@ -30,37 +27,12 @@ FROM
   whatsapp_messaging.whatsapp_conversations
 WHERE
   company_id = $1 AND 
-  user_id = $2 AND
-  jid = $3
+  jid = $2
 LIMIT 1;
-
--- name: GetConversationsByUser :many
-SELECT
-  id,
-  company_id,
-  user_id,
-  jid,
-  name,
-  unread_count,
-  is_group,
-  profile_picture_url,
-  last_message_timestamp
-FROM
-  whatsapp_messaging.whatsapp_conversations
-WHERE
-  company_id = $1 AND 
-  user_id = $2
-ORDER BY
-  last_message_timestamp DESC NULLS LAST
-LIMIT 
-  $3
-OFFSET 
-  $4;
 
 -- name: CreateMessage :one
 INSERT INTO 
   whatsapp_messaging.whatsapp_messages (
-	  id, 
     company_id, 
     conversation_id, 
     message_id, 
@@ -78,7 +50,7 @@ INSERT INTO
     is_deleted
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
   )
 RETURNING id;
 
@@ -113,18 +85,16 @@ OFFSET
 
 -- name: BulkUpsertConversations :exec
 INSERT INTO whatsapp_messaging.whatsapp_conversations (
-    id, company_id, user_id, jid, name, unread_count, is_group, profile_picture_url
+    company_id, jid, name, unread_count, is_group, profile_picture_url
 ) 
 SELECT 
-    unnest(@ids::bigint[]) as id,
     unnest(@company_ids::bigint[]) as company_id,
-    unnest(@user_ids::bigint[]) as user_id,
     unnest(@jids::text[]) as jid,
     unnest(@names::text[]) as name,
     unnest(@unread_counts::int[]) as unread_count,
     unnest(@is_groups::boolean[]) as is_group,
     unnest(@profile_picture_urls::text[]) as profile_picture_url
-ON CONFLICT (company_id, user_id, jid) 
+ON CONFLICT (company_id, jid) 
 DO UPDATE SET
     name = EXCLUDED.name,
     unread_count = EXCLUDED.unread_count,
@@ -140,12 +110,11 @@ WHERE excluded.id IS NOT NULL;
 
 -- name: BulkUpsertMessages :exec
 INSERT INTO whatsapp_messaging.whatsapp_messages (
-    id, company_id, conversation_id, message_id, remote_jid, from_me,
+    company_id, conversation_id, message_id, remote_jid, from_me,
     message_type, message_text, media_url, media_caption, status,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
 SELECT 
-    unnest(@ids::bigint[]) as id,
     unnest(@company_ids::bigint[]) as company_id,
     unnest(@conversation_ids::bigint[]) as conversation_id,
     unnest(@message_ids::text[]) as message_id,
@@ -176,7 +145,6 @@ WHERE excluded.id IS NOT NULL;
 SELECT
   id,
   company_id,
-  user_id,
   jid,
   name,
   unread_count,
