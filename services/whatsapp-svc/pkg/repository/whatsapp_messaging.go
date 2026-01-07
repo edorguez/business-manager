@@ -69,13 +69,13 @@ func (wr *WhatsappMessagingRepo) CreateMessage(ctx context.Context, arg db.Creat
 	return result, err
 }
 
-func (wr *WhatsappMessagingRepo) GetMessagesByConversation(ctx context.Context, arg db.GetMessagesByConversationParams) ([]db.GetMessagesByConversationRow, error) {
-	var result []db.GetMessagesByConversationRow
+func (wr *WhatsappMessagingRepo) GetMessagesByConversationJID(ctx context.Context, arg db.GetMessagesByConversationJIDParams) ([]db.GetMessagesByConversationJIDRow, error) {
+	var result []db.GetMessagesByConversationJIDRow
 
 	err := wr.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
 
-		result, err = q.GetMessagesByConversation(ctx, arg)
+		result, err = q.GetMessagesByConversationJID(ctx, arg)
 		if err != nil {
 			return err
 		}
@@ -92,9 +92,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversations(ctx context.Context, para
 	}
 
 	// Prepare arrays for bulk insert
-	ids := make([]int64, 0, len(params.Conversations))
 	companyIDs := make([]int64, 0, len(params.Conversations))
-	userIDs := make([]int64, 0, len(params.Conversations))
 	jids := make([]string, 0, len(params.Conversations))
 	names := make([]string, 0, len(params.Conversations))
 	unreadCounts := make([]int32, 0, len(params.Conversations))
@@ -102,9 +100,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversations(ctx context.Context, para
 	profilePictureURLs := make([]string, 0, len(params.Conversations))
 
 	for _, conv := range params.Conversations {
-		ids = append(ids, conv.ID)
 		companyIDs = append(companyIDs, params.CompanyID)
-		userIDs = append(userIDs, conv.UserID)
 		jids = append(jids, conv.JID)
 		names = append(names, conv.Name)
 		unreadCounts = append(unreadCounts, conv.UnreadCount)
@@ -113,9 +109,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversations(ctx context.Context, para
 	}
 
 	bulkParams := db.BulkUpsertConversationsParams{
-		Ids:                ids,
 		CompanyIds:         companyIDs,
-		UserIds:            userIDs,
 		Jids:               jids,
 		Names:              names,
 		UnreadCounts:       unreadCounts,
@@ -136,9 +130,8 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 	}
 
 	// Prepare arrays for bulk insert
-	ids := make([]int64, 0, len(params.Messages))
 	companyIDs := make([]int64, 0, len(params.Messages))
-	conversationIDs := make([]int64, 0, len(params.Messages))
+	conversationJids := make([]int64, 0, len(params.Messages))
 	messageIDs := make([]string, 0, len(params.Messages))
 	remoteJIDs := make([]string, 0, len(params.Messages))
 	fromMes := make([]bool, 0, len(params.Messages))
@@ -154,9 +147,8 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 	isDeleteds := make([]bool, 0, len(params.Messages))
 
 	for _, msg := range params.Messages {
-		ids = append(ids, msg.ID)
 		companyIDs = append(companyIDs, params.CompanyID)
-		conversationIDs = append(conversationIDs, msg.ConversationID)
+		conversationJids = append(conversationJids, msg.ConversationID)
 		messageIDs = append(messageIDs, msg.MessageID)
 		remoteJIDs = append(remoteJIDs, msg.RemoteJID)
 		fromMes = append(fromMes, msg.FromMe)
@@ -173,22 +165,20 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 	}
 
 	bulkParams := db.BulkUpsertMessagesParams{
-		Ids:             ids,
-		CompanyIds:      companyIDs,
-		ConversationIds: conversationIDs,
-		MessageIds:      messageIDs,
-		RemoteJids:      remoteJIDs,
-		FromMes:         fromMes,
-		MessageTypes:    messageTypes,
-		MessageTexts:    messageTexts,
-		MediaUrls:       mediaURLs,
-		MediaCaptions:   mediaCaptions,
-		Statuses:        statuses,
-		Timestamps:      timestamps,
-		ReceivedAts:     receivedAts,
-		EditedAts:       editedAts,
-		IsForwardeds:    isForwardeds,
-		IsDeleteds:      isDeleteds,
+		CompanyIds:       companyIDs,
+		ConversationJids: conversationJids,
+		RemoteJids:       remoteJIDs,
+		FromMes:          fromMes,
+		MessageTypes:     messageTypes,
+		MessageTexts:     messageTexts,
+		MediaUrls:        mediaURLs,
+		MediaCaptions:    mediaCaptions,
+		Statuses:         statuses,
+		Timestamps:       timestamps,
+		ReceivedAts:      receivedAts,
+		EditedAts:        editedAts,
+		IsForwardeds:     isForwardeds,
+		IsDeleteds:       isDeleteds,
 	}
 
 	err := wr.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
@@ -203,9 +193,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 		// Save conversations first
 		if len(convParams.Conversations) > 0 {
 			// Prepare conversation arrays
-			ids := make([]int64, 0, len(convParams.Conversations))
 			companyIDs := make([]int64, 0, len(convParams.Conversations))
-			userIDs := make([]int64, 0, len(convParams.Conversations))
 			jids := make([]string, 0, len(convParams.Conversations))
 			names := make([]string, 0, len(convParams.Conversations))
 			unreadCounts := make([]int32, 0, len(convParams.Conversations))
@@ -213,9 +201,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			profilePictureURLs := make([]string, 0, len(convParams.Conversations))
 
 			for _, conv := range convParams.Conversations {
-				ids = append(ids, conv.ID)
 				companyIDs = append(companyIDs, convParams.CompanyID)
-				userIDs = append(userIDs, conv.UserID)
 				jids = append(jids, conv.JID)
 				names = append(names, conv.Name)
 				unreadCounts = append(unreadCounts, conv.UnreadCount)
@@ -224,9 +210,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			}
 
 			convBulkParams := db.BulkUpsertConversationsParams{
-				Ids:                ids,
 				CompanyIds:         companyIDs,
-				UserIds:            userIDs,
 				Jids:               jids,
 				Names:              names,
 				UnreadCounts:       unreadCounts,
@@ -242,9 +226,8 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 		// Save messages
 		if len(msgParams.Messages) > 0 {
 			// Prepare message arrays
-			ids := make([]int64, 0, len(msgParams.Messages))
 			companyIDs := make([]int64, 0, len(msgParams.Messages))
-			conversationIDs := make([]int64, 0, len(msgParams.Messages))
+			conversationJids := make([]int64, 0, len(msgParams.Messages))
 			messageIDs := make([]string, 0, len(msgParams.Messages))
 			remoteJIDs := make([]string, 0, len(msgParams.Messages))
 			fromMes := make([]bool, 0, len(msgParams.Messages))
@@ -260,9 +243,8 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			isDeleteds := make([]bool, 0, len(msgParams.Messages))
 
 			for _, msg := range msgParams.Messages {
-				ids = append(ids, msg.ID)
 				companyIDs = append(companyIDs, msgParams.CompanyID)
-				conversationIDs = append(conversationIDs, msg.ConversationID)
+				conversationJids = append(conversationJids, msg.ConversationID)
 				messageIDs = append(messageIDs, msg.MessageID)
 				remoteJIDs = append(remoteJIDs, msg.RemoteJID)
 				fromMes = append(fromMes, msg.FromMe)
@@ -279,22 +261,20 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			}
 
 			msgBulkParams := db.BulkUpsertMessagesParams{
-				Ids:             ids,
-				CompanyIds:      companyIDs,
-				ConversationIds: conversationIDs,
-				MessageIds:      messageIDs,
-				RemoteJids:      remoteJIDs,
-				FromMes:         fromMes,
-				MessageTypes:    messageTypes,
-				MessageTexts:    messageTexts,
-				MediaUrls:       mediaURLs,
-				MediaCaptions:   mediaCaptions,
-				Statuses:        statuses,
-				Timestamps:      timestamps,
-				ReceivedAts:     receivedAts,
-				EditedAts:       editedAts,
-				IsForwardeds:    isForwardeds,
-				IsDeleteds:      isDeleteds,
+				CompanyIds:       companyIDs,
+				ConversationJids: conversationJids,
+				RemoteJids:       remoteJIDs,
+				FromMes:          fromMes,
+				MessageTypes:     messageTypes,
+				MessageTexts:     messageTexts,
+				MediaUrls:        mediaURLs,
+				MediaCaptions:    mediaCaptions,
+				Statuses:         statuses,
+				Timestamps:       timestamps,
+				ReceivedAts:      receivedAts,
+				EditedAts:        editedAts,
+				IsForwardeds:     isForwardeds,
+				IsDeleteds:       isDeleteds,
 			}
 
 			if err := q.BulkUpsertMessages(ctx, msgBulkParams); err != nil {

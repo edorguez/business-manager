@@ -155,12 +155,13 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 			Conversations: make([]*datatransfer.ConversationDataDto, 0),
 		}
 
-		msgParams := datatransfer.BulkMessageParamsDto{
-			CompanyID: 1,
-			Messages:  make([]*datatransfer.MessageDataDto, 0),
-		}
-
 		for _, conversation := range v.Data.Conversations {
+
+			msgParams := datatransfer.BulkMessageParamsDto{
+				CompanyID: 1,
+				Messages:  make([]*datatransfer.MessageDataDto, 0),
+			}
+
 			var addConversation WhatsappConversation
 
 			addConversation.ID = conversation.GetID()
@@ -187,8 +188,8 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 				}
 
 				convParams.Conversations = append(convParams.Conversations, &datatransfer.ConversationDataDto{
-					ID:                conversation.GetID(),
 					JID:               jid.String(),
+					Name:              conversation.GetName(),
 					UnreadCount:       int32(conversation.GetUnreadCount()),
 					IsGroup:           jid.Server == types.GroupServer,
 					ProfilePictureURL: addConversation.ProfilePictureUrl,
@@ -221,6 +222,10 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 					if len(wsmsg.Message) > 0 {
 						addConversation.Messages = append([]WhatsappMessage{wsmsg}, addConversation.Messages...)
 					}
+
+					msgParams.Messages = append(msgParams.Messages, &datatransfer.MessageDataDto{
+						ConversationJID: jid.String(),
+					})
 				}
 
 				if len(addConversation.Messages) > 0 {

@@ -34,8 +34,7 @@ LIMIT 1;
 INSERT INTO 
   whatsapp_messaging.whatsapp_messages (
     company_id, 
-    conversation_id, 
-    message_id, 
+    conversation_jid, 
     remote_jid,
     from_me,
     message_type,
@@ -50,16 +49,15 @@ INSERT INTO
     is_deleted
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
   )
 RETURNING id;
 
--- name: GetMessagesByConversation :many
+-- name: GetMessagesByConversationJID :many
 SELECT
   id, 
   company_id, 
-  conversation_id, 
-  message_id, 
+  conversation_jid, 
   remote_jid,
   from_me,
   message_type,
@@ -75,7 +73,7 @@ SELECT
 FROM
   whatsapp_messaging.whatsapp_messages
 WHERE
-  conversation_id = $1
+  conversation_jid = $1
 ORDER BY
   received_at DESC
 LIMIT 
@@ -110,14 +108,13 @@ WHERE excluded.id IS NOT NULL;
 
 -- name: BulkUpsertMessages :exec
 INSERT INTO whatsapp_messaging.whatsapp_messages (
-    company_id, conversation_id, message_id, remote_jid, from_me,
+    company_id, conversation_jid, remote_jid, from_me,
     message_type, message_text, media_url, media_caption, status,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
 SELECT 
     unnest(@company_ids::bigint[]) as company_id,
-    unnest(@conversation_ids::bigint[]) as conversation_id,
-    unnest(@message_ids::text[]) as message_id,
+    unnest(@conversation_jids::bigint[]) as conversation_jid,
     unnest(@remote_jids::text[]) as remote_jid,
     unnest(@from_mes::boolean[]) as from_me,
     unnest(@message_types::text[]) as message_type,
@@ -130,7 +127,7 @@ SELECT
     unnest(@edited_ats::timestamptz[]) as edited_at,
     unnest(@is_forwardeds::boolean[]) as is_forwarded,
     unnest(@is_deleteds::boolean[]) as is_deleted
-ON CONFLICT (company_id, conversation_id, message_id) 
+ON CONFLICT (company_id, conversation_jid) 
 DO UPDATE SET
     message_text = EXCLUDED.message_text,
     media_url = EXCLUDED.media_url,

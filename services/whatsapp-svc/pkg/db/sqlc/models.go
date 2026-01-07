@@ -31,22 +31,21 @@ type WhatsappMessagingWhatsappConversation struct {
 }
 
 type WhatsappMessagingWhatsappMessage struct {
-	ID             int64          `json:"id"`
-	CompanyID      int64          `json:"company_id"`
-	ConversationID int64          `json:"conversation_id"`
-	MessageID      string         `json:"message_id"`
-	RemoteJid      string         `json:"remote_jid"`
-	FromMe         sql.NullBool   `json:"from_me"`
-	MessageType    string         `json:"message_type"`
-	MessageText    sql.NullString `json:"message_text"`
-	MediaUrl       sql.NullString `json:"media_url"`
-	MediaCaption   sql.NullString `json:"media_caption"`
-	Status         sql.NullString `json:"status"`
-	Timestamp      time.Time      `json:"timestamp"`
-	ReceivedAt     sql.NullTime   `json:"received_at"`
-	EditedAt       sql.NullTime   `json:"edited_at"`
-	IsForwarded    sql.NullBool   `json:"is_forwarded"`
-	IsDeleted      sql.NullBool   `json:"is_deleted"`
-	CreatedAt      sql.NullTime   `json:"created_at"`
-	ModifiedAt     sql.NullTime   `json:"modified_at"`
+	ID              int64          `json:"id"`
+	CompanyID       int64          `json:"company_id"`
+	ConversationJid string         `json:"conversation_jid"`
+	RemoteJid       string         `json:"remote_jid"`
+	FromMe          sql.NullBool   `json:"from_me"`
+	MessageType     string         `json:"message_type"`
+	MessageText     sql.NullString `json:"message_text"`
+	MediaUrl        sql.NullString `json:"media_url"`
+	MediaCaption    sql.NullString `json:"media_caption"`
+	Status          sql.NullString `json:"status"`
+	Timestamp       time.Time      `json:"timestamp"`
+	ReceivedAt      sql.NullTime   `json:"received_at"`
+	EditedAt        sql.NullTime   `json:"edited_at"`
+	IsForwarded     sql.NullBool   `json:"is_forwarded"`
+	IsDeleted       sql.NullBool   `json:"is_deleted"`
+	CreatedAt       sql.NullTime   `json:"created_at"`
+	ModifiedAt      sql.NullTime   `json:"modified_at"`
 }

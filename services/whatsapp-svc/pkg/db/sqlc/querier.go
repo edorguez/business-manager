@@ -18,7 +18,7 @@ type Querier interface {
 	GetBusinessPhoneByCompanyId(ctx context.Context, companyID int64) (WhatsappBusinessPhone, error)
 	GetConversationByID(ctx context.Context, id int64) (GetConversationByIDRow, error)
 	GetConversationByJID(ctx context.Context, arg GetConversationByJIDParams) (GetConversationByJIDRow, error)
-	GetMessagesByConversation(ctx context.Context, arg GetMessagesByConversationParams) ([]GetMessagesByConversationRow, error)
+	GetMessagesByConversationJID(ctx context.Context, arg GetMessagesByConversationJIDParams) ([]GetMessagesByConversationJIDRow, error)
 	UpdateBusinessPhone(ctx context.Context, arg UpdateBusinessPhoneParams) (WhatsappBusinessPhone, error)
 }
 

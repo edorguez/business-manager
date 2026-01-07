@@ -62,27 +62,26 @@ func (q *Queries) BulkUpsertConversations(ctx context.Context, arg BulkUpsertCon
 
 const bulkUpsertMessages = `-- name: BulkUpsertMessages :exec
 INSERT INTO whatsapp_messaging.whatsapp_messages (
-    company_id, conversation_id, message_id, remote_jid, from_me,
+    company_id, conversation_jid, remote_jid, from_me,
     message_type, message_text, media_url, media_caption, status,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
 SELECT 
     unnest($1::bigint[]) as company_id,
-    unnest($2::bigint[]) as conversation_id,
-    unnest($3::text[]) as message_id,
-    unnest($4::text[]) as remote_jid,
-    unnest($5::boolean[]) as from_me,
-    unnest($6::text[]) as message_type,
-    unnest($7::text[]) as message_text,
-    unnest($8::text[]) as media_url,
-    unnest($9::text[]) as media_caption,
-    unnest($10::text[]) as status,
-    unnest($11::timestamptz[]) as timestamp,
-    unnest($12::timestamptz[]) as received_at,
-    unnest($13::timestamptz[]) as edited_at,
-    unnest($14::boolean[]) as is_forwarded,
-    unnest($15::boolean[]) as is_deleted
-ON CONFLICT (company_id, conversation_id, message_id) 
+    unnest($2::bigint[]) as conversation_jid,
+    unnest($3::text[]) as remote_jid,
+    unnest($4::boolean[]) as from_me,
+    unnest($5::text[]) as message_type,
+    unnest($6::text[]) as message_text,
+    unnest($7::text[]) as media_url,
+    unnest($8::text[]) as media_caption,
+    unnest($9::text[]) as status,
+    unnest($10::timestamptz[]) as timestamp,
+    unnest($11::timestamptz[]) as received_at,
+    unnest($12::timestamptz[]) as edited_at,
+    unnest($13::boolean[]) as is_forwarded,
+    unnest($14::boolean[]) as is_deleted
+ON CONFLICT (company_id, conversation_jid) 
 DO UPDATE SET
     message_text = EXCLUDED.message_text,
     media_url = EXCLUDED.media_url,
@@ -95,28 +94,26 @@ WHERE excluded.id IS NOT NULL
 `
 
 type BulkUpsertMessagesParams struct {
-	CompanyIds      []int64     `json:"company_ids"`
-	ConversationIds []int64     `json:"conversation_ids"`
-	MessageIds      []string    `json:"message_ids"`
-	RemoteJids      []string    `json:"remote_jids"`
-	FromMes         []bool      `json:"from_mes"`
-	MessageTypes    []string    `json:"message_types"`
-	MessageTexts    []string    `json:"message_texts"`
-	MediaUrls       []string    `json:"media_urls"`
-	MediaCaptions   []string    `json:"media_captions"`
-	Statuses        []string    `json:"statuses"`
-	Timestamps      []time.Time `json:"timestamps"`
-	ReceivedAts     []time.Time `json:"received_ats"`
-	EditedAts       []time.Time `json:"edited_ats"`
-	IsForwardeds    []bool      `json:"is_forwardeds"`
-	IsDeleteds      []bool      `json:"is_deleteds"`
+	CompanyIds       []int64     `json:"company_ids"`
+	ConversationJids []int64     `json:"conversation_jids"`
+	RemoteJids       []string    `json:"remote_jids"`
+	FromMes          []bool      `json:"from_mes"`
+	MessageTypes     []string    `json:"message_types"`
+	MessageTexts     []string    `json:"message_texts"`
+	MediaUrls        []string    `json:"media_urls"`
+	MediaCaptions    []string    `json:"media_captions"`
+	Statuses         []string    `json:"statuses"`
+	Timestamps       []time.Time `json:"timestamps"`
+	ReceivedAts      []time.Time `json:"received_ats"`
+	EditedAts        []time.Time `json:"edited_ats"`
+	IsForwardeds     []bool      `json:"is_forwardeds"`
+	IsDeleteds       []bool      `json:"is_deleteds"`
 }
 
 func (q *Queries) BulkUpsertMessages(ctx context.Context, arg BulkUpsertMessagesParams) error {
 	_, err := q.db.ExecContext(ctx, bulkUpsertMessages,
 		pq.Array(arg.CompanyIds),
-		pq.Array(arg.ConversationIds),
-		pq.Array(arg.MessageIds),
+		pq.Array(arg.ConversationJids),
 		pq.Array(arg.RemoteJids),
 		pq.Array(arg.FromMes),
 		pq.Array(arg.MessageTypes),
@@ -176,8 +173,7 @@ const createMessage = `-- name: CreateMessage :one
 INSERT INTO 
   whatsapp_messaging.whatsapp_messages (
     company_id, 
-    conversation_id, 
-    message_id, 
+    conversation_jid, 
     remote_jid,
     from_me,
     message_type,
@@ -192,34 +188,32 @@ INSERT INTO
     is_deleted
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
   )
 RETURNING id
 `
 
 type CreateMessageParams struct {
-	CompanyID      int64          `json:"company_id"`
-	ConversationID int64          `json:"conversation_id"`
-	MessageID      string         `json:"message_id"`
-	RemoteJid      string         `json:"remote_jid"`
-	FromMe         sql.NullBool   `json:"from_me"`
-	MessageType    string         `json:"message_type"`
-	MessageText    sql.NullString `json:"message_text"`
-	MediaUrl       sql.NullString `json:"media_url"`
-	MediaCaption   sql.NullString `json:"media_caption"`
-	Status         sql.NullString `json:"status"`
-	Timestamp      time.Time      `json:"timestamp"`
-	ReceivedAt     sql.NullTime   `json:"received_at"`
-	EditedAt       sql.NullTime   `json:"edited_at"`
-	IsForwarded    sql.NullBool   `json:"is_forwarded"`
-	IsDeleted      sql.NullBool   `json:"is_deleted"`
+	CompanyID       int64          `json:"company_id"`
+	ConversationJid string         `json:"conversation_jid"`
+	RemoteJid       string         `json:"remote_jid"`
+	FromMe          sql.NullBool   `json:"from_me"`
+	MessageType     string         `json:"message_type"`
+	MessageText     sql.NullString `json:"message_text"`
+	MediaUrl        sql.NullString `json:"media_url"`
+	MediaCaption    sql.NullString `json:"media_caption"`
+	Status          sql.NullString `json:"status"`
+	Timestamp       time.Time      `json:"timestamp"`
+	ReceivedAt      sql.NullTime   `json:"received_at"`
+	EditedAt        sql.NullTime   `json:"edited_at"`
+	IsForwarded     sql.NullBool   `json:"is_forwarded"`
+	IsDeleted       sql.NullBool   `json:"is_deleted"`
 }
 
 func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (int64, error) {
 	row := q.db.QueryRowContext(ctx, createMessage,
 		arg.CompanyID,
-		arg.ConversationID,
-		arg.MessageID,
+		arg.ConversationJid,
 		arg.RemoteJid,
 		arg.FromMe,
 		arg.MessageType,
@@ -332,12 +326,11 @@ func (q *Queries) GetConversationByJID(ctx context.Context, arg GetConversationB
 	return i, err
 }
 
-const getMessagesByConversation = `-- name: GetMessagesByConversation :many
+const getMessagesByConversationJID = `-- name: GetMessagesByConversationJID :many
 SELECT
   id, 
   company_id, 
-  conversation_id, 
-  message_id, 
+  conversation_jid, 
   remote_jid,
   from_me,
   message_type,
@@ -353,7 +346,7 @@ SELECT
 FROM
   whatsapp_messaging.whatsapp_messages
 WHERE
-  conversation_id = $1
+  conversation_jid = $1
 ORDER BY
   received_at DESC
 LIMIT 
@@ -362,45 +355,43 @@ OFFSET
   $3
 `
 
-type GetMessagesByConversationParams struct {
-	ConversationID int64 `json:"conversation_id"`
-	Limit          int32 `json:"limit"`
-	Offset         int32 `json:"offset"`
+type GetMessagesByConversationJIDParams struct {
+	ConversationJid string `json:"conversation_jid"`
+	Limit           int32  `json:"limit"`
+	Offset          int32  `json:"offset"`
 }
 
-type GetMessagesByConversationRow struct {
-	ID             int64          `json:"id"`
-	CompanyID      int64          `json:"company_id"`
-	ConversationID int64          `json:"conversation_id"`
-	MessageID      string         `json:"message_id"`
-	RemoteJid      string         `json:"remote_jid"`
-	FromMe         sql.NullBool   `json:"from_me"`
-	MessageType    string         `json:"message_type"`
-	MessageText    sql.NullString `json:"message_text"`
-	MediaUrl       sql.NullString `json:"media_url"`
-	MediaCaption   sql.NullString `json:"media_caption"`
-	Status         sql.NullString `json:"status"`
-	Timestamp      time.Time      `json:"timestamp"`
-	ReceivedAt     sql.NullTime   `json:"received_at"`
-	EditedAt       sql.NullTime   `json:"edited_at"`
-	IsForwarded    sql.NullBool   `json:"is_forwarded"`
-	IsDeleted      sql.NullBool   `json:"is_deleted"`
+type GetMessagesByConversationJIDRow struct {
+	ID              int64          `json:"id"`
+	CompanyID       int64          `json:"company_id"`
+	ConversationJid string         `json:"conversation_jid"`
+	RemoteJid       string         `json:"remote_jid"`
+	FromMe          sql.NullBool   `json:"from_me"`
+	MessageType     string         `json:"message_type"`
+	MessageText     sql.NullString `json:"message_text"`
+	MediaUrl        sql.NullString `json:"media_url"`
+	MediaCaption    sql.NullString `json:"media_caption"`
+	Status          sql.NullString `json:"status"`
+	Timestamp       time.Time      `json:"timestamp"`
+	ReceivedAt      sql.NullTime   `json:"received_at"`
+	EditedAt        sql.NullTime   `json:"edited_at"`
+	IsForwarded     sql.NullBool   `json:"is_forwarded"`
+	IsDeleted       sql.NullBool   `json:"is_deleted"`
 }
 
-func (q *Queries) GetMessagesByConversation(ctx context.Context, arg GetMessagesByConversationParams) ([]GetMessagesByConversationRow, error) {
-	rows, err := q.db.QueryContext(ctx, getMessagesByConversation, arg.ConversationID, arg.Limit, arg.Offset)
+func (q *Queries) GetMessagesByConversationJID(ctx context.Context, arg GetMessagesByConversationJIDParams) ([]GetMessagesByConversationJIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getMessagesByConversationJID, arg.ConversationJid, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetMessagesByConversationRow{}
+	items := []GetMessagesByConversationJIDRow{}
 	for rows.Next() {
-		var i GetMessagesByConversationRow
+		var i GetMessagesByConversationJIDRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.CompanyID,
-			&i.ConversationID,
-			&i.MessageID,
+			&i.ConversationJid,
 			&i.RemoteJid,
 			&i.FromMe,
 			&i.MessageType,
