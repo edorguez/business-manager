@@ -114,7 +114,7 @@ INSERT INTO whatsapp_messaging.whatsapp_messages (
 ) 
 SELECT 
     unnest(@company_ids::bigint[]) as company_id,
-    unnest(@conversation_jids::bigint[]) as conversation_jid,
+    unnest(@conversation_jids::text[]) as conversation_jid,
     unnest(@remote_jids::text[]) as remote_jid,
     unnest(@from_mes::boolean[]) as from_me,
     unnest(@message_types::text[]) as message_type,
@@ -127,7 +127,7 @@ SELECT
     unnest(@edited_ats::timestamptz[]) as edited_at,
     unnest(@is_forwardeds::boolean[]) as is_forwarded,
     unnest(@is_deleteds::boolean[]) as is_deleted
-ON CONFLICT (company_id, conversation_jid) 
+ON CONFLICT (company_id, conversation_jid, timestamp, from_me, remote_jid)
 DO UPDATE SET
     message_text = EXCLUDED.message_text,
     media_url = EXCLUDED.media_url,

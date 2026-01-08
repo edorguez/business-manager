@@ -155,12 +155,12 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 			Conversations: make([]*datatransfer.ConversationDataDto, 0),
 		}
 
-		for _, conversation := range v.Data.Conversations {
+		msgParams := datatransfer.BulkMessageParamsDto{
+			CompanyID: 1,
+			Messages:  make([]*datatransfer.MessageDataDto, 0),
+		}
 
-			msgParams := datatransfer.BulkMessageParamsDto{
-				CompanyID: 1,
-				Messages:  make([]*datatransfer.MessageDataDto, 0),
-			}
+		for _, conversation := range v.Data.Conversations {
 
 			var addConversation WhatsappConversation
 
@@ -232,6 +232,11 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 					result = append(result, addConversation)
 				}
 			}
+		}
+
+		if err := c.whatsappMessagingService.BulkSaveConversationsAndMessages(context.Background(), convParams, msgParams); err != nil {
+			fmt.Println("Error BulkSaveConversationsAndMessages: ", err)
+			return
 		}
 
 		var buf bytes.Buffer

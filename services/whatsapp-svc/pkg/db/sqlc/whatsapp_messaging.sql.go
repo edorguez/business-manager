@@ -68,7 +68,7 @@ INSERT INTO whatsapp_messaging.whatsapp_messages (
 ) 
 SELECT 
     unnest($1::bigint[]) as company_id,
-    unnest($2::bigint[]) as conversation_jid,
+    unnest($2::text[]) as conversation_jid,
     unnest($3::text[]) as remote_jid,
     unnest($4::boolean[]) as from_me,
     unnest($5::text[]) as message_type,
@@ -95,7 +95,7 @@ WHERE excluded.id IS NOT NULL
 
 type BulkUpsertMessagesParams struct {
 	CompanyIds       []int64     `json:"company_ids"`
-	ConversationJids []int64     `json:"conversation_jids"`
+	ConversationJids []string    `json:"conversation_jids"`
 	RemoteJids       []string    `json:"remote_jids"`
 	FromMes          []bool      `json:"from_mes"`
 	MessageTypes     []string    `json:"message_types"`

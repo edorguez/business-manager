@@ -131,8 +131,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 
 	// Prepare arrays for bulk insert
 	companyIDs := make([]int64, 0, len(params.Messages))
-	conversationJids := make([]int64, 0, len(params.Messages))
-	messageIDs := make([]string, 0, len(params.Messages))
+	conversationJids := make([]string, 0, len(params.Messages))
 	remoteJIDs := make([]string, 0, len(params.Messages))
 	fromMes := make([]bool, 0, len(params.Messages))
 	messageTypes := make([]string, 0, len(params.Messages))
@@ -148,8 +147,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 
 	for _, msg := range params.Messages {
 		companyIDs = append(companyIDs, params.CompanyID)
-		conversationJids = append(conversationJids, msg.ConversationID)
-		messageIDs = append(messageIDs, msg.MessageID)
+		conversationJids = append(conversationJids, msg.ConversationJID)
 		remoteJIDs = append(remoteJIDs, msg.RemoteJID)
 		fromMes = append(fromMes, msg.FromMe)
 		messageTypes = append(messageTypes, msg.MessageType)
@@ -227,8 +225,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 		if len(msgParams.Messages) > 0 {
 			// Prepare message arrays
 			companyIDs := make([]int64, 0, len(msgParams.Messages))
-			conversationJids := make([]int64, 0, len(msgParams.Messages))
-			messageIDs := make([]string, 0, len(msgParams.Messages))
+			conversationJids := make([]string, 0, len(msgParams.Messages))
 			remoteJIDs := make([]string, 0, len(msgParams.Messages))
 			fromMes := make([]bool, 0, len(msgParams.Messages))
 			messageTypes := make([]string, 0, len(msgParams.Messages))
@@ -244,8 +241,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 
 			for _, msg := range msgParams.Messages {
 				companyIDs = append(companyIDs, msgParams.CompanyID)
-				conversationJids = append(conversationJids, msg.ConversationID)
-				messageIDs = append(messageIDs, msg.MessageID)
+				conversationJids = append(conversationJids, msg.ConversationJID)
 				remoteJIDs = append(remoteJIDs, msg.RemoteJID)
 				fromMes = append(fromMes, msg.FromMe)
 				messageTypes = append(messageTypes, msg.MessageType)

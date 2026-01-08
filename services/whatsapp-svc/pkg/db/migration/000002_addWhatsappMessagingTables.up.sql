@@ -11,13 +11,13 @@ CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_conversations" (
     "last_message_timestamp" timestamptz,
     "created_at" timestamptz DEFAULT (NOW()),
     "modified_at" timestamptz DEFAULT (NOW()),
-    UNIQUE("jid")
+    UNIQUE("company_id", "jid")
 );
 
 CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_messages" (
     "id" bigserial PRIMARY KEY,
     "company_id" bigint NOT NULL,
-    "conversation_jid" varchar(100) NOT NULL REFERENCES "whatsapp_messaging"."whatsapp_conversations"("jid"),
+    "conversation_jid" varchar(100) NOT NULL,
     "remote_jid" varchar(100) NOT NULL,
     "from_me" boolean DEFAULT FALSE,
     "message_type" varchar(50) NOT NULL,
@@ -32,9 +32,10 @@ CREATE TABLE IF NOT EXISTS "whatsapp_messaging"."whatsapp_messages" (
     "is_deleted" boolean DEFAULT FALSE,
     "created_at" timestamptz DEFAULT (NOW()),
     "modified_at" timestamptz DEFAULT (NOW()),
-    CONSTRAINT fk_conversation FOREIGN KEY ("conversation_jid") REFERENCES "whatsapp_messaging"."whatsapp_conversations"("jid")
+    CONSTRAINT fk_conversation FOREIGN KEY ("company_id", "conversation_jid") REFERENCES "whatsapp_messaging"."whatsapp_conversations"("company_id", "jid"),
+    UNIQUE("company_id", "conversation_jid", "timestamp", "from_me", "remote_jid")
 );
 
-CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_jid ON "whatsapp_messaging"."whatsapp_conversations"("jid"); 
-CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_conversation_timestamp ON "whatsapp_messaging"."whatsapp_messages"("conversation_jid", "timestamp");
-CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_tenant_conversation ON "whatsapp_messaging"."whatsapp_messages"("company_id", "conversation_jid");
+CREATE INDEX IF NOT EXISTS idx_whatsapp_jid ON "whatsapp_messaging"."whatsapp_conversations"("jid"); 
+CREATE INDEX IF NOT EXISTS idx_whatsapp_conversation_timestamp ON "whatsapp_messaging"."whatsapp_messages"("conversation_jid");
+CREATE INDEX IF NOT EXISTS idx_whatsapp_tenant_conversation ON "whatsapp_messaging"."whatsapp_messages"("company_id", "conversation_jid");
