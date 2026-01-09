@@ -35,8 +35,8 @@ DO UPDATE SET
         OR whatsapp_messaging.whatsapp_conversations.last_message_timestamp IS NULL
         THEN EXCLUDED.last_message_timestamp
         ELSE whatsapp_messaging.whatsapp_conversations.last_message_timestamp
-    END
-WHERE excluded.id IS NOT NULL
+    END,
+    modified_at = NOW()
 `
 
 type BulkUpsertConversationsParams struct {
@@ -61,27 +61,37 @@ func (q *Queries) BulkUpsertConversations(ctx context.Context, arg BulkUpsertCon
 }
 
 const bulkUpsertMessages = `-- name: BulkUpsertMessages :exec
+WITH input_data AS (
+    SELECT DISTINCT ON (company_id, conversation_jid, timestamp, from_me, remote_jid)
+        company_id, conversation_jid, remote_jid, from_me,
+        message_type, message_text, media_url, media_caption, status,
+        timestamp, received_at, edited_at, is_forwarded, is_deleted
+    FROM (
+        SELECT 
+            unnest($1::bigint[]) as company_id,
+            unnest($2::text[]) as conversation_jid,
+            unnest($3::text[]) as remote_jid,
+            unnest($4::boolean[]) as from_me,
+            unnest($5::text[]) as message_type,
+            unnest($6::text[]) as message_text,
+            unnest($7::text[]) as media_url,
+            unnest($8::text[]) as media_caption,
+            unnest($9::text[]) as status,
+            unnest($10::timestamptz[]) as timestamp,
+            unnest($11::timestamptz[]) as received_at,
+            unnest($12::timestamptz[]) as edited_at,
+            unnest($13::boolean[]) as is_forwarded,
+            unnest($14::boolean[]) as is_deleted
+    ) AS raw_input
+    ORDER BY company_id, conversation_jid, timestamp, from_me, remote_jid, timestamp DESC
+)
 INSERT INTO whatsapp_messaging.whatsapp_messages (
     company_id, conversation_jid, remote_jid, from_me,
     message_type, message_text, media_url, media_caption, status,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
-SELECT 
-    unnest($1::bigint[]) as company_id,
-    unnest($2::text[]) as conversation_jid,
-    unnest($3::text[]) as remote_jid,
-    unnest($4::boolean[]) as from_me,
-    unnest($5::text[]) as message_type,
-    unnest($6::text[]) as message_text,
-    unnest($7::text[]) as media_url,
-    unnest($8::text[]) as media_caption,
-    unnest($9::text[]) as status,
-    unnest($10::timestamptz[]) as timestamp,
-    unnest($11::timestamptz[]) as received_at,
-    unnest($12::timestamptz[]) as edited_at,
-    unnest($13::boolean[]) as is_forwarded,
-    unnest($14::boolean[]) as is_deleted
-ON CONFLICT (company_id, conversation_jid) 
+SELECT company_id, conversation_jid, remote_jid, from_me, message_type, message_text, media_url, media_caption, status, timestamp, received_at, edited_at, is_forwarded, is_deleted FROM input_data
+ON CONFLICT (company_id, conversation_jid, timestamp, from_me, remote_jid)
 DO UPDATE SET
     message_text = EXCLUDED.message_text,
     media_url = EXCLUDED.media_url,
@@ -89,8 +99,8 @@ DO UPDATE SET
     status = EXCLUDED.status,
     edited_at = EXCLUDED.edited_at,
     is_forwarded = EXCLUDED.is_forwarded,
-    is_deleted = EXCLUDED.is_deleted
-WHERE excluded.id IS NOT NULL
+    is_deleted = EXCLUDED.is_deleted,
+    modified_at = NOW()
 `
 
 type BulkUpsertMessagesParams struct {

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/datatransfer"
@@ -217,6 +218,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			}
 
 			if err := q.BulkUpsertConversations(ctx, convBulkParams); err != nil {
+				fmt.Println("ERROR BULKCONVERSATIONS")
 				return err
 			}
 		}
@@ -274,6 +276,7 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			}
 
 			if err := q.BulkUpsertMessages(ctx, msgBulkParams); err != nil {
+				fmt.Println("ERROR BULKMESSAGES")
 				return err
 			}
 		}

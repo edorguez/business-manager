@@ -103,30 +103,40 @@ DO UPDATE SET
         OR whatsapp_messaging.whatsapp_conversations.last_message_timestamp IS NULL
         THEN EXCLUDED.last_message_timestamp
         ELSE whatsapp_messaging.whatsapp_conversations.last_message_timestamp
-    END
-WHERE excluded.id IS NOT NULL;
+    END,
+    modified_at = NOW();
 
 -- name: BulkUpsertMessages :exec
+WITH input_data AS (
+    SELECT DISTINCT ON (company_id, conversation_jid, timestamp, from_me, remote_jid)
+        company_id, conversation_jid, remote_jid, from_me,
+        message_type, message_text, media_url, media_caption, status,
+        timestamp, received_at, edited_at, is_forwarded, is_deleted
+    FROM (
+        SELECT 
+            unnest(@company_ids::bigint[]) as company_id,
+            unnest(@conversation_jids::text[]) as conversation_jid,
+            unnest(@remote_jids::text[]) as remote_jid,
+            unnest(@from_mes::boolean[]) as from_me,
+            unnest(@message_types::text[]) as message_type,
+            unnest(@message_texts::text[]) as message_text,
+            unnest(@media_urls::text[]) as media_url,
+            unnest(@media_captions::text[]) as media_caption,
+            unnest(@statuses::text[]) as status,
+            unnest(@timestamps::timestamptz[]) as timestamp,
+            unnest(@received_ats::timestamptz[]) as received_at,
+            unnest(@edited_ats::timestamptz[]) as edited_at,
+            unnest(@is_forwardeds::boolean[]) as is_forwarded,
+            unnest(@is_deleteds::boolean[]) as is_deleted
+    ) AS raw_input
+    ORDER BY company_id, conversation_jid, timestamp, from_me, remote_jid, timestamp DESC
+)
 INSERT INTO whatsapp_messaging.whatsapp_messages (
     company_id, conversation_jid, remote_jid, from_me,
     message_type, message_text, media_url, media_caption, status,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
-SELECT 
-    unnest(@company_ids::bigint[]) as company_id,
-    unnest(@conversation_jids::text[]) as conversation_jid,
-    unnest(@remote_jids::text[]) as remote_jid,
-    unnest(@from_mes::boolean[]) as from_me,
-    unnest(@message_types::text[]) as message_type,
-    unnest(@message_texts::text[]) as message_text,
-    unnest(@media_urls::text[]) as media_url,
-    unnest(@media_captions::text[]) as media_caption,
-    unnest(@statuses::text[]) as status,
-    unnest(@timestamps::timestamptz[]) as timestamp,
-    unnest(@received_ats::timestamptz[]) as received_at,
-    unnest(@edited_ats::timestamptz[]) as edited_at,
-    unnest(@is_forwardeds::boolean[]) as is_forwarded,
-    unnest(@is_deleteds::boolean[]) as is_deleted
+SELECT * FROM input_data
 ON CONFLICT (company_id, conversation_jid, timestamp, from_me, remote_jid)
 DO UPDATE SET
     message_text = EXCLUDED.message_text,
@@ -135,8 +145,8 @@ DO UPDATE SET
     status = EXCLUDED.status,
     edited_at = EXCLUDED.edited_at,
     is_forwarded = EXCLUDED.is_forwarded,
-    is_deleted = EXCLUDED.is_deleted
-WHERE excluded.id IS NOT NULL;
+    is_deleted = EXCLUDED.is_deleted,
+    modified_at = NOW();
 
 -- name: GetConversationByID :one
 SELECT

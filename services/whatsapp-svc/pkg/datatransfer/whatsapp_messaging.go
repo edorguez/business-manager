@@ -93,12 +93,10 @@ type MessageDataDto struct {
 	ConversationJID string
 	RemoteJID       string
 	FromMe          bool
-	MessageType     string
 	MessageText     string
 	MediaURL        string
 	MediaCaption    string
-	Status          string
-	Timestamp       time.Time
+	Timestamp       uint64
 	ReceivedAt      time.Time
 	EditedAt        time.Time
 	IsForwarded     bool

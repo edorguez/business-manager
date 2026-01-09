@@ -225,6 +225,13 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 
 					msgParams.Messages = append(msgParams.Messages, &datatransfer.MessageDataDto{
 						ConversationJID: jid.String(),
+						RemoteJID:       msg.Message.Key.GetRemoteJID(),
+						FromMe:          msg.Message.Key.GetFromMe(),
+						MessageText:     wsmsg.Message,
+						Timestamp:       msg.Message.GetMessageTimestamp(),
+						ReceivedAt:      time.Now(),
+						IsForwarded:     false,
+						IsDeleted:       false,
 					})
 				}
 
