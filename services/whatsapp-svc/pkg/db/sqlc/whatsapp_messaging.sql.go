@@ -64,7 +64,7 @@ const bulkUpsertMessages = `-- name: BulkUpsertMessages :exec
 WITH input_data AS (
     SELECT DISTINCT ON (company_id, conversation_jid, timestamp, from_me, remote_jid)
         company_id, conversation_jid, remote_jid, from_me,
-        message_type, message_text, media_url, media_caption, status,
+        message_text, media_url, media_caption,
         timestamp, received_at, edited_at, is_forwarded, is_deleted
     FROM (
         SELECT 
@@ -72,31 +72,28 @@ WITH input_data AS (
             unnest($2::text[]) as conversation_jid,
             unnest($3::text[]) as remote_jid,
             unnest($4::boolean[]) as from_me,
-            unnest($5::text[]) as message_type,
-            unnest($6::text[]) as message_text,
-            unnest($7::text[]) as media_url,
-            unnest($8::text[]) as media_caption,
-            unnest($9::text[]) as status,
-            unnest($10::timestamptz[]) as timestamp,
-            unnest($11::timestamptz[]) as received_at,
-            unnest($12::timestamptz[]) as edited_at,
-            unnest($13::boolean[]) as is_forwarded,
-            unnest($14::boolean[]) as is_deleted
+            unnest($5::text[]) as message_text,
+            unnest($6::text[]) as media_url,
+            unnest($7::text[]) as media_caption,
+            unnest($8::bigint[]) as timestamp,
+            unnest($9::timestamptz[]) as received_at,
+            unnest($10::timestamptz[]) as edited_at,
+            unnest($11::boolean[]) as is_forwarded,
+            unnest($12::boolean[]) as is_deleted
     ) AS raw_input
     ORDER BY company_id, conversation_jid, timestamp, from_me, remote_jid, timestamp DESC
 )
 INSERT INTO whatsapp_messaging.whatsapp_messages (
     company_id, conversation_jid, remote_jid, from_me,
-    message_type, message_text, media_url, media_caption, status,
+    message_text, media_url, media_caption,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
-SELECT company_id, conversation_jid, remote_jid, from_me, message_type, message_text, media_url, media_caption, status, timestamp, received_at, edited_at, is_forwarded, is_deleted FROM input_data
+SELECT company_id, conversation_jid, remote_jid, from_me, message_text, media_url, media_caption, timestamp, received_at, edited_at, is_forwarded, is_deleted FROM input_data
 ON CONFLICT (company_id, conversation_jid, timestamp, from_me, remote_jid)
 DO UPDATE SET
     message_text = EXCLUDED.message_text,
     media_url = EXCLUDED.media_url,
     media_caption = EXCLUDED.media_caption,
-    status = EXCLUDED.status,
     edited_at = EXCLUDED.edited_at,
     is_forwarded = EXCLUDED.is_forwarded,
     is_deleted = EXCLUDED.is_deleted,
@@ -108,12 +105,10 @@ type BulkUpsertMessagesParams struct {
 	ConversationJids []string    `json:"conversation_jids"`
 	RemoteJids       []string    `json:"remote_jids"`
 	FromMes          []bool      `json:"from_mes"`
-	MessageTypes     []string    `json:"message_types"`
 	MessageTexts     []string    `json:"message_texts"`
 	MediaUrls        []string    `json:"media_urls"`
 	MediaCaptions    []string    `json:"media_captions"`
-	Statuses         []string    `json:"statuses"`
-	Timestamps       []time.Time `json:"timestamps"`
+	Timestamps       []int64     `json:"timestamps"`
 	ReceivedAts      []time.Time `json:"received_ats"`
 	EditedAts        []time.Time `json:"edited_ats"`
 	IsForwardeds     []bool      `json:"is_forwardeds"`
@@ -126,11 +121,9 @@ func (q *Queries) BulkUpsertMessages(ctx context.Context, arg BulkUpsertMessages
 		pq.Array(arg.ConversationJids),
 		pq.Array(arg.RemoteJids),
 		pq.Array(arg.FromMes),
-		pq.Array(arg.MessageTypes),
 		pq.Array(arg.MessageTexts),
 		pq.Array(arg.MediaUrls),
 		pq.Array(arg.MediaCaptions),
-		pq.Array(arg.Statuses),
 		pq.Array(arg.Timestamps),
 		pq.Array(arg.ReceivedAts),
 		pq.Array(arg.EditedAts),
@@ -186,11 +179,9 @@ INSERT INTO
     conversation_jid, 
     remote_jid,
     from_me,
-    message_type,
     message_text,
     media_url,
     media_caption,
-    status,
     timestamp,
     received_at,
     edited_at,
@@ -198,7 +189,7 @@ INSERT INTO
     is_deleted
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
   )
 RETURNING id
 `
@@ -208,12 +199,10 @@ type CreateMessageParams struct {
 	ConversationJid string         `json:"conversation_jid"`
 	RemoteJid       string         `json:"remote_jid"`
 	FromMe          sql.NullBool   `json:"from_me"`
-	MessageType     string         `json:"message_type"`
 	MessageText     sql.NullString `json:"message_text"`
 	MediaUrl        sql.NullString `json:"media_url"`
 	MediaCaption    sql.NullString `json:"media_caption"`
-	Status          sql.NullString `json:"status"`
-	Timestamp       time.Time      `json:"timestamp"`
+	Timestamp       int64          `json:"timestamp"`
 	ReceivedAt      sql.NullTime   `json:"received_at"`
 	EditedAt        sql.NullTime   `json:"edited_at"`
 	IsForwarded     sql.NullBool   `json:"is_forwarded"`
@@ -226,11 +215,9 @@ func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (i
 		arg.ConversationJid,
 		arg.RemoteJid,
 		arg.FromMe,
-		arg.MessageType,
 		arg.MessageText,
 		arg.MediaUrl,
 		arg.MediaCaption,
-		arg.Status,
 		arg.Timestamp,
 		arg.ReceivedAt,
 		arg.EditedAt,
@@ -343,11 +330,9 @@ SELECT
   conversation_jid, 
   remote_jid,
   from_me,
-  message_type,
   message_text,
   media_url,
   media_caption,
-  status,
   timestamp,
   received_at,
   edited_at,
@@ -377,12 +362,10 @@ type GetMessagesByConversationJIDRow struct {
 	ConversationJid string         `json:"conversation_jid"`
 	RemoteJid       string         `json:"remote_jid"`
 	FromMe          sql.NullBool   `json:"from_me"`
-	MessageType     string         `json:"message_type"`
 	MessageText     sql.NullString `json:"message_text"`
 	MediaUrl        sql.NullString `json:"media_url"`
 	MediaCaption    sql.NullString `json:"media_caption"`
-	Status          sql.NullString `json:"status"`
-	Timestamp       time.Time      `json:"timestamp"`
+	Timestamp       int64          `json:"timestamp"`
 	ReceivedAt      sql.NullTime   `json:"received_at"`
 	EditedAt        sql.NullTime   `json:"edited_at"`
 	IsForwarded     sql.NullBool   `json:"is_forwarded"`
@@ -404,11 +387,9 @@ func (q *Queries) GetMessagesByConversationJID(ctx context.Context, arg GetMessa
 			&i.ConversationJid,
 			&i.RemoteJid,
 			&i.FromMe,
-			&i.MessageType,
 			&i.MessageText,
 			&i.MediaUrl,
 			&i.MediaCaption,
-			&i.Status,
 			&i.Timestamp,
 			&i.ReceivedAt,
 			&i.EditedAt,

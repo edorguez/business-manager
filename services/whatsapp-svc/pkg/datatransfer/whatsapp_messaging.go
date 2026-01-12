@@ -40,7 +40,7 @@ type CreateMessageRequestDto struct {
 	MediaUrl        *string    `json:"media_url"`
 	MediaCaption    *string    `json:"media_caption"`
 	Status          *string    `json:"status"`
-	Timestamp       time.Time  `json:"timestamp"`
+	Timestamp       uint64     `json:"timestamp"`
 	ReceivedAt      *time.Time `json:"received_at"`
 	EditedAt        *time.Time `json:"edited_at"`
 	IsForwarded     *bool      `json:"is_forwarded"`
@@ -64,7 +64,7 @@ type GetMessagesByConversationResponseDto struct {
 	MediaUrl        *string    `json:"media_url"`
 	MediaCaption    *string    `json:"media_caption"`
 	Status          *string    `json:"status"`
-	Timestamp       time.Time  `json:"timestamp"`
+	Timestamp       uint64     `json:"timestamp"`
 	ReceivedAt      *time.Time `json:"received_at"`
 	EditedAt        *time.Time `json:"edited_at"`
 	IsForwarded     *bool      `json:"is_forwarded"`

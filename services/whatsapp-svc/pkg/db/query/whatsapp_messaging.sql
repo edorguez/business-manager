@@ -37,11 +37,9 @@ INSERT INTO
     conversation_jid, 
     remote_jid,
     from_me,
-    message_type,
     message_text,
     media_url,
     media_caption,
-    status,
     timestamp,
     received_at,
     edited_at,
@@ -49,7 +47,7 @@ INSERT INTO
     is_deleted
 	) 
 VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
   )
 RETURNING id;
 
@@ -60,11 +58,9 @@ SELECT
   conversation_jid, 
   remote_jid,
   from_me,
-  message_type,
   message_text,
   media_url,
   media_caption,
-  status,
   timestamp,
   received_at,
   edited_at,
@@ -110,7 +106,7 @@ DO UPDATE SET
 WITH input_data AS (
     SELECT DISTINCT ON (company_id, conversation_jid, timestamp, from_me, remote_jid)
         company_id, conversation_jid, remote_jid, from_me,
-        message_type, message_text, media_url, media_caption, status,
+        message_text, media_url, media_caption,
         timestamp, received_at, edited_at, is_forwarded, is_deleted
     FROM (
         SELECT 
@@ -118,12 +114,10 @@ WITH input_data AS (
             unnest(@conversation_jids::text[]) as conversation_jid,
             unnest(@remote_jids::text[]) as remote_jid,
             unnest(@from_mes::boolean[]) as from_me,
-            unnest(@message_types::text[]) as message_type,
             unnest(@message_texts::text[]) as message_text,
             unnest(@media_urls::text[]) as media_url,
             unnest(@media_captions::text[]) as media_caption,
-            unnest(@statuses::text[]) as status,
-            unnest(@timestamps::timestamptz[]) as timestamp,
+            unnest(@timestamps::bigint[]) as timestamp,
             unnest(@received_ats::timestamptz[]) as received_at,
             unnest(@edited_ats::timestamptz[]) as edited_at,
             unnest(@is_forwardeds::boolean[]) as is_forwarded,
@@ -133,7 +127,7 @@ WITH input_data AS (
 )
 INSERT INTO whatsapp_messaging.whatsapp_messages (
     company_id, conversation_jid, remote_jid, from_me,
-    message_type, message_text, media_url, media_caption, status,
+    message_text, media_url, media_caption,
     timestamp, received_at, edited_at, is_forwarded, is_deleted
 ) 
 SELECT * FROM input_data
@@ -142,7 +136,6 @@ DO UPDATE SET
     message_text = EXCLUDED.message_text,
     media_url = EXCLUDED.media_url,
     media_caption = EXCLUDED.media_caption,
-    status = EXCLUDED.status,
     edited_at = EXCLUDED.edited_at,
     is_forwarded = EXCLUDED.is_forwarded,
     is_deleted = EXCLUDED.is_deleted,

@@ -152,13 +152,17 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 
 		convParams := datatransfer.BulkConversationParamsDto{
 			CompanyID:     1,
-			Conversations: make([]*datatransfer.ConversationDataDto, 0),
+			Conversations: make([]*datatransfer.ConversationDataDto, 0, len(v.Data.Conversations)),
 		}
 
 		msgParams := datatransfer.BulkMessageParamsDto{
 			CompanyID: 1,
 			Messages:  make([]*datatransfer.MessageDataDto, 0),
 		}
+
+		fmt.Println("=================")
+		fmt.Printf("Number of conversations: %v\n", len(v.Data.Conversations))
+		fmt.Println("=================")
 
 		for _, conversation := range v.Data.Conversations {
 
@@ -257,6 +261,8 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 
 		jsonStr := buf.String()
 		jsonStr = jsonStr[:len(jsonStr)-1]
+
+		fmt.Println("FINAL BROMA")
 
 		c.SendServerMessage(jsonStr, CONVERSATIONS_CODE)
 	}

@@ -135,12 +135,10 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 	conversationJids := make([]string, 0, len(params.Messages))
 	remoteJIDs := make([]string, 0, len(params.Messages))
 	fromMes := make([]bool, 0, len(params.Messages))
-	messageTypes := make([]string, 0, len(params.Messages))
 	messageTexts := make([]string, 0, len(params.Messages))
 	mediaURLs := make([]string, 0, len(params.Messages))
 	mediaCaptions := make([]string, 0, len(params.Messages))
-	statuses := make([]string, 0, len(params.Messages))
-	timestamps := make([]time.Time, 0, len(params.Messages))
+	timestamps := make([]int64, 0, len(params.Messages))
 	receivedAts := make([]time.Time, 0, len(params.Messages))
 	editedAts := make([]time.Time, 0, len(params.Messages))
 	isForwardeds := make([]bool, 0, len(params.Messages))
@@ -151,12 +149,10 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 		conversationJids = append(conversationJids, msg.ConversationJID)
 		remoteJIDs = append(remoteJIDs, msg.RemoteJID)
 		fromMes = append(fromMes, msg.FromMe)
-		messageTypes = append(messageTypes, msg.MessageType)
 		messageTexts = append(messageTexts, msg.MessageText)
 		mediaURLs = append(mediaURLs, msg.MediaURL)
 		mediaCaptions = append(mediaCaptions, msg.MediaCaption)
-		statuses = append(statuses, msg.Status)
-		timestamps = append(timestamps, msg.Timestamp)
+		timestamps = append(timestamps, int64(msg.Timestamp))
 		receivedAts = append(receivedAts, msg.ReceivedAt)
 		editedAts = append(editedAts, msg.EditedAt)
 		isForwardeds = append(isForwardeds, msg.IsForwarded)
@@ -168,11 +164,9 @@ func (wr *WhatsappMessagingRepo) BulkSaveMessages(ctx context.Context, params da
 		ConversationJids: conversationJids,
 		RemoteJids:       remoteJIDs,
 		FromMes:          fromMes,
-		MessageTypes:     messageTypes,
 		MessageTexts:     messageTexts,
 		MediaUrls:        mediaURLs,
 		MediaCaptions:    mediaCaptions,
-		Statuses:         statuses,
 		Timestamps:       timestamps,
 		ReceivedAts:      receivedAts,
 		EditedAts:        editedAts,
@@ -230,12 +224,10 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 			conversationJids := make([]string, 0, len(msgParams.Messages))
 			remoteJIDs := make([]string, 0, len(msgParams.Messages))
 			fromMes := make([]bool, 0, len(msgParams.Messages))
-			messageTypes := make([]string, 0, len(msgParams.Messages))
 			messageTexts := make([]string, 0, len(msgParams.Messages))
 			mediaURLs := make([]string, 0, len(msgParams.Messages))
 			mediaCaptions := make([]string, 0, len(msgParams.Messages))
-			statuses := make([]string, 0, len(msgParams.Messages))
-			timestamps := make([]time.Time, 0, len(msgParams.Messages))
+			timestamps := make([]int64, 0, len(msgParams.Messages))
 			receivedAts := make([]time.Time, 0, len(msgParams.Messages))
 			editedAts := make([]time.Time, 0, len(msgParams.Messages))
 			isForwardeds := make([]bool, 0, len(msgParams.Messages))
@@ -246,12 +238,10 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 				conversationJids = append(conversationJids, msg.ConversationJID)
 				remoteJIDs = append(remoteJIDs, msg.RemoteJID)
 				fromMes = append(fromMes, msg.FromMe)
-				messageTypes = append(messageTypes, msg.MessageType)
 				messageTexts = append(messageTexts, msg.MessageText)
 				mediaURLs = append(mediaURLs, msg.MediaURL)
 				mediaCaptions = append(mediaCaptions, msg.MediaCaption)
-				statuses = append(statuses, msg.Status)
-				timestamps = append(timestamps, msg.Timestamp)
+				timestamps = append(timestamps, int64(msg.Timestamp))
 				receivedAts = append(receivedAts, msg.ReceivedAt)
 				editedAts = append(editedAts, msg.EditedAt)
 				isForwardeds = append(isForwardeds, msg.IsForwarded)
@@ -263,11 +253,9 @@ func (wr *WhatsappMessagingRepo) BulkSaveConversationsAndMessages(ctx context.Co
 				ConversationJids: conversationJids,
 				RemoteJids:       remoteJIDs,
 				FromMes:          fromMes,
-				MessageTypes:     messageTypes,
 				MessageTexts:     messageTexts,
 				MediaUrls:        mediaURLs,
 				MediaCaptions:    mediaCaptions,
-				Statuses:         statuses,
 				Timestamps:       timestamps,
 				ReceivedAts:      receivedAts,
 				EditedAts:        editedAts,

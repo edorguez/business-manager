@@ -36,12 +36,10 @@ type WhatsappMessagingWhatsappMessage struct {
 	ConversationJid string         `json:"conversation_jid"`
 	RemoteJid       string         `json:"remote_jid"`
 	FromMe          sql.NullBool   `json:"from_me"`
-	MessageType     string         `json:"message_type"`
 	MessageText     sql.NullString `json:"message_text"`
 	MediaUrl        sql.NullString `json:"media_url"`
 	MediaCaption    sql.NullString `json:"media_caption"`
-	Status          sql.NullString `json:"status"`
-	Timestamp       time.Time      `json:"timestamp"`
+	Timestamp       int64          `json:"timestamp"`
 	ReceivedAt      sql.NullTime   `json:"received_at"`
 	EditedAt        sql.NullTime   `json:"edited_at"`
 	IsForwarded     sql.NullBool   `json:"is_forwarded"`
