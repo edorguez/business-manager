@@ -5,7 +5,7 @@ import { numberMoveDecimal } from "@/app/utils/Utils";
 import { Button } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -71,7 +71,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
           <span className="text-lg font-bold">
             ${numberMoveDecimal(product.price, 2)}
           </span>
-          <Button variant="main" size="sm" onClick={() => onAddToCard()}>
+          <Button variant="default" size="sm" onClick={() => onAddToCard()}>
             + Agregar
           </Button>
         </div>

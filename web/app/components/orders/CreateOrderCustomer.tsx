@@ -87,6 +87,7 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
         <Input
           size="sm"
           name="firstName"
+          variant="default"
           value={formData.firstName}
           onChange={handleNameChange}
           maxLength={20}
@@ -98,6 +99,7 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
         <Input
           size="sm"
           name="lastName"
+          variant="default"
           value={formData.lastName}
           onChange={handleNameChange}
           maxLength={20}
@@ -111,6 +113,7 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
         <Input
           size="sm"
           name="phone"
+          variant="default"
           value={formData.phone}
           onChange={handleNumberChange}
           maxLength={11}
@@ -126,6 +129,7 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
             <Select
               size="sm"
               name="identificationType"
+              variant="default"
               value={formData.identificationType}
               onChange={handleChange}
               disabled={isCreateLoading}
@@ -141,6 +145,7 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
           <Input
             size="sm"
             name="identificationNumber"
+            variant="default"
             value={formData.identificationNumber}
             onChange={handleNumberChange}
             maxLength={9}
@@ -150,7 +155,7 @@ const CreateOrderCustomerComponent: React.FC<CreateCustomerProps> = ({
       </div>
       <div className="mt-3">
         <Button
-          variant="main"
+          variant="default"
           size="sm"
           className="w-full"
           onClick={onSubmit}

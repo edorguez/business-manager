@@ -38,6 +38,19 @@ const config: any = {
       800: "#004466",
       900: "#002233",
     },
+    default: {
+      50: "#ffffff",
+      100: "#d9d9d9",
+      200: "#b3b3b3",
+      300: "#999999",
+      400: "#808080",
+      500: "#666666",
+      600: "#4d4d4d",
+      700: "#333333",
+      800: "#1a1a1a",
+      900: "#000000",
+
+    }
   },
   components: {
     Button: {
@@ -78,18 +91,87 @@ const config: any = {
             backgroundColor: mode("fifth.700", "fifth.400")(props),
           },
         }),
+        default: (props: any) => ({
+          color: mode("white", "gray.800")(props),
+          backgroundColor: mode("default.700", "default.400")(props),
+          _hover: {
+            backgroundColor: mode("default.800", "default.400")(props),
+            _disabled: {
+              backgroundColor: mode("default.700", "default.300")(props),
+            },
+          },
+          _active: {
+            backgroundColor: mode("default.800", "default.500")(props),
+          },
+          _loading: {
+            backgroundColor: mode("default.600", "default.300")(props),
+          },
+        }),
       },
     },
     Input: {
+      variants: {
+        default: (props: any) => ({
+          field: {
+            border: "1px solid",
+            borderColor: mode("default.100", "default.600")(props),
+            _focus: {
+              borderColor: mode("default.500", "default.400")(props),
+            },
+            _hover: {
+              borderColor: mode("default.400", "default.500")(props),
+            },
+            _invalid: {
+              borderColor: mode("third.500", "third.300")(props),
+            },
+          },
+        }),
+      },
       defaultProps: {
         focusBorderColor: "main.500",
         errorBorderColor: "third.500",
       },
     },
     NumberInput: {
+      variants: {
+        default: (props: any) => ({
+          field: {
+            border: "1px solid",
+            borderColor: mode("default.100", "default.600")(props),
+            _focus: {
+              borderColor: mode("default.500", "default.400")(props),
+            },
+            _hover: {
+              borderColor: mode("default.400", "default.500")(props),
+            },
+            _invalid: {
+              borderColor: mode("third.500", "third.300")(props),
+            },
+          },
+        }),
+      },
       defaultProps: {
         focusBorderColor: "main.500",
         errorBorderColor: "third.500",
+      },
+    },
+    Select: {
+      variants: {
+        default: (props: any) => ({
+          field: {
+            border: "1px solid",
+            borderColor: mode("default.100", "default.600")(props),
+            _focus: {
+              borderColor: mode("default.500", "default.400")(props),
+            },
+            _hover: {
+              borderColor: mode("default.400", "default.500")(props),
+            },
+            _invalid: {
+              borderColor: mode("third.500", "third.300")(props),
+            },
+          },
+        }),
       },
     },
     Alert: {

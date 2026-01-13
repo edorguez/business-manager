@@ -35,7 +35,8 @@ const config: Config = {
         fourthcolorhov: '#501F3A1A',
         fifthcolor: '#00A9FF',
         fifthcolorhov: '#00A9FF1A',
-        whatsappmessage: '#DCF8C6'
+        whatsappmessage: '#DCF8C6',
+        defaultcolor: '#000000'
       }
     },
   },

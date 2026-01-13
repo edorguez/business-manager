@@ -69,11 +69,11 @@ const SitePage = () => {
         {/* Header */}
         <header className="bg-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-maincolor">
+            <h1 className="text-2xl font-bold text-defaultcolor">
               {company?.name}
             </h1>
             <div className="flex items-center space-x-4">
-              <Button variant="main" onClick={cart.onOpen}>
+              <Button variant="default" onClick={cart.onOpen}>
                 Carrito ({getTotalItems()})
               </Button>
             </div>

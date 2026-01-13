@@ -73,7 +73,7 @@ const ProductsCartDrawer = () => {
                     <span className="font-semibold">Total:</span>
                     <span className="font-bold">${getTotalPrice()}</span>
                   </div>
-                  <Button variant="main" width="100%" onClick={onCheckout}>
+                  <Button variant="default" width="100%" onClick={onCheckout}>
                     Realizar Pedido
                   </Button>
                 </div>

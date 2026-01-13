@@ -109,7 +109,7 @@ const CheckoutModal = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalBody className="my-3">
-            <Stepper size="sm" colorScheme="main" index={activeStep}>
+            <Stepper size="sm" colorScheme="default" index={activeStep}>
               <Step key={0}>
                 <StepIndicator>
                   <StepStatus
