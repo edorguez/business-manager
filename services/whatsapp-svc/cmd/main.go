@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -17,8 +16,8 @@ import (
 	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/wsmanager"
 	pbwhatsapp "github.com/edorguez/business-manager/shared/pb/whatsapp"
 	_ "github.com/lib/pq"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	waLog "go.mau.fi/whatsmeow/util/log"
+	// "go.mau.fi/whatsmeow/store/sqlstore"
+	// waLog "go.mau.fi/whatsmeow/util/log"
 	"google.golang.org/grpc"
 )
 
@@ -34,7 +33,7 @@ func main() {
 		log.Fatalln("Failed to listen for gRPC:", err)
 	}
 
-	httpLis, err := net.Listen("tcp", ":"+c.WhatsappWsPort)
+	// httpLis, err := net.Listen("tcp", ":"+c.WhatsappWsPort)
 	if err != nil {
 		log.Fatalln("Failed to listen for HTTP:", err)
 	}
@@ -60,12 +59,12 @@ func main() {
 
 	storage := db.NewStorage(conn)
 
-	rootCtx := context.Background()
-	ctx, cancel := context.WithCancel(rootCtx)
-	defer cancel()
+	// rootCtx := context.Background()
+	// ctx, cancel := context.WithCancel(rootCtx)
+	// defer cancel()
 
-	dbLog := waLog.Stdout("Database", "DEBUG", true)
-	container, err := sqlstore.New(ctx, c.PostgresDBDriver, dbSource, dbLog)
+	// dbLog := waLog.Stdout("Database", "DEBUG", true)
+	// container, err := sqlstore.New(ctx, c.PostgresDBDriver, dbSource, dbLog)
 	if err != nil {
 		panic(err)
 	}
@@ -78,19 +77,19 @@ func main() {
 		Config: &c,
 	}
 
-	wms := services.WhatsappMessagingService{
-		Repo: repository.NewWhatsappMessagingRepo(storage),
-	}
+	// wms := services.WhatsappMessagingService{
+	// 	Repo: repository.NewWhatsappMessagingRepo(storage),
+	// }
 
 	grpcServer := grpc.NewServer()
 	pbwhatsapp.RegisterWhatsappServiceServer(grpcServer, &ps)
 
-	setupAPI := setupAPI{
-		WhatsappMessagingService: wms,
-		Manager:                  wsmanager.NewManager(ctx, *container),
-	}
+	// setupAPI := setupAPI{
+	// 	WhatsappMessagingService: wms,
+	// 	Manager:                  wsmanager.NewManager(ctx, *container),
+	// }
 
-	setupAPI.handleRoutes()
+	// setupAPI.handleRoutes()
 
 	// Run both servers concurrently
 	go func() {
@@ -100,12 +99,12 @@ func main() {
 		}
 	}()
 
-	go func() {
-		log.Printf("Starting HTTP/WebSocket server on port %s", c.WhatsappWsPort)
-		if err := http.Serve(httpLis, nil); err != nil {
-			log.Fatalf("Failed to serve HTTP: %v", err)
-		}
-	}()
+	// go func() {
+	// 	log.Printf("Starting HTTP/WebSocket server on port %s", c.WhatsappWsPort)
+	// 	if err := http.Serve(httpLis, nil); err != nil {
+	// 		log.Fatalf("Failed to serve HTTP: %v", err)
+	// 	}
+	// }()
 
 	// Wait for interrupt signal to gracefully shutdown
 	ch := make(chan os.Signal, 1)
@@ -114,7 +113,7 @@ func main() {
 
 	fmt.Println("Shutting down servers...")
 	grpcServer.GracefulStop()
-	cancel()
+	// cancel()
 }
 
 type setupAPI struct {

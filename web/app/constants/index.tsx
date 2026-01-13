@@ -109,17 +109,17 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
     submenu: true,
     subMenuItems: [
+      // {
+      //   title: "Chat",
+      //   path: "/management/whatsapp",
+      //   roleIds: [
+      //     USER_ROLE_ID.SUPER_ADMIN,
+      //     USER_ROLE_ID.ADMIN,
+      //     USER_ROLE_ID.REGULAR,
+      //   ],
+      // },
       {
-        title: "Chat",
-        path: "/management/whatsapp",
-        roleIds: [
-          USER_ROLE_ID.SUPER_ADMIN,
-          USER_ROLE_ID.ADMIN,
-          USER_ROLE_ID.REGULAR,
-        ],
-      },
-      {
-        title: "Número de Mensajes",
+        title: "Número de WhatsApp",
         path: "/management/whatsapp/number",
         roleIds: [
           USER_ROLE_ID.SUPER_ADMIN,
