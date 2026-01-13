@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/datatransfer"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
@@ -36,8 +37,10 @@ type WhatsappMessage struct {
 func (c *Client) whatsappEventHandler(evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
+		fmt.Println("=====> Event MESSAGE")
 		fmt.Println("Received a message!", v.Message.GetConversation())
 	case *events.QR:
+		fmt.Println("=====> Event QR")
 		if len(v.Codes) > 0 {
 			c.SendServerMessage(v.Codes[0], QR_CODE)
 		}
@@ -51,6 +54,7 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 	// personMsg := map[string][]*events.Message
 	// evt, err := c.whatsappClient.ParseWebMessage(chatJID, historyMsg.GetMessage())
 	case *events.HistorySync:
+		fmt.Println("=====> Event HISTORY")
 		c.handleHistorySync(v)
 
 		// if v.Data.Progress != nil {
@@ -77,9 +81,9 @@ func (c *Client) whatsappEventHandler(evt interface{}) {
 		// }
 	default:
 		var r = reflect.TypeOf(v)
-		fmt.Println("----->")
-		fmt.Printf("-----> EVENT TYPE = %v", r)
-		fmt.Println("----->")
+		fmt.Println("======")
+		fmt.Printf("=====> DEFAULT EVENT TYPE = %v \n", r)
+		fmt.Println("======")
 	}
 }
 
@@ -139,7 +143,29 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 
 		result := make([]WhatsappConversation, 0, len(v.Data.Conversations))
 
+		fmt.Println("======> CHECK CONVERSATIONS")
+		fmt.Printf("%v\n", len(v.Data.Conversations))
+		fmt.Printf("%v\n", v.Data.Conversations[0])
+		fmt.Printf("%v\n", v.Data.Conversations[1])
+		fmt.Println("--------------")
+		fmt.Printf("%v\n", v.Data.Conversations)
+
+		convParams := datatransfer.BulkConversationParamsDto{
+			CompanyID:     1,
+			Conversations: make([]*datatransfer.ConversationDataDto, 0, len(v.Data.Conversations)),
+		}
+
+		msgParams := datatransfer.BulkMessageParamsDto{
+			CompanyID: 1,
+			Messages:  make([]*datatransfer.MessageDataDto, 0),
+		}
+
+		fmt.Println("=================")
+		fmt.Printf("Number of conversations: %v\n", len(v.Data.Conversations))
+		fmt.Println("=================")
+
 		for _, conversation := range v.Data.Conversations {
+
 			var addConversation WhatsappConversation
 
 			addConversation.ID = conversation.GetID()
@@ -153,17 +179,25 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 			idFormat := re.FindString(jid.String())
 			addConversation.Name = idFormat
 
-			if users, err := c.whatsappClient.GetUserInfo([]types.JID{jid}); err != nil {
+			if users, err := c.whatsappClient.GetUserInfo(context.Background(), []types.JID{jid}); err != nil {
 				fmt.Println(err)
 			} else {
 				for _, user := range users {
 
-					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(jid, nil); err != nil || picture_info == nil {
+					if picture_info, err := c.whatsappClient.GetProfilePictureInfo(context.Background(), jid, nil); err != nil || picture_info == nil {
 						fmt.Println("error", jid, user.PictureID, picture_info, err)
 					} else {
 						addConversation.ProfilePictureUrl = picture_info.URL
 					}
 				}
+
+				convParams.Conversations = append(convParams.Conversations, &datatransfer.ConversationDataDto{
+					JID:               jid.String(),
+					Name:              conversation.GetName(),
+					UnreadCount:       int32(conversation.GetUnreadCount()),
+					IsGroup:           jid.Server == types.GroupServer,
+					ProfilePictureURL: addConversation.ProfilePictureUrl,
+				})
 
 				addConversation.Messages = make([]WhatsappMessage, 0, len(conversation.Messages))
 
@@ -192,12 +226,28 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 					if len(wsmsg.Message) > 0 {
 						addConversation.Messages = append([]WhatsappMessage{wsmsg}, addConversation.Messages...)
 					}
+
+					msgParams.Messages = append(msgParams.Messages, &datatransfer.MessageDataDto{
+						ConversationJID: jid.String(),
+						RemoteJID:       msg.Message.Key.GetRemoteJID(),
+						FromMe:          msg.Message.Key.GetFromMe(),
+						MessageText:     wsmsg.Message,
+						Timestamp:       msg.Message.GetMessageTimestamp(),
+						ReceivedAt:      time.Now(),
+						IsForwarded:     false,
+						IsDeleted:       false,
+					})
 				}
 
 				if len(addConversation.Messages) > 0 {
 					result = append(result, addConversation)
 				}
 			}
+		}
+
+		if err := c.whatsappMessagingService.BulkSaveConversationsAndMessages(context.Background(), convParams, msgParams); err != nil {
+			fmt.Println("Error BulkSaveConversationsAndMessages: ", err)
+			return
 		}
 
 		var buf bytes.Buffer
@@ -211,6 +261,8 @@ func (c *Client) handleHistorySync(v *events.HistorySync) {
 
 		jsonStr := buf.String()
 		jsonStr = jsonStr[:len(jsonStr)-1]
+
+		fmt.Println("FINAL BROMA")
 
 		c.SendServerMessage(jsonStr, CONVERSATIONS_CODE)
 	}

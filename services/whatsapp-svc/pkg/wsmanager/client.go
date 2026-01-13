@@ -1,10 +1,12 @@
 package wsmanager
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"time"
 
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/services"
 	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq"
 	"go.mau.fi/whatsmeow"
@@ -25,7 +27,8 @@ type Client struct {
 	// chatroom is used to know what room user is in
 	chatroom string
 
-	whatsappClient *whatsmeow.Client
+	whatsappClient           *whatsmeow.Client
+	whatsappMessagingService services.WhatsappMessagingService
 }
 
 var (
@@ -38,11 +41,12 @@ var (
 )
 
 // NewClient is used to initialize a new Client with all required values initialized
-func NewClient(conn *websocket.Conn, manager *Manager) *Client {
+func NewClient(conn *websocket.Conn, manager *Manager, wms services.WhatsappMessagingService) *Client {
 	r := &Client{
-		connection: conn,
-		manager:    manager,
-		egress:     make(chan Event),
+		connection:               conn,
+		manager:                  manager,
+		egress:                   make(chan Event),
+		whatsappMessagingService: wms,
 	}
 	return r
 }
@@ -135,6 +139,7 @@ func (c *Client) writeMessages() {
 				log.Println(err)
 			}
 			log.Println("sent message")
+			log.Printf("%s", data)
 		case <-ticker.C:
 			// Send the Ping
 			if err := c.connection.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
@@ -143,4 +148,12 @@ func (c *Client) writeMessages() {
 			}
 		}
 	}
+}
+
+// disconnect is a function that removes the client
+func (c *Client) disconnect() {
+	if err := c.whatsappClient.Logout(context.Background()); err != nil {
+		log.Fatalf("Logout failed: %v", err)
+	}
+	c.manager.removeClient(c)
 }

@@ -26,6 +26,8 @@ const (
 	EventNewMessage = "new_message"
 	// EventChangeRoom is event when switching rooms
 	EventChangeRoom = "change_room"
+	// EventDisconnect is event when disconnecting
+	EventDisconnect = "disconnect"
 )
 
 // SendMessageEvent is the payload sent in the
@@ -92,5 +94,15 @@ func ChatRoomHandler(event Event, c *Client) error {
 	// Add Client to chat room
 	c.chatroom = changeRoomEvent.Name
 
+	return nil
+}
+
+type DisconnectEvent struct {
+	CompanyID string `json:"companyId"`
+}
+
+// DisconnectHandler will disconnect the client
+func DisconnectHandler(event Event, c *Client) error {
+	c.disconnect()
 	return nil
 }

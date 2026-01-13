@@ -24,6 +24,11 @@ export class PASSWORD {
   public static MIN_PASSWORD_LEGTH = 6;
 }
 
+export class EVENT {
+	public static SEND_MESSAGE = "send_message";
+	public static DISCONNECT = "disconnect";
+}
+
 export const SIDENAV_ITEMS: SideNavItem[] = [
   {
     title: "Home",
@@ -102,6 +107,26 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     title: "WhatsApp",
     path: "/management/whatsapp",
     icon: <Icon icon="ic:baseline-whatsapp" width="20" height="20" />,
+    submenu: true,
+    subMenuItems: [
+      // {
+      //   title: "Chat",
+      //   path: "/management/whatsapp",
+      //   roleIds: [
+      //     USER_ROLE_ID.SUPER_ADMIN,
+      //     USER_ROLE_ID.ADMIN,
+      //     USER_ROLE_ID.REGULAR,
+      //   ],
+      // },
+      {
+        title: "Número de WhatsApp",
+        path: "/management/whatsapp/number",
+        roleIds: [
+          USER_ROLE_ID.SUPER_ADMIN,
+          USER_ROLE_ID.ADMIN,
+        ],
+      },
+    ],
     roleIds: [
       USER_ROLE_ID.SUPER_ADMIN,
       USER_ROLE_ID.ADMIN,

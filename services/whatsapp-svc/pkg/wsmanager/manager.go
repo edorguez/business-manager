@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/edorguez/business-manager/services/whatsapp-svc/pkg/services"
 	"github.com/gorilla/websocket"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 )
@@ -76,6 +77,7 @@ func NewManager(ctx context.Context, container sqlstore.Container) *Manager {
 func (m *Manager) setupEventHandlers() {
 	m.handlers[EventSendMessage] = SendMessageHandler
 	m.handlers[EventChangeRoom] = ChatRoomHandler
+	m.handlers[EventDisconnect] = DisconnectHandler
 }
 
 // routeEvent is used to make sure the correct event goes into the correct handler
@@ -137,7 +139,7 @@ func (m *Manager) LoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // serveWS is a HTTP Handler that the has the Manager that allows connections
-func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request) {
+func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request, s services.WhatsappMessagingService) {
 
 	// Grab the OTP in the Get param
 	// otp := r.URL.Query().Get("otp")
@@ -162,7 +164,7 @@ func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create New Client
-	client := NewClient(conn, m)
+	client := NewClient(conn, m, s)
 	// Add the newly created client to the manager
 	m.addClient(client)
 

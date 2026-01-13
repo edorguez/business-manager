@@ -5,6 +5,7 @@
 package db
 
 import (
+	"database/sql"
 	"time"
 )
 
@@ -14,4 +15,35 @@ type WhatsappBusinessPhone struct {
 	Phone      string    `json:"phone"`
 	CreatedAt  time.Time `json:"created_at"`
 	ModifiedAt time.Time `json:"modified_at"`
+}
+
+type WhatsappMessagingWhatsappConversation struct {
+	ID                   int64          `json:"id"`
+	CompanyID            int64          `json:"company_id"`
+	Jid                  string         `json:"jid"`
+	Name                 sql.NullString `json:"name"`
+	UnreadCount          sql.NullInt32  `json:"unread_count"`
+	IsGroup              sql.NullBool   `json:"is_group"`
+	ProfilePictureUrl    sql.NullString `json:"profile_picture_url"`
+	LastMessageTimestamp sql.NullTime   `json:"last_message_timestamp"`
+	CreatedAt            sql.NullTime   `json:"created_at"`
+	ModifiedAt           sql.NullTime   `json:"modified_at"`
+}
+
+type WhatsappMessagingWhatsappMessage struct {
+	ID              int64          `json:"id"`
+	CompanyID       int64          `json:"company_id"`
+	ConversationJid string         `json:"conversation_jid"`
+	RemoteJid       string         `json:"remote_jid"`
+	FromMe          sql.NullBool   `json:"from_me"`
+	MessageText     sql.NullString `json:"message_text"`
+	MediaUrl        sql.NullString `json:"media_url"`
+	MediaCaption    sql.NullString `json:"media_caption"`
+	Timestamp       int64          `json:"timestamp"`
+	ReceivedAt      sql.NullTime   `json:"received_at"`
+	EditedAt        sql.NullTime   `json:"edited_at"`
+	IsForwarded     sql.NullBool   `json:"is_forwarded"`
+	IsDeleted       sql.NullBool   `json:"is_deleted"`
+	CreatedAt       sql.NullTime   `json:"created_at"`
+	ModifiedAt      sql.NullTime   `json:"modified_at"`
 }

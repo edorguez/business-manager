@@ -1,14 +1,18 @@
 'use client';
 
-import { Container } from "@chakra-ui/react";
+import Container from "@/app/components/Container";
 import WhatsAppClient from "./WhatsAppClient";
+import { redirect } from "next/navigation";
 
 const WhatsAppPage = () => {
-  return (
-    <Container>
-      <WhatsAppClient />
-    </Container>
-  )
+  redirect('/management/home');
+
+  return null;
+  // return (
+  //   <Container>
+  //     <WhatsAppClient />
+  //   </Container>
+  // )
 }
 
 export default WhatsAppPage;

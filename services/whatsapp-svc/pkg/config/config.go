@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	WhatsappSvcPort                 string `mapstructure:"WHATSAPP_SVC_PORT"`
+	WhatsappWsPort                  string `mapstructure:"WHATSAPP_WS_PORT"`
 	PostgresDBDriver                string `mapstructure:"POSTGRES_DB_DRIVER"`
 	WhatsappDBSourceDevelopment     string `mapstructure:"WHATSAPP_DB_SOURCE_DEVELOPMENT"`
 	WhatsappDBSourceDockerContainer string `mapstructure:"WHATSAPP_DB_SOURCE_DOCKER_CONTAINER"`
@@ -30,6 +31,7 @@ func LoadConfig() (config Config, err error) {
 		log.Println("No .env file found, using environment variables")
 
 		config.WhatsappSvcPort = getViperString("WHATSAPP_SVC_PORT")
+		config.WhatsappWsPort = getViperString("WHATSAPP_WS_PORT")
 		config.PostgresDBDriver = getViperString("POSTGRES_DB_DRIVER")
 		config.WhatsappDBSourceDevelopment = getViperString("WHATSAPP_DB_SOURCE_DEVELOPMENT")
 		config.WhatsappDBSourceDockerContainer = getViperString("WHATSAPP_DB_SOURCE_DOCKER_CONTAINER")
