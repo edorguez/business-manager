@@ -6,7 +6,7 @@ import { Company } from "../types/company";
 import { Product } from "../types/product";
 import ProductCard from "../components/cards/ProductCard";
 import { GetCompanyByNameUrlRequest } from "../services/companies";
-import { notFound, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import useGeneralLoading from "../hooks/useGeneralLoading";
 import { GetProductsRequest } from "../services/products";
 import ProductsCartDrawer from "../components/drawers/ProductsCartDrawer";
