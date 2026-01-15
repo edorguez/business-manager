@@ -9,6 +9,8 @@ volumes:
     name: whatsapp_db_data
   auth_db_data:
     name: auth_db_data
+  order_db_data:
+    name: order_db_data
 
 services:
   gateway:
@@ -243,6 +245,21 @@ services:
       - POSTGRES_PASSWORD=${AUTH_SVC_DB_PASSWORD}
     volumes:
       - auth_db_data:/var/lib/postgresql/data
+    networks:
+        - my_app_network
+    restart: always
+
+  order-db:
+    container_name: order-db
+    image: postgres:16.2
+    ports:
+      - "5438:5432"
+    environment:
+      - POSTGRES_DB=${ORDER_SVC_DB}
+      - POSTGRES_USER=${ORDER_SVC_DB_USER}
+      - POSTGRES_PASSWORD=${ORDER_SVC_DB_PASSWORD}
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
     restart: always
