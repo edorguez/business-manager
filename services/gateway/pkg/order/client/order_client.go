@@ -89,3 +89,59 @@ func CreateOrder(body contracts.CreateOrderRequest, c context.Context) (*pb.Crea
 	fmt.Println("Order CLIENT :  CreateOrder - SUCCESS")
 	return res, nil
 }
+
+func GetOrder(id string, c context.Context) (*pb.GetOrderResponse, *types.Error) {
+	fmt.Println("Order CLIENT :  GetOrder")
+
+	fmt.Println("Order CLIENT :  GetOrder - ID:", id)
+
+	req := &pb.GetOrderRequest{
+		Id: id,
+	}
+
+	res, err := orderServiceClient.GetOrder(c, req)
+
+	if err != nil {
+		fmt.Println("Order CLIENT :  GetOrder - ERROR")
+		fmt.Println(err.Error())
+
+		error := &types.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Order CLIENT :  GetOrder - SUCCESS")
+	return res, nil
+}
+
+func GetOrders(companyId int64, limit, offset int32, c context.Context) (*pb.GetOrdersResponse, *types.Error) {
+	fmt.Println("Order CLIENT :  GetOrders")
+
+	fmt.Println("Order CLIENT :  GetOrders - companyId:", companyId, "limit:", limit, "offset:", offset)
+
+	req := &pb.GetOrdersRequest{
+		CompanyId: companyId,
+		Limit:     limit,
+		Offset:    offset,
+	}
+
+	res, err := orderServiceClient.GetOrders(c, req)
+
+	if err != nil {
+		fmt.Println("Order CLIENT :  GetOrders - ERROR")
+		fmt.Println(err.Error())
+
+		error := &types.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Order CLIENT :  GetOrders - SUCCESS")
+	return res, nil
+}

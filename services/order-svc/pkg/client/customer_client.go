@@ -60,3 +60,23 @@ func CreateCustomer(params *pb.CreateCustomerRequest, c context.Context) (*pb.Cr
 	fmt.Println("Customer CLIENT :  CreateCustomer - SUCCESS")
 	return res, nil
 }
+
+func GetCustomer(params *pb.GetCustomerRequest, c context.Context) (*pb.GetCustomerResponse, error) {
+	fmt.Println("Customer CLIENT :  GetCustomer")
+
+	fmt.Println("Customer CLIENT :  GetCustomer - Body")
+	fmt.Println(params)
+	fmt.Println("-----------------")
+
+	res, err := customerServiceClient.GetCustomer(c, params)
+
+	if err != nil {
+		fmt.Println("Customer CLIENT :  GetCustomer - ERROR")
+		fmt.Println(err.Error())
+
+		return nil, err
+	}
+
+	fmt.Println("Customer CLIENT :  GetCustomer - SUCCESS")
+	return res, nil
+}

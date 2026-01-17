@@ -8,11 +8,14 @@ import (
 )
 
 type Config struct {
-	OrderSvcPort    string `mapstructure:"ORDER_SVC_PORT"`
-	CustomerSvcUrl  string `mapstructure:"CUSTOMER_SVC_URL"`
-	CustomerSvcPort string `mapstructure:"CUSTOMER_SVC_PORT"`
-	WhatsappSvcUrl  string `mapstructure:"WHATSAPP_SVC_URL"`
-	WhatsappSvcPort string `mapstructure:"WHATSAPP_SVC_PORT"`
+	OrderSvcPort                 string `mapstructure:"ORDER_SVC_PORT"`
+	CustomerSvcUrl               string `mapstructure:"CUSTOMER_SVC_URL"`
+	CustomerSvcPort              string `mapstructure:"CUSTOMER_SVC_PORT"`
+	WhatsappSvcUrl               string `mapstructure:"WHATSAPP_SVC_URL"`
+	WhatsappSvcPort              string `mapstructure:"WHATSAPP_SVC_PORT"`
+	PostgresDBDriver             string `mapstructure:"POSTGRES_DB_DRIVER"`
+	OrderDBSourceDevelopment     string `mapstructure:"ORDER_DB_SOURCE_DEVELOPMENT"`
+	OrderDBSourceDockerContainer string `mapstructure:"ORDER_DB_SOURCE_DOCKER_CONTAINER"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -32,6 +35,9 @@ func LoadConfig() (config Config, err error) {
 		config.CustomerSvcPort = getViperString("CUSTOMER_SVC_PORT")
 		config.WhatsappSvcUrl = getViperString("WHATSAPP_SVC_URL")
 		config.WhatsappSvcPort = getViperString("WHATSAPP_SVC_PORT")
+		config.PostgresDBDriver = getViperString("POSTGRES_DB_DRIVER")
+		config.OrderDBSourceDevelopment = getViperString("ORDER_DB_SOURCE_DEVELOPMENT")
+		config.OrderDBSourceDockerContainer = getViperString("ORDER_DB_SOURCE_DOCKER_CONTAINER")
 	}
 
 	err = viper.Unmarshal(&config)

@@ -76,9 +76,9 @@ docker-whatsapp-svc:
 	docker build -t $(REGISTRY)/whatsapp-svc -f infra/production/docker/whatsapp-svc.Dockerfile .
 
 # Sync Databases
-migrateup-all: migrateup-auth-svc migrateup-company-svc migrateup-customer-svc migrateup-whatsapp-svc
+migrateup-all: migrateup-auth-svc migrateup-company-svc migrateup-customer-svc migrateup-whatsapp-svc migrateup-order-svc
 
-migratedown-all: migratedown-auth-svc migratedown-company-svc migratedown-customer-svc migratedown-whatsapp-svc
+migratedown-all: migratedown-auth-svc migratedown-company-svc migratedown-customer-svc migratedown-whatsapp-svc migratedown-order-svc
 
 migrateup-auth-svc:
 	migrate -path services/auth-svc/pkg/db/migration -database ${AUTH_DB_SOURCE_DEVELOPMENT} --verbose up
@@ -103,4 +103,10 @@ migrateup-whatsapp-svc:
 
 migratedown-whatsapp-svc:
 	migrate -path services/whatsapp-svc/pkg/db/migration -database ${WHATSAPP_DB_SOURCE_DEVELOPMENT} --verbose down
+
+migrateup-order-svc:
+	migrate -path services/order-svc/pkg/db/migration -database ${ORDER_DB_SOURCE_DEVELOPMENT} --verbose up
+
+migratedown-order-svc:
+	migrate -path services/order-svc/pkg/db/migration -database ${ORDER_DB_SOURCE_DEVELOPMENT} --verbose down
 
