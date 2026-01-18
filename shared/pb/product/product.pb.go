@@ -27,7 +27,7 @@ type CreateProductRequest struct {
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Description   *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	Sku           *string                `protobuf:"bytes,4,opt,name=sku,proto3,oneof" json:"sku,omitempty"`
-	Quantity      uint64                 `protobuf:"varint,5,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity      uint32                 `protobuf:"varint,5,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,6,opt,name=price,proto3" json:"price,omitempty"`
 	Images        [][]byte               `protobuf:"bytes,7,rep,name=images,proto3" json:"images,omitempty"`
 	ProductStatus uint32                 `protobuf:"varint,8,opt,name=productStatus,proto3" json:"productStatus,omitempty"`
@@ -93,7 +93,7 @@ func (x *CreateProductRequest) GetSku() string {
 	return ""
 }
 
-func (x *CreateProductRequest) GetQuantity() uint64 {
+func (x *CreateProductRequest) GetQuantity() uint32 {
 	if x != nil {
 		return x.Quantity
 	}
@@ -232,7 +232,7 @@ type GetProductResponse struct {
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Description   *string                `protobuf:"bytes,4,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	Sku           *string                `protobuf:"bytes,5,opt,name=sku,proto3,oneof" json:"sku,omitempty"`
-	Quantity      uint64                 `protobuf:"varint,6,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity      uint32                 `protobuf:"varint,6,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,7,opt,name=price,proto3" json:"price,omitempty"`
 	Images        []string               `protobuf:"bytes,8,rep,name=images,proto3" json:"images,omitempty"`
 	ProductStatus uint32                 `protobuf:"varint,9,opt,name=productStatus,proto3" json:"productStatus,omitempty"`
@@ -307,7 +307,7 @@ func (x *GetProductResponse) GetSku() string {
 	return ""
 }
 
-func (x *GetProductResponse) GetQuantity() uint64 {
+func (x *GetProductResponse) GetQuantity() uint32 {
 	if x != nil {
 		return x.Quantity
 	}
@@ -612,7 +612,7 @@ type UpdateProductRequest struct {
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Description   *string                `protobuf:"bytes,4,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	Sku           *string                `protobuf:"bytes,5,opt,name=sku,proto3,oneof" json:"sku,omitempty"`
-	Quantity      uint64                 `protobuf:"varint,6,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity      uint32                 `protobuf:"varint,6,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,7,opt,name=price,proto3" json:"price,omitempty"`
 	Images        [][]byte               `protobuf:"bytes,8,rep,name=images,proto3" json:"images,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -684,7 +684,7 @@ func (x *UpdateProductRequest) GetSku() string {
 	return ""
 }
 
-func (x *UpdateProductRequest) GetQuantity() uint64 {
+func (x *UpdateProductRequest) GetQuantity() uint32 {
 	if x != nil {
 		return x.Quantity
 	}
@@ -967,7 +967,7 @@ const file_product_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12%\n" +
 	"\vdescription\x18\x03 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x15\n" +
 	"\x03sku\x18\x04 \x01(\tH\x01R\x03sku\x88\x01\x01\x12\x1a\n" +
-	"\bquantity\x18\x05 \x01(\x04R\bquantity\x12\x14\n" +
+	"\bquantity\x18\x05 \x01(\rR\bquantity\x12\x14\n" +
 	"\x05price\x18\x06 \x01(\x04R\x05price\x12\x16\n" +
 	"\x06images\x18\a \x03(\fR\x06images\x12$\n" +
 	"\rproductStatus\x18\b \x01(\rR\rproductStatusB\x0e\n" +
@@ -985,7 +985,7 @@ const file_product_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12%\n" +
 	"\vdescription\x18\x04 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x15\n" +
 	"\x03sku\x18\x05 \x01(\tH\x01R\x03sku\x88\x01\x01\x12\x1a\n" +
-	"\bquantity\x18\x06 \x01(\x04R\bquantity\x12\x14\n" +
+	"\bquantity\x18\x06 \x01(\rR\bquantity\x12\x14\n" +
 	"\x05price\x18\a \x01(\x04R\x05price\x12\x16\n" +
 	"\x06images\x18\b \x03(\tR\x06images\x12$\n" +
 	"\rproductStatus\x18\t \x01(\rR\rproductStatus\x12\x16\n" +
@@ -1021,7 +1021,7 @@ const file_product_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12%\n" +
 	"\vdescription\x18\x04 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x15\n" +
 	"\x03sku\x18\x05 \x01(\tH\x01R\x03sku\x88\x01\x01\x12\x1a\n" +
-	"\bquantity\x18\x06 \x01(\x04R\bquantity\x12\x14\n" +
+	"\bquantity\x18\x06 \x01(\rR\bquantity\x12\x14\n" +
 	"\x05price\x18\a \x01(\x04R\x05price\x12\x16\n" +
 	"\x06images\x18\b \x03(\fR\x06imagesB\x0e\n" +
 	"\f_descriptionB\x06\n" +

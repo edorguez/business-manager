@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 const createOrderProduct = `-- name: CreateOrderProduct :one
@@ -18,11 +16,11 @@ RETURNING id, order_id, product_id, created_at, modified_at, quantity, price, na
 `
 
 type CreateOrderProductParams struct {
-	OrderID   int64     `json:"order_id"`
-	ProductID uuid.UUID `json:"product_id"`
-	Quantity  int32     `json:"quantity"`
-	Price     int64     `json:"price"`
-	Name      string    `json:"name"`
+	OrderID   int64  `json:"order_id"`
+	ProductID string `json:"product_id"`
+	Quantity  int32  `json:"quantity"`
+	Price     int64  `json:"price"`
+	Name      string `json:"name"`
 }
 
 func (q *Queries) CreateOrderProduct(ctx context.Context, arg CreateOrderProductParams) (OrderOrderProduct, error) {

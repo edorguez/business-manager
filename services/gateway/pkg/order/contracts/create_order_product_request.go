@@ -5,7 +5,7 @@ import "github.com/go-playground/validator/v10"
 type CreateOrderProductRequest struct {
 	ProductId string `json:"productId" validate:"required"`
 	Name      string `json:"name" validate:"required"`
-	Quantity  uint64 `json:"quantity" validate:"required"`
+	Quantity  uint32 `json:"quantity" validate:"required"`
 	Price     uint64 `json:"price" validate:"required"`
 }
 

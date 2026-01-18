@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import useLoading from '@/app/hooks/useLoading';
 import useWarningModal from '@/app/hooks/useWarningModal';
 import WarningModal from '@/app/components/modals/WarningModal';
-import { validIdentification, validLetters, validNumbers } from '@/app/utils/InputUtils';
+import { validLetters, validNumbers } from '@/app/utils/InputUtils';
 
 const CustomersClient = () => {
   const bcItems: BreadcrumItem[] = [

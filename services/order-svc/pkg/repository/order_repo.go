@@ -4,7 +4,6 @@ import (
 	"context"
 
 	db "github.com/edorguez/business-manager/services/order-svc/pkg/db/sqlc"
-	"github.com/google/uuid"
 )
 
 type OrderRepo struct {
@@ -26,7 +25,7 @@ type CreateOrderWithProductsParams struct {
 type CreateOrderProductParams struct {
 	ProductID string
 	Name      string
-	Quantity  uint64
+	Quantity  uint32
 	Price     uint64
 }
 
@@ -48,13 +47,9 @@ func (repo *OrderRepo) CreateOrderWithProducts(ctx context.Context, arg CreateOr
 
 		// Create order products
 		for _, product := range arg.Products {
-			productUUID, err := uuid.Parse(product.ProductID)
-			if err != nil {
-				return err
-			}
 			productParams := db.CreateOrderProductParams{
 				OrderID:   result.ID,
-				ProductID: productUUID,
+				ProductID: product.ProductID,
 				Quantity:  int32(product.Quantity),
 				Price:     int64(product.Price),
 				Name:      product.Name,

@@ -6,8 +6,6 @@ package db
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type OrderOrder struct {
@@ -21,7 +19,7 @@ type OrderOrder struct {
 type OrderOrderProduct struct {
 	ID         int64     `json:"id"`
 	OrderID    int64     `json:"order_id"`
-	ProductID  uuid.UUID `json:"product_id"`
+	ProductID  string    `json:"product_id"`
 	CreatedAt  time.Time `json:"created_at"`
 	ModifiedAt time.Time `json:"modified_at"`
 	Quantity   int32     `json:"quantity"`

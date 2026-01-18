@@ -209,9 +209,9 @@ func (s *OrderService) GetOrder(ctx context.Context, req *order.GetOrderRequest)
 		productsProto = append(productsProto, &order.OrderProduct{
 			Id:        fmt.Sprintf("%d", p.ID),
 			OrderId:   fmt.Sprintf("%d", p.OrderID),
-			ProductId: p.ProductID.String(),
+			ProductId: p.ProductID,
 			Name:      p.Name,
-			Quantity:  uint64(p.Quantity),
+			Quantity:  uint32(p.Quantity),
 			Price:     uint64(p.Price),
 		})
 	}
@@ -309,9 +309,9 @@ func (s *OrderService) GetOrders(ctx context.Context, req *order.GetOrdersReques
 			productsProto = append(productsProto, &order.OrderProduct{
 				Id:        fmt.Sprintf("%d", p.ID),
 				OrderId:   fmt.Sprintf("%d", p.OrderID),
-				ProductId: p.ProductID.String(),
+				ProductId: p.ProductID,
 				Name:      p.Name,
-				Quantity:  uint64(p.Quantity),
+				Quantity:  uint32(p.Quantity),
 				Price:     uint64(p.Price),
 			})
 		}

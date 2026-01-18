@@ -161,7 +161,7 @@ type CreateOrderProductRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     string                 `protobuf:"bytes,1,opt,name=productId,proto3" json:"productId,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Quantity      uint64                 `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity      uint32                 `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,4,opt,name=price,proto3" json:"price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -211,7 +211,7 @@ func (x *CreateOrderProductRequest) GetName() string {
 	return ""
 }
 
-func (x *CreateOrderProductRequest) GetQuantity() uint64 {
+func (x *CreateOrderProductRequest) GetQuantity() uint32 {
 	if x != nil {
 		return x.Quantity
 	}
@@ -599,7 +599,7 @@ type OrderProduct struct {
 	OrderId       string                 `protobuf:"bytes,2,opt,name=orderId,proto3" json:"orderId,omitempty"`
 	ProductId     string                 `protobuf:"bytes,3,opt,name=productId,proto3" json:"productId,omitempty"`
 	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Quantity      uint64                 `protobuf:"varint,5,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity      uint32                 `protobuf:"varint,5,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,6,opt,name=price,proto3" json:"price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -663,7 +663,7 @@ func (x *OrderProduct) GetName() string {
 	return ""
 }
 
-func (x *OrderProduct) GetQuantity() uint64 {
+func (x *OrderProduct) GetQuantity() uint32 {
 	if x != nil {
 		return x.Quantity
 	}
@@ -848,7 +848,7 @@ const file_order_proto_rawDesc = "" +
 	"\x19CreateOrderProductRequest\x12\x1c\n" +
 	"\tproductId\x18\x01 \x01(\tR\tproductId\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
-	"\bquantity\x18\x03 \x01(\x04R\bquantity\x12\x14\n" +
+	"\bquantity\x18\x03 \x01(\rR\bquantity\x12\x14\n" +
 	"\x05price\x18\x04 \x01(\x04R\x05price\"C\n" +
 	"\x13CreateOrderResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\x03R\x06status\x12\x14\n" +
@@ -882,7 +882,7 @@ const file_order_proto_rawDesc = "" +
 	"\aorderId\x18\x02 \x01(\tR\aorderId\x12\x1c\n" +
 	"\tproductId\x18\x03 \x01(\tR\tproductId\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +
-	"\bquantity\x18\x05 \x01(\x04R\bquantity\x12\x14\n" +
+	"\bquantity\x18\x05 \x01(\rR\bquantity\x12\x14\n" +
 	"\x05price\x18\x06 \x01(\x04R\x05price\"\x94\x02\n" +
 	"\bCustomer\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +

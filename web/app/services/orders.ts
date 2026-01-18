@@ -1,4 +1,5 @@
-import { CreateOrder } from "../types/order";
+import { CreateOrder, GetOrders } from "../types/order";
+import Cookies from 'js-cookie';
 
 const baseUrl: string =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
@@ -20,5 +21,30 @@ export async function CreateOrderRequest(request: CreateOrder) {
     return response;
   } catch (error: any) {
     console.log(error.toString());
+  }
+}
+
+export async function GetOrdersRequest(
+  request: GetOrders
+) {
+  try {
+    const headers = new Headers();
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
+
+    const res = await fetch(`${baseUrl}?` + new URLSearchParams({
+      companyId: request.companyId.toString(),
+      limit: request.limit.toString(),
+      offset: request.offset.toString()
+    }).toString(), {
+      method: 'GET',
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
   }
 }

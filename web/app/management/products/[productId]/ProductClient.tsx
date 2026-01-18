@@ -262,7 +262,7 @@ const ProductClient = () => {
                 name="quantity"
                 onChange={handleNumberChange}
                 disabled={!isEdit}
-                maxLength={15}
+                maxLength={9}
               />
             </NumberInput>
           </div>

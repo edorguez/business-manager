@@ -264,7 +264,7 @@ func (x *SendOrderBusinessMessageResponse) GetError() string {
 type OrderProductRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Quantity      uint64                 `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity      uint32                 `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,3,opt,name=price,proto3" json:"price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -307,7 +307,7 @@ func (x *OrderProductRequest) GetName() string {
 	return ""
 }
 
-func (x *OrderProductRequest) GetQuantity() uint64 {
+func (x *OrderProductRequest) GetQuantity() uint32 {
 	if x != nil {
 		return x.Quantity
 	}
@@ -792,7 +792,7 @@ const file_whatsapp_proto_rawDesc = "" +
 	"\x05error\x18\x02 \x01(\tR\x05error\"[\n" +
 	"\x13OrderProductRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
-	"\bquantity\x18\x02 \x01(\x04R\bquantity\x12\x14\n" +
+	"\bquantity\x18\x02 \x01(\rR\bquantity\x12\x14\n" +
 	"\x05price\x18\x03 \x01(\x04R\x05price\"P\n" +
 	"\x1aCreateBusinessPhoneRequest\x12\x1c\n" +
 	"\tcompanyId\x18\x01 \x01(\x03R\tcompanyId\x12\x14\n" +

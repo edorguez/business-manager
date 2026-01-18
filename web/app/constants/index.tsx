@@ -51,6 +51,16 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     ],
   },
   {
+    title: "Órdenes",
+    path: "/management/orders",
+    icon: <Icon icon="lets-icons:order" width="20" height="20" />,
+    roleIds: [
+      USER_ROLE_ID.SUPER_ADMIN,
+      USER_ROLE_ID.ADMIN,
+      USER_ROLE_ID.REGULAR,
+    ],
+  },
+  {
     title: "Inventario",
     path: "/management/products",
     icon: <Icon icon="fluent-mdl2:product" width="20" height="20" />,

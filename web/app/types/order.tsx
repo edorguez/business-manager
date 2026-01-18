@@ -18,3 +18,9 @@ export type CreateOrderProduct = {
   quantity: number;
   price: number;
 };
+
+export type GetOrders = {
+  companyId: number;
+  limit: number;
+  offset: number;
+}

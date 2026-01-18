@@ -11,7 +11,10 @@ CREATE TABLE "order"."order" (
 CREATE TABLE "order"."order_product" (
   "id" bigserial PRIMARY KEY,
   "order_id" bigint NOT NULL,
-  "product_id" uuid NOT NULL,
+  "product_id" varchar(24) NOT NULL,
+  "quantity" integer NOT NULL,
+  "price" bigint NOT NULL,
+  "name" varchar(50) NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (NOW()),
   "modified_at" timestamptz NOT NULL DEFAULT (NOW())
 );

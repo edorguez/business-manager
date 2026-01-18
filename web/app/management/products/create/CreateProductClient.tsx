@@ -216,7 +216,7 @@ const CreateProductClient = () => {
               <NumberInputField
                 name="quantity"
                 onChange={handleNumberChange}
-                maxLength={15}
+                maxLength={9}
               />
             </NumberInput>
           </div>
