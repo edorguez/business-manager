@@ -103,7 +103,7 @@ const SimpleTableDesktop: React.FC<SimpleTableProps> = ({
                 className="hover:bg-thirdcolorhov transition duration-150 text-sm"
               >
                 {columns.map((col: SimpleTableColumn, colIndex: number) => (
-                  <Td key={colIndex}>
+                  <Td key={colIndex} className="whitespace-pre-line">
                     {<SimpleTableField data={dataVal} col={col} />}
                   </Td>
                 ))}

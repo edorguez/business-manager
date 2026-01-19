@@ -61,6 +61,14 @@ export const numberMoveDecimal = (num: number, places: number): number => {
   return num / Math.pow(10, places);
 };
 
+export const convertTimestampToDate = (timestamp: {
+  seconds: number;
+  nanos: number;
+}): Date => {
+  // Convert seconds to milliseconds and add nanoseconds as milliseconds
+  return new Date(timestamp.seconds * 1000 + timestamp.nanos / 1000000);
+};
+
 export const formatPriceStringToNumberBackend = (price: string): number => {
   if (price.indexOf(".") !== -1) {
     let parts = price.split(".");

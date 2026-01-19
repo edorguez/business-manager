@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package order;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package= "./order";
 
 service OrderService{
@@ -62,15 +64,15 @@ message GetOrdersResponse {
 }
 
 message Order {
-  string id = 1;
+  int64 id = 1;
   int64 companyId = 2;
   int64 customerId = 3;
-  string createdAt = 4;
+  google.protobuf.Timestamp createdAt = 4;
 }
 
 message OrderProduct {
-  string id = 1;
-  string orderId = 2;
+  int64 id = 1;
+  int64 orderId = 2;
   string productId = 3;
   string name = 4;
   uint32 quantity = 5;

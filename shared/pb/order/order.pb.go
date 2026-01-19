@@ -9,6 +9,7 @@ package order
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -527,10 +528,10 @@ func (x *GetOrdersResponse) GetError() string {
 
 type Order struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	CompanyId     int64                  `protobuf:"varint,2,opt,name=companyId,proto3" json:"companyId,omitempty"`
 	CustomerId    int64                  `protobuf:"varint,3,opt,name=customerId,proto3" json:"customerId,omitempty"`
-	CreatedAt     string                 `protobuf:"bytes,4,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -565,11 +566,11 @@ func (*Order) Descriptor() ([]byte, []int) {
 	return file_order_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *Order) GetId() string {
+func (x *Order) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *Order) GetCompanyId() int64 {
@@ -586,17 +587,17 @@ func (x *Order) GetCustomerId() int64 {
 	return 0
 }
 
-func (x *Order) GetCreatedAt() string {
+func (x *Order) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
 	}
-	return ""
+	return nil
 }
 
 type OrderProduct struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	OrderId       string                 `protobuf:"bytes,2,opt,name=orderId,proto3" json:"orderId,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	OrderId       int64                  `protobuf:"varint,2,opt,name=orderId,proto3" json:"orderId,omitempty"`
 	ProductId     string                 `protobuf:"bytes,3,opt,name=productId,proto3" json:"productId,omitempty"`
 	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	Quantity      uint32                 `protobuf:"varint,5,opt,name=quantity,proto3" json:"quantity,omitempty"`
@@ -635,18 +636,18 @@ func (*OrderProduct) Descriptor() ([]byte, []int) {
 	return file_order_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *OrderProduct) GetId() string {
+func (x *OrderProduct) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
-func (x *OrderProduct) GetOrderId() string {
+func (x *OrderProduct) GetOrderId() int64 {
 	if x != nil {
 		return x.OrderId
 	}
-	return ""
+	return 0
 }
 
 func (x *OrderProduct) GetProductId() string {
@@ -833,7 +834,7 @@ var File_order_proto protoreflect.FileDescriptor
 
 const file_order_proto_rawDesc = "" +
 	"\n" +
-	"\vorder.proto\x12\x05order\"\xaf\x01\n" +
+	"\vorder.proto\x12\x05order\x1a\x1fgoogle/protobuf/timestamp.proto\"\xaf\x01\n" +
 	"\x12CreateOrderRequest\x12\x1c\n" +
 	"\tcompanyId\x18\x01 \x01(\x03R\tcompanyId\x12=\n" +
 	"\bcustomer\x18\x02 \x01(\v2!.order.CreateOrderCustomerRequestR\bcustomer\x12<\n" +
@@ -869,17 +870,17 @@ const file_order_proto_rawDesc = "" +
 	"\x06orders\x18\x01 \x03(\v2\x17.order.OrderWithDetailsR\x06orders\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x16\n" +
 	"\x06status\x18\x03 \x01(\x03R\x06status\x12\x14\n" +
-	"\x05error\x18\x04 \x01(\tR\x05error\"s\n" +
+	"\x05error\x18\x04 \x01(\tR\x05error\"\x8f\x01\n" +
 	"\x05Order\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1c\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
 	"\tcompanyId\x18\x02 \x01(\x03R\tcompanyId\x12\x1e\n" +
 	"\n" +
 	"customerId\x18\x03 \x01(\x03R\n" +
-	"customerId\x12\x1c\n" +
-	"\tcreatedAt\x18\x04 \x01(\tR\tcreatedAt\"\x9c\x01\n" +
+	"customerId\x128\n" +
+	"\tcreatedAt\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x9c\x01\n" +
 	"\fOrderProduct\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\aorderId\x18\x02 \x01(\tR\aorderId\x12\x1c\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
+	"\aorderId\x18\x02 \x01(\x03R\aorderId\x12\x1c\n" +
 	"\tproductId\x18\x03 \x01(\tR\tproductId\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +
 	"\bquantity\x18\x05 \x01(\rR\bquantity\x12\x14\n" +
@@ -930,6 +931,7 @@ var file_order_proto_goTypes = []any{
 	(*OrderProduct)(nil),               // 9: order.OrderProduct
 	(*Customer)(nil),                   // 10: order.Customer
 	(*OrderWithDetails)(nil),           // 11: order.OrderWithDetails
+	(*timestamppb.Timestamp)(nil),      // 12: google.protobuf.Timestamp
 }
 var file_order_proto_depIdxs = []int32{
 	1,  // 0: order.CreateOrderRequest.customer:type_name -> order.CreateOrderCustomerRequest
@@ -938,20 +940,21 @@ var file_order_proto_depIdxs = []int32{
 	10, // 3: order.GetOrderResponse.customer:type_name -> order.Customer
 	9,  // 4: order.GetOrderResponse.products:type_name -> order.OrderProduct
 	11, // 5: order.GetOrdersResponse.orders:type_name -> order.OrderWithDetails
-	8,  // 6: order.OrderWithDetails.order:type_name -> order.Order
-	10, // 7: order.OrderWithDetails.customer:type_name -> order.Customer
-	9,  // 8: order.OrderWithDetails.products:type_name -> order.OrderProduct
-	0,  // 9: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
-	4,  // 10: order.OrderService.GetOrder:input_type -> order.GetOrderRequest
-	6,  // 11: order.OrderService.GetOrders:input_type -> order.GetOrdersRequest
-	3,  // 12: order.OrderService.CreateOrder:output_type -> order.CreateOrderResponse
-	5,  // 13: order.OrderService.GetOrder:output_type -> order.GetOrderResponse
-	7,  // 14: order.OrderService.GetOrders:output_type -> order.GetOrdersResponse
-	12, // [12:15] is the sub-list for method output_type
-	9,  // [9:12] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	12, // 6: order.Order.createdAt:type_name -> google.protobuf.Timestamp
+	8,  // 7: order.OrderWithDetails.order:type_name -> order.Order
+	10, // 8: order.OrderWithDetails.customer:type_name -> order.Customer
+	9,  // 9: order.OrderWithDetails.products:type_name -> order.OrderProduct
+	0,  // 10: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
+	4,  // 11: order.OrderService.GetOrder:input_type -> order.GetOrderRequest
+	6,  // 12: order.OrderService.GetOrders:input_type -> order.GetOrdersRequest
+	3,  // 13: order.OrderService.CreateOrder:output_type -> order.CreateOrderResponse
+	5,  // 14: order.OrderService.GetOrder:output_type -> order.GetOrderResponse
+	7,  // 15: order.OrderService.GetOrders:output_type -> order.GetOrdersResponse
+	13, // [13:16] is the sub-list for method output_type
+	10, // [10:13] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_order_proto_init() }

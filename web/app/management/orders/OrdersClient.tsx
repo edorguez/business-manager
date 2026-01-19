@@ -19,6 +19,9 @@ import useWarningModal from '@/app/hooks/useWarningModal';
 import WarningModal from '@/app/components/modals/WarningModal';
 import { validLetters, validNumbers } from '@/app/utils/InputUtils';
 import { GetOrdersRequest } from '@/app/services/orders';
+import { GetOrdersResponse, OrderDetails, OrdersTable } from '@/app/types/order';
+import { convertTimestampToDate, convertToTimezone } from '@/app/utils/Utils';
+import dayjs from 'dayjs';
 
 const OrdersClient = () => {
   const bcItems: BreadcrumItem[] = [
@@ -30,28 +33,28 @@ const OrdersClient = () => {
 
   const customerCols: SimpleTableColumn[] = [
     {
+      key: "id",
+      name: "N. Orden",
+      type: ColumnType.String
+    },
+    {
+      key: "fullName",
+      name: "Cliente",
+      type: ColumnType.String
+    },
+    {
       key: "identificationNumber",
       name: "Cédula",
       type: ColumnType.String
     },
     {
-      key: "firstName",
-      name: "Nombre",
+      key: "date",
+      name: "Fecha",
       type: ColumnType.String
     },
     {
-      key: "lastName",
-      name: "Apellido",
-      type: ColumnType.String
-    },
-    {
-      key: "email",
-      name: "Correo",
-      type: ColumnType.String
-    },
-    {
-      key: "phone",
-      name: "Teléfono",
+      key: "products",
+      name: "Productos",
       type: ColumnType.String
     },
   ]
@@ -59,7 +62,7 @@ const OrdersClient = () => {
   const isLoading = useLoading();
   const toast = useToast();
   const { push } = useRouter();
-  const [customerData, setCustomerData] = useState<Customer[]>([]);
+  const [ordersTableData, setOrdersTableData] = useState<OrdersTable[]>([]);
   const [offset, setOffset] = useState<number>(0);
   const deleteCustomerModal = useWarningModal();
   const [customerIdDelete, setCustomerIdDelete] = useState<number>(0);
@@ -69,16 +72,24 @@ const OrdersClient = () => {
     const currentUser: CurrentUser | null = getCurrentUser();
 
     if (currentUser) {
-      let data: Customer[] = await GetOrdersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
-      console.log('hola')
-      console.log(data)
-      // const formatData: Customer[] = data.map(x => {
-      //   return {
-      //     ...x,
-      //     identificationNumber: `${x.identificationType}-${x.identificationNumber}`
-      //   }
-      // })
-      // setCustomerData(formatData);
+      let data: GetOrdersResponse = await GetOrdersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
+      const formatData: OrdersTable[] = data.orders.map((x): OrdersTable => {
+        const userTimeZone: number = new Date().getTimezoneOffset();
+        const productDate: Date = convertTimestampToDate(x.order.createdAt);
+        const productsString: string = x.products.map(x => `- (${x.quantity}) ${x.name.substring(0, 20)}`)
+                                                  .slice(0, 5)
+                                                  .join('\n');
+
+        return {
+          id: x.order.id,
+          fullName: `${x.customer.firstName} ${x.customer.lastName}`,
+          identificationNumber: `${x.customer.identificationType}-${x.customer.identificationNumber}`,
+          date: dayjs(convertToTimezone(productDate, userTimeZone)).format('DD-MM-YYYY'),
+          products: productsString
+        }
+      })
+
+      setOrdersTableData(formatData);
     }
     isLoading.onEndLoading();
   }, [offset])
@@ -142,7 +153,7 @@ const OrdersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={customerData} showDetails onDetail={handleOpenDetail} onChangePage={handleChangePage} offset={offset} />
+          <SimpleTable columns={customerCols} data={ordersTableData} showDetails onDetail={handleOpenDetail} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>

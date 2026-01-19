@@ -11,6 +11,7 @@ import (
 	customer "github.com/edorguez/business-manager/shared/pb/customer"
 	order "github.com/edorguez/business-manager/shared/pb/order"
 	"github.com/edorguez/business-manager/shared/pb/whatsapp"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type OrderService struct {
@@ -186,10 +187,10 @@ func (s *OrderService) GetOrder(ctx context.Context, req *order.GetOrderRequest)
 
 	// Convert database order to protobuf order
 	orderProto := &order.Order{
-		Id:         fmt.Sprintf("%d", dbOrder.ID),
+		Id:         dbOrder.ID,
 		CompanyId:  dbOrder.CompanyID,
 		CustomerId: dbOrder.CustomerID,
-		CreatedAt:  dbOrder.CreatedAt.Format("2006-01-02 15:04:05"),
+		CreatedAt:  timestamppb.New(dbOrder.CreatedAt),
 	}
 
 	// Convert customer response to protobuf customer
@@ -207,8 +208,8 @@ func (s *OrderService) GetOrder(ctx context.Context, req *order.GetOrderRequest)
 	var productsProto []*order.OrderProduct
 	for _, p := range products {
 		productsProto = append(productsProto, &order.OrderProduct{
-			Id:        fmt.Sprintf("%d", p.ID),
-			OrderId:   fmt.Sprintf("%d", p.OrderID),
+			Id:        p.ID,
+			OrderId:   p.OrderID,
 			ProductId: p.ProductID,
 			Name:      p.Name,
 			Quantity:  uint32(p.Quantity),
@@ -286,10 +287,10 @@ func (s *OrderService) GetOrders(ctx context.Context, req *order.GetOrdersReques
 
 		// Convert database order to protobuf order
 		orderProto := &order.Order{
-			Id:         fmt.Sprintf("%d", dbOrder.ID),
+			Id:         dbOrder.ID,
 			CompanyId:  dbOrder.CompanyID,
 			CustomerId: dbOrder.CustomerID,
-			CreatedAt:  dbOrder.CreatedAt.Format("2006-01-02 15:04:05"),
+			CreatedAt:  timestamppb.New(dbOrder.CreatedAt),
 		}
 
 		// Convert customer response to protobuf customer
@@ -307,8 +308,8 @@ func (s *OrderService) GetOrders(ctx context.Context, req *order.GetOrdersReques
 		var productsProto []*order.OrderProduct
 		for _, p := range products {
 			productsProto = append(productsProto, &order.OrderProduct{
-				Id:        fmt.Sprintf("%d", p.ID),
-				OrderId:   fmt.Sprintf("%d", p.OrderID),
+				Id:        p.ID,
+				OrderId:   p.OrderID,
 				ProductId: p.ProductID,
 				Name:      p.Name,
 				Quantity:  uint32(p.Quantity),
