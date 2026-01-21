@@ -10,7 +10,9 @@ import (
 	"github.com/edorguez/business-manager/services/order-svc/pkg/repository"
 	customer "github.com/edorguez/business-manager/shared/pb/customer"
 	order "github.com/edorguez/business-manager/shared/pb/order"
+	product "github.com/edorguez/business-manager/shared/pb/product"
 	"github.com/edorguez/business-manager/shared/pb/whatsapp"
+	"github.com/edorguez/business-manager/shared/util/type_converter"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -38,6 +40,12 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 			Status: http.StatusInternalServerError,
 			Error:  err.Error(),
 		}, nil
+	}
+
+	productClientErr := client.InitProductServiceClient(s.Config)
+	if productClientErr != nil {
+		fmt.Println("Order Service :  CreateOrder - WARNING: failed to init product service client")
+		fmt.Println(productClientErr.Error())
 	}
 
 	whatsappProducts := make([]*whatsapp.OrderProductRequest, 0, len(req.Products))
@@ -93,13 +101,52 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *order.CreateOrderRe
 	}
 
 	// Create order with products in database
+	// First, fetch product images from product service if available
+	productImageMap := make(map[string]*string) // product ID -> first image URL (nil if none)
+	if productClientErr == nil {
+		// Collect product IDs
+		productIds := make([]string, 0, len(req.Products))
+		for _, v := range req.Products {
+			productIds = append(productIds, v.ProductId)
+		}
+
+		// Call product service to get product details
+		productResp, err := client.GetProductsByIds(&product.GetProductsByIdsRequest{
+			CompanyId: req.CompanyId,
+			Ids:       productIds,
+		}, ctx)
+
+		if err != nil {
+			fmt.Println("Order Service :  CreateOrder - WARNING: failed to fetch product images")
+			fmt.Println(err.Error())
+			// Continue with empty image map
+		} else if productResp.Status != http.StatusOK {
+			fmt.Println("Order Service :  CreateOrder - WARNING: product service returned error status:", productResp.Status, productResp.Error)
+			// Continue with empty image map
+		} else {
+			// Build map of product ID to first image URL
+			for _, p := range productResp.Products {
+				var imageUrl *string
+				if len(p.Images) > 0 {
+					imageUrl = &p.Images[0]
+				}
+				productImageMap[p.Id] = imageUrl
+			}
+		}
+	}
+
 	dbOrderProducts := make([]repository.CreateOrderProductParams, 0, len(req.Products))
 	for _, v := range req.Products {
+		var imageUrl *string
+		if img, exists := productImageMap[v.ProductId]; exists {
+			imageUrl = img
+		}
 		dbOrderProducts = append(dbOrderProducts, repository.CreateOrderProductParams{
 			ProductID: v.ProductId,
 			Name:      v.Name,
 			Quantity:  v.Quantity,
 			Price:     v.Price,
+			ImageUrl:  imageUrl,
 		})
 	}
 
@@ -214,6 +261,7 @@ func (s *OrderService) GetOrder(ctx context.Context, req *order.GetOrderRequest)
 			Name:      p.Name,
 			Quantity:  uint32(p.Quantity),
 			Price:     uint64(p.Price),
+			ImageUrl:  type_converter.NewString(p.ImageUrl),
 		})
 	}
 
@@ -314,6 +362,7 @@ func (s *OrderService) GetOrders(ctx context.Context, req *order.GetOrdersReques
 				Name:      p.Name,
 				Quantity:  uint32(p.Quantity),
 				Price:     uint64(p.Price),
+				ImageUrl:  type_converter.NewString(p.ImageUrl),
 			})
 		}
 

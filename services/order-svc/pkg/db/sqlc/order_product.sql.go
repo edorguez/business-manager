@@ -7,20 +7,22 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createOrderProduct = `-- name: CreateOrderProduct :one
-INSERT INTO "order"."order_product" (order_id, product_id, quantity, price, name)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING id, order_id, product_id, created_at, modified_at, quantity, price, name
+INSERT INTO "order"."order_product" (order_id, product_id, quantity, price, name, image_url)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, order_id, product_id, quantity, price, name, image_url, created_at, modified_at
 `
 
 type CreateOrderProductParams struct {
-	OrderID   int64  `json:"order_id"`
-	ProductID string `json:"product_id"`
-	Quantity  int32  `json:"quantity"`
-	Price     int64  `json:"price"`
-	Name      string `json:"name"`
+	OrderID   int64          `json:"order_id"`
+	ProductID string         `json:"product_id"`
+	Quantity  int32          `json:"quantity"`
+	Price     int64          `json:"price"`
+	Name      string         `json:"name"`
+	ImageUrl  sql.NullString `json:"image_url"`
 }
 
 func (q *Queries) CreateOrderProduct(ctx context.Context, arg CreateOrderProductParams) (OrderOrderProduct, error) {
@@ -30,23 +32,25 @@ func (q *Queries) CreateOrderProduct(ctx context.Context, arg CreateOrderProduct
 		arg.Quantity,
 		arg.Price,
 		arg.Name,
+		arg.ImageUrl,
 	)
 	var i OrderOrderProduct
 	err := row.Scan(
 		&i.ID,
 		&i.OrderID,
 		&i.ProductID,
-		&i.CreatedAt,
-		&i.ModifiedAt,
 		&i.Quantity,
 		&i.Price,
 		&i.Name,
+		&i.ImageUrl,
+		&i.CreatedAt,
+		&i.ModifiedAt,
 	)
 	return i, err
 }
 
 const getOrderProductsByOrderId = `-- name: GetOrderProductsByOrderId :many
-SELECT id, order_id, product_id, created_at, modified_at, quantity, price, name FROM "order"."order_product" WHERE order_id = $1 ORDER BY id
+SELECT id, order_id, product_id, quantity, price, name, image_url, created_at, modified_at FROM "order"."order_product" WHERE order_id = $1 ORDER BY id
 `
 
 func (q *Queries) GetOrderProductsByOrderId(ctx context.Context, orderID int64) ([]OrderOrderProduct, error) {
@@ -62,11 +66,12 @@ func (q *Queries) GetOrderProductsByOrderId(ctx context.Context, orderID int64) 
 			&i.ID,
 			&i.OrderID,
 			&i.ProductID,
-			&i.CreatedAt,
-			&i.ModifiedAt,
 			&i.Quantity,
 			&i.Price,
 			&i.Name,
+			&i.ImageUrl,
+			&i.CreatedAt,
+			&i.ModifiedAt,
 		); err != nil {
 			return nil, err
 		}

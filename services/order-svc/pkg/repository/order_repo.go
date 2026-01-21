@@ -4,6 +4,7 @@ import (
 	"context"
 
 	db "github.com/edorguez/business-manager/services/order-svc/pkg/db/sqlc"
+	"github.com/edorguez/business-manager/shared/util/type_converter"
 )
 
 type OrderRepo struct {
@@ -27,6 +28,7 @@ type CreateOrderProductParams struct {
 	Name      string
 	Quantity  uint32
 	Price     uint64
+	ImageUrl  *string
 }
 
 func (repo *OrderRepo) CreateOrderWithProducts(ctx context.Context, arg CreateOrderWithProductsParams) (db.OrderOrder, error) {
@@ -53,6 +55,7 @@ func (repo *OrderRepo) CreateOrderWithProducts(ctx context.Context, arg CreateOr
 				Quantity:  int32(product.Quantity),
 				Price:     int64(product.Price),
 				Name:      product.Name,
+				ImageUrl:  type_converter.NewSqlNullString(product.ImageUrl),
 			}
 			_, err = q.CreateOrderProduct(ctx, productParams)
 			if err != nil {

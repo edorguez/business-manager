@@ -1,6 +1,6 @@
 -- name: CreateOrderProduct :one
-INSERT INTO "order"."order_product" (order_id, product_id, quantity, price, name)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO "order"."order_product" (order_id, product_id, quantity, price, name, image_url)
+VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 
 -- name: GetOrderProductsByOrderId :many

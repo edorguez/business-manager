@@ -23,6 +23,7 @@ const (
 	ProductService_GetProduct_FullMethodName          = "/product.ProductService/GetProduct"
 	ProductService_GetProducts_FullMethodName         = "/product.ProductService/GetProducts"
 	ProductService_GetLatestProducts_FullMethodName   = "/product.ProductService/GetLatestProducts"
+	ProductService_GetProductsByIds_FullMethodName    = "/product.ProductService/GetProductsByIds"
 	ProductService_UpdateProduct_FullMethodName       = "/product.ProductService/UpdateProduct"
 	ProductService_UpdateProductStatus_FullMethodName = "/product.ProductService/UpdateProductStatus"
 	ProductService_DeleteProduct_FullMethodName       = "/product.ProductService/DeleteProduct"
@@ -36,6 +37,7 @@ type ProductServiceClient interface {
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*GetProductResponse, error)
 	GetProducts(ctx context.Context, in *GetProductsRequest, opts ...grpc.CallOption) (*GetProductsResponse, error)
 	GetLatestProducts(ctx context.Context, in *GetLatestProductsRequest, opts ...grpc.CallOption) (*GetLatestProductsResponse, error)
+	GetProductsByIds(ctx context.Context, in *GetProductsByIdsRequest, opts ...grpc.CallOption) (*GetProductsByIdsResponse, error)
 	UpdateProduct(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*UpdateProductResponse, error)
 	UpdateProductStatus(ctx context.Context, in *UpdateProductStatusRequest, opts ...grpc.CallOption) (*UpdateProductStatusResponse, error)
 	DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error)
@@ -89,6 +91,16 @@ func (c *productServiceClient) GetLatestProducts(ctx context.Context, in *GetLat
 	return out, nil
 }
 
+func (c *productServiceClient) GetProductsByIds(ctx context.Context, in *GetProductsByIdsRequest, opts ...grpc.CallOption) (*GetProductsByIdsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProductsByIdsResponse)
+	err := c.cc.Invoke(ctx, ProductService_GetProductsByIds_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *productServiceClient) UpdateProduct(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*UpdateProductResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateProductResponse)
@@ -127,6 +139,7 @@ type ProductServiceServer interface {
 	GetProduct(context.Context, *GetProductRequest) (*GetProductResponse, error)
 	GetProducts(context.Context, *GetProductsRequest) (*GetProductsResponse, error)
 	GetLatestProducts(context.Context, *GetLatestProductsRequest) (*GetLatestProductsResponse, error)
+	GetProductsByIds(context.Context, *GetProductsByIdsRequest) (*GetProductsByIdsResponse, error)
 	UpdateProduct(context.Context, *UpdateProductRequest) (*UpdateProductResponse, error)
 	UpdateProductStatus(context.Context, *UpdateProductStatusRequest) (*UpdateProductStatusResponse, error)
 	DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error)
@@ -151,6 +164,9 @@ func (UnimplementedProductServiceServer) GetProducts(context.Context, *GetProduc
 }
 func (UnimplementedProductServiceServer) GetLatestProducts(context.Context, *GetLatestProductsRequest) (*GetLatestProductsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLatestProducts not implemented")
+}
+func (UnimplementedProductServiceServer) GetProductsByIds(context.Context, *GetProductsByIdsRequest) (*GetProductsByIdsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProductsByIds not implemented")
 }
 func (UnimplementedProductServiceServer) UpdateProduct(context.Context, *UpdateProductRequest) (*UpdateProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProduct not implemented")
@@ -254,6 +270,24 @@ func _ProductService_GetLatestProducts_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_GetProductsByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProductsByIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).GetProductsByIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_GetProductsByIds_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).GetProductsByIds(ctx, req.(*GetProductsByIdsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProductService_UpdateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateProductRequest)
 	if err := dec(in); err != nil {
@@ -330,6 +364,10 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLatestProducts",
 			Handler:    _ProductService_GetLatestProducts_Handler,
+		},
+		{
+			MethodName: "GetProductsByIds",
+			Handler:    _ProductService_GetProductsByIds_Handler,
 		},
 		{
 			MethodName: "UpdateProduct",

@@ -15,6 +15,7 @@ CREATE TABLE "order"."order_product" (
   "quantity" integer NOT NULL,
   "price" bigint NOT NULL,
   "name" varchar(50) NOT NULL,
+  "image_url" varchar,
   "created_at" timestamptz NOT NULL DEFAULT (NOW()),
   "modified_at" timestamptz NOT NULL DEFAULT (NOW())
 );

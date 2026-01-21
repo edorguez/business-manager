@@ -114,6 +114,11 @@ type GetLatestProductsParams struct {
 	Limit     int32
 }
 
+type GetProductsByIdsParams struct {
+	CompanyId int64
+	Ids       []string
+}
+
 func (productRepo *ProductRepo) GetLatestProducts(ctx context.Context, arg GetLatestProductsParams) ([]models.GetProduct, error) {
 	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
 
@@ -125,6 +130,50 @@ func (productRepo *ProductRepo) GetLatestProducts(ctx context.Context, arg GetLa
 	}
 
 	cursor, err := collection.Find(ctx, query, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(context.Background()) {
+		var product models.GetProduct
+		cursor.Decode(&product)
+		result = append(result, product)
+	}
+
+	return result, nil
+}
+
+func (productRepo *ProductRepo) GetProductsByIds(ctx context.Context, arg GetProductsByIdsParams) ([]models.GetProduct, error) {
+	collection := productRepo.client.Database(productRepo.config.ProductDBName).Collection(collectionName)
+
+	var result []models.GetProduct
+
+	// Convert string IDs to ObjectIDs
+	var objectIDs []primitive.ObjectID
+	for _, idStr := range arg.Ids {
+		objID, err := primitive.ObjectIDFromHex(idStr)
+		if err != nil {
+			// Skip invalid IDs, just continue
+			continue
+		}
+		objectIDs = append(objectIDs, objID)
+	}
+
+	if len(objectIDs) == 0 {
+		return result, nil
+	}
+
+	query := bson.M{
+		"_id": bson.M{"$in": objectIDs},
+	}
+
+	// Optionally filter by companyId if needed (should match companyId)
+	if arg.CompanyId != 0 {
+		query["companyId"] = arg.CompanyId
+	}
+
+	cursor, err := collection.Find(ctx, query)
 	if err != nil {
 		return nil, err
 	}

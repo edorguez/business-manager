@@ -9,6 +9,7 @@ service ProductService{
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
   rpc GetProducts(GetProductsRequest) returns (GetProductsResponse);
   rpc GetLatestProducts(GetLatestProductsRequest) returns (GetLatestProductsResponse);
+  rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);
   rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
   rpc UpdateProductStatus(UpdateProductStatusRequest) returns (UpdateProductStatusResponse);
   rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
@@ -108,4 +109,15 @@ message DeleteProductRequest{
 message DeleteProductResponse{
   int64 status = 1;
   string error = 2;
+}
+
+message GetProductsByIdsRequest {
+  int64 companyId = 1;
+  repeated string ids = 2;
+}
+
+message GetProductsByIdsResponse {
+  repeated GetProductResponse products = 1;
+  int64 status = 2;
+  string error = 3;
 }

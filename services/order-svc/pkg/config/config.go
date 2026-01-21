@@ -11,6 +11,8 @@ type Config struct {
 	OrderSvcPort                 string `mapstructure:"ORDER_SVC_PORT"`
 	CustomerSvcUrl               string `mapstructure:"CUSTOMER_SVC_URL"`
 	CustomerSvcPort              string `mapstructure:"CUSTOMER_SVC_PORT"`
+	ProductSvcUrl                string `mapstructure:"PRODUCT_SVC_URL"`
+	ProductSvcPort               string `mapstructure:"PRODUCT_SVC_PORT"`
 	WhatsappSvcUrl               string `mapstructure:"WHATSAPP_SVC_URL"`
 	WhatsappSvcPort              string `mapstructure:"WHATSAPP_SVC_PORT"`
 	PostgresDBDriver             string `mapstructure:"POSTGRES_DB_DRIVER"`
@@ -33,6 +35,8 @@ func LoadConfig() (config Config, err error) {
 		config.OrderSvcPort = getViperString("ORDER_SVC_PORT")
 		config.CustomerSvcUrl = getViperString("CUSTOMER_SVC_URL")
 		config.CustomerSvcPort = getViperString("CUSTOMER_SVC_PORT")
+		config.ProductSvcUrl = getViperString("PRODUCT_SVC_URL")
+		config.ProductSvcPort = getViperString("PRODUCT_SVC_PORT")
 		config.WhatsappSvcUrl = getViperString("WHATSAPP_SVC_URL")
 		config.WhatsappSvcPort = getViperString("WHATSAPP_SVC_PORT")
 		config.PostgresDBDriver = getViperString("POSTGRES_DB_DRIVER")

@@ -164,6 +164,7 @@ type CreateOrderProductRequest struct {
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Quantity      uint32                 `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,4,opt,name=price,proto3" json:"price,omitempty"`
+	ImageUrl      string                 `protobuf:"bytes,5,opt,name=imageUrl,proto3" json:"imageUrl,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -224,6 +225,13 @@ func (x *CreateOrderProductRequest) GetPrice() uint64 {
 		return x.Price
 	}
 	return 0
+}
+
+func (x *CreateOrderProductRequest) GetImageUrl() string {
+	if x != nil {
+		return x.ImageUrl
+	}
+	return ""
 }
 
 type CreateOrderResponse struct {
@@ -602,6 +610,7 @@ type OrderProduct struct {
 	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	Quantity      uint32                 `protobuf:"varint,5,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Price         uint64                 `protobuf:"varint,6,opt,name=price,proto3" json:"price,omitempty"`
+	ImageUrl      *string                `protobuf:"bytes,7,opt,name=imageUrl,proto3,oneof" json:"imageUrl,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -676,6 +685,13 @@ func (x *OrderProduct) GetPrice() uint64 {
 		return x.Price
 	}
 	return 0
+}
+
+func (x *OrderProduct) GetImageUrl() string {
+	if x != nil && x.ImageUrl != nil {
+		return *x.ImageUrl
+	}
+	return ""
 }
 
 type Customer struct {
@@ -845,12 +861,13 @@ const file_order_proto_rawDesc = "" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\x122\n" +
 	"\x14identificationNumber\x18\x04 \x01(\tR\x14identificationNumber\x12.\n" +
 	"\x12identificationType\x18\x05 \x01(\tR\x12identificationTypeB\v\n" +
-	"\t_lastName\"\x7f\n" +
+	"\t_lastName\"\x9b\x01\n" +
 	"\x19CreateOrderProductRequest\x12\x1c\n" +
 	"\tproductId\x18\x01 \x01(\tR\tproductId\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
 	"\bquantity\x18\x03 \x01(\rR\bquantity\x12\x14\n" +
-	"\x05price\x18\x04 \x01(\x04R\x05price\"C\n" +
+	"\x05price\x18\x04 \x01(\x04R\x05price\x12\x1a\n" +
+	"\bimageUrl\x18\x05 \x01(\tR\bimageUrl\"C\n" +
 	"\x13CreateOrderResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\x03R\x06status\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05error\"!\n" +
@@ -877,14 +894,16 @@ const file_order_proto_rawDesc = "" +
 	"\n" +
 	"customerId\x18\x03 \x01(\x03R\n" +
 	"customerId\x128\n" +
-	"\tcreatedAt\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x9c\x01\n" +
+	"\tcreatedAt\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xca\x01\n" +
 	"\fOrderProduct\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\aorderId\x18\x02 \x01(\x03R\aorderId\x12\x1c\n" +
 	"\tproductId\x18\x03 \x01(\tR\tproductId\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +
 	"\bquantity\x18\x05 \x01(\rR\bquantity\x12\x14\n" +
-	"\x05price\x18\x06 \x01(\x04R\x05price\"\x94\x02\n" +
+	"\x05price\x18\x06 \x01(\x04R\x05price\x12\x1f\n" +
+	"\bimageUrl\x18\a \x01(\tH\x00R\bimageUrl\x88\x01\x01B\v\n" +
+	"\t_imageUrl\"\x94\x02\n" +
 	"\bCustomer\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
 	"\tfirstName\x18\x02 \x01(\tR\tfirstName\x12\x1f\n" +
@@ -963,6 +982,7 @@ func file_order_proto_init() {
 		return
 	}
 	file_order_proto_msgTypes[1].OneofWrappers = []any{}
+	file_order_proto_msgTypes[9].OneofWrappers = []any{}
 	file_order_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
