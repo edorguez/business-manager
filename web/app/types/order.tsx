@@ -43,6 +43,7 @@ export type OrderProduct = {
   id: number;
   orderId: number;
   productId: string;
+  imageUrl: string;
   name: string;
   quantity: number;
   price: number;
@@ -60,4 +61,12 @@ export type OrdersTable = {
   identificationNumber: string;
   date: string;
   products: string;
+}
+
+export type OrderProductsTable = {
+  imageUrl: string;
+  name: string;
+  quantity: number;
+  price: number;
+  total: number;
 }

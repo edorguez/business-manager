@@ -15,10 +15,12 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { OrderDetails } from "@/app/types/order";
+import { OrderDetails, OrderProduct, OrderProductsTable } from "@/app/types/order";
 import { GetOrderRequest, GetOrdersRequest } from "@/app/services/orders";
 import dayjs from 'dayjs';
-import { convertTimestampToDate, convertToTimezone } from "@/app/utils/Utils";
+import { convertTimestampToDate, convertToTimezone, numberMoveDecimal } from "@/app/utils/Utils";
+import SimpleTable from "@/app/components/tables/SimpleTable";
+import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
 
 const OrderClient = () => {
   const router = useRouter();
@@ -58,6 +60,35 @@ const OrderClient = () => {
     products: []
   });
 
+  const [orderProductsTableData, setOrderProductsTableData] = useState<OrderProductsTable[]>([]);
+  const productCols: SimpleTableColumn[] = [
+    {
+      key: "imageUrl",
+      name: "a",
+      type: ColumnType.Image
+    },
+    {
+      key: "name",
+      name: "Producto",
+      type: ColumnType.String
+    },
+    {
+      key: "quantity",
+      name: "Cantidad",
+      type: ColumnType.Number
+    },
+    {
+      key: "price",
+      name: "Precio",
+      type: ColumnType.Money
+    },
+    {
+      key: "total",
+      name: "Total",
+      type: ColumnType.Money
+    },
+  ]
+
   const getPayment = useCallback(async () => {
     let data: OrderDetails = await GetOrderRequest(+params.orderId);
     console.log('hola')
@@ -86,6 +117,20 @@ const OrderClient = () => {
         },
         products: data.products
       });
+
+      if(data.products) {
+        console.log('aja')
+        console.log(data.products)
+        data.products.forEach((x: OrderProduct) => {
+          setOrderProductsTableData(prev =>  [...prev, {
+            imageUrl: x.imageUrl,
+            name: x.name,
+            quantity: x.quantity,
+            price: numberMoveDecimal(x.price, 2),
+            total: x.quantity * numberMoveDecimal(x.price, 2)
+          }])
+        });
+      }
     }
   }, [params.orderId]);
 
@@ -194,6 +239,11 @@ const OrderClient = () => {
         </SimpleCard>
       </div>
 
+      <div className="mt-3">
+        <SimpleCard>
+          <SimpleTable columns={productCols} data={orderProductsTableData} offset={0} />
+        </SimpleCard>
+      </div>
     </div>
   );
 };

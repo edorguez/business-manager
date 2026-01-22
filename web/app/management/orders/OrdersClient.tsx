@@ -23,7 +23,7 @@ const OrdersClient = () => {
     }
   ];
 
-  const customerCols: SimpleTableColumn[] = [
+  const orderCols: SimpleTableColumn[] = [
     {
       key: "id",
       name: "N. Órden",
@@ -62,24 +62,27 @@ const OrdersClient = () => {
 
     if (currentUser) {
       let data: GetOrdersResponse = await GetOrdersRequest({ companyId: currentUser.companyId, limit: 10, offset: offset });
-      const formatData: OrdersTable[] = data.orders.map((x): OrdersTable => {
-        const userTimeZone: number = new Date().getTimezoneOffset();
-        const orderDate: Date = convertTimestampToDate(x.order.createdAt);
-        const productsString: string = x.products.map(x => `- (${x.quantity}) ${x.name.substring(0, 20)}`)
-                                                  .slice(0, 5)
-                                                  .join('\n');
+      if(data?.orders) {
+        const formatData: OrdersTable[] = data.orders.map((x): OrdersTable => {
+          const userTimeZone: number = new Date().getTimezoneOffset();
+          const orderDate: Date = convertTimestampToDate(x.order.createdAt);
+          const productsString: string = x.products.map(x => `- (${x.quantity}) ${x.name.substring(0, 20)}`)
+                                                    .slice(0, 5)
+                                                    .join('\n');
 
-        return {
-          id: x.order.id,
-          fullName: `${x.customer.firstName} ${x.customer.lastName}`,
-          identificationNumber: `${x.customer.identificationType}-${x.customer.identificationNumber}`,
-          date: dayjs(convertToTimezone(orderDate, userTimeZone)).format('DD-MM-YYYY'),
-          products: productsString
-        }
-      })
+          return {
+            id: x.order.id,
+            fullName: `${x.customer.firstName} ${x.customer.lastName}`,
+            identificationNumber: `${x.customer.identificationType}-${x.customer.identificationNumber}`,
+            date: dayjs(convertToTimezone(orderDate, userTimeZone)).format('DD-MM-YYYY'),
+            products: productsString
+          }
+        })
 
-      setOrdersTableData(formatData);
+        setOrdersTableData(formatData);
+      }
     }
+
     isLoading.onEndLoading();
   }, [offset])
 
@@ -126,7 +129,7 @@ const OrdersClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={customerCols} data={ordersTableData} showDetails onDetail={handleOpenDetail} onChangePage={handleChangePage} offset={offset} />
+          <SimpleTable columns={orderCols} data={ordersTableData} showDetails onDetail={handleOpenDetail} onChangePage={handleChangePage} offset={offset} />
         </SimpleCard>
       </div>
     </div>

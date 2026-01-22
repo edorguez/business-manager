@@ -160,6 +160,8 @@ services:
         - CUSTOMER_SVC_PORT=${CUSTOMER_SVC_PORT}
         - WHATSAPP_SVC_URL=${WHATSAPP_SVC_URL}
         - WHATSAPP_SVC_PORT=${WHATSAPP_SVC_PORT}
+        - PRODUCT_SVC_URL=${PRODUCT_SVC_URL}
+        - PRODUCT_SVC_PORT=${PRODUCT_SVC_PORT}
       networks:
         - my_app_network
       restart: always
