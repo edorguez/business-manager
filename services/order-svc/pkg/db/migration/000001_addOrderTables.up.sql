@@ -4,6 +4,7 @@ CREATE TABLE "order"."order" (
   "id" bigserial PRIMARY KEY,
   "company_id" bigint NOT NULL,
   "customer_id" bigint NOT NULL,
+  "order_number" integer NOT NULL DEFAULT 1,
   "created_at" timestamptz NOT NULL DEFAULT (NOW()),
   "modified_at" timestamptz NOT NULL DEFAULT (NOW())
 );

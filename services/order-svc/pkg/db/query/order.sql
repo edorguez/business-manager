@@ -1,6 +1,14 @@
+-- name: LockCompanyOrders :exec
+SELECT pg_advisory_xact_lock($1);
+
+-- name: GetMaxOrderNumberForCompany :one
+SELECT COALESCE(MAX(order_number), 0)::INTEGER as max_order_number 
+FROM "order"."order" 
+WHERE company_id = $1;
+
 -- name: CreateOrder :one
-INSERT INTO "order"."order" (company_id, customer_id)
-VALUES ($1, $2)
+INSERT INTO "order"."order" (company_id, customer_id, order_number)
+VALUES ($1, $2, $3)
 RETURNING *;
 
 -- name: GetOrder :one

@@ -234,10 +234,11 @@ func (s *OrderService) GetOrder(ctx context.Context, req *order.GetOrderRequest)
 
 	// Convert database order to protobuf order
 	orderProto := &order.Order{
-		Id:         dbOrder.ID,
-		CompanyId:  dbOrder.CompanyID,
-		CustomerId: dbOrder.CustomerID,
-		CreatedAt:  timestamppb.New(dbOrder.CreatedAt),
+		Id:          dbOrder.ID,
+		CompanyId:   dbOrder.CompanyID,
+		CustomerId:  dbOrder.CustomerID,
+		CreatedAt:   timestamppb.New(dbOrder.CreatedAt),
+		OrderNumber: int64(dbOrder.OrderNumber),
 	}
 
 	// Convert customer response to protobuf customer
@@ -335,10 +336,11 @@ func (s *OrderService) GetOrders(ctx context.Context, req *order.GetOrdersReques
 
 		// Convert database order to protobuf order
 		orderProto := &order.Order{
-			Id:         dbOrder.ID,
-			CompanyId:  dbOrder.CompanyID,
-			CustomerId: dbOrder.CustomerID,
-			CreatedAt:  timestamppb.New(dbOrder.CreatedAt),
+			Id:          dbOrder.ID,
+			CompanyId:   dbOrder.CompanyID,
+			CustomerId:  dbOrder.CustomerID,
+			CreatedAt:   timestamppb.New(dbOrder.CreatedAt),
+			OrderNumber: int64(dbOrder.OrderNumber),
 		}
 
 		// Convert customer response to protobuf customer

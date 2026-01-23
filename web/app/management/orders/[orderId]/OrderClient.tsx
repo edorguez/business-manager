@@ -64,7 +64,7 @@ const OrderClient = () => {
   const productCols: SimpleTableColumn[] = [
     {
       key: "imageUrl",
-      name: "a",
+      name: "Foto",
       type: ColumnType.Image
     },
     {
@@ -91,8 +91,6 @@ const OrderClient = () => {
 
   const getPayment = useCallback(async () => {
     let data: OrderDetails = await GetOrderRequest(+params.orderId);
-    console.log('hola')
-    console.log(data)
     if (data) {
       const userTimeZone: number = new Date().getTimezoneOffset();
       const orderDate: Date = convertTimestampToDate(data.order.createdAt);
@@ -119,8 +117,6 @@ const OrderClient = () => {
       });
 
       if(data.products) {
-        console.log('aja')
-        console.log(data.products)
         data.products.forEach((x: OrderProduct) => {
           setOrderProductsTableData(prev =>  [...prev, {
             imageUrl: x.imageUrl,
@@ -241,7 +237,10 @@ const OrderClient = () => {
 
       <div className="mt-3">
         <SimpleCard>
-          <SimpleTable columns={productCols} data={orderProductsTableData} offset={0} />
+
+          <h1 className="font-bold">Productos</h1>
+
+          <SimpleTable columns={productCols} data={orderProductsTableData} offset={undefined} />
         </SimpleCard>
       </div>
     </div>

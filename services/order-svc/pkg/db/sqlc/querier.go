@@ -11,10 +11,12 @@ import (
 type Querier interface {
 	CreateOrder(ctx context.Context, arg CreateOrderParams) (OrderOrder, error)
 	CreateOrderProduct(ctx context.Context, arg CreateOrderProductParams) (OrderOrderProduct, error)
+	GetMaxOrderNumberForCompany(ctx context.Context, companyID int64) (int32, error)
 	GetOrder(ctx context.Context, id int64) (OrderOrder, error)
 	GetOrderProductsByOrderId(ctx context.Context, orderID int64) ([]OrderOrderProduct, error)
 	GetOrders(ctx context.Context, arg GetOrdersParams) ([]OrderOrder, error)
 	GetOrdersCount(ctx context.Context, companyID int64) (int64, error)
+	LockCompanyOrders(ctx context.Context, pgAdvisoryXactLock int64) error
 }
 
 var _ Querier = (*Queries)(nil)

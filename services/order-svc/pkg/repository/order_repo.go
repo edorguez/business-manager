@@ -37,10 +37,24 @@ func (repo *OrderRepo) CreateOrderWithProducts(ctx context.Context, arg CreateOr
 	err := repo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
 		var err error
 
-		// Create order
+		// Acquire advisory lock for this company to prevent concurrent order number assignment
+		err = q.LockCompanyOrders(ctx, arg.CompanyID)
+		if err != nil {
+			return err
+		}
+
+		// Get max order number for this company
+		maxOrderNumber, err := q.GetMaxOrderNumberForCompany(ctx, arg.CompanyID)
+		if err != nil {
+			return err
+		}
+		nextOrderNumber := maxOrderNumber + 1
+
+		// Create order with order number
 		orderParams := db.CreateOrderParams{
-			CompanyID:  arg.CompanyID,
-			CustomerID: arg.CustomerID,
+			CompanyID:   arg.CompanyID,
+			CustomerID:  arg.CustomerID,
+			OrderNumber: nextOrderNumber,
 		}
 		result, err = q.CreateOrder(ctx, orderParams)
 		if err != nil {

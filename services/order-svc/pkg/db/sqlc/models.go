@@ -10,11 +10,12 @@ import (
 )
 
 type OrderOrder struct {
-	ID         int64     `json:"id"`
-	CompanyID  int64     `json:"company_id"`
-	CustomerID int64     `json:"customer_id"`
-	CreatedAt  time.Time `json:"created_at"`
-	ModifiedAt time.Time `json:"modified_at"`
+	ID          int64     `json:"id"`
+	CompanyID   int64     `json:"company_id"`
+	CustomerID  int64     `json:"customer_id"`
+	OrderNumber int32     `json:"order_number"`
+	CreatedAt   time.Time `json:"created_at"`
+	ModifiedAt  time.Time `json:"modified_at"`
 }
 
 type OrderOrderProduct struct {

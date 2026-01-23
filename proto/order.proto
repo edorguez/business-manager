@@ -69,6 +69,7 @@ message Order {
   int64 companyId = 2;
   int64 customerId = 3;
   google.protobuf.Timestamp createdAt = 4;
+  int64 orderNumber = 5;
 }
 
 message OrderProduct {

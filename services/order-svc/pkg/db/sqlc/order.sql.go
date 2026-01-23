@@ -10,31 +10,46 @@ import (
 )
 
 const createOrder = `-- name: CreateOrder :one
-INSERT INTO "order"."order" (company_id, customer_id)
-VALUES ($1, $2)
-RETURNING id, company_id, customer_id, created_at, modified_at
+INSERT INTO "order"."order" (company_id, customer_id, order_number)
+VALUES ($1, $2, $3)
+RETURNING id, company_id, customer_id, order_number, created_at, modified_at
 `
 
 type CreateOrderParams struct {
-	CompanyID  int64 `json:"company_id"`
-	CustomerID int64 `json:"customer_id"`
+	CompanyID   int64 `json:"company_id"`
+	CustomerID  int64 `json:"customer_id"`
+	OrderNumber int32 `json:"order_number"`
 }
 
 func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (OrderOrder, error) {
-	row := q.db.QueryRowContext(ctx, createOrder, arg.CompanyID, arg.CustomerID)
+	row := q.db.QueryRowContext(ctx, createOrder, arg.CompanyID, arg.CustomerID, arg.OrderNumber)
 	var i OrderOrder
 	err := row.Scan(
 		&i.ID,
 		&i.CompanyID,
 		&i.CustomerID,
+		&i.OrderNumber,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)
 	return i, err
 }
 
+const getMaxOrderNumberForCompany = `-- name: GetMaxOrderNumberForCompany :one
+SELECT COALESCE(MAX(order_number), 0)::INTEGER as max_order_number 
+FROM "order"."order" 
+WHERE company_id = $1
+`
+
+func (q *Queries) GetMaxOrderNumberForCompany(ctx context.Context, companyID int64) (int32, error) {
+	row := q.db.QueryRowContext(ctx, getMaxOrderNumberForCompany, companyID)
+	var max_order_number int32
+	err := row.Scan(&max_order_number)
+	return max_order_number, err
+}
+
 const getOrder = `-- name: GetOrder :one
-SELECT id, company_id, customer_id, created_at, modified_at FROM "order"."order" WHERE id = $1
+SELECT id, company_id, customer_id, order_number, created_at, modified_at FROM "order"."order" WHERE id = $1
 `
 
 func (q *Queries) GetOrder(ctx context.Context, id int64) (OrderOrder, error) {
@@ -44,6 +59,7 @@ func (q *Queries) GetOrder(ctx context.Context, id int64) (OrderOrder, error) {
 		&i.ID,
 		&i.CompanyID,
 		&i.CustomerID,
+		&i.OrderNumber,
 		&i.CreatedAt,
 		&i.ModifiedAt,
 	)
@@ -51,7 +67,7 @@ func (q *Queries) GetOrder(ctx context.Context, id int64) (OrderOrder, error) {
 }
 
 const getOrders = `-- name: GetOrders :many
-SELECT id, company_id, customer_id, created_at, modified_at FROM "order"."order"
+SELECT id, company_id, customer_id, order_number, created_at, modified_at FROM "order"."order"
 WHERE company_id = $1
 ORDER BY created_at DESC
 LIMIT $2 OFFSET $3
@@ -76,6 +92,7 @@ func (q *Queries) GetOrders(ctx context.Context, arg GetOrdersParams) ([]OrderOr
 			&i.ID,
 			&i.CompanyID,
 			&i.CustomerID,
+			&i.OrderNumber,
 			&i.CreatedAt,
 			&i.ModifiedAt,
 		); err != nil {
@@ -101,4 +118,13 @@ func (q *Queries) GetOrdersCount(ctx context.Context, companyID int64) (int64, e
 	var count int64
 	err := row.Scan(&count)
 	return count, err
+}
+
+const lockCompanyOrders = `-- name: LockCompanyOrders :exec
+SELECT pg_advisory_xact_lock($1)
+`
+
+func (q *Queries) LockCompanyOrders(ctx context.Context, pgAdvisoryXactLock int64) error {
+	_, err := q.db.ExecContext(ctx, lockCompanyOrders, pgAdvisoryXactLock)
+	return err
 }

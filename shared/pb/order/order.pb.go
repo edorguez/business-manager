@@ -540,6 +540,7 @@ type Order struct {
 	CompanyId     int64                  `protobuf:"varint,2,opt,name=companyId,proto3" json:"companyId,omitempty"`
 	CustomerId    int64                  `protobuf:"varint,3,opt,name=customerId,proto3" json:"customerId,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	OrderNumber   int64                  `protobuf:"varint,5,opt,name=orderNumber,proto3" json:"orderNumber,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -600,6 +601,13 @@ func (x *Order) GetCreatedAt() *timestamppb.Timestamp {
 		return x.CreatedAt
 	}
 	return nil
+}
+
+func (x *Order) GetOrderNumber() int64 {
+	if x != nil {
+		return x.OrderNumber
+	}
+	return 0
 }
 
 type OrderProduct struct {
@@ -887,14 +895,15 @@ const file_order_proto_rawDesc = "" +
 	"\x06orders\x18\x01 \x03(\v2\x17.order.OrderWithDetailsR\x06orders\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x16\n" +
 	"\x06status\x18\x03 \x01(\x03R\x06status\x12\x14\n" +
-	"\x05error\x18\x04 \x01(\tR\x05error\"\x8f\x01\n" +
+	"\x05error\x18\x04 \x01(\tR\x05error\"\xb1\x01\n" +
 	"\x05Order\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
 	"\tcompanyId\x18\x02 \x01(\x03R\tcompanyId\x12\x1e\n" +
 	"\n" +
 	"customerId\x18\x03 \x01(\x03R\n" +
 	"customerId\x128\n" +
-	"\tcreatedAt\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xca\x01\n" +
+	"\tcreatedAt\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12 \n" +
+	"\vorderNumber\x18\x05 \x01(\x03R\vorderNumber\"\xca\x01\n" +
 	"\fOrderProduct\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\aorderId\x18\x02 \x01(\x03R\aorderId\x12\x1c\n" +
