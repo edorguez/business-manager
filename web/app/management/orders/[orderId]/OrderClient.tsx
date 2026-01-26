@@ -1,29 +1,21 @@
 "use client";
 
-import { EditPaymentRequest, GetPaymentRequest } from "@/app/services/payment";
-import { GetPaymentTypesRequest } from "@/app/services/paymentType";
 import BreadcrumbNavigation from "@/app/components/BreadcrumbNavigation";
-import PaymentFilterCard from "@/app/components/cards/PaymentFilterCard";
 import SimpleCard from "@/app/components/cards/SimpleCard";
-import useLoading from "@/app/hooks/useLoading";
 import { BreadcrumItem } from "@/app/types";
-import { CreatePayment } from "@/app/types/payment";
-import { PaymentType } from "@/app/types/paymentType";
-import { Button, Input, Select, useToast } from "@chakra-ui/react";
+import { Input, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { OrderDetails, OrderProduct, OrderProductsTable } from "@/app/types/order";
-import { GetOrderRequest, GetOrdersRequest } from "@/app/services/orders";
+import { GetOrderRequest } from "@/app/services/orders";
 import dayjs from 'dayjs';
 import { convertTimestampToDate, convertToTimezone, numberMoveDecimal } from "@/app/utils/Utils";
 import SimpleTable from "@/app/components/tables/SimpleTable";
 import { ColumnType, SimpleTableColumn } from "@/app/components/tables/SimpleTable.types";
 
 const OrderClient = () => {
-  const router = useRouter();
   const params = useParams();
 
   const bcItems: BreadcrumItem[] = [
@@ -37,15 +29,13 @@ const OrderClient = () => {
     },
   ];
 
-  const isLoading = useLoading();
-  const searchParams = useSearchParams();
-  const toast = useToast();
   const [orderDateString, setOrderDateString] = useState<string>("");
   const [formData, setFormData] = useState<OrderDetails>({
     order: {
       id: 0,
       companyId: 0,
       customerId: 0,
+      orderNumber: 0,
       createdAt: new Date()
     },
     customer: {
@@ -102,6 +92,7 @@ const OrderClient = () => {
           id: data.order.id,
           companyId: data.order.companyId,
           customerId: data.order.customerId,
+          orderNumber: data.order.orderNumber,
           createdAt: data.order.createdAt
         },
         customer: {
@@ -160,7 +151,7 @@ const OrderClient = () => {
             <label className="text-sm">Número de Órden</label>
             <Input
               size="sm"
-              value={formData.order.id}
+              value={formData.order.orderNumber}
               disabled={true}
             />
           </div>

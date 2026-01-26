@@ -9,7 +9,6 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react';
-import { Warning } from 'postcss';
 
 interface WarningModalProps {
   title: string;

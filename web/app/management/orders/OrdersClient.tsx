@@ -25,7 +25,7 @@ const OrdersClient = () => {
 
   const orderCols: SimpleTableColumn[] = [
     {
-      key: "id",
+      key: "orderNumber",
       name: "N. Órden",
       type: ColumnType.String
     },
@@ -72,6 +72,7 @@ const OrdersClient = () => {
 
           return {
             id: x.order.id,
+            orderNumber: x.order.orderNumber,
             fullName: `${x.customer.firstName} ${x.customer.lastName}`,
             identificationNumber: `${x.customer.identificationType}-${x.customer.identificationNumber}`,
             date: dayjs(convertToTimezone(orderDate, userTimeZone)).format('DD-MM-YYYY'),
@@ -102,29 +103,6 @@ const OrdersClient = () => {
     <div>
       <SimpleCard>
         <BreadcrumbNavigation items={bcItems} />
-
-        {/* <hr className="my-3" /> */}
-        {/**/}
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4"> */}
-        {/*   <div> */}
-        {/*     <label className="text-sm">Nombre</label> */}
-        {/*     <Input size="sm" name="name" onChange={handleNameChange} value={searchCustomer.name} maxLength={20} /> */}
-        {/*   </div> */}
-        {/*   <div> */}
-        {/*     <label className="text-sm">Apellido</label> */}
-        {/*     <Input size="sm" name="lastName" onChange={handleNameChange} value={searchCustomer.lastName} maxLength={20} /> */}
-        {/*   </div> */}
-        {/*   <div> */}
-        {/*     <label className="text-sm">Cédula</label> */}
-        {/*     <Input size="sm" name="identificationNumber" onChange={handleIdentificationNumberChange} value={searchCustomer.identificationNumber} maxLength={9} /> */}
-        {/*   </div> */}
-        {/*   <div className="flex flex-col"> */}
-        {/*     <span className="opacity-0">.</span> */}
-        {/*     <Button size="sm" variant="main" onClick={onSearchCustomer}> */}
-        {/*       <Icon icon="tabler:search" /> */}
-        {/*     </Button> */}
-        {/*   </div> */}
-        {/* </div> */}
       </SimpleCard>
 
       <div className="mt-3">

@@ -13,9 +13,12 @@ import ProductsCartDrawer from "../components/drawers/ProductsCartDrawer";
 import useProductsCart from "@/app/hooks/useProductsCart";
 import useCompanyInfo from "../hooks/useCompanyInfo";
 import NotFound from "../components/NotFound";
+import useProductDetailModal from "../hooks/useProductDetailModal";
+import ProductDetailModal from "../components/modals/ProductDetailModal";
 
 const SitePage = () => {
   const cart = useProductsCart();
+  const productDetailModal = useProductDetailModal();
   const companyInfo = useCompanyInfo();
   const router = useRouter();
   const params = useParams();
@@ -85,13 +88,14 @@ const SitePage = () => {
           {/* <h2 className="text-2xl font-semibold mb-6">Our Menu</h2> */}
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCard={() => {
-                  cart.onAddToCart(product);
-                }}
-              />
+               <ProductCard
+                 key={product.id}
+                 product={product}
+                 onAddToCard={() => {
+                   cart.onAddToCart(product);
+                 }}
+                 onImageClick={() => productDetailModal.onOpen(product)}
+               />
             ))}
             {
               products?.length <= 0 && (
@@ -105,6 +109,7 @@ const SitePage = () => {
 
         {/* Shopping Cart Drawer */}
         <ProductsCartDrawer />
+        <ProductDetailModal />
       </div>
     </div>
   );

@@ -36,6 +36,7 @@ export type Order = {
   id: number;
   companyId: number;
   customerId: number;
+  orderNumber: number;
   createdAt: any;
 }
 
@@ -57,6 +58,7 @@ export type OrderDetails = {
 
 export type OrdersTable = {
   id: number;
+  orderNumber: number;
   fullName: string;
   identificationNumber: string;
   date: string;

@@ -10,9 +10,10 @@ import { useState } from "react";
 interface ProductCardProps {
   product: Product;
   onAddToCard: () => void;
+  onImageClick?: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard, onImageClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   const nextImage = () => {
@@ -32,7 +33,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
       key={product.id}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
     >
-      <div className="relative w-full h-40 lg:h-64 overflow-hidden">
+       <div 
+         className={`relative w-full h-40 lg:h-64 overflow-hidden ${onImageClick ? 'cursor-pointer' : ''}`}
+         onClick={onImageClick}
+       >
         <Image
           src={
             product.images && product.images.length > 0
@@ -48,14 +52,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard }) => {
         {product.images && product.images.length > 1 && (
           <>
             <button
-              onClick={prevImage}
+              onClick={(e) => { e.stopPropagation(); prevImage(); }}
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200"
               aria-label="Previous image"
             >
               <Icon icon="material-symbols:chevron-left" />
             </button>
             <button
-              onClick={nextImage}
+              onClick={(e) => { e.stopPropagation(); nextImage(); }}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200"
               aria-label="Next image"
             >
