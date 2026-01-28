@@ -64,33 +64,26 @@ const ProductDetailModal = () => {
           <div className="flex flex-col">
             {images.length > 0 ? (
               <PhotoProvider>
-                {/* Hidden gallery images - non-current images for gallery navigation */}
-                {images.length > 1 && (
-                  <div style={{ visibility: 'hidden', position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
-                    {images
-                      .filter((_, idx) => idx !== currentImageIndex)
-                      .map((image, index) => (
-                        <PhotoView key={index} src={image}>
-                          <div />
-                        </PhotoView>
-                      ))}
-                  </div>
-                )}
-
                 {/* Main Image Area */}
                 <div className="relative w-full h-64 md:h-80 bg-gray-100">
-                  <PhotoView src={images[currentImageIndex]}>
-                    <div className="relative w-full h-full cursor-zoom-in">
-                      <Image
-                        src={images[currentImageIndex]}
-                        alt={product.name}
-                        layout="fill"
-                        objectFit="contain"
-                        className="select-none"
-                        draggable="false"
-                      />
-                    </div>
-                  </PhotoView>
+                  {images.map((image, index) => (
+                    <PhotoView key={index} src={image}>
+                      {index === currentImageIndex ? (
+                        <div className="relative w-full h-full cursor-zoom-in">
+                          <Image
+                            src={image}
+                            alt={product.name}
+                            layout="fill"
+                            objectFit="contain"
+                            className="select-none"
+                            draggable="false"
+                          />
+                        </div>
+                      ) : (
+                        <div style={{ display: 'none' }} />
+                      )}
+                    </PhotoView>
+                  ))}
 
                   {images.length > 1 && (
                     <>
@@ -164,24 +157,14 @@ const ProductDetailModal = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <Box className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-500">SKU</p>
-                  <p className="font-medium">{product.sku}</p>
-                </Box>
-                <Box className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-500">Cantidad disponible</p>
-                  <p className="font-medium">{product.quantity}</p>
-                </Box>
-                <Box className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-500">Precio</p>
                   <p className="font-medium text-green-600">
                     ${numberMoveDecimal(product.price, 2)}
                   </p>
                 </Box>
                 <Box className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-500">Estado</p>
-                  <p className="font-medium">
-                    {product.productStatus === 1 ? "Activo" : "Inactivo"}
-                  </p>
+                  <p className="text-sm text-gray-500">SKU</p>
+                  <p className="font-medium">{product.sku}</p>
                 </Box>
               </div>
             </div>
