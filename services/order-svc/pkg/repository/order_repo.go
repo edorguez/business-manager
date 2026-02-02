@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	db "github.com/edorguez/business-manager/services/order-svc/pkg/db/sqlc"
 	"github.com/edorguez/business-manager/shared/util/type_converter"
@@ -129,6 +130,28 @@ func (repo *OrderRepo) GetOrdersCount(ctx context.Context, companyID int64) (int
 		var err error
 
 		result, err = q.GetOrdersCount(ctx, companyID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return result, err
+}
+
+func (repo *OrderRepo) GetOrdersByMonth(ctx context.Context, companyID int64, year, month int32) ([]time.Time, error) {
+	var result []time.Time
+
+	err := repo.SQLStorage.ExecTx(ctx, func(q *db.Queries) error {
+		var err error
+
+		params := db.GetOrdersByMonthParams{
+			CompanyID: companyID,
+			Year:      year,
+			Month:     month,
+		}
+		result, err = q.GetOrdersByMonth(ctx, params)
 		if err != nil {
 			return err
 		}

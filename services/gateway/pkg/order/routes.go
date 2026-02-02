@@ -28,6 +28,7 @@ func LoadRoutes(router *mux.Router, c *config.Config) {
 
 	getRouter := baseRoute.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("", cr.GetOrders)
+	getRouter.HandleFunc("/by-month", cr.GetOrdersByMonth)
 	getRouter.HandleFunc("/{id}", cr.GetOrder)
 }
 
@@ -44,4 +45,9 @@ func (or *OrderRoutes) GetOrder(w http.ResponseWriter, r *http.Request) {
 func (or *OrderRoutes) GetOrders(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("API Gateway :  GetOrders Called")
 	routes.GetOrders(w, r, or.config)
+}
+
+func (or *OrderRoutes) GetOrdersByMonth(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("API Gateway :  GetOrdersByMonth Called")
+	routes.GetOrdersByMonth(w, r, or.config)
 }

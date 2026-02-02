@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 )
 
 const createOrder = `-- name: CreateOrder :one
@@ -99,6 +100,44 @@ func (q *Queries) GetOrders(ctx context.Context, arg GetOrdersParams) ([]OrderOr
 			return nil, err
 		}
 		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getOrdersByMonth = `-- name: GetOrdersByMonth :many
+SELECT created_at
+FROM "order"."order"
+WHERE company_id = $1
+  AND created_at >= make_date($2::int, $3::int, 1)
+  AND created_at < make_date($2::int, $3::int, 1) + INTERVAL '1 month'
+ORDER BY created_at
+`
+
+type GetOrdersByMonthParams struct {
+	CompanyID int64 `json:"company_id"`
+	Year      int32 `json:"year"`
+	Month     int32 `json:"month"`
+}
+
+func (q *Queries) GetOrdersByMonth(ctx context.Context, arg GetOrdersByMonthParams) ([]time.Time, error) {
+	rows, err := q.db.QueryContext(ctx, getOrdersByMonth, arg.CompanyID, arg.Year, arg.Month)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []time.Time{}
+	for rows.Next() {
+		var created_at time.Time
+		if err := rows.Scan(&created_at); err != nil {
+			return nil, err
+		}
+		items = append(items, created_at)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err

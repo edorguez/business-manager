@@ -6,6 +6,7 @@ package db
 
 import (
 	"context"
+	"time"
 )
 
 type Querier interface {
@@ -15,6 +16,7 @@ type Querier interface {
 	GetOrder(ctx context.Context, id int64) (OrderOrder, error)
 	GetOrderProductsByOrderId(ctx context.Context, orderID int64) ([]OrderOrderProduct, error)
 	GetOrders(ctx context.Context, arg GetOrdersParams) ([]OrderOrder, error)
+	GetOrdersByMonth(ctx context.Context, arg GetOrdersByMonthParams) ([]time.Time, error)
 	GetOrdersCount(ctx context.Context, companyID int64) (int64, error)
 	LockCompanyOrders(ctx context.Context, pgAdvisoryXactLock int64) error
 }

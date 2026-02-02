@@ -383,3 +383,33 @@ func (s *OrderService) GetOrders(ctx context.Context, req *order.GetOrdersReques
 		Status: http.StatusOK,
 	}, nil
 }
+
+func (s *OrderService) GetOrdersByMonth(ctx context.Context, req *order.GetOrdersByMonthRequest) (*order.GetOrdersByMonthResponse, error) {
+	fmt.Println("Order Service :  GetOrdersByMonth")
+	fmt.Println("Order Service :  GetOrdersByMonth - Req")
+	fmt.Println(req)
+	fmt.Println("----------------")
+
+	// Fetch order timestamps from repository
+	orderDates, err := s.Repo.GetOrdersByMonth(ctx, req.CompanyId, req.Year, req.Month)
+	if err != nil {
+		fmt.Println("Order Service :  GetOrdersByMonth - ERROR")
+		fmt.Println(err.Error())
+		return &order.GetOrdersByMonthResponse{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	// Convert time.Time to protobuf timestamps
+	timestamps := make([]*timestamppb.Timestamp, 0, len(orderDates))
+	for _, date := range orderDates {
+		timestamps = append(timestamps, timestamppb.New(date))
+	}
+
+	fmt.Println("Order Service :  GetOrdersByMonth - SUCCESS")
+	return &order.GetOrdersByMonthResponse{
+		CreatedAt: timestamps,
+		Status:    http.StatusOK,
+	}, nil
+}

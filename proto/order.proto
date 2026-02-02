@@ -10,6 +10,7 @@ service OrderService{
   rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
   rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
   rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse);
+  rpc GetOrdersByMonth(GetOrdersByMonthRequest) returns (GetOrdersByMonthResponse);
 }
 
 message CreateOrderRequest{
@@ -96,4 +97,16 @@ message OrderWithDetails {
   Order order = 1;
   Customer customer = 2;
   repeated OrderProduct products = 3;
+}
+
+message GetOrdersByMonthRequest {
+  int64 companyId = 1;
+  int32 year = 2;
+  int32 month = 3;
+}
+
+message GetOrdersByMonthResponse {
+  repeated google.protobuf.Timestamp createdAt = 1;
+  int64 status = 2;
+  string error = 3;
 }

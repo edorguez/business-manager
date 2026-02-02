@@ -11,6 +11,7 @@ import DoughnutChartCard, {
 } from "@/app/components/cards/DoughnutChartCard";
 import ListCard from "@/app/components/cards/ListCard";
 import SimpleLineChartCard from "@/app/components/cards/SimpleLineChartCard";
+import OrdersBarChartCard from "@/app/components/cards/OrdersBarChartCard";
 import {
   ColumnType,
   SimpleTableColumn,
@@ -238,9 +239,9 @@ const HomeClient = () => {
         </div>
       )}
 
-      {/* <div className="mt-4">
-        <BarChartCard />
-      </div> */}
+      <div className="mt-4">
+        <OrdersBarChartCard />
+      </div>
 
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         {paymentsTypes && (

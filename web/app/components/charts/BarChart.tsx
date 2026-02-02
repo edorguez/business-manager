@@ -9,6 +9,7 @@ import {
   LinearScale,
   TimeScale,
   Tooltip,
+  TimeUnit,
 } from "chart.js";
 import React, { useEffect, useRef, useState } from "react";
 import { chartColors } from "./ChartjsConfig";
@@ -17,6 +18,9 @@ interface BarChartProps {
   data: any;
   width: number;
   height: number;
+  unit?: TimeUnit;
+  valueFormatter?: (value: any) => string;
+  showAllTicks?: boolean;
 }
 
 Chart.register(
@@ -28,7 +32,7 @@ Chart.register(
   Legend
 );
 
-const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
+const BarChart: React.FC<BarChartProps> = ({ data, width, height, unit = 'month', valueFormatter = formatValue, showAllTicks = false }) => {
   const [chart, setChart] = useState(null);
   const canvas = useRef(null);
   const legend = useRef(null);
@@ -62,7 +66,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
             },
             ticks: {
               maxTicksLimit: 5,
-              callback: (value) => formatValue(value),
+              callback: (value) => valueFormatter(value),
               color: textColor.dark,
             },
             grid: {
@@ -73,9 +77,10 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
             type: "time",
             time: {
               parser: "MM-DD-YYYY",
-              unit: "month",
+              unit: unit,
               displayFormats: {
                 month: "MMM YY",
+                day: "MMM DD",
               },
             },
             border: {
@@ -86,6 +91,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
             },
             ticks: {
               color: textColor.dark,
+              ...(unit === 'day' && showAllTicks ? { autoSkip: false, maxTicksLimit: 31 } : {}),
             },
           },
         },
@@ -96,7 +102,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
           tooltip: {
             callbacks: {
               //title: () => false, // Disable tooltip title
-              label: (context) => formatValue(context.parsed.y),
+              label: (context) => valueFormatter(context.parsed.y),
             },
             bodyColor: tooltipBodyColor.dark,
             backgroundColor: tooltipBgColor.dark,
@@ -172,7 +178,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
                 (a: number, b: number) => a + b,
                 0
               );
-              const valueText = document.createTextNode(formatValue(theValue));
+              const valueText = document.createTextNode(valueFormatter(theValue));
               const labelText = document.createTextNode(item.text);
               value.appendChild(valueText);
               label.appendChild(labelText);

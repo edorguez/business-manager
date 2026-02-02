@@ -1,4 +1,4 @@
-import { CreateOrder, GetOrders } from "../types/order";
+import { CreateOrder, GetOrders, GetOrdersByMonthRequest, GetOrdersByMonthResponse } from "../types/order";
 import Cookies from 'js-cookie';
 
 const baseUrl: string =
@@ -58,6 +58,31 @@ export async function GetOrderRequest(
     headers.append("Authorization", <string>token);
 
     const res = await fetch(`${baseUrl}/${orderId}`.toString(), {
+      method: 'GET',
+      headers: headers,
+    });
+
+    let response = await res.json();
+
+    return response;
+  } catch (error: any) {
+    console.log(error.toString())
+  }
+}
+
+export async function GetOrdersByMonthRequest(
+  request: GetOrdersByMonthRequest
+): Promise<GetOrdersByMonthResponse | undefined> {
+  try {
+    const headers = new Headers();
+    const token = Cookies.get('token');
+    headers.append("Authorization", <string>token);
+
+    const res = await fetch(`${baseUrl}/by-month?` + new URLSearchParams({
+      companyId: request.companyId.toString(),
+      year: request.year.toString(),
+      month: request.month.toString()
+    }).toString(), {
       method: 'GET',
       headers: headers,
     });

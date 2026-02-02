@@ -854,6 +854,126 @@ func (x *OrderWithDetails) GetProducts() []*OrderProduct {
 	return nil
 }
 
+type GetOrdersByMonthRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CompanyId     int64                  `protobuf:"varint,1,opt,name=companyId,proto3" json:"companyId,omitempty"`
+	Year          int32                  `protobuf:"varint,2,opt,name=year,proto3" json:"year,omitempty"`
+	Month         int32                  `protobuf:"varint,3,opt,name=month,proto3" json:"month,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetOrdersByMonthRequest) Reset() {
+	*x = GetOrdersByMonthRequest{}
+	mi := &file_order_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrdersByMonthRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrdersByMonthRequest) ProtoMessage() {}
+
+func (x *GetOrdersByMonthRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_order_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrdersByMonthRequest.ProtoReflect.Descriptor instead.
+func (*GetOrdersByMonthRequest) Descriptor() ([]byte, []int) {
+	return file_order_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetOrdersByMonthRequest) GetCompanyId() int64 {
+	if x != nil {
+		return x.CompanyId
+	}
+	return 0
+}
+
+func (x *GetOrdersByMonthRequest) GetYear() int32 {
+	if x != nil {
+		return x.Year
+	}
+	return 0
+}
+
+func (x *GetOrdersByMonthRequest) GetMonth() int32 {
+	if x != nil {
+		return x.Month
+	}
+	return 0
+}
+
+type GetOrdersByMonthResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	CreatedAt     []*timestamppb.Timestamp `protobuf:"bytes,1,rep,name=createdAt,proto3" json:"createdAt,omitempty"`
+	Status        int64                    `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
+	Error         string                   `protobuf:"bytes,3,opt,name=error,proto3" json:"error,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetOrdersByMonthResponse) Reset() {
+	*x = GetOrdersByMonthResponse{}
+	mi := &file_order_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrdersByMonthResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrdersByMonthResponse) ProtoMessage() {}
+
+func (x *GetOrdersByMonthResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_order_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrdersByMonthResponse.ProtoReflect.Descriptor instead.
+func (*GetOrdersByMonthResponse) Descriptor() ([]byte, []int) {
+	return file_order_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetOrdersByMonthResponse) GetCreatedAt() []*timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *GetOrdersByMonthResponse) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *GetOrdersByMonthResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
 var File_order_proto protoreflect.FileDescriptor
 
 const file_order_proto_rawDesc = "" +
@@ -927,11 +1047,20 @@ const file_order_proto_rawDesc = "" +
 	"\x10OrderWithDetails\x12\"\n" +
 	"\x05order\x18\x01 \x01(\v2\f.order.OrderR\x05order\x12+\n" +
 	"\bcustomer\x18\x02 \x01(\v2\x0f.order.CustomerR\bcustomer\x12/\n" +
-	"\bproducts\x18\x03 \x03(\v2\x13.order.OrderProductR\bproducts2\xd1\x01\n" +
+	"\bproducts\x18\x03 \x03(\v2\x13.order.OrderProductR\bproducts\"a\n" +
+	"\x17GetOrdersByMonthRequest\x12\x1c\n" +
+	"\tcompanyId\x18\x01 \x01(\x03R\tcompanyId\x12\x12\n" +
+	"\x04year\x18\x02 \x01(\x05R\x04year\x12\x14\n" +
+	"\x05month\x18\x03 \x01(\x05R\x05month\"\x82\x01\n" +
+	"\x18GetOrdersByMonthResponse\x128\n" +
+	"\tcreatedAt\x18\x01 \x03(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\x03R\x06status\x12\x14\n" +
+	"\x05error\x18\x03 \x01(\tR\x05error2\xa6\x02\n" +
 	"\fOrderService\x12D\n" +
 	"\vCreateOrder\x12\x19.order.CreateOrderRequest\x1a\x1a.order.CreateOrderResponse\x12;\n" +
 	"\bGetOrder\x12\x16.order.GetOrderRequest\x1a\x17.order.GetOrderResponse\x12>\n" +
-	"\tGetOrders\x12\x17.order.GetOrdersRequest\x1a\x18.order.GetOrdersResponseB\tZ\a./orderb\x06proto3"
+	"\tGetOrders\x12\x17.order.GetOrdersRequest\x1a\x18.order.GetOrdersResponse\x12S\n" +
+	"\x10GetOrdersByMonth\x12\x1e.order.GetOrdersByMonthRequest\x1a\x1f.order.GetOrdersByMonthResponseB\tZ\a./orderb\x06proto3"
 
 var (
 	file_order_proto_rawDescOnce sync.Once
@@ -945,7 +1074,7 @@ func file_order_proto_rawDescGZIP() []byte {
 	return file_order_proto_rawDescData
 }
 
-var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_order_proto_goTypes = []any{
 	(*CreateOrderRequest)(nil),         // 0: order.CreateOrderRequest
 	(*CreateOrderCustomerRequest)(nil), // 1: order.CreateOrderCustomerRequest
@@ -959,7 +1088,9 @@ var file_order_proto_goTypes = []any{
 	(*OrderProduct)(nil),               // 9: order.OrderProduct
 	(*Customer)(nil),                   // 10: order.Customer
 	(*OrderWithDetails)(nil),           // 11: order.OrderWithDetails
-	(*timestamppb.Timestamp)(nil),      // 12: google.protobuf.Timestamp
+	(*GetOrdersByMonthRequest)(nil),    // 12: order.GetOrdersByMonthRequest
+	(*GetOrdersByMonthResponse)(nil),   // 13: order.GetOrdersByMonthResponse
+	(*timestamppb.Timestamp)(nil),      // 14: google.protobuf.Timestamp
 }
 var file_order_proto_depIdxs = []int32{
 	1,  // 0: order.CreateOrderRequest.customer:type_name -> order.CreateOrderCustomerRequest
@@ -968,21 +1099,24 @@ var file_order_proto_depIdxs = []int32{
 	10, // 3: order.GetOrderResponse.customer:type_name -> order.Customer
 	9,  // 4: order.GetOrderResponse.products:type_name -> order.OrderProduct
 	11, // 5: order.GetOrdersResponse.orders:type_name -> order.OrderWithDetails
-	12, // 6: order.Order.createdAt:type_name -> google.protobuf.Timestamp
+	14, // 6: order.Order.createdAt:type_name -> google.protobuf.Timestamp
 	8,  // 7: order.OrderWithDetails.order:type_name -> order.Order
 	10, // 8: order.OrderWithDetails.customer:type_name -> order.Customer
 	9,  // 9: order.OrderWithDetails.products:type_name -> order.OrderProduct
-	0,  // 10: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
-	4,  // 11: order.OrderService.GetOrder:input_type -> order.GetOrderRequest
-	6,  // 12: order.OrderService.GetOrders:input_type -> order.GetOrdersRequest
-	3,  // 13: order.OrderService.CreateOrder:output_type -> order.CreateOrderResponse
-	5,  // 14: order.OrderService.GetOrder:output_type -> order.GetOrderResponse
-	7,  // 15: order.OrderService.GetOrders:output_type -> order.GetOrdersResponse
-	13, // [13:16] is the sub-list for method output_type
-	10, // [10:13] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	14, // 10: order.GetOrdersByMonthResponse.createdAt:type_name -> google.protobuf.Timestamp
+	0,  // 11: order.OrderService.CreateOrder:input_type -> order.CreateOrderRequest
+	4,  // 12: order.OrderService.GetOrder:input_type -> order.GetOrderRequest
+	6,  // 13: order.OrderService.GetOrders:input_type -> order.GetOrdersRequest
+	12, // 14: order.OrderService.GetOrdersByMonth:input_type -> order.GetOrdersByMonthRequest
+	3,  // 15: order.OrderService.CreateOrder:output_type -> order.CreateOrderResponse
+	5,  // 16: order.OrderService.GetOrder:output_type -> order.GetOrderResponse
+	7,  // 17: order.OrderService.GetOrders:output_type -> order.GetOrdersResponse
+	13, // 18: order.OrderService.GetOrdersByMonth:output_type -> order.GetOrdersByMonthResponse
+	15, // [15:19] is the sub-list for method output_type
+	11, // [11:15] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_order_proto_init() }
@@ -999,7 +1133,7 @@ func file_order_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_order_proto_rawDesc), len(file_order_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

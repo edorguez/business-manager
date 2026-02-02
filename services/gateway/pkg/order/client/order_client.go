@@ -145,3 +145,32 @@ func GetOrders(companyId int64, limit, offset int32, c context.Context) (*pb.Get
 	fmt.Println("Order CLIENT :  GetOrders - SUCCESS")
 	return res, nil
 }
+
+func GetOrdersByMonth(companyId int64, year, month int32, c context.Context) (*pb.GetOrdersByMonthResponse, *types.Error) {
+	fmt.Println("Order CLIENT :  GetOrdersByMonth")
+
+	fmt.Println("Order CLIENT :  GetOrdersByMonth - companyId:", companyId, "year:", year, "month:", month)
+
+	req := &pb.GetOrdersByMonthRequest{
+		CompanyId: companyId,
+		Year:      year,
+		Month:     month,
+	}
+
+	res, err := orderServiceClient.GetOrdersByMonth(c, req)
+
+	if err != nil {
+		fmt.Println("Order CLIENT :  GetOrdersByMonth - ERROR")
+		fmt.Println(err.Error())
+
+		error := &types.Error{
+			Status: http.StatusInternalServerError,
+			Error:  err.Error(),
+		}
+
+		return nil, error
+	}
+
+	fmt.Println("Order CLIENT :  GetOrdersByMonth - SUCCESS")
+	return res, nil
+}

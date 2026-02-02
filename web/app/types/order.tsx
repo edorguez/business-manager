@@ -72,3 +72,15 @@ export type OrderProductsTable = {
   price: number;
   total: number;
 }
+
+export type GetOrdersByMonthRequest = {
+  companyId: number;
+  year: number;
+  month: number;
+}
+
+export type GetOrdersByMonthResponse = {
+  createdAt: string[];
+  status: number;
+  error: string;
+}

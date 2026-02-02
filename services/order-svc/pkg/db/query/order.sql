@@ -22,3 +22,11 @@ LIMIT $2 OFFSET $3;
 
 -- name: GetOrdersCount :one
 SELECT COUNT(*) FROM "order"."order" WHERE company_id = $1;
+
+-- name: GetOrdersByMonth :many
+SELECT created_at
+FROM "order"."order"
+WHERE company_id = sqlc.arg(company_id)
+  AND created_at >= make_date(sqlc.arg(year)::int, sqlc.arg(month)::int, 1)
+  AND created_at < make_date(sqlc.arg(year)::int, sqlc.arg(month)::int, 1) + INTERVAL '1 month'
+ORDER BY created_at;
