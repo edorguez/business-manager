@@ -112,3 +112,37 @@ export const formatCompanyNameToUrlName = (name: string): string => {
     // Replace one or more consecutive spaces with a single dash
     .replace(/\s+/g, '-');
 }
+
+export const getSpanishMonthAbbreviation = (month: number): string => {
+  const spanishMonths = [
+    "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+    "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+  ];
+  return spanishMonths[month]; // month is 0-indexed (0 = January)
+};
+
+export interface MonthOption {
+  label: string; // "2026 - Feb"
+  value: string; // "2026-02" (YYYY-MM) for easy parsing
+  date: Date;    // First day of the month
+}
+
+export const generateMonthList = (count: number = 12): MonthOption[] => {
+  const result: MonthOption[] = [];
+  const now = new Date();
+  
+  for (let i = 0; i < count; i++) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0-indexed
+    const monthAbbr = getSpanishMonthAbbreviation(month);
+    
+    result.push({
+      label: `${year} - ${monthAbbr}`,
+      value: `${year}-${String(month + 1).padStart(2, '0')}`,
+      date,
+    });
+  }
+  
+  return result;
+};

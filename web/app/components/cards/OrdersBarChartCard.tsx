@@ -1,17 +1,29 @@
 "use client";
 
 import BarChart from "../charts/BarChart";
-import { tailwindConfig, convertToTimezone } from "@/app/utils/Utils";
+import { tailwindConfig, convertToTimezone, generateMonthList, MonthOption } from "@/app/utils/Utils";
 import { GetOrdersByMonthRequest } from "@/app/services/orders";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { CurrentUser } from "@/app/types/auth";
+import { Select } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 const OrdersBarChartCard = () => {
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-  const [ordersData, setOrdersData] = useState<number[]>([]);
+  const monthOptions = generateMonthList(12);
+  const [selectedMonthValue, setSelectedMonthValue] = useState<string>(() => {
+    // Default to current month in YYYY-MM format
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+  const [ordersData, setOrdersData] = useState<(number | null)[]>([]);
   const [labels, setLabels] = useState<Date[]>([]);
   const [totalOrders, setTotalOrders] = useState<number>(0);
+
+  // Compute current month Date from selected value
+  const currentMonthDate = (() => {
+    const [year, month] = selectedMonthValue.split('-').map(Number);
+    return new Date(year, month - 1, 1);
+  })();
 
   const getMonthName = (date: Date): string => {
     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -28,27 +40,12 @@ const OrdersBarChartCard = () => {
   };
 
   const integerFormatter = (value: any): string => {
+    if (value === null || value === undefined) return '';
     return Math.round(Number(value)).toString();
   };
 
-  const prevMonth = () => {
-    setCurrentMonth(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(prev.getMonth() - 1);
-      return newDate;
-    });
-  };
-
-  const nextMonth = () => {
-    setCurrentMonth(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(prev.getMonth() + 1);
-      return newDate;
-    });
-  };
-
-  const goToCurrentMonth = () => {
-    setCurrentMonth(new Date());
+  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedMonthValue(event.target.value);
   };
 
   useEffect(() => {
@@ -58,11 +55,10 @@ const OrdersBarChartCard = () => {
         return;
       }
 
-      const year = currentMonth.getFullYear();
-      const month = currentMonth.getMonth() + 1; // JavaScript months are 0-indexed, backend expects 1-indexed
-
+      const [year, month] = selectedMonthValue.split('-').map(Number);
       const daysInMonth = getDaysInMonth(year, month - 1);
-      const dayCounts = new Array(daysInMonth.length).fill(0);
+      // Initialize with null for gaps (no bar for zero orders)
+      const dayCounts: (number | null)[] = new Array(daysInMonth.length).fill(null);
 
       try {
         const response = await GetOrdersByMonthRequest({
@@ -71,7 +67,13 @@ const OrdersBarChartCard = () => {
           month,
         });
 
-        if (response && response.createdAt) {
+        console.log('Orders by month response:', response);
+
+        if (response && response.status !== 200) {
+          console.error('Error fetching orders:', response.error);
+        }
+
+        if (response && response.createdAt && Array.isArray(response.createdAt)) {
           // Count orders per day
           const userTimezoneOffset = new Date().getTimezoneOffset();
           response.createdAt.forEach((timestampStr) => {
@@ -79,7 +81,8 @@ const OrdersBarChartCard = () => {
             timestamp = convertToTimezone(timestamp, userTimezoneOffset);
             const dayOfMonth = timestamp.getDate() - 1; // zero-index
             if (dayOfMonth >= 0 && dayOfMonth < dayCounts.length) {
-              dayCounts[dayOfMonth]++;
+              // If currently null, set to 1, else increment
+              dayCounts[dayOfMonth] = dayCounts[dayOfMonth] === null ? 1 : (dayCounts[dayOfMonth]! + 1);
             }
           });
         }
@@ -89,11 +92,13 @@ const OrdersBarChartCard = () => {
 
       setLabels(daysInMonth);
       setOrdersData(dayCounts);
-      setTotalOrders(dayCounts.reduce((sum, count) => sum + count, 0));
+      // Total orders: sum only non-null values
+      const total = dayCounts.reduce<number>((sum, count) => sum + (count || 0), 0);
+      setTotalOrders(total);
     };
 
     fetchOrdersByMonth();
-  }, [currentMonth]);
+  }, [selectedMonthValue]);
 
   const chartData = {
     labels: labels.map(date => {
@@ -124,30 +129,21 @@ const OrdersBarChartCard = () => {
             <h2 className="font-semibold text-maincolor text-md">
               Orders per Day
             </h2>
-            <p className="text-sm text-gray-600">{getMonthName(currentMonth)}</p>
+            <p className="text-sm text-gray-600">{getMonthName(currentMonthDate)}</p>
           </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={prevMonth}
-              className="p-2 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700"
-              aria-label="Previous month"
-            >
-              &larr;
-            </button>
-            <button
-              onClick={goToCurrentMonth}
-              className="px-3 py-1 text-sm rounded-md bg-maincolor text-white hover:bg-thirdcolor"
-            >
-              Current Month
-            </button>
-            <button
-              onClick={nextMonth}
-              className="p-2 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700"
-              aria-label="Next month"
-            >
-              &rarr;
-            </button>
-          </div>
+          <Select
+            size="sm"
+            value={selectedMonthValue}
+            onChange={handleMonthChange}
+            variant="default"
+            width="180px"
+          >
+            {monthOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
         </div>
         <div className="mt-2 text-lg font-bold text-black">
           Total Orders: {totalOrders}
