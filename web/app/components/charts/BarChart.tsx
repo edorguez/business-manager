@@ -32,10 +32,18 @@ Chart.register(
   Legend
 );
 
-const BarChart: React.FC<BarChartProps> = ({ data, width, height, unit = 'month', valueFormatter = formatValue, showAllTicks = false }) => {
-  const [chart, setChart] = useState(null);
-  const canvas = useRef(null);
-  const legend = useRef(null);
+const BarChart: React.FC<BarChartProps> = ({ 
+  data, 
+  width, 
+  height, 
+  unit = 'month', 
+  valueFormatter = formatValue, 
+  showAllTicks = false 
+}) => {
+  const [chart, setChart] = useState<Chart | null>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const legend = useRef<HTMLUListElement>(null);
+  
   const {
     textColor,
     gridColor,
@@ -45,50 +53,36 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height, unit = 'month'
   } = chartColors;
 
   useEffect(() => {
-    const ctx: any = canvas.current;
-    // eslint-disable-next-line no-unused-vars
-    const newChart: any = new Chart(ctx, {
+    if (!canvas.current) return;
+
+    const ctx = canvas.current;
+    
+    const newChart = new Chart(ctx, {
       type: "bar",
       data: data,
       options: {
         layout: {
-          padding: {
-            top: 12,
-            bottom: 16,
-            left: 20,
-            right: 20,
-          },
+          padding: { top: 12, bottom: 16, left: 20, right: 20 },
         },
         scales: {
           y: {
-            border: {
-              display: false,
-            },
+            border: { display: false },
             ticks: {
               maxTicksLimit: 5,
               callback: (value) => valueFormatter(value),
               color: textColor.dark,
             },
-            grid: {
-              color: gridColor.dark,
-            },
+            grid: { color: gridColor.dark },
           },
           x: {
             type: "time",
             time: {
               parser: "MM-DD-YYYY",
               unit: unit,
-              displayFormats: {
-                month: "MMM YY",
-                day: "MMM DD",
-              },
+              displayFormats: { month: "MMM YY", day: "MMM DD" },
             },
-            border: {
-              display: false,
-            },
-            grid: {
-              display: false,
-            },
+            border: { display: false },
+            grid: { display: false },
             ticks: {
               color: textColor.dark,
               ...(unit === 'day' && showAllTicks ? { autoSkip: false, maxTicksLimit: 31 } : {}),
@@ -96,12 +90,9 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height, unit = 'month'
           },
         },
         plugins: {
-          legend: {
-            display: false,
-          },
+          legend: { display: false },
           tooltip: {
             callbacks: {
-              //title: () => false, // Disable tooltip title
               label: (context) => valueFormatter(context.parsed.y),
             },
             bodyColor: tooltipBodyColor.dark,
@@ -109,94 +100,66 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height, unit = 'month'
             borderColor: tooltipBorderColor.dark,
           },
         },
-        interaction: {
-          intersect: false,
-          mode: "nearest",
-        },
-        animation: {
-          duration: 500,
-        },
+        interaction: { intersect: false, mode: "nearest" },
+        animation: { duration: 500 },
         maintainAspectRatio: false,
         resizeDelay: 200,
       },
       plugins: [
         {
           id: "htmlLegend",
-          afterUpdate(c: any, args, options) {
-            const ul: any = legend.current;
+          afterUpdate(c: any) {
+            const ul = legend.current;
             if (!ul) return;
-            // Remove old legend items
-            while (ul.firstChild) {
-              ul.firstChild.remove();
-            }
-            // Reuse the built-in legendItems generator
-            const items: any =
-              c.options.plugins.legend.labels.generateLabels(c);
+            while (ul.firstChild) { ul.firstChild.remove(); }
+            const items = c.options.plugins.legend.labels.generateLabels(c);
             items.forEach((item: any) => {
               const li = document.createElement("li");
               li.style.marginRight = tailwindConfig().theme.margin[4];
-              // Button element
               const button = document.createElement("button");
               button.style.display = "inline-flex";
               button.style.alignItems = "center";
               button.style.opacity = item.hidden ? ".3" : "";
               button.onclick = () => {
-                c.setDatasetVisibility(
-                  item.datasetIndex,
-                  !c.isDatasetVisible(item.datasetIndex)
-                );
+                c.setDatasetVisibility(item.datasetIndex, !c.isDatasetVisible(item.datasetIndex));
                 c.update();
               };
-              // Color box
               const box = document.createElement("span");
               box.style.display = "block";
               box.style.width = tailwindConfig().theme.width[3];
               box.style.height = tailwindConfig().theme.height[3];
-              box.style.borderRadius = tailwindConfig().theme.borderRadius.full;
+              box.style.borderRadius = "9999px";
               box.style.marginRight = tailwindConfig().theme.margin[2];
               box.style.borderWidth = "3px";
               box.style.borderColor = item.fillStyle;
-              box.style.pointerEvents = "none";
-              // Label
               const labelContainer = document.createElement("span");
               labelContainer.style.display = "flex";
               labelContainer.style.alignItems = "center";
               const value = document.createElement("span");
               value.classList.add("text-black");
-              value.style.fontSize = tailwindConfig().theme.fontSize["2xl"][0];
-              value.style.lineHeight =
-                tailwindConfig().theme.fontSize["3xl"][1].lineHeight;
-              value.style.fontWeight = tailwindConfig().theme.fontWeight.bold;
+              value.style.fontWeight = "bold";
               value.style.marginRight = tailwindConfig().theme.margin[2];
-              value.style.pointerEvents = "none";
+              const totalValue = c.data.datasets[item.datasetIndex].data.reduce((a: number, b: number) => a + b, 0);
+              value.innerText = valueFormatter(totalValue);
               const label = document.createElement("span");
-              label.classList.add("text-black");
-              label.style.fontSize = tailwindConfig().theme.fontSize.sm[0];
-              label.style.lineHeight =
-                tailwindConfig().theme.fontSize.sm[1].lineHeight;
-              const theValue = c.data.datasets[item.datasetIndex].data.reduce(
-                (a: number, b: number) => a + b,
-                0
-              );
-              const valueText = document.createTextNode(valueFormatter(theValue));
-              const labelText = document.createTextNode(item.text);
-              value.appendChild(valueText);
-              label.appendChild(labelText);
-              li.appendChild(button);
-              button.appendChild(box);
-              button.appendChild(labelContainer);
+              label.innerText = item.text;
               labelContainer.appendChild(value);
               labelContainer.appendChild(label);
+              button.appendChild(box);
+              button.appendChild(labelContainer);
+              li.appendChild(button);
               ul.appendChild(li);
             });
           },
         },
       ],
     });
+
     setChart(newChart);
-    return () => newChart.destroy();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => {
+      newChart.destroy();
+    };
+  }, [data, unit, showAllTicks, gridColor.dark, textColor.dark, tooltipBgColor.dark, tooltipBodyColor.dark, tooltipBorderColor.dark, valueFormatter]);
 
   return (
     <React.Fragment>

@@ -1,7 +1,7 @@
 "use client";
 
 import BarChart from "../charts/BarChart";
-import { tailwindConfig, convertToTimezone, generateMonthList, MonthOption } from "@/app/utils/Utils";
+import { tailwindConfig, convertToTimezone, generateMonthList, MonthOption, convertTimestampToDate } from "@/app/utils/Utils";
 import { GetOrdersByMonthRequest } from "@/app/services/orders";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { CurrentUser } from "@/app/types/auth";
@@ -67,8 +67,6 @@ const OrdersBarChartCard = () => {
           month,
         });
 
-        console.log('Orders by month response:', response);
-
         if (response && response.status !== 200) {
           console.error('Error fetching orders:', response.error);
         }
@@ -76,8 +74,8 @@ const OrdersBarChartCard = () => {
         if (response && response.createdAt && Array.isArray(response.createdAt)) {
           // Count orders per day
           const userTimezoneOffset = new Date().getTimezoneOffset();
-          response.createdAt.forEach((timestampStr) => {
-            let timestamp = new Date(timestampStr);
+          response.createdAt.forEach((timestampStr: any) => {
+            let timestamp: Date = convertTimestampToDate(timestampStr);
             timestamp = convertToTimezone(timestamp, userTimezoneOffset);
             const dayOfMonth = timestamp.getDate() - 1; // zero-index
             if (dayOfMonth >= 0 && dayOfMonth < dayCounts.length) {
