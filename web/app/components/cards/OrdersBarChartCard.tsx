@@ -1,7 +1,7 @@
 "use client";
 
 import BarChart from "../charts/BarChart";
-import { tailwindConfig, convertToTimezone, generateMonthList, MonthOption, convertTimestampToDate } from "@/app/utils/Utils";
+import { tailwindConfig, convertToTimezone, generateMonthList, convertTimestampToDate } from "@/app/utils/Utils";
 import { GetOrdersByMonthRequest } from "@/app/services/orders";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { CurrentUser } from "@/app/types/auth";
@@ -26,7 +26,8 @@ const OrdersBarChartCard = () => {
   })();
 
   const getMonthName = (date: Date): string => {
-    return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    const monthYear = date.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+    return monthYear[0].toUpperCase() + monthYear.substring(1);
   };
 
   const getDaysInMonth = (year: number, month: number): Date[] => {
@@ -108,7 +109,7 @@ const OrdersBarChartCard = () => {
     }),
     datasets: [
       {
-        label: "Orders",
+        label: "Órdenes",
         data: ordersData,
         backgroundColor: tailwindConfig().theme.colors.blue[400],
         hoverBackgroundColor: tailwindConfig().theme.colors.blue[500],
@@ -125,7 +126,7 @@ const OrdersBarChartCard = () => {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="font-semibold text-maincolor text-md">
-              Orders per Day
+              Órdenes del Mes
             </h2>
             <p className="text-sm text-gray-600">{getMonthName(currentMonthDate)}</p>
           </div>
@@ -144,7 +145,7 @@ const OrdersBarChartCard = () => {
           </Select>
         </div>
         <div className="mt-2 text-lg font-bold text-black">
-          Total Orders: {totalOrders}
+          Número de Órdenes: {totalOrders}
         </div>
       </header>
       {/* Chart built with Chart.js 3 */}

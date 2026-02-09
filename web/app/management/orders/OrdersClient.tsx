@@ -81,6 +81,8 @@ const OrdersClient = () => {
         })
 
         setOrdersTableData(formatData);
+      } else {
+        setOrdersTableData([]);
       }
     }
 
@@ -92,7 +94,10 @@ const OrdersClient = () => {
   }, [getOrders]);
 
   const handleChangePage = (val: string) => {
-    setOffset((prevValue) => val === 'NEXT' ? prevValue += 10 : prevValue -= 10);
+    setOffset((prevValue) => {
+      const newOffset = val === 'NEXT' ? prevValue + 10 : prevValue - 10;
+      return Math.max(0, newOffset);
+    });
   }
 
   const handleOpenDetail = (val: any) => {

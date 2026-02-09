@@ -1,6 +1,6 @@
 "use client";
 
-import { formatValue, tailwindConfig } from "@/app/utils/Utils";
+import { formatTitleValue, formatValue, tailwindConfig } from "@/app/utils/Utils";
 import {
   BarController,
   BarElement,
@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import React, { useEffect, useRef, useState } from "react";
 import { chartColors } from "./ChartjsConfig";
+import "chartjs-adapter-dayjs-3";
 
 interface BarChartProps {
   data: any;
@@ -93,6 +94,15 @@ const BarChart: React.FC<BarChartProps> = ({
           legend: { display: false },
           tooltip: {
             callbacks: {
+              title: (tooltipItems: any): string => {
+                // Access the first tooltip item
+                const tooltipItem: any = tooltipItems[0];
+                // Use the label from the data
+                const label = tooltipItem.label;
+                // Return your custom title
+                return formatTitleValue(label);
+              },
+
               label: (context) => valueFormatter(context.parsed.y),
             },
             bodyColor: tooltipBodyColor.dark,

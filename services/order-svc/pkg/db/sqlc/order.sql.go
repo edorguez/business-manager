@@ -70,7 +70,7 @@ func (q *Queries) GetOrder(ctx context.Context, id int64) (OrderOrder, error) {
 const getOrders = `-- name: GetOrders :many
 SELECT id, company_id, customer_id, order_number, created_at, modified_at FROM "order"."order"
 WHERE company_id = $1
-ORDER BY created_at DESC
+ORDER BY created_at DESC, id DESC
 LIMIT $2 OFFSET $3
 `
 

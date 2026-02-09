@@ -279,6 +279,7 @@ func (s *OrderService) GetOrders(ctx context.Context, req *order.GetOrdersReques
 	fmt.Println("Order Service :  GetOrders")
 	fmt.Println("Order Service :  GetOrders - Req")
 	fmt.Println(req)
+	fmt.Println("Order Service :  GetOrders - Details - CompanyId:", req.CompanyId, "Limit:", req.Limit, "Offset:", req.Offset)
 	fmt.Println("----------------")
 
 	// Initialize customer service client

@@ -54,6 +54,8 @@ func GetOrders(w http.ResponseWriter, r *http.Request, c *config.Config) {
 		}
 	}
 
+	fmt.Println("API Gateway : GetOrders - Parsed values - companyId:", companyId, "limit:", limit, "offset:", offset, "raw limit:", limitStr, "raw offset:", offsetStr)
+
 	if err := orderClient.InitOrderServiceClient(c); err != nil {
 		json.NewEncoder(w).Encode(&types.Error{
 			Status: http.StatusInternalServerError,

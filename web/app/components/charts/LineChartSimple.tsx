@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { chartColors } from "./ChartjsConfig";
 import {
   Chart,
-  ChartData,
   Filler,
   LineController,
   LineElement,
@@ -14,8 +13,7 @@ import {
   Tooltip,
   TooltipItem,
 } from "chart.js";
-import { formatTitleValue, formatValue } from "@/app/utils/Utils";
-import "chartjs-adapter-moment";
+import { formatTitleValue } from "@/app/utils/Utils";
 
 interface LineChartSimpleProps {
   data: any;

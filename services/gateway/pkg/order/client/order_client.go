@@ -128,6 +128,8 @@ func GetOrders(companyId int64, limit, offset int32, c context.Context) (*pb.Get
 		Offset:    offset,
 	}
 
+	fmt.Println("Order CLIENT : GetOrders - Request created with CompanyId:", req.CompanyId, "Limit:", req.Limit, "Offset:", req.Offset)
+
 	res, err := orderServiceClient.GetOrders(c, req)
 
 	if err != nil {

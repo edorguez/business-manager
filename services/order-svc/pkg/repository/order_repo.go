@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	db "github.com/edorguez/business-manager/services/order-svc/pkg/db/sqlc"
@@ -112,6 +113,7 @@ func (repo *OrderRepo) GetOrders(ctx context.Context, companyID int64, limit, of
 			Limit:     limit,
 			Offset:    offset,
 		}
+		fmt.Println("Order Repository : GetOrders - params:", params)
 		result, err = q.GetOrders(ctx, params)
 		if err != nil {
 			return err
