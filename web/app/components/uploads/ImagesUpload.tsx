@@ -74,9 +74,11 @@ const ImagesUpload: React.FC<ImagesUploadProps> = ({
       return false;
     }
 
+    const allowedMimeTypes = ['image/jpeg', 'image/png'];
     const isIncorrectFileImage: boolean = arrayFiles.some(
-      (x: File) => !x.name.match(/\.(jpg|jpeg|png)$/)
+      (x: File) => !allowedMimeTypes.includes(x.type)
     );
+
     if (isIncorrectFileImage) {
       toast({
         position: "top-right",
