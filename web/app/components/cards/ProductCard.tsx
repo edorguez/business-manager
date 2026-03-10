@@ -31,12 +31,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard, onImage
   return (
     <div
       key={product.id}
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col"
     >
-       <div 
-         className={`relative w-full h-40 lg:h-64 overflow-hidden ${onImageClick ? 'cursor-pointer' : ''}`}
-         onClick={onImageClick}
-       >
+      <div
+        className={`relative w-full h-40 lg:h-64 overflow-hidden ${onImageClick ? 'cursor-pointer' : ''}`}
+        onClick={onImageClick}
+      >
         <Image
           src={
             product.images && product.images.length > 0
@@ -68,17 +68,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCard, onImage
           </>
         )}
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-        <p className="text-gray-600 mb-2">{product.description}</p>
+      <div className="px-4 pb-2">
+        <h3 className="text-sm lg:text-lg font-semibold mb-1">{product.name}</h3>
+        <p className="text-gray-600 mb-1 hidden md:block">{product.description}</p>
         <div className="flex items-start justify-between flex-col md:flex-row md:items-center">
-          <span className="text-lg font-bold">
+          <span className="text-sm md:text-lg font-bold">
             ${numberMoveDecimal(product.price, 2)}
           </span>
-          <Button variant="default" size="sm" onClick={() => onAddToCard()}>
-            + Agregar
-          </Button>
         </div>
+      </div>
+      <div className="mt-auto p-1">
+
+        <Button className="w-full" variant="default" size="sm" onClick={() => onAddToCard()}>
+          <span className="text-xs">
+            + Agregar
+          </span>
+        </Button>
       </div>
     </div>
   );

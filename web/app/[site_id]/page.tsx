@@ -71,12 +71,12 @@ const SitePage = () => {
       <div className="min-h-screen bg-gray-200">
         {/* Header */}
         <header className="bg-white shadow-md">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="container mx-auto py-4 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-defaultcolor">
               {company?.name}
             </h1>
             <div className="flex items-center space-x-4">
-              <Button variant="default" onClick={cart.onOpen}>
+              <Button variant="default" size="sm" onClick={cart.onOpen}>
                 Carrito ({getTotalItems()})
               </Button>
             </div>
@@ -84,7 +84,7 @@ const SitePage = () => {
         </header>
 
         {/* Main Content */}
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto py-4">
           {/* <h2 className="text-2xl font-semibold mb-6">Our Menu</h2> */}
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {products.map((product) => (

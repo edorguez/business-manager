@@ -149,11 +149,15 @@ const ProductDetailModal = () => {
             )}
 
             {/* Product Details */}
-            <div className="p-4 md:p-6 space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Descripción</h3>
-                <p className="text-gray-700">{product.description}</p>
-              </div>
+            <div className="py-2 space-y-4">
+              {
+                product.description && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">Descripción</h3>
+                    <p className="text-gray-700">{product.description}</p>
+                  </div>
+                )
+              }
 
               <div className="grid grid-cols-2 gap-4">
                 <Box className="bg-gray-50 p-3 rounded-lg">
@@ -162,10 +166,14 @@ const ProductDetailModal = () => {
                     ${numberMoveDecimal(product.price, 2)}
                   </p>
                 </Box>
-                <Box className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-500">SKU</p>
-                  <p className="font-medium">{product.sku}</p>
-                </Box>
+                {
+                  product.sku && (
+                    <Box className="bg-gray-50 p-3 rounded-lg">
+                      <p className="text-sm text-gray-500">SKU</p>
+                      <p className="font-medium">{product.sku}</p>
+                    </Box>
+                  )
+                }
               </div>
             </div>
           </div>

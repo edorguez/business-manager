@@ -243,7 +243,7 @@ const HomeClient = () => {
         <OrdersBarChartCard />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-y-2 lg:gap-4">
         {paymentsTypes && (
           <DoughnutChartCard
             title={paymentsTypes.title}

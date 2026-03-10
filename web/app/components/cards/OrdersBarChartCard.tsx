@@ -148,9 +148,8 @@ const OrdersBarChartCard = () => {
           Número de Órdenes: {totalOrders}
         </div>
       </header>
-      {/* Chart built with Chart.js 3 */}
       <div className="grow">
-         <BarChart data={chartData} width={595} height={248} unit="day" valueFormatter={integerFormatter} showAllTicks={true} />
+         <BarChart data={chartData} width={389} height={260} unit="day" valueFormatter={integerFormatter} showAllTicks={true} />
       </div>
     </div>
   );

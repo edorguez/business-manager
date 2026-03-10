@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { chartColors } from "./ChartjsConfig";
 import {
   ArcElement,
   Chart,
