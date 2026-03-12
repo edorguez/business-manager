@@ -47,7 +47,7 @@ const SitePage = () => {
       name: "",
       sku: "",
       productStatus: 1,
-      limit: 10,
+      limit: 1000,
       offset: 0,
     });
 
