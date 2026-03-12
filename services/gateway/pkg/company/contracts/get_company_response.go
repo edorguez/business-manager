@@ -7,6 +7,7 @@ type GetCompanyResponse struct {
 	Name            string    `json:"name"`
 	NameFormatUrl   string    `json:"nameFormatUrl"`
 	ImageUrl        *string   `json:"imageUrl"`
+	IsFreeTrial     bool      `json:"isFreeTrial"`
 	PlanId          int64     `json:"planId"`
 	LastPaymentDate time.Time `json:"lastPaymentDate"`
 }

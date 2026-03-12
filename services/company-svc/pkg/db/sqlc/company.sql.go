@@ -143,6 +143,7 @@ SELECT
   name,
   name_format_url,
   image_url,
+  (is_free_trial::integer)::boolean AS is_free_trial,
   plan_id,
   last_payment_date,
   created_at,
@@ -159,6 +160,7 @@ type GetCompanyRow struct {
 	Name            string         `json:"name"`
 	NameFormatUrl   string         `json:"name_format_url"`
 	ImageUrl        sql.NullString `json:"image_url"`
+	IsFreeTrial     bool           `json:"is_free_trial"`
 	PlanID          int64          `json:"plan_id"`
 	LastPaymentDate time.Time      `json:"last_payment_date"`
 	CreatedAt       time.Time      `json:"created_at"`
@@ -173,6 +175,7 @@ func (q *Queries) GetCompany(ctx context.Context, id int64) (GetCompanyRow, erro
 		&i.Name,
 		&i.NameFormatUrl,
 		&i.ImageUrl,
+		&i.IsFreeTrial,
 		&i.PlanID,
 		&i.LastPaymentDate,
 		&i.CreatedAt,

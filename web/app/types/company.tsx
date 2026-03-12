@@ -3,6 +3,8 @@ export type Company = {
   name: string;
   nameFormatUrl: string;
   imageUrl: string;
+  isFreeTrial: boolean;
+  planId: boolean
   lastPaymentDate: Date;
 }
 

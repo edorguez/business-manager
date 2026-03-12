@@ -87,6 +87,7 @@ func (s *CompanyService) GetCompany(ctx context.Context, req *company.GetCompany
 		Name:            c.Name,
 		NameFormatUrl:   c.NameFormatUrl,
 		ImageUrl:        type_converter.NewString(c.ImageUrl),
+		IsFreeTrial:     c.IsFreeTrial,
 		PlanId:          c.PlanID,
 		LastPaymentDate: timestamppb.New(c.LastPaymentDate),
 		Status:          http.StatusOK,

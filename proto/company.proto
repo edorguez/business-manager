@@ -37,10 +37,11 @@ message GetCompanyResponse{
   string name = 2;
   string name_format_url = 3;
   optional string imageUrl = 4;
-  int64 plan_id = 5;
-	google.protobuf.Timestamp lastPaymentDate = 6;
-  int64 status = 7;
-  string error = 8;
+  bool isFreeTrial = 5;
+  int64 plan_id = 6;
+	google.protobuf.Timestamp lastPaymentDate = 7;
+  int64 status = 8;
+  string error = 9;
 }
 
 message GetCompanyByNameRequest{

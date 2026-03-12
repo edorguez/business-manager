@@ -18,6 +18,7 @@ SELECT
   name,
   name_format_url,
   image_url,
+  (is_free_trial::integer)::boolean AS is_free_trial,
   plan_id,
   last_payment_date,
   created_at,

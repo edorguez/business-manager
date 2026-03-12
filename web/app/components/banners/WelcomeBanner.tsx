@@ -1,32 +1,17 @@
 'use client';
 
-import getCurrentUser from "@/app/actions/getCurrentUser";
-import { GetCompanyRequest } from "@/app/services/companies";
-import { CurrentUser } from "@/app/types/auth";
 import { Company } from "@/app/types/company";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
 
-const WelcomeBanner = () => {
-  const [companyUrl, setCompanyUrl] = useState<string>("");
+interface WelcomeBannerProps {
+  company: Company | undefined
+}
 
-  useEffect(() => {
-    getCompany();
-  }, [])
-
-  const getCompany = useCallback(async () => {
-    const currentUser: CurrentUser | null = getCurrentUser();
-    if (currentUser) {
-      let company: Company = await GetCompanyRequest({
-        id: currentUser?.companyId,
-      });
-      if (company) {
-        setCompanyUrl(`https://${company.nameFormatUrl}.edezco.com`);
-      }
-    }
-  }, []);
-  return (
+const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
+  company
+}) => {
+    return (
     <div className="relative bg-white p-4 sm:p-6 rounded-md overflow-hidden shadow-lg">
       {/* Background illustration */}
       <div className="absolute right-0 top-0 -mt-4 mr-16 pointer-events-none hidden xl:block" aria-hidden="true">
@@ -74,7 +59,7 @@ const WelcomeBanner = () => {
       <div className="relative">
         <h1 className="text-2xl md:text-3xl text-thirdcolor font-bold mb-1">Buenos días, Edezco. 👋!</h1>
         <p className="mt-4 text-black">Accede a tu página web aquí:
-          <Link href={companyUrl} target="_blank" className="ml-2">
+          <Link href={`https://${company?.nameFormatUrl}.edezco.com`} target="_blank" className="ml-2">
             <Button size="sm" variant="main" >
               Ir a mi Página
             </Button>

@@ -109,6 +109,7 @@ func GetCompany(id int64, c context.Context) (*contracts.GetCompanyResponse, *ty
 		Name:            res.Name,
 		NameFormatUrl:   res.NameFormatUrl,
 		ImageUrl:        res.ImageUrl,
+		IsFreeTrial:     res.IsFreeTrial,
 		PlanId:          res.PlanId,
 		LastPaymentDate: res.LastPaymentDate.AsTime(),
 	}, nil

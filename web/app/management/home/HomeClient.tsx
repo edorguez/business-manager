@@ -1,7 +1,6 @@
 "use client";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import isValidLogin from "@/app/actions/isValidLogin";
 import { GetCustomersByMonthsRequest } from "@/app/services/customers";
 import { GetPaymentsTypesRequest } from "@/app/services/payment";
 import { GetLatestProductsRequest } from "@/app/services/products";
@@ -23,10 +22,13 @@ import { PaymentTypeChart } from "@/app/types/payment";
 import { Product } from "@/app/types/product";
 import {
   convertToTimezone,
-  formatTitleValue,
   numberMoveDecimal,
 } from "@/app/utils/Utils";
 import { useCallback, useEffect, useState } from "react";
+import { Alert, AlertDescription, AlertIcon, Box, CloseButton } from "@chakra-ui/react";
+import { Company } from "@/app/types/company";
+import { GetCompanyRequest } from "@/app/services/companies";
+import dayjs from 'dayjs';
 
 const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
   let now: Date = new Date();
@@ -71,9 +73,9 @@ const formatCustomerMonths = (dates: Date[]): CustomerMonths => {
   let twoMonthsNumber = new Date().getMonth() - 1;
   let threeMonthsNumber = new Date().getMonth() - 2;
 
-  if(twoMonthsNumber < 0) twoMonthsNumber = 11;
-  if(threeMonthsNumber === -1) threeMonthsNumber = 11;
-  if(threeMonthsNumber === -2) threeMonthsNumber = 10;
+  if (twoMonthsNumber < 0) twoMonthsNumber = 11;
+  if (threeMonthsNumber === -1) threeMonthsNumber = 11;
+  if (threeMonthsNumber === -2) threeMonthsNumber = 10;
 
   for (let i = 0; i < dates.length; i++) {
     let baseDate: Date = new Date(dates[i]);
@@ -132,6 +134,9 @@ const HomeClient = () => {
   const [customerMonths, setCustomerMonths] = useState<CustomerMonths>();
   const [products, setProducts] = useState<Product[]>([]);
   const [paymentsTypes, setPaymentsTypes] = useState<DoughnutChartCardProps>();
+  const [company, setCompany] = useState<Company | undefined>();
+  const [showFreeTrialBanner, setShowFreeTrialBanner] = useState<boolean>(false);
+  const [expirationDays, setExpirationDays] = useState<number>(0);
 
   const productCols: SimpleTableColumn[] = [
     {
@@ -203,15 +208,51 @@ const HomeClient = () => {
     isLoading.onEndLoading();
   }, []);
 
+  const getCompany = useCallback(async () => {
+    const currentUser: CurrentUser | null = getCurrentUser();
+    if (currentUser) {
+      let company: Company = await GetCompanyRequest({
+        id: currentUser?.companyId,
+      });
+      if (company) {
+        setCompany(company);
+
+        if (company.isFreeTrial) {
+          setShowFreeTrialBanner(true);
+          const startDate = dayjs(new Date());
+          const endDate = dayjs(company.lastPaymentDate);
+          setExpirationDays(endDate.diff(startDate, 'day') + 1);
+        }
+      }
+    }
+  }, []);
+
+
   useEffect(() => {
     getCustomersByMonths();
     getLatestProducts();
     getPaymentsTypes();
-  }, [getCustomersByMonths, getLatestProducts, getPaymentsTypes]);
+    getCompany();
+  }, [getCustomersByMonths, getLatestProducts, getPaymentsTypes, getCompany]);
 
   return (
     <>
-      <WelcomeBanner />
+      {showFreeTrialBanner && (
+        <Alert status='info' className="mb-2">
+          <AlertIcon />
+          <Box>
+            <AlertDescription fontSize="small">
+              Tienes un período de prueba que expira en {expirationDays} días
+            </AlertDescription>
+          </Box>
+          <CloseButton
+            className="ml-auto"
+            onClick={() => setShowFreeTrialBanner(false)}
+          />
+        </Alert>
+      )}
+
+      <WelcomeBanner company={company} />
 
       {customerMonths && (
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
