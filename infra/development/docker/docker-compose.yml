@@ -40,7 +40,7 @@ services:
       - WHATSAPP_SVC_PORT=${WHATSAPP_SVC_PORT}
     networks:
       - my_app_network
-    restart: always
+    restart: unless-stopped
 
   customer-svc:
       container_name: customer-svc
@@ -57,7 +57,7 @@ services:
         - my_app_network
       depends_on:
         - customer-db
-      restart: always
+      restart: unless-stopped
 
   company-svc:
       container_name: company-svc
@@ -76,7 +76,7 @@ services:
         - my_app_network
       depends_on:
         - company-db
-      restart: always
+      restart: unless-stopped
 
   product-svc:
       container_name: product-svc
@@ -97,7 +97,7 @@ services:
         - my_app_network
       depends_on:
         - product-db
-      restart: always
+      restart: unless-stopped
 
   whatsapp-svc:
       container_name: whatsapp-svc
@@ -119,7 +119,7 @@ services:
         - my_app_network
       depends_on:
         - whatsapp-db
-      restart: always
+      restart: unless-stopped
 
   auth-svc:
       container_name: auth-svc
@@ -143,7 +143,7 @@ services:
         - my_app_network
       depends_on:
         - auth-db
-      restart: always
+      restart: unless-stopped
 
   order-svc:
       container_name: order-svc
@@ -164,7 +164,7 @@ services:
         - PRODUCT_SVC_PORT=${PRODUCT_SVC_PORT}
       networks:
         - my_app_network
-      restart: always
+      restart: unless-stopped
 
   file-svc:
       container_name: file-svc
@@ -178,7 +178,7 @@ services:
         - AWS_SECRET_ACCESS_KEY_ID=${AWS_SECRET_ACCESS_KEY_ID}
       networks:
         - my_app_network
-      restart: always
+      restart: unless-stopped
 
   customer-db:
     container_name: customer-db
@@ -193,7 +193,7 @@ services:
       - customer_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
-    restart: always
+    restart: unless-stopped
 
   company-db:
     container_name: company-db
@@ -208,7 +208,7 @@ services:
       - company_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
-    restart: always
+    restart: unless-stopped
 
   product-db:
     container_name: product-db
@@ -222,7 +222,7 @@ services:
       - product_db_data:/data/db
     networks:
         - my_app_network
-    restart: always
+    restart: unless-stopped
 
   whatsapp-db:
     container_name: whatsapp-db
@@ -237,7 +237,7 @@ services:
       - whatsapp_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
-    restart: always
+    restart: unless-stopped
 
   auth-db:
     container_name: auth-db
@@ -252,7 +252,7 @@ services:
       - auth_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
-    restart: always
+    restart: unless-stopped
 
   order-db:
     container_name: order-db
@@ -267,7 +267,7 @@ services:
       - order_db_data:/var/lib/postgresql/data
     networks:
         - my_app_network
-    restart: always
+    restart: unless-stopped
 
 networks:
   my_app_network:
