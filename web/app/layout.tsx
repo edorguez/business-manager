@@ -38,7 +38,7 @@ export default function RootLayout({
         />
         <meta
           property="og:image"
-          content="https://edezco.com/_next/image?url=%2Fimages%2Flogo.png&w=128&q=75"
+          content="https://business-manager.edoutput.dev/_next/image?url=%2Fimages%2Flogo.png&w=128&q=75"
         />
         <meta name="twitter:card" content="summary_large_image" />
         <script

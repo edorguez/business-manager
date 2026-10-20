@@ -10,9 +10,7 @@ import {
 import Cookies from "js-cookie";
 
 const baseUrl: string =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://edezco.com/api/users"
-    : "http://localhost:3001/api/users";
+  `${process.env.NEXT_PUBLIC_API_URL ?? "/api"}/users`;
 
 export async function CreateUserRequest(request: CreateUser) {
   try {

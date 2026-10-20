@@ -1,9 +1,7 @@
 import Cookies from 'js-cookie';
 
 const baseUrl: string =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://edezco.com/api/paymentTypes"
-    : "http://localhost:3001/api/paymentTypes";
+  `${process.env.NEXT_PUBLIC_API_URL ?? "/api"}/paymentTypes`;
 
 export async function GetPaymentTypesRequest() {
   try {

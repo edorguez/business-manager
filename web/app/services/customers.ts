@@ -2,9 +2,7 @@ import { CreateCustomer, DeleteCustomer, EditCustomer, GetCustomer, GetCustomers
 import Cookies from 'js-cookie';
 
 const baseUrl: string =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://edezco.com/api/customers"
-    : "http://localhost:3001/api/customers";
+  `${process.env.NEXT_PUBLIC_API_URL ?? "/api"}/customers`;
 
 export async function CreateCustomerRequest(
   request: CreateCustomer

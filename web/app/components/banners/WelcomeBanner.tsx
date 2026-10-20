@@ -1,6 +1,7 @@
 'use client';
 
 import { Company } from "@/app/types/company";
+import { TENANT_BASE_DOMAIN } from "@/app/utils/tenant";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -59,7 +60,7 @@ const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
       <div className="relative">
         <h1 className="text-2xl md:text-3xl text-thirdcolor font-bold mb-1">Buenos días, Edezco. 👋!</h1>
         <p className="mt-4 text-black">Accede a tu página web aquí:
-          <Link href={`https://${company?.nameFormatUrl}.edezco.com`} target="_blank" className="ml-2">
+          <Link href={`https://${company?.nameFormatUrl}.${TENANT_BASE_DOMAIN}`} target="_blank" className="ml-2">
             <Button size="sm" variant="main" >
               Ir a mi Página
             </Button>

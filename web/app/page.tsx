@@ -470,7 +470,7 @@ export default function Home() {
                       Correo
                     </h3>
                     <p className="text-gray-600">
-                      info@edezco.com
+                      info@edoutput.dev
                     </p>
                   </div>
                   <div className="flex flex-col items-center text-center">

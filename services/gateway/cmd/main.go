@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"strings"
@@ -132,19 +133,25 @@ func routesConfig(next http.Handler) http.Handler {
 }
 
 func isValidOrigin(origin string) bool {
-	// Define your main domain
-	mainDomain := "edezco.com"
+	if origin == "" {
+		return false
+	}
 
-	// Check if the origin is exactly your main domain
-	if origin == "https://"+mainDomain || origin == "http://"+mainDomain {
+	mainDomain := strings.TrimSpace(os.Getenv("ALLOWED_ORIGIN_DOMAIN"))
+	if mainDomain == "" {
+		mainDomain = "edoutput.dev"
+	}
+	mainDomain = strings.TrimPrefix(strings.TrimPrefix(mainDomain, "https://"), "http://")
+	mainDomain = strings.TrimSuffix(mainDomain, "/")
+
+	originHost := origin
+	if parsed, err := url.Parse(origin); err == nil && parsed.Hostname() != "" {
+		originHost = parsed.Hostname()
+	}
+
+	if originHost == mainDomain {
 		return true
 	}
 
-	// Check if the origin is a subdomain of your main domain
-	if strings.HasSuffix(origin, "."+mainDomain) {
-		return true
-	}
-
-	// If the origin doesn't match, return false
-	return false
+	return strings.HasSuffix(originHost, "."+mainDomain)
 }

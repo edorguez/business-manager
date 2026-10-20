@@ -25,6 +25,7 @@
 # production
 /build
 /web/build
+/cmd
 
 # misc
 .DS_Store

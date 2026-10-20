@@ -5,6 +5,7 @@ import { Button, Input, InputGroup, InputRightAddon, useToast } from "@chakra-ui
 import { Icon } from "@iconify/react";
 import ImagesUpload from "../uploads/ImagesUpload";
 import { SignUp } from "@/app/types/auth";
+import { RESERVED_TENANT_SUBDOMAINS, TENANT_BASE_DOMAIN } from "@/app/utils/tenant";
 
 interface SignUpStep1Props {
   companyForm: SignUp['company'],
@@ -70,6 +71,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
     if (!companyForm.name) return false;
     if (companyForm.name && !validLettersAndNumbers(companyForm.name, true)) return false;
     if (!companyForm.nameFormatUrl) return false;
+    if (RESERVED_TENANT_SUBDOMAINS.includes(companyForm.nameFormatUrl.toLowerCase())) return false;
     if (!companyForm.phone) return false;
     if (companyForm.phone && !validPhone(companyForm.phone)) return false;
 
@@ -127,7 +129,7 @@ const SignUpStep1: React.FC<SignUpStep1Props> = ({
             value={companyForm.nameFormatUrl}
             onChange={handleNameFormatUrlChange}
           />
-          <InputRightAddon>.edezco.com</InputRightAddon>
+          <InputRightAddon>.{TENANT_BASE_DOMAIN}</InputRightAddon>
         </InputGroup>
       </div>
       <div className="mt-2">

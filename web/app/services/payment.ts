@@ -2,9 +2,7 @@ import { ChangeStatusPayment, CreatePayment, DeletePayment, EditPayment, GetPaym
 import Cookies from 'js-cookie';
 
 const baseUrl: string =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://edezco.com/api/payments"
-    : "http://localhost:3001/api/payments";
+  `${process.env.NEXT_PUBLIC_API_URL ?? "/api"}/payments`;
 
 export async function CreatePaymentRequest(
   request: CreatePayment

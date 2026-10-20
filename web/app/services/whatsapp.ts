@@ -2,9 +2,7 @@ import Cookies from 'js-cookie';
 import { CreateBusinessPhone, EditBusinessPhone } from '../types/whatsapp';
 
 const baseUrl: string =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://edezco.com/api/whatsapp"
-    : "http://localhost:3001/api/whatsapp";
+  `${process.env.NEXT_PUBLIC_API_URL ?? "/api"}/whatsapp`;
 
 export async function CreateBusinessPhoneRequest(
   request: CreateBusinessPhone

@@ -2,9 +2,7 @@ import { Login, SignUp } from "@/app/types/auth"
 import Cookies from "js-cookie";
 
 const baseUrl: string =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "production"
-    ? "https://edezco.com/api/auth"
-    : "http://localhost:3001/api/auth";
+  `${process.env.NEXT_PUBLIC_API_URL ?? "/api"}/auth`;
 
 export async function login(
   request: Login,

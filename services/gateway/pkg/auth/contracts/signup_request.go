@@ -1,6 +1,12 @@
 package contracts
 
-import "github.com/go-playground/validator/v10"
+import (
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type SignUpRequest struct {
 	Company SignUpCompany `json:"company" validate:"required"`
@@ -21,5 +27,20 @@ type SignUpUser struct {
 func (s *SignUpRequest) Validate() error {
 	validate := validator.New()
 
-	return validate.Struct(s)
+	if err := validate.Struct(s); err != nil {
+		return err
+	}
+
+	reserved := os.Getenv("RESERVED_SUBDOMAINS")
+	if reserved == "" {
+		reserved = "www,tourism-agency,gps-medical-assistance,business-manager"
+	}
+
+	for _, item := range strings.Split(reserved, ",") {
+		if strings.EqualFold(strings.TrimSpace(item), s.Company.NameFormatUrl) {
+			return fmt.Errorf("subdomain %q is reserved", s.Company.NameFormatUrl)
+		}
+	}
+
+	return nil
 }

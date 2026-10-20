@@ -1,0 +1,424 @@
+name: business-manager
+
+x-app-env: &app-env
+  ENVIRONMENT: production
+
+services:
+  # ---------------------------------------------------------------------------
+  # Edge / public entrypoint
+  # ---------------------------------------------------------------------------
+  business-manager-edge:
+    container_name: business-manager-edge
+    image: nginx:1.27-alpine
+    volumes:
+      - ./deploy/business-manager.nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "${BIND_IP:-127.0.0.1}:${EDGE_PORT:-8083}:80"
+    depends_on:
+      business-manager-web:
+        condition: service_started
+      business-manager-gateway:
+        condition: service_started
+    networks:
+      - internal
+      - shared-edge
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Frontend
+  # ---------------------------------------------------------------------------
+  business-manager-web:
+    container_name: business-manager-web
+    build:
+      context: .
+      dockerfile: deploy/business-manager-web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: /api
+        NEXT_PUBLIC_TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN:-edoutput.dev}
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      BASE_DOMAIN: ${BASE_DOMAIN:-edoutput.dev}
+      RESERVED_SUBDOMAINS: ${RESERVED_SUBDOMAINS:-www,tourism-agency,gps-medical-assistance,business-manager}
+    depends_on:
+      business-manager-gateway:
+        condition: service_started
+    networks:
+      - internal
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # API gateway
+  # ---------------------------------------------------------------------------
+  business-manager-gateway:
+    container_name: business-manager-gateway
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: gateway
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+      ALLOW_ALL_CORS: "false"
+      ALLOWED_ORIGIN_DOMAIN: ${BASE_DOMAIN:-edoutput.dev}
+      DOCKER_CONTAINER_URL: 0.0.0.0
+      DEVELOPMENT_URL: localhost
+      GATEWAY_PORT: "3001"
+    depends_on:
+      business-manager-auth-svc:
+        condition: service_started
+      business-manager-company-svc:
+        condition: service_started
+      business-manager-customer-svc:
+        condition: service_started
+      business-manager-order-svc:
+        condition: service_started
+      business-manager-product-svc:
+        condition: service_started
+      business-manager-file-svc:
+        condition: service_started
+      business-manager-whatsapp-svc:
+        condition: service_started
+    networks:
+      - internal
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Go microservices
+  # ---------------------------------------------------------------------------
+  business-manager-auth-svc:
+    container_name: business-manager-auth-svc
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: auth-svc
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+    depends_on:
+      business-manager-auth-db:
+        condition: service_healthy
+      business-manager-migrate-auth:
+        condition: service_completed_successfully
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-company-svc:
+    container_name: business-manager-company-svc
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: company-svc
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+    depends_on:
+      business-manager-company-db:
+        condition: service_healthy
+      business-manager-migrate-company:
+        condition: service_completed_successfully
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-customer-svc:
+    container_name: business-manager-customer-svc
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: customer-svc
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+    depends_on:
+      business-manager-customer-db:
+        condition: service_healthy
+      business-manager-migrate-customer:
+        condition: service_completed_successfully
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-order-svc:
+    container_name: business-manager-order-svc
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: order-svc
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+    depends_on:
+      business-manager-order-db:
+        condition: service_healthy
+      business-manager-migrate-order:
+        condition: service_completed_successfully
+      business-manager-customer-svc:
+        condition: service_started
+      business-manager-product-svc:
+        condition: service_started
+      business-manager-whatsapp-svc:
+        condition: service_started
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-product-svc:
+    container_name: business-manager-product-svc
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: product-svc
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+    depends_on:
+      business-manager-product-db:
+        condition: service_healthy
+      business-manager-company-svc:
+        condition: service_started
+      business-manager-file-svc:
+        condition: service_started
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-file-svc:
+    container_name: business-manager-file-svc
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: file-svc
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-whatsapp-svc:
+    container_name: business-manager-whatsapp-svc
+    build:
+      context: .
+      dockerfile: deploy/business-manager-go.Dockerfile
+      args:
+        SERVICE: whatsapp-svc
+    env_file:
+      - ${APP_ENV_FILE:-.env}
+    environment:
+      <<: *app-env
+    depends_on:
+      business-manager-whatsapp-db:
+        condition: service_healthy
+      business-manager-migrate-whatsapp:
+        condition: service_completed_successfully
+    networks:
+      - internal
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Databases
+  # ---------------------------------------------------------------------------
+  business-manager-auth-db:
+    container_name: business-manager-auth-db
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ${AUTH_SVC_DB}
+      POSTGRES_USER: ${AUTH_SVC_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_SVC_DB_PASSWORD}
+    volumes:
+      - ${DATA_ROOT}/postgres/auth:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_SVC_DB_USER} -d ${AUTH_SVC_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-company-db:
+    container_name: business-manager-company-db
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ${COMPANY_SVC_DB}
+      POSTGRES_USER: ${COMPANY_SVC_DB_USER}
+      POSTGRES_PASSWORD: ${COMPANY_SVC_DB_PASSWORD}
+    volumes:
+      - ${DATA_ROOT}/postgres/company:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${COMPANY_SVC_DB_USER} -d ${COMPANY_SVC_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-customer-db:
+    container_name: business-manager-customer-db
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ${CUSTOMER_SVC_DB}
+      POSTGRES_USER: ${CUSTOMER_SVC_DB_USER}
+      POSTGRES_PASSWORD: ${CUSTOMER_SVC_DB_PASSWORD}
+    volumes:
+      - ${DATA_ROOT}/postgres/customer:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${CUSTOMER_SVC_DB_USER} -d ${CUSTOMER_SVC_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-order-db:
+    container_name: business-manager-order-db
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ${ORDER_SVC_DB}
+      POSTGRES_USER: ${ORDER_SVC_DB_USER}
+      POSTGRES_PASSWORD: ${ORDER_SVC_DB_PASSWORD}
+    volumes:
+      - ${DATA_ROOT}/postgres/order:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ORDER_SVC_DB_USER} -d ${ORDER_SVC_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-whatsapp-db:
+    container_name: business-manager-whatsapp-db
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ${WHATSAPP_SVC_DB}
+      POSTGRES_USER: ${WHATSAPP_SVC_DB_USER}
+      POSTGRES_PASSWORD: ${WHATSAPP_SVC_DB_PASSWORD}
+    volumes:
+      - ${DATA_ROOT}/postgres/whatsapp:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${WHATSAPP_SVC_DB_USER} -d ${WHATSAPP_SVC_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-product-db:
+    container_name: business-manager-product-db
+    image: mongo:7.0.8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${PRODUCT_SVC_DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${PRODUCT_SVC_DB_PASSWORD}
+    volumes:
+      - ${DATA_ROOT}/mongo:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"db.adminCommand('ping').ok\" | grep 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - internal
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # SQL migrations (run once, before each service starts)
+  # ---------------------------------------------------------------------------
+  business-manager-migrate-auth:
+    container_name: business-manager-migrate-auth
+    image: migrate/migrate:v4.17.1
+    volumes:
+      - ./services/auth-svc/pkg/db/migration:/migrations:ro
+    command: ["-path=/migrations", "-database=${AUTH_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    depends_on:
+      business-manager-auth-db:
+        condition: service_healthy
+    networks:
+      - internal
+    restart: "no"
+
+  business-manager-migrate-company:
+    container_name: business-manager-migrate-company
+    image: migrate/migrate:v4.17.1
+    volumes:
+      - ./services/company-svc/pkg/db/migration:/migrations:ro
+    command: ["-path=/migrations", "-database=${COMPANY_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    depends_on:
+      business-manager-company-db:
+        condition: service_healthy
+    networks:
+      - internal
+    restart: "no"
+
+  business-manager-migrate-customer:
+    container_name: business-manager-migrate-customer
+    image: migrate/migrate:v4.17.1
+    volumes:
+      - ./services/customer-svc/pkg/db/migration:/migrations:ro
+    command: ["-path=/migrations", "-database=${CUSTOMER_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    depends_on:
+      business-manager-customer-db:
+        condition: service_healthy
+    networks:
+      - internal
+    restart: "no"
+
+  business-manager-migrate-order:
+    container_name: business-manager-migrate-order
+    image: migrate/migrate:v4.17.1
+    volumes:
+      - ./services/order-svc/pkg/db/migration:/migrations:ro
+    command: ["-path=/migrations", "-database=${ORDER_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    depends_on:
+      business-manager-order-db:
+        condition: service_healthy
+    networks:
+      - internal
+    restart: "no"
+
+  business-manager-migrate-whatsapp:
+    container_name: business-manager-migrate-whatsapp
+    image: migrate/migrate:v4.17.1
+    volumes:
+      - ./services/whatsapp-svc/pkg/db/migration:/migrations:ro
+    command: ["-path=/migrations", "-database=${WHATSAPP_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    depends_on:
+      business-manager-whatsapp-db:
+        condition: service_healthy
+    networks:
+      - internal
+    restart: "no"
+
+networks:
+  internal:
+    name: business-manager-internal
+  shared-edge:
+    external: true
+    name: shared-edge

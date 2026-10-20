@@ -1,10 +1,30 @@
 .env
+.env.*
+!.env.example
 .git
 .gitignore
 README.md
 *.md
 Dockerfile*
-infra/development/
-infra/production/docker/*.Dockerfile
 *.tmp
 *.log
+
+# Local build / dependency directories
+**/node_modules
+**/.next
+**/out
+**/dist
+**/coverage
+**/.angular
+**/.idea
+**/.vscode
+
+# Go/local build artifacts
+build
+**/*.test
+**/bin
+**/obj
+
+# Legacy deployment files (the new deployment lives in deploy/)
+infra/development/
+infra/production/docker/*.Dockerfile

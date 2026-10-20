@@ -37,6 +37,7 @@ import {
 } from "@/app/services/users";
 import useWarningModal from "@/app/hooks/useWarningModal";
 import WarningModal from "@/app/components/modals/WarningModal";
+import { TENANT_BASE_DOMAIN } from "@/app/utils/tenant";
 import { useRouter } from "next/navigation";
 import deleteUserSession from "@/app/actions/deleteUserSession";
 import isUserAdmin from "@/app/actions/isUserAdmin";
@@ -322,10 +323,10 @@ const AccountClient = () => {
               </Heading>
               <span className="text-gray-500">
                 <a
-                  href={`https://${companyFormData.nameFormatUrl}.edezco.com`}
+                  href={`https://${companyFormData.nameFormatUrl}.${TENANT_BASE_DOMAIN}`}
                   target="_blank"
                 >
-                  https://{companyFormData.nameFormatUrl}.edezco.com
+                  https://{companyFormData.nameFormatUrl}.{TENANT_BASE_DOMAIN}
                 </a>
               </span>
             </Box>
