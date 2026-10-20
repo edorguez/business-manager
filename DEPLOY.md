@@ -66,6 +66,10 @@ docker compose up -d --build
 - `JWT_SECRET_KEY`: usar un secreto largo y aleatorio.
 - Las URLs de bases y servicios ya apuntan a los nombres `business-manager-*`.
 
+> Si cambias una contraseña de base de datos, actualiza también su URL en
+> `*_DB_SOURCE_DOCKER_CONTAINER`; si la contraseña tiene caracteres especiales,
+> debe ir URL-encoded.
+>
 > Si reutilizas el `.env` antiguo del proyecto, actualiza los hosts internos:
 > `auth-db` → `business-manager-auth-db`, `company-db` → `business-manager-company-db`,
 > `customer-db` → `business-manager-customer-db`, `order-db` → `business-manager-order-db`,
