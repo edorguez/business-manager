@@ -49,7 +49,7 @@ curl -f http://localhost:8083/api/roles
 sudo mkdir -p /opt/docker-projects /opt/docker-projects-data
 sudo chown -R "$USER":"$USER" /opt/docker-projects /opt/docker-projects-data
 
-git clone https://github.com/EdoRguez/business-manager.git /opt/docker-projects/business-manager
+git clone https://github.com/edorguez/business-manager.git /opt/docker-projects/business-manager
 cd /opt/docker-projects/business-manager
 
 cp .env.example .env
