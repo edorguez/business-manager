@@ -14,10 +14,10 @@ proto-all:
 		$(PROTO_SRC)
 
 docker-compose-up-prod:
-	docker compose -f infra/production/docker/docker-compose.yml --env-file .env -p "business-manager" up -d
+	docker compose -f docker-compose.yml --env-file .env -p "business-manager" up -d --build
 
 docker-compose-down-prod:
-	docker compose -f infra/production/docker/docker-compose.yml --env-file .env -p "business-manager" down
+	docker compose -f docker-compose.yml --env-file .env -p "business-manager" down
 
 docker-compose-up-dev:
 	docker compose -f infra/development/docker/docker-compose.yml --env-file .env -p "business-manager" up -d

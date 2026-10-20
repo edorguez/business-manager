@@ -185,7 +185,7 @@ Use absolute imports with `@/*` alias (configured in `tsconfig.json`).
 
 ## Environment Variables
 
-- Copy `example.env` to `.env` and fill in required values.
+- Copy `.env.example` to `.env` and fill in required values. VersityGW is used as the local S3-compatible storage.
 - Frontend environment variables are in `web/.env`.
 - Environment variables are loaded via `config.LoadConfig()` in Go services.
 

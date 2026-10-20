@@ -3,12 +3,9 @@ const nextConfig = {
   output: "standalone",
   reactStrictMode: false,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'business-manager-bucket-s3.s3.us-east-1.amazonaws.com',
-      }
-    ],
+    // Uploaded images are served by the edge at /media/*. Avoid asking the
+    // Next.js optimizer to fetch them from inside the container.
+    unoptimized: true,
   },
 };
 

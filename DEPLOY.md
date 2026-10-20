@@ -22,7 +22,7 @@
 ```bash
 docker network inspect shared-edge >/dev/null 2>&1 || docker network create shared-edge
 cp .env.example .env
-# Edita todos los change-me y las credenciales de AWS/Twilio.
+# Edita todos los change-me y las credenciales del object storage/Twilio.
 ./deploy/bootstrap.sh
 
 # Si ya tienes un .env real y solo quieres probar con el ejemplo:
@@ -85,7 +85,36 @@ docker compose up -d --build
 /opt/docker-projects-data/business-manager/postgres/order
 /opt/docker-projects-data/business-manager/postgres/whatsapp
 /opt/docker-projects-data/business-manager/mongo
+/opt/docker-projects-data/business-manager/object-storage/s3
+/opt/docker-projects-data/business-manager/object-storage/versioning
 ```
+
+## Almacenamiento de imágenes
+
+Business-manager ya no depende de AWS S3. Usa **VersityGW**, un servidor
+S3-compatible que guarda los objetos en el filesystem local.
+
+> Las imágenes oficiales de MinIO dejaron de estar disponibles en los
+> registries públicos usados por Docker, por eso se usa VersityGW. La API es
+> compatible con S3 y el cambio para file-svc es mínimo.
+
+- Contenedor: `business-manager-object-storage` (`versity/versitygw:v1.9.0`)
+- Inicialización: `business-manager-object-storage-init`
+- Bucket: `business-manager-bucket-s3`
+- URL pública de imágenes: `https://business-manager.edoutput.dev/media/...`
+- Credenciales: se reutilizan `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY_ID`
+  como root del object storage.
+
+`S3_ENDPOINT` apunta a `http://business-manager-object-storage:9000`,
+`S3_PUBLIC_URL=/media` y `S3_FORCE_PATH_STYLE=true`.
+
+> VersityGW necesita un filesystem con soporte de **xattrs** para su backend
+> POSIX. En Linux, ext4/xfs lo soportan. No uses NFS ni un filesystem que los
+> deshabilite.
+>
+> En macOS, los bind mounts de Docker Desktop no soportan xattrs. Para probar
+> el stack completo en Mac, usa volúmenes Docker nombrados para el object
+> storage o valida directamente en el servidor Linux.
 
 ## Migraciones
 

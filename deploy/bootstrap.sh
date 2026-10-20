@@ -14,7 +14,9 @@ mkdir -p \
   "$DATA_ROOT/postgres/customer" \
   "$DATA_ROOT/postgres/order" \
   "$DATA_ROOT/postgres/whatsapp" \
-  "$DATA_ROOT/mongo"
+  "$DATA_ROOT/mongo" \
+  "$DATA_ROOT/object-storage/s3" \
+  "$DATA_ROOT/object-storage/versioning"
 
 if [ "$(id -u)" -eq 0 ]; then
   chown -R 999:999 "$DATA_ROOT/postgres" "$DATA_ROOT/mongo"

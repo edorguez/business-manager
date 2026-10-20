@@ -26,6 +26,7 @@
 /build
 /web/build
 /cmd
+/.local-data
 
 # misc
 .DS_Store

@@ -208,9 +208,60 @@ services:
       - ${APP_ENV_FILE:-.env}
     environment:
       <<: *app-env
+    depends_on:
+      business-manager-object-storage-init:
+        condition: service_completed_successfully
     networks:
       - internal
     restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # S3-compatible object storage (VersityGW; same S3 API used by file-svc)
+  # ---------------------------------------------------------------------------
+  business-manager-object-storage:
+    container_name: business-manager-object-storage
+    image: versity/versitygw:v1.9.0
+    environment:
+      ROOT_ACCESS_KEY: ${AWS_ACCESS_KEY_ID}
+      ROOT_SECRET_KEY: ${AWS_SECRET_ACCESS_KEY_ID}
+      VGW_PORT: ":9000"
+      VGW_REGION: ${S3_REGION:-us-east-1}
+      VGW_BACKEND: posix
+      VGW_BACKEND_ARG: /data/s3
+      VGW_VERSIONING_DIR: /data/versioning
+    volumes:
+      - ${DATA_ROOT}/object-storage/s3:/data/s3
+      - ${DATA_ROOT}/object-storage/versioning:/data/versioning
+    networks:
+      - internal
+    restart: unless-stopped
+
+  business-manager-object-storage-init:
+    container_name: business-manager-object-storage-init
+    image: amazon/aws-cli:latest
+    depends_on:
+      business-manager-object-storage:
+        condition: service_started
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        until aws --endpoint-url http://business-manager-object-storage:9000 s3api list-buckets >/dev/null 2>&1; do
+          echo "Waiting for object storage..."
+          sleep 2
+        done
+        aws --endpoint-url http://business-manager-object-storage:9000 s3api create-bucket --bucket business-manager-bucket-s3 >/dev/null 2>&1 || true
+        aws --endpoint-url http://business-manager-object-storage:9000 s3api put-bucket-policy \
+          --bucket business-manager-bucket-s3 \
+          --policy file:///policy.json
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY_ID}
+      AWS_DEFAULT_REGION: ${S3_REGION:-us-east-1}
+    volumes:
+      - ./deploy/business-manager-bucket-policy.json:/policy.json:ro
+    networks:
+      - internal
+    restart: "no"
 
   business-manager-whatsapp-svc:
     container_name: business-manager-whatsapp-svc
@@ -356,7 +407,21 @@ services:
     image: migrate/migrate:v4.17.1
     volumes:
       - ./services/auth-svc/pkg/db/migration:/migrations:ro
-    command: ["-path=/migrations", "-database=${AUTH_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        attempt=0
+        until migrate -path=/migrations -database="$${DATABASE_URL}" up; do
+          attempt=$$((attempt + 1))
+          if [ "$$attempt" -ge 30 ]; then
+            echo "Migration failed after 30 attempts"
+            exit 1
+          fi
+          echo "Migration failed, retrying in 2s..."
+          sleep 2
+        done
+    environment:
+      DATABASE_URL: ${AUTH_DB_SOURCE_DOCKER_CONTAINER}
     depends_on:
       business-manager-auth-db:
         condition: service_healthy
@@ -369,7 +434,21 @@ services:
     image: migrate/migrate:v4.17.1
     volumes:
       - ./services/company-svc/pkg/db/migration:/migrations:ro
-    command: ["-path=/migrations", "-database=${COMPANY_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        attempt=0
+        until migrate -path=/migrations -database="$${DATABASE_URL}" up; do
+          attempt=$$((attempt + 1))
+          if [ "$$attempt" -ge 30 ]; then
+            echo "Migration failed after 30 attempts"
+            exit 1
+          fi
+          echo "Migration failed, retrying in 2s..."
+          sleep 2
+        done
+    environment:
+      DATABASE_URL: ${COMPANY_DB_SOURCE_DOCKER_CONTAINER}
     depends_on:
       business-manager-company-db:
         condition: service_healthy
@@ -382,7 +461,21 @@ services:
     image: migrate/migrate:v4.17.1
     volumes:
       - ./services/customer-svc/pkg/db/migration:/migrations:ro
-    command: ["-path=/migrations", "-database=${CUSTOMER_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        attempt=0
+        until migrate -path=/migrations -database="$${DATABASE_URL}" up; do
+          attempt=$$((attempt + 1))
+          if [ "$$attempt" -ge 30 ]; then
+            echo "Migration failed after 30 attempts"
+            exit 1
+          fi
+          echo "Migration failed, retrying in 2s..."
+          sleep 2
+        done
+    environment:
+      DATABASE_URL: ${CUSTOMER_DB_SOURCE_DOCKER_CONTAINER}
     depends_on:
       business-manager-customer-db:
         condition: service_healthy
@@ -395,7 +488,21 @@ services:
     image: migrate/migrate:v4.17.1
     volumes:
       - ./services/order-svc/pkg/db/migration:/migrations:ro
-    command: ["-path=/migrations", "-database=${ORDER_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        attempt=0
+        until migrate -path=/migrations -database="$${DATABASE_URL}" up; do
+          attempt=$$((attempt + 1))
+          if [ "$$attempt" -ge 30 ]; then
+            echo "Migration failed after 30 attempts"
+            exit 1
+          fi
+          echo "Migration failed, retrying in 2s..."
+          sleep 2
+        done
+    environment:
+      DATABASE_URL: ${ORDER_DB_SOURCE_DOCKER_CONTAINER}
     depends_on:
       business-manager-order-db:
         condition: service_healthy
@@ -408,7 +515,21 @@ services:
     image: migrate/migrate:v4.17.1
     volumes:
       - ./services/whatsapp-svc/pkg/db/migration:/migrations:ro
-    command: ["-path=/migrations", "-database=${WHATSAPP_DB_SOURCE_DOCKER_CONTAINER}", "up"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        attempt=0
+        until migrate -path=/migrations -database="$${DATABASE_URL}" up; do
+          attempt=$$((attempt + 1))
+          if [ "$$attempt" -ge 30 ]; then
+            echo "Migration failed after 30 attempts"
+            exit 1
+          fi
+          echo "Migration failed, retrying in 2s..."
+          sleep 2
+        done
+    environment:
+      DATABASE_URL: ${WHATSAPP_DB_SOURCE_DOCKER_CONTAINER}
     depends_on:
       business-manager-whatsapp-db:
         condition: service_healthy

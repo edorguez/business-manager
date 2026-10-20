@@ -3,6 +3,10 @@ package s3
 import (
 	"bytes"
 	"fmt"
+	"mime"
+	"net/url"
+	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -12,24 +16,66 @@ import (
 	"github.com/edorguez/business-manager/services/file-svc/pkg/config"
 )
 
-const region = "us-east-1"
-
 type S3File struct {
 	FileName string
 	FileData []byte
 }
 
-func UploadFiles(c *config.Config, bucketName string, folderName string, files []S3File) ([]string, error) {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(region),
-		Credentials: credentials.NewStaticCredentials(c.AwsAccessKeyId, c.AwsSecretAccessKeyId, ""),
-	})
+func newS3Client(c *config.Config) (*s3.S3, error) {
+	region := c.S3Region
+	if region == "" {
+		region = "us-east-1"
+	}
+
+	awsConfig := &aws.Config{
+		Region:           aws.String(region),
+		Credentials:      credentials.NewStaticCredentials(c.AwsAccessKeyId, c.AwsSecretAccessKeyId, ""),
+		S3ForcePathStyle: aws.Bool(c.S3ForcePathStyle),
+	}
+
+	// VersityGW/MinIO (and other S3-compatible services) need a custom endpoint.
+	if c.S3Endpoint != "" {
+		awsConfig.Endpoint = aws.String(c.S3Endpoint)
+	}
+
+	sess, err := session.NewSession(awsConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create S3 session: %w", err)
 	}
 
-	svc := s3.New(sess)
+	return s3.New(sess), nil
+}
+
+func publicObjectURL(c *config.Config, bucketName string, folderName string, fileName string) string {
+	base := strings.TrimRight(c.S3PublicUrl, "/")
+	if base == "" {
+		base = "/media"
+	}
+
+	return fmt.Sprintf(
+		"%s/%s/%s/%s",
+		base,
+		bucketName,
+		strings.Trim(folderName, "/"),
+		url.PathEscape(fileName),
+	)
+}
+
+func contentType(fileName string) string {
+	if value := mime.TypeByExtension(filepath.Ext(fileName)); value != "" {
+		return value
+	}
+	return "application/octet-stream"
+}
+
+func UploadFiles(c *config.Config, bucketName string, folderName string, files []S3File) ([]string, error) {
+	svc, err := newS3Client(c)
+	if err != nil {
+		return nil, err
+	}
+
 	var wg sync.WaitGroup
+	var mu sync.Mutex
 	var errUpload error
 	urls := make([]string, len(files))
 
@@ -38,17 +84,18 @@ func UploadFiles(c *config.Config, bucketName string, folderName string, files [
 		go func(i int, file S3File) {
 			defer wg.Done()
 			_, err := svc.PutObject(&s3.PutObjectInput{
-				Bucket: aws.String(bucketName),
-				Key:    aws.String(folderName + "/" + file.FileName),
-				Body:   bytes.NewReader(file.FileData),
-				// ACL:    aws.String("public-read"),
+				Bucket:      aws.String(bucketName),
+				Key:         aws.String(folderName + "/" + file.FileName),
+				Body:        bytes.NewReader(file.FileData),
+				ContentType: aws.String(contentType(file.FileName)),
 			})
 			if err != nil {
+				mu.Lock()
 				errUpload = fmt.Errorf("failed to upload file %s: %w", file.FileName, err)
+				mu.Unlock()
 				return
 			}
-			// https://business-manager-bucket-s3.s3.us-east-1.amazonaws.com/images/myImage.png
-			urls[i] = fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s/%s", bucketName, region, folderName, file.FileName)
+			urls[i] = publicObjectURL(c, bucketName, folderName, file.FileName)
 		}(i, file)
 	}
 
@@ -58,16 +105,13 @@ func UploadFiles(c *config.Config, bucketName string, folderName string, files [
 }
 
 func DeleteFiles(c *config.Config, bucketName string, folderName string, files []string) error {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(region),
-		Credentials: credentials.NewStaticCredentials(c.AwsAccessKeyId, c.AwsSecretAccessKeyId, ""),
-	})
+	svc, err := newS3Client(c)
 	if err != nil {
-		return fmt.Errorf("failed to create S3 session: %w", err)
+		return err
 	}
 
-	svc := s3.New(sess)
 	var wg sync.WaitGroup
+	var mu sync.Mutex
 	var errDelete error
 
 	for _, file := range files {
@@ -79,7 +123,9 @@ func DeleteFiles(c *config.Config, bucketName string, folderName string, files [
 				Key:    aws.String(folderName + "/" + file),
 			})
 			if err != nil {
+				mu.Lock()
 				errDelete = fmt.Errorf("failed to delete file %s: %w", file, err)
+				mu.Unlock()
 				return
 			}
 		}(file)
